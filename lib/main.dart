@@ -1,6 +1,7 @@
 // ignore_for_file: unnecessary_import, unused_import
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/login/loginPage.dart';
+import 'package:frontend_matching/signup/imageUpload/selectImagePage.dart';
 import 'package:frontend_matching/signup/schoolAuth.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -10,7 +11,7 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 void main() {
   runApp(
     GetMaterialApp(
-      home: LoginPage(),
+      home: SelectImagePage(),
       initialBinding: BindingsBuilder(() {
         Get.put(SignupController());
       }),
