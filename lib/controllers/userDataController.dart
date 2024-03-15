@@ -7,7 +7,7 @@ import '../models/user.dart';
 import '../models/userImage.dart';
 
 class UserDataController extends GetxController {
-  static UserDataController instance = Get.find(); //싱글톤 형식
+  static UserDataController get to => Get.find<UserDataController>();
   Rxn<User?> user = Rxn<User?>(null);
   List<dynamic> images = [];
   var accessToken = '';
@@ -27,7 +27,7 @@ class UserDataController extends GetxController {
   void _moveToPage(User? user) {
     if (user == null) {
       // Get.offAll(() => InitPage());
-      Get.offAll(() => LoginPage()); //이전 모든 라우트를 제거하고 새로운 라우트로 이동(이전 라우트 스택 제거)
+      Get.offAll(() => LoginPage());
     } else {
       Get.offAll(() => InitPage());
     }

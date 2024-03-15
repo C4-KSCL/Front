@@ -1,0 +1,20 @@
+import 'package:flutter/material.dart';
+import 'package:frontend_matching/pages/friend/friend_and_request_listtile.dart';
+import 'package:frontend_matching/pages/friend/friend_controller.dart';
+import 'package:get/get.dart';
+
+Widget FriendTabView() {
+  return Obx(() => ListView.separated(
+    // itemCount: FriendController.to.friends.length,
+    itemCount: 3,
+    itemBuilder: (context, index) {
+      return FriendListTile(
+        username: "username",
+        content: "content",
+      );
+    },
+    separatorBuilder: (context, index) {
+      return Divider();
+    },
+  )) ;
+}
