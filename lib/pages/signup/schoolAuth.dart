@@ -4,8 +4,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/components/textformField.dart';
-import 'package:frontend_matching/login/loginPage.dart';
-import 'package:frontend_matching/signup/myInfo.dart';
+import 'package:frontend_matching/pages/login/loginPage.dart';
+import 'package:frontend_matching/pages/signup/myInfo.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 

@@ -1,13 +1,14 @@
 import 'package:get/get.dart';
 
-import '../login/loginPage.dart';
-import '../matching/mainPage.dart';
+import '../pages/init_page.dart';
+import '../pages/login/loginPage.dart';
+import '../pages/matching/mainPage.dart';
 import '../models/user.dart';
 import '../models/userImage.dart';
 
 class UserDataController extends GetxController {
   static UserDataController instance = Get.find(); //싱글톤 형식
-  Rx<User?> user = Rx<User?>(null);
+  Rxn<User?> user = Rxn<User?>(null);
   List<dynamic> images = [];
   var accessToken = '';
   var refreshToken = '';
@@ -25,9 +26,10 @@ class UserDataController extends GetxController {
   //User 정보에 따른 페이지 이동
   void _moveToPage(User? user) {
     if (user == null) {
+      // Get.offAll(() => InitPage());
       Get.offAll(() => LoginPage()); //이전 모든 라우트를 제거하고 새로운 라우트로 이동(이전 라우트 스택 제거)
     } else {
-      Get.offAll(() => MainPage());
+      Get.offAll(() => InitPage());
     }
   }
 
