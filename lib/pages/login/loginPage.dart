@@ -1,7 +1,7 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
-import 'package:frontend_matching/login/bottomLayer.dart';
-import 'package:frontend_matching/login/topLayer.dart';
+import 'package:frontend_matching/pages/login/bottomLayer.dart';
+import 'package:frontend_matching/pages/login/topLayer.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

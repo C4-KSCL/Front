@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend_matching/components/gap.dart';
 import 'package:frontend_matching/components/genderButton.dart';
 import 'package:frontend_matching/components/textformField.dart';
-import 'package:frontend_matching/signup/schoolAuth.dart';
+import 'package:frontend_matching/pages/signup/schoolAuth.dart';
 import 'package:get/get.dart';
 // ignore_for_file: unused_import
 import 'package:http/http.dart' as http;

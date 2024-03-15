@@ -2,18 +2,18 @@
 
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/components/personalKeyword.dart';
-import 'package:frontend_matching/signup/friendInfo.dart';
-import 'package:frontend_matching/signup/schoolAuth.dart';
+import 'package:frontend_matching/pages/signup/friendMbtiPage.dart';
+import 'package:frontend_matching/pages/signup/schoolAuth.dart';
 import 'package:get/get.dart';
 
-class FriendKeywordPage extends StatefulWidget {
-  const FriendKeywordPage({Key? key});
+class MyKeywordPage extends StatefulWidget {
+  const MyKeywordPage({Key? key});
 
   @override
-  _FriendKeywordPageState createState() => _FriendKeywordPageState();
+  _MyKeywordPageState createState() => _MyKeywordPageState();
 }
 
-class _FriendKeywordPageState extends State<FriendKeywordPage> {
+class _MyKeywordPageState extends State<MyKeywordPage> {
   SignupController signupController = Get.find<SignupController>();
   List<String> selectedKeywords = [];
   bool isElevationButtonEnabled = false; // ElevationButton 활성/비활성 상태
@@ -47,11 +47,11 @@ class _FriendKeywordPageState extends State<FriendKeywordPage> {
         child: Column(
           children: [
             Text(
-              '친구는',
+              '나는',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 35,
-                color: Color.fromARGB(255, 212, 118, 172),
+                color: Color(0xFF7EA5F3),
               ),
             ),
             Text(
@@ -88,7 +88,7 @@ class _FriendKeywordPageState extends State<FriendKeywordPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => FriendInfoPage(),
+                          builder: (context) => const FriendMbtiPage(),
                         ),
                       );
                     }
