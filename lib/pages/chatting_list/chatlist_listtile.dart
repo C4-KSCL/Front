@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:get/get.dart';
 
 import '../../theme/textStyle.dart';
+import '../chat_room/chat_room_page.dart';
 
 ListTile ChatListTile({
   required String nickname,
   required String content,
-  required String createdAt,
-  required int readCounts,
+  required String timestamp,
+  required int notReadCounts,
+  required String roomId,
+  required String userImage,
 }) {
   return ListTile(
-    leading: Image.asset('lib/sample.jpg', fit: BoxFit.fill),
+    leading: CircleAvatar(
+      backgroundImage: NetworkImage(
+        userImage
+      ),
+    ),
     title: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -27,7 +36,7 @@ ListTile ChatListTile({
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Text(
-          createdAt,
+          timestamp,
           style: greyTextStyle4,
         ),
         Container(
@@ -35,11 +44,13 @@ ListTile ChatListTile({
               color: Colors.red, borderRadius: BorderRadius.circular(7)),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
-            child: Text(readCounts.toString()),
+            child: Text(notReadCounts.toString()),
           ),
         ),
       ],
     ),
-    onTap: () {},
+    onTap: () {
+      Get.to(ChatRoomPage(roomId: roomId,));
+    },
   );
 }

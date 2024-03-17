@@ -4,7 +4,7 @@ class ChatList {
   final String createdAt;
   final String content;
   final int notReadCounts;
-  String userImage;
+  final String userImage;
 
   ChatList({
     required this.roomId,
@@ -12,7 +12,7 @@ class ChatList {
     required this.createdAt,
     required this.content,
     required this.notReadCounts,
-    this.userImage = "",
+    required this.userImage,
   });
 
   factory ChatList.fromJson(Map<String, dynamic> json) {
@@ -22,7 +22,7 @@ class ChatList {
       createdAt: json['createdAt'],
       content: json['content'],
       notReadCounts: json['notReadCounts'],
-      userImage: "", // 초기값 설정, 필요시 수정 가능
+      userImage: json['userImage'], // 초기값 설정, 필요시 수정 가능
     );
   }
 

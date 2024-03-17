@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
+import 'package:frontend_matching/pages/chatting_list/chatlist_listtile.dart';
 import 'package:frontend_matching/pages/chatting_list/chatting_list_controller.dart';
 import 'package:get/get.dart';
 
@@ -33,19 +35,36 @@ class ChattingListPage extends StatelessWidget {
           ],
         ),
       ),
-      body:
-      Obx(
+      body: Obx(
         () => ListView.separated(
           itemCount: ChattingListController.to.chattingList.length,
           itemBuilder: (context, index) {
-            return ChatListTile(
-              nickname: ChattingListController.to.chattingList[index].nickname,
-              content: ChattingListController.to.chattingList[index].content,
-              timestamp:
-                  ChattingListController.to.chattingList[index].createdAt,
-              notReadCounts:
-                  ChattingListController.to.chattingList[index].notReadCounts,
-              roomId: ChattingListController.to.chattingList[index].roomId,
+            var chatListData = ChattingListController.to.chattingList[index];
+
+            return Slidable(
+              endActionPane: ActionPane(
+                extentRatio: 0.3,
+                motion: const DrawerMotion(),
+                children: [
+                  SlidableAction(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                    icon: Icons.output,
+                    label: '나가기',
+                    onPressed: (BuildContext context) {
+                      //방 퇴장 API
+                    },
+                  ),
+                ],
+              ),
+              child: ChatListTile(
+                nickname: chatListData.nickname,
+                content: chatListData.content,
+                timestamp: chatListData.createdAt,
+                notReadCounts: chatListData.notReadCounts,
+                roomId: chatListData.roomId,
+                userImage: chatListData.userImage,
+              ),
             );
           },
           separatorBuilder: (BuildContext context, int index) {

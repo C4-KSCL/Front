@@ -36,14 +36,22 @@ class ChatService {
       if (lastChats['lastChats'] != null) {
         for (var lastChat in lastChats['lastChats']) {
           String roomId = lastChat['roomId'];
-          String nickname = lastChat['nickName']+" 수정해야함";
-          // String nickname = lastChat['room']['joinRoom'][0]['user']['nickname'];
           String createdAt = lastChat['createdAt'];
           String content = lastChat['content'];
           int notReadCounts=lastChat['notReadCounts'];
-          String userImage="";
 
-          var chatList=ChatList(roomId: roomId, nickname: nickname, createdAt: createdAt, content: content, notReadCounts: notReadCounts,);
+          String nickname="";
+          String userImage="";
+          if(lastChat['room']['joinRoom'].isEmpty){
+            nickname = lastChat['room']['addRequest'][0]['receive']['nickname'];
+            userImage=lastChat['room']['addRequest'][0]['receive']['userImage'];
+          }
+          else{
+            nickname = lastChat['room']['joinRoom'][0]['user']['nickname'];
+            userImage = lastChat['room']['joinRoom'][0]['user']['userImage'];
+          }
+
+          var chatList=ChatList(roomId: roomId, nickname: nickname, createdAt: createdAt, content: content, notReadCounts: notReadCounts, userImage: userImage,);
 
           ChattingListController.to.chattingList.add(chatList);
           print(ChattingListController.to.chattingList.length.toString());
