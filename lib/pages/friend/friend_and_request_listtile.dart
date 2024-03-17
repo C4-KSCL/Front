@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_matching/pages/chat_room/chat_room_page.dart';
+import 'package:frontend_matching/services/chat_service.dart';
+import 'package:frontend_matching/services/friend_service.dart';
 import 'package:get/get.dart';
 
 import '../../theme/textStyle.dart';
 
 
 ListTile ChatListTile({
-  required String username,
+  required String nickname,
   required String content,
   required String timestamp,
-  required int readCounts,
+  required int notReadCounts,
+  required String roomId,
 }) {
   return ListTile(
-    leading: Image.asset('assets/images/profile1.jpg', fit: BoxFit.fill),
+    leading: CircleAvatar(),
     title: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          username,
+          nickname,
           style: blackTextStyle1,
         ),
         Text(
@@ -37,31 +41,47 @@ ListTile ChatListTile({
               color: Colors.red, borderRadius: BorderRadius.circular(7)),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
-            child: Text(readCounts.toString()),
+            child: Text(notReadCounts.toString()),
           ),
         ),
       ],
     ),
     onTap: () {
+      Get.to(ChatRoomPage(roomId: roomId,));
     },
   );
 }
 
 ListTile FriendListTile({
-  required String username,
-  required String content,
+  required String nickname,
+  required String userImage,
+  required String myMBTI,
+  required String age,
+  required String myKeyword,
 }) {
   return ListTile(
-    leading: Image.asset('assets/images/profile1.jpg', fit: BoxFit.fill),
+    leading: Image.network(userImage, fit: BoxFit.fill),
     title: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          username,
-          style: blackTextStyle1,
+        Row(
+          children: [
+            Text(
+              nickname,
+              style: blackTextStyle1,
+            ),
+            Text(
+              myMBTI,
+              style: blueTextStyle1,
+            ),
+            Text(
+              age,
+              style: blackTextStyle1,
+            ),
+          ],
         ),
         Text(
-          content,
+          myKeyword,
           style: greyTextStyle3,
         ),
       ],
@@ -75,21 +95,44 @@ ListTile FriendListTile({
 }
 
 ListTile ReceivedRequest({
-  required String username,
-  required String content,
+  required String nickname,
+  required String userImage,
+  required String myMBTI,
+  required String age,
+  required String myKeyword,
+  required String createdAt,
+  required String chatContent,
+  required int requestId,
+  required String roomId,
 }) {
   return ListTile(
     leading: Image.asset('assets/images/profile1.jpg', fit: BoxFit.fill),
     title: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          username,
-          style: blackTextStyle1,
+        Row(
+          children: [
+            Text(
+              nickname,
+              style: blackTextStyle1,
+            ),
+            Text(
+              myMBTI,
+              style: blueTextStyle1,
+            ),
+            Text(
+              age,
+              style: blackTextStyle1,
+            ),
+          ],
         ),
         Text(
-          content,
+          myKeyword,
           style: greyTextStyle3,
+        ),
+        Text(
+          chatContent,
+          style: blackTextStyle1,
         ),
       ],
     ),
@@ -97,12 +140,16 @@ ListTile ReceivedRequest({
       mainAxisSize: MainAxisSize.min,
       children: [
         TextButton(
-          onPressed: () {  },
-          child: Text('수락'),
+          onPressed: () {
+            FriendService.acceptFriendRequest(requestId: requestId.toString());
+          },
+          child: const Text('수락'),
         ),
         TextButton(
-          onPressed: () {  },
-          child: Text('거절'),
+          onPressed: () {
+            FriendService.rejectFriendRequest(requestId: requestId.toString());
+          },
+          child: const Text('거절'),
         ),
       ],
     ),
@@ -111,26 +158,51 @@ ListTile ReceivedRequest({
 }
 
 ListTile SendedRequest({
-  required String username,
-  required String content,
-}) {
+  required String nickname,
+  required String userImage,
+  required String myMBTI,
+  required String age,
+  required String myKeyword,
+  required String createdAt,
+  required String chatContent,
+  required int requestId,
+  required String roomId,
+})  {
   return ListTile(
     leading: Image.asset('assets/images/profile1.jpg', fit: BoxFit.fill),
     title: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          username,
-          style: blackTextStyle1,
+        Row(
+          children: [
+            Text(
+              nickname,
+              style: blackTextStyle1,
+            ),
+            Text(
+              myMBTI,
+              style: blueTextStyle1,
+            ),
+            Text(
+              age,
+              style: blackTextStyle1,
+            ),
+          ],
         ),
         Text(
-          content,
+          myKeyword,
           style: greyTextStyle3,
+        ),
+        Text(
+          chatContent,
+          style: blackTextStyle1,
         ),
       ],
     ),
     trailing: TextButton(
-      onPressed: () {  },
+      onPressed: () {
+        FriendService.deleteFriendRequest(requestId: requestId.toString());
+      },
       child: Text('취소'),
     ),
     onTap: () {},

@@ -1,17 +1,19 @@
 import 'dart:async';
 
+import 'package:frontend_matching/controllers/userDataController.dart';
 import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../../services/chat_service.dart';
 
 class SocketController extends GetxController {
-  static SocketController get() => Get.find<SocketController>();
+  static SocketController get to => Get.find<SocketController>();
 
   IO.Socket? _socket; //소켓IO 객체
   var serverUrl = 'http://15.164.245.62:8000'; //서버 url
   RxList<dynamic> chats = [].obs; //채팅 객체를 담는 배열
   RxList readCounts = [].obs; //채팅의 읽음 여부를 담는 배열
+
   var clickAddButton = false.obs;
   var showSecondGridView = false.obs;
 
@@ -20,6 +22,9 @@ class SocketController extends GetxController {
     _socket ??= IO.io(serverUrl, <String, dynamic>{
       'transports': ['websocket'], //전송 방식을 웹소켓으로 설정
       'autoConnect': false, //수동으로 연결해야함
+      'auth': {
+        'token': UserDataController.to.accessToken
+      },
     });
   }
 
@@ -35,7 +40,7 @@ class SocketController extends GetxController {
     }
   }
 
-  void connect({required String roomId, required String userEmail}) async {
+  void connect({required String roomId}) async {
     //소켓 연결
     _socket!.connect();
     //소켓 연결되면 소켓 이벤트 리스너 설정하기
@@ -45,7 +50,7 @@ class SocketController extends GetxController {
     //채팅방 내용 가져오기
     fetchInitialMessages(roomId: roomId);
     // 방 참여
-    joinRoom(userEmail: userEmail, roomId: roomId);
+    joinRoom(roomId: roomId);
   }
 
   // 소켓 리스너 초기 설정
@@ -102,17 +107,15 @@ class SocketController extends GetxController {
   }
 
   // 채팅방 입장
-  void joinRoom({required String userEmail, required String roomId}) {
+  void joinRoom({required String roomId}) {
     final data = {
       "roomId": roomId,
-      "userEmail": userEmail,
     };
     _socket!.emit("join room", data);
   }
 
   //채팅 보내기
   void sendMessage({
-    required String userEmail,
     required String roomId,
     required String content,
   }) {
@@ -120,7 +123,6 @@ class SocketController extends GetxController {
 
     final data = {
       "roomId": roomId,
-      "userEmail": userEmail,
       "content": content,
     };
     socket.emit("send message", data);
@@ -128,7 +130,6 @@ class SocketController extends GetxController {
 
   //채팅 삭제
   void deleteMessage({
-    required String userEmail,
     required String roomId,
     required int chatId,
   }) {
@@ -136,7 +137,6 @@ class SocketController extends GetxController {
 
     final data = {
       "roomId": roomId,
-      "userEmail": userEmail,
       "chatId": chatId,
     };
     socket.emit("delete message", data);

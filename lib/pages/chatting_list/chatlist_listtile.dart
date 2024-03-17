@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import '../../theme/textStyle.dart';
 
 ListTile ChatListTile({
-  required String username,
+  required String nickname,
   required String content,
-  required String timestamp,
+  required String createdAt,
   required int readCounts,
 }) {
   return ListTile(
@@ -14,7 +14,7 @@ ListTile ChatListTile({
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          username,
+          nickname,
           style: blackTextStyle1,
         ),
         Text(
@@ -27,7 +27,7 @@ ListTile ChatListTile({
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Text(
-          timestamp,
+          createdAt,
           style: greyTextStyle4,
         ),
         Container(

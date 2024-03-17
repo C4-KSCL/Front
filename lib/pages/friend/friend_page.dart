@@ -25,6 +25,15 @@ class FriendPage extends StatelessWidget {
     Get.put(FriendController());
     //컨트롤러 제거 코드도 생각해보기 Get.delete<FriendController>();
 
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FriendController.to.friends.clear();
+      FriendController.to.receivedRequests.clear();
+      FriendController.to.sendedRequests.clear();
+      FriendService.getFriendList();
+      FriendService.getFriendReceivedRequest(); //request:{[]}오면 에러
+      FriendService.getFriendSendedRequest();
+    });
+
     return Scaffold(
       appBar: AppBar(
         title: Text("친구창"),
@@ -137,7 +146,7 @@ class FriendPage extends StatelessWidget {
               SendedFriendRequestTabView(),
             ],
             options: CarouselOptions(
-                height: 600,
+                height: 400,
                 //mediaquery로 수정필요
                 scrollDirection: Axis.horizontal,
                 viewportFraction: 1,

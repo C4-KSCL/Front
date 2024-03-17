@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:frontend_matching/models/chat_list.dart';
+import 'package:frontend_matching/pages/chatting_list/chatting_list_controller.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
@@ -22,15 +24,32 @@ class ChatService {
   };
 
   //유저의 마지막 채팅들 가져오기 - 채팅방 리스트 구현
-  static dynamic getLastChatList() async {
+  static void getLastChatList() async {
     final url = Uri.parse('$baseUrl/$chats/get-last-chats');
 
     final response = await http.get(url, headers: headers);
 
     print(response.statusCode);
     print(response.body);
+    if (response.statusCode == 200) {
+      var lastChats = jsonDecode(response.body);
+      if (lastChats['lastChats'] != null) {
+        for (var lastChat in lastChats['lastChats']) {
+          String roomId = lastChat['roomId'];
+          String nickname = lastChat['nickName']+" 수정해야함";
+          // String nickname = lastChat['room']['joinRoom'][0]['user']['nickname'];
+          String createdAt = lastChat['createdAt'];
+          String content = lastChat['content'];
+          int notReadCounts=lastChat['notReadCounts'];
+          String userImage="";
 
-    return response.body;
+          var chatList=ChatList(roomId: roomId, nickname: nickname, createdAt: createdAt, content: content, notReadCounts: notReadCounts,);
+
+          ChattingListController.to.chattingList.add(chatList);
+          print(ChattingListController.to.chattingList.length.toString());
+        }
+      }
+    }
   }
 
   // 그 방 채팅내용 가져오기
@@ -54,6 +73,15 @@ class ChatService {
     required String roomId,
   }) async {
     final url = Uri.parse('$baseUrl/$rooms/leave/$roomId');
+
+    final response = await http.get(url, headers: headers);
+
+    print(response.statusCode);
+    print(response.body);
+  }
+
+  static void getRoomList() async {
+    final url = Uri.parse('$baseUrl/rooms/get-list/');
 
     final response = await http.get(url, headers: headers);
 
