@@ -15,6 +15,7 @@ ListTile FriendListTile({
   required String myMBTI,
   required String age,
   required String myKeyword,
+  required String roomId,
 }) {
   return ListTile(
     leading: Image.network(userImage, fit: BoxFit.fill),
@@ -44,7 +45,9 @@ ListTile FriendListTile({
       ],
     ),
     trailing: TextButton(
-      onPressed: () {},
+      onPressed: () {
+        Get.to(ChatRoomPage(roomId: roomId));
+      },
       child: Text("채팅방 입장 or 메모 기능"),
     ),
     onTap: () {},
@@ -99,12 +102,15 @@ ListTile ReceivedRequest({
         TextButton(
           onPressed: () {
             FriendService.acceptFriendRequest(requestId: requestId.toString());
+            FriendService.getFriendReceivedRequest();
           },
           child: const Text('수락'),
         ),
         TextButton(
           onPressed: () {
-            FriendService.rejectFriendRequest(requestId: requestId.toString());
+            FriendService.rejectFriendRequest(requestId: requestId.toString()); //친구 거절
+            ChatService.deleteRoom(roomId: roomId); //채팅방 나가기
+            FriendService.getFriendReceivedRequest(); //내역 리프레쉬
           },
           child: const Text('거절'),
         ),

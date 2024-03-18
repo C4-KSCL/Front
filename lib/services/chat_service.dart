@@ -76,8 +76,8 @@ class ChatService {
     return lastChats;
   }
 
-  //채팅 방 나가기
-  static void leaveRoom({
+  //채팅 방 삭제하기
+  static void deleteRoom({
     required String roomId,
   }) async {
     final url = Uri.parse('$baseUrl/$rooms/leave/$roomId');

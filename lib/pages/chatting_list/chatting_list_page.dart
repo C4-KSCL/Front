@@ -52,7 +52,7 @@ class ChattingListPage extends StatelessWidget {
                     icon: Icons.output,
                     label: '나가기',
                     onPressed: (BuildContext context) {
-                      ChatService.leaveRoom(roomId:chatListData.roomId);
+
                     },
                   ),
                 ],

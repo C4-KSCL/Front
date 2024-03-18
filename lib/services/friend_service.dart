@@ -176,13 +176,21 @@ class FriendService {
     final response = await http.get(url, headers: headers);
 
     print(response.statusCode);
-
+    print(response.body);
     if (response.statusCode == 200) {
       var friendsData = jsonDecode(response.body);
 
       for (var friendData in friendsData['friends']) {
-        var id = friendData['id'];
-        Friend friend = Friend.fromJson(friendData['friend']);
+        String roomId = friendData['room']['id'];
+        String myMBTI = friendData['friend']['myMBTI'];
+        String nickname = friendData['friend']['nickname'];
+        String myKeyword = friendData['friend']['myKeyword'];
+        String age = friendData['friend']['age'];
+        String userImage = friendData['friend']['userImage'];
+
+
+        Friend friend = Friend(myMBTI: myMBTI, myKeyword: myKeyword, nickname: nickname, userImage: userImage, age: age, roomId: roomId);
+
         FriendController.to.friends.add(friend);
       }
     }
