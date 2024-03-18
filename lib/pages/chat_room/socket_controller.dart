@@ -14,8 +14,8 @@ class SocketController extends GetxController {
   RxList<dynamic> chats = [].obs; //채팅 객체를 담는 배열
   RxList readCounts = [].obs; //채팅의 읽음 여부를 담는 배열
 
-  var clickAddButton = false.obs;
-  var showSecondGridView = false.obs;
+  var clickAddButton = false.obs; // +버튼 누름여부
+  var showSecondGridView = false.obs; // 두번째 카테고리 여부
 
   //소켓 연결
   void init() {

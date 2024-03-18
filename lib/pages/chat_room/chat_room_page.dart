@@ -1,7 +1,9 @@
 import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
-import 'package:frontend_matching/pages/chat_room/chat_room_controller.dart';
+import 'package:frontend_matching/pages/chat_room/big_category.dart';
+import 'package:frontend_matching/pages/chat_room/middle_category.dart';
+import 'package:frontend_matching/pages/chat_room/socket_controller.dart';
 import 'package:get/get.dart';
 
 class ChatRoomPage extends GetView<SocketController> {
@@ -105,6 +107,17 @@ class ChatRoomPage extends GetView<SocketController> {
               }, icon: Icon(Icons.send)),
             ],
           ),
+          Obx(() => SocketController.to.clickAddButton.value
+              ? SizedBox(
+            height: 250,
+            child: Center(
+                child: Obx(
+                      () => SocketController.to.showSecondGridView.value
+                      ? middleCategory()
+                      : bigCategory(),
+                )),
+          )
+              : Container()),
         ]));
   }
 }

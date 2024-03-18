@@ -82,16 +82,17 @@ class ChatService {
   }) async {
     final url = Uri.parse('$baseUrl/$rooms/leave/$roomId');
 
-    final response = await http.get(url, headers: headers);
+    final response = await http.delete(url, headers: headers);
 
     print(response.statusCode);
     print(response.body);
   }
 
+  //속한 채팅 방들 리스트 가져오기
   static void getRoomList() async {
     final url = Uri.parse('$baseUrl/rooms/get-list/');
 
-    final response = await http.get(url, headers: headers);
+    final response = await http.delete(url, headers: headers);
 
     print(response.statusCode);
     print(response.body);
