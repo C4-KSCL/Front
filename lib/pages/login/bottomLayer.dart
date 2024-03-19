@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:frontend_matching/components/textformField.dart';
 import 'package:frontend_matching/components/textformVerify.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
-import 'package:frontend_matching/matching/mainPage.dart';
+import 'package:frontend_matching/pages/matching/mainPage.dart';
 import 'package:frontend_matching/services/user_service.dart';
-import 'package:frontend_matching/signup/schoolAuth.dart';
+import 'package:frontend_matching/pages/signup/schoolAuth.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
@@ -125,6 +125,7 @@ class _BottomLayerLoginScreenState extends State<BottomLayerLoginScreen> {
                   onPressed: () {
                     String email = idController.text;
                     String password = pwController.text;
+                    print("aaa");
 
                     // 데이터 전달
                     UserServices.loginUser(email, password);

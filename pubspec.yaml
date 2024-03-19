@@ -72,6 +72,7 @@ flutter:
     - assets/images/profile1.jpg
     - assets/images/profile2.jpg
     - assets/images/profile3.jpg
+    - assets/icons/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -87,13 +88,13 @@ flutter:
   fonts:
     - family: NotoSansKR_Regular_w400
       fonts:
-        - asset: lib/fonts/NotoSansKR-Regular.ttf
+        - asset: lib/theme/fonts/NotoSansKR-Regular.ttf
     - family: NotoSansKR_Medium_w500
       fonts:
-        - asset: lib/fonts/NotoSansKR-Medium.ttf
+        - asset: lib/theme/fonts/NotoSansKR-Medium.ttf
     - family: NotoSansKR_Bold_w700
       fonts:
-        - asset: lib/fonts/NotoSansKR-Bold.ttf
+        - asset: lib/theme/fonts/NotoSansKR-Bold.ttf
   
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

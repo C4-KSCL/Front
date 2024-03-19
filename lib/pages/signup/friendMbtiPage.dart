@@ -2,18 +2,18 @@
 
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/components/mbtiKeyword.dart';
-import 'package:frontend_matching/signup/myKeywordPage.dart';
-import 'package:frontend_matching/signup/schoolAuth.dart';
+import 'package:frontend_matching/pages/signup/friendKeywordPage.dart';
+import 'package:frontend_matching/pages/signup/schoolAuth.dart';
 import 'package:get/get.dart';
 
-class MyMbtiPage extends StatefulWidget {
-  const MyMbtiPage({Key? key}) : super(key: key);
+class FriendMbtiPage extends StatefulWidget {
+  const FriendMbtiPage({Key? key}) : super(key: key);
 
   @override
-  _MyMbtiPageState createState() => _MyMbtiPageState();
+  _FriendMbtiPageState createState() => _FriendMbtiPageState();
 }
 
-class _MyMbtiPageState extends State<MyMbtiPage> {
+class _FriendMbtiPageState extends State<FriendMbtiPage> {
   SignupController signupController = Get.find<SignupController>();
   String selectedMBTI = "";
 
@@ -39,11 +39,11 @@ class _MyMbtiPageState extends State<MyMbtiPage> {
         child: Column(
           children: [
             Text(
-              '나의',
+              '친구의',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 35,
-                color: Color(0xFF7EA5F3),
+                color: Color.fromARGB(255, 212, 118, 172),
               ),
             ),
             Text(
@@ -83,7 +83,7 @@ class _MyMbtiPageState extends State<MyMbtiPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MyKeywordPage(),
+                    builder: (context) => FriendKeywordPage(),
                   ),
                 );
               },

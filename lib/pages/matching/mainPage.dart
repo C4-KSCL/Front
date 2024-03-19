@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
-import 'package:frontend_matching/matching/imageSlide.dart';
+import 'package:frontend_matching/pages/matching/imageSlide.dart';
 import 'package:get/get.dart';
 
 class MainPage extends StatefulWidget {
