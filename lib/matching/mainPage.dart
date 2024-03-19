@@ -50,8 +50,8 @@ class _MainPageState extends State<MainPage> {
           padding: EdgeInsets.zero,
           children: [
             UserAccountsDrawerHeader(
-              accountName: const Text('성준영'),
-              accountEmail: const Text('jysung3711@naver.com'),
+              accountName: const Text('랄랄랄'),
+              accountEmail: const Text('a@naver.com'),
               currentAccountPicture: const CircleAvatar(
                 backgroundColor: Colors.white,
                 backgroundImage: AssetImage('assets/images/logo1.png'),
