@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, invalid_use_of_protected_member, unnecessary_null_comparison
+// ignore_for_file: prefer_const_constructors, invalid_use_of_protected_member, unnecessary_null_comparison, prefer_conditional_assignment
 
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
@@ -25,7 +25,8 @@ class _MainPageState extends State<MainPage> {
   String imagePath2 = '';
   int imageCount = 0;
   List<String> validImagePaths = [];
-  String profileImagePath = '';
+  String profileImagePath =
+      'https://matchingimage.s3.ap-northeast-2.amazonaws.com/defalut_user.png';
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +105,7 @@ class _MainPageState extends State<MainPage> {
       ),
       body: SingleChildScrollView(
         child: GetBuilder<UserDataController>(builder: (controller) {
-          if (controller.user != null) {
+          if (controller.user.value != null) {
             email = controller.user.value!.email;
             nickname = controller.user.value!.nickname;
             age = controller.user.value!.age;
@@ -117,6 +118,7 @@ class _MainPageState extends State<MainPage> {
             }
             imageCount = controller.images.length;
             profileImagePath = controller.user.value!.userImage!;
+            print(profileImagePath);
 
             for (int i = 0; i < imageCount; i++) {
               if (controller.images[i].imagePath != null) {

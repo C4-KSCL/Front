@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend_matching/components/gap.dart';
 import 'package:frontend_matching/components/genderButton.dart';
 import 'package:frontend_matching/components/textformField.dart';
+import 'package:frontend_matching/pages/init_page.dart';
 import 'package:frontend_matching/pages/signup/schoolAuth.dart';
 import 'package:get/get.dart';
 // ignore_for_file: unused_import
@@ -168,7 +169,7 @@ class FriendInfoPage extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => LoginPage(),
+                      builder: (context) => InitPage(),
                     ),
                   );
                 },
