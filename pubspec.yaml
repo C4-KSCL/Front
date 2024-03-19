@@ -39,8 +39,9 @@ dependencies:
   http:
   page_indicator:
   carousel_slider:
-  flutter_chat_bubble:
+  chat_bubbles:
   group_button:
+  flutter_slidable:
 
 dev_dependencies:
   flutter_test:
