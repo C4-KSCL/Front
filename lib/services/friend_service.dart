@@ -57,6 +57,7 @@ class FriendService {
     print(response.body);
     if (response.statusCode == 200) {
       var sendedRequests = jsonDecode(response.body);
+      FriendController.to.receivedRequests.clear();
 
       if (sendedRequests['requests'] != null) {
         for (var sendedRequest in sendedRequests['requests']) {
