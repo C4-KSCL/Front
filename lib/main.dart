@@ -4,6 +4,8 @@ import 'package:frontend_matching/controllers/bottomNavigationBar.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
 import 'package:frontend_matching/pages/init_page.dart';
 import 'package:frontend_matching/pages/login/loginPage.dart';
+import 'package:frontend_matching/pages/matching/mainPage.dart';
+import 'package:frontend_matching/pages/signup/friendInfo.dart';
 import 'package:frontend_matching/pages/signup/imageUpload/selectImagePage.dart';
 import 'package:frontend_matching/pages/signup/schoolAuth.dart';
 import 'package:get/get.dart';
@@ -14,7 +16,7 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 void main() {
   runApp(
     GetMaterialApp(
-      home: InitPage(),
+      home: MainPage(),
       initialBinding: BindingsBuilder(() {
         Get.put(SignupController());
         Get.put(UserDataController());
