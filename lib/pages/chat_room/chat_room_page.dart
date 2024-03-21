@@ -32,26 +32,34 @@ class ChatRoomPage extends GetView<SocketController> {
     });
 
     return Scaffold(
+      backgroundColor: blueColor5,
+      appBar: AppBar(
         backgroundColor: blueColor5,
-        appBar: AppBar(
-          backgroundColor: blueColor5,
-          leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back_ios_rounded,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              controller.disconnect();
-              Get.back();
-            },
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios_rounded,
+            color: Colors.black,
           ),
-          title: Text(oppUserName),
-          centerTitle: true,
-          actions: [
-            IconButton(onPressed: (){}, icon: Icon(Icons.settings_rounded))
-          ],
+          onPressed: () {
+            controller.disconnect();
+            Get.back();
+          },
         ),
-        body: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+        title: Text(oppUserName),
+        centerTitle: true,
+        actions: [
+          Builder(
+            builder: (context) => IconButton(
+              icon: Icon(Icons.menu),
+              onPressed: () => Scaffold.of(context).openEndDrawer(),
+              // 이 버튼을 누르면 endDrawer가 열립니다.
+            ),
+          ),
+        ],
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
           Expanded(
             child: Obx(
               () => Padding(
@@ -168,6 +176,35 @@ class ChatRoomPage extends GetView<SocketController> {
                   )),
                 )
               : Container()),
-        ]));
+        ],
+      ),
+      endDrawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              child: Text('오른쪽 드로어 헤더'),
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+            ),
+            ListTile(
+              title: Text('항목 1'),
+              onTap: () {
+                // 항목 1을 탭했을 때 수행할 작업
+                Navigator.pop(context); // Drawer를 닫습니다.
+              },
+            ),
+            ListTile(
+              title: Text('항목 2'),
+              onTap: () {
+                // 항목 2를 탭했을 때 수행할 작업
+                Navigator.pop(context); // Drawer를 닫습니다.
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

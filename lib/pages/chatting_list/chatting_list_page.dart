@@ -22,9 +22,7 @@ class ChattingListPage extends StatelessWidget {
     });
 
     return Scaffold(
-      backgroundColor: blueColor5,
       appBar: AppBar(
-        backgroundColor: blueColor5,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

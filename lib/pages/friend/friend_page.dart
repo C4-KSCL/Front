@@ -35,9 +35,7 @@ class FriendPage extends StatelessWidget {
     });
 
     return Scaffold(
-      backgroundColor: blueColor5,
       appBar: AppBar(
-        backgroundColor: blueColor5,
         title: Text("친구창"),
       ),
       body: Column(
