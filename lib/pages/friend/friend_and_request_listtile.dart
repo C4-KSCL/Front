@@ -46,7 +46,7 @@ ListTile FriendListTile({
     ),
     trailing: TextButton(
       onPressed: () {
-        Get.to(ChatRoomPage(roomId: roomId));
+        Get.to(ChatRoomPage(roomId: roomId, oppUserName: nickname,));
       },
       child: Text("채팅방 입장 or 메모 기능"),
     ),

@@ -3,6 +3,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
 import 'package:frontend_matching/pages/chatting_list/chatlist_listtile.dart';
 import 'package:frontend_matching/pages/chatting_list/chatting_list_controller.dart';
+import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get.dart';
 
 import '../../services/chat_service.dart';
@@ -21,7 +22,9 @@ class ChattingListPage extends StatelessWidget {
     });
 
     return Scaffold(
+      backgroundColor: blueColor5,
       appBar: AppBar(
+        backgroundColor: blueColor5,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

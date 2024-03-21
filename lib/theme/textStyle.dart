@@ -83,6 +83,12 @@ const blackTextStyle3 = TextStyle(
   fontFamily: 'NotoSansKR_Bold_w700',
 );
 
+const blackTextStyle4 = TextStyle(
+  fontSize: 12,
+  color: blackColor1,
+  fontFamily: 'NotoSansKR_Medium_w500',
+);
+
 //파란색 글자
 
 

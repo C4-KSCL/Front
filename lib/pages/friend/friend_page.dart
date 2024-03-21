@@ -35,7 +35,9 @@ class FriendPage extends StatelessWidget {
     });
 
     return Scaffold(
+      backgroundColor: blueColor5,
       appBar: AppBar(
+        backgroundColor: blueColor5,
         title: Text("친구창"),
       ),
       body: Column(
@@ -79,7 +81,7 @@ class FriendPage extends StatelessWidget {
                           child: TextButton(
                               onPressed: () {
                                 FriendController.to.pageNumber.value = 0;
-                                _carouselController.animateToPage(
+                                _carouselController.jumpToPage(
                                     FriendController.to.pageNumber.value);
                               },
                               child: Text(
@@ -100,7 +102,7 @@ class FriendPage extends StatelessWidget {
                         child: TextButton(
                           onPressed: () {
                             FriendController.to.pageNumber.value = 1;
-                            _carouselController.animateToPage(
+                            _carouselController.jumpToPage(
                                 FriendController.to.pageNumber.value);
                           },
                           child: Text(
@@ -121,7 +123,7 @@ class FriendPage extends StatelessWidget {
                         child: TextButton(
                             onPressed: () {
                               FriendController.to.pageNumber.value = 2;
-                              _carouselController.animateToPage(
+                              _carouselController.jumpToPage(
                                   FriendController.to.pageNumber.value);
                             },
                             child: Text(

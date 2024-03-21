@@ -50,7 +50,7 @@ ListTile ChatListTile({
       ],
     ),
     onTap: () {
-      Get.to(ChatRoomPage(roomId: roomId,));
+      Get.to(ChatRoomPage(roomId: roomId, oppUserName: nickname,));
     },
   );
 }
