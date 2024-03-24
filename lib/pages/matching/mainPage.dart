@@ -46,63 +46,6 @@ class _MainPageState extends State<MainPage> {
           IconButton(icon: Icon(Icons.search), onPressed: () => {})
         ],
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            UserAccountsDrawerHeader(
-              accountName: const Text('랄랄랄'),
-              accountEmail: const Text('a@naver.com'),
-              currentAccountPicture: const CircleAvatar(
-                backgroundColor: Colors.white,
-                backgroundImage: AssetImage('assets/images/logo1.png'),
-              ),
-              otherAccountsPictures: const [
-                CircleAvatar(
-                  backgroundColor: Colors.white,
-                  backgroundImage: AssetImage('assets/images/logo2.png'),
-                )
-              ],
-              onDetailsPressed: () => {},
-              decoration: const BoxDecoration(
-                color: Colors.amber,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(40.0),
-                  bottomRight: Radius.circular(40.0),
-                ),
-              ),
-            ),
-            ListTile(
-              //타일 탭에 나올 리스트
-              leading: Icon(
-                Icons.home,
-                color: Colors.grey[850],
-              ),
-              title: const Text("Home"),
-              onTap: () => {},
-              trailing: Icon(Icons.add),
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.settings,
-                color: Colors.grey[850],
-              ),
-              title: const Text("Setting"),
-              onTap: () => {},
-              trailing: Icon(Icons.add),
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.question_answer,
-                color: Colors.grey[850],
-              ),
-              title: const Text("Q&A"),
-              onTap: () => {},
-              trailing: Icon(Icons.add),
-            ),
-          ],
-        ),
-      ),
       body: SingleChildScrollView(
         child: GetBuilder<UserDataController>(builder: (controller) {
           if (controller.user.value != null) {
