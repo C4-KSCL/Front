@@ -13,13 +13,12 @@ class MyPage extends StatelessWidget {
     final double medWidth = MediaQuery.of(context).size.width;
     final double medHeight = MediaQuery.of(context).size.height;
     final double statusBarHeight = MediaQuery.of(context).padding.top;
-    final mainPage = MainPage();
 
     return Scaffold(
         backgroundColor: const Color(0xFFFCFCFF),
         body: SingleChildScrollView(
             child: Stack(children: [
-          const Image(image: AssetImage('assets/logo/login_image.png')),
+          const Image(image: AssetImage('assets/images/logo1.png')),
           Positioned(
               top: medHeight / 3.5,
               child: Container(
@@ -55,7 +54,7 @@ class MyPage extends StatelessWidget {
                   height: medHeight / 10,
                 ),
                 UserAvatar(
-                  img: MainPage.profileImagePath,
+                  img: 'assets/images/logo1.png', //MainPage.profileImagePath,
                   medWidth: medWidth,
                 ),
                 const SizedBox(
@@ -101,19 +100,19 @@ class MyPage extends StatelessWidget {
                               medHeight: medHeight,
                               medWidth: medWidth,
                               pressed: () {},
-                              img: 'assets/logos/dropbox-fill.png',
+                              img: 'assets/icons/selected_friend.png',
                               str: '맡긴 내역'),
                           RowButton(
                               medHeight: medHeight,
                               medWidth: medWidth,
                               pressed: () {},
-                              img: 'assets/map/truck-fill.png',
+                              img: 'assets/icons/selected_friend.png',
                               str: '옮긴 내역'),
                           RowButton(
                               medHeight: medHeight,
                               medWidth: medWidth,
                               pressed: () {},
-                              img: 'assets/health/heart-fill.png',
+                              img: 'assets/icons/selected_friend.png',
                               str: '관심 내역')
                         ],
                       ),
@@ -126,19 +125,19 @@ class MyPage extends StatelessWidget {
                       ),
                       ColumnButton(
                           pressed: () {},
-                          img: 'assets/communication/chat-quote-fill.png',
+                          img: 'assets/icons/selected_friend.png',
                           str: '내가 쓴 댓글'),
                       ColumnButton(
                           pressed: () {},
-                          img: 'assets/communication/chat-quote-fill.png',
+                          img: 'assets/icons/selected_friend.png',
                           str: '내가 쓴 댓글'),
                       ColumnButton(
                           pressed: () {},
-                          img: 'assets/communication/chat-quote-fill.png',
+                          img: 'assets/icons/selected_friend.png',
                           str: '내가 쓴 댓글'),
                       ColumnButton(
                           pressed: () {},
-                          img: 'assets/communication/chat-quote-fill.png',
+                          img: 'assets/icons/selected_friend.png',
                           str: '내가 쓴 댓글'),
                     ],
                   ),

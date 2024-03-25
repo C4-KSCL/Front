@@ -39,7 +39,7 @@ class TopLayer extends StatelessWidget {
                       height: 25,
                       width: 25,
                       fit: BoxFit.fill,
-                      image: AssetImage('assets/system/settings-2-fill.png')),
+                      image: AssetImage('assets/icons/selected_friend.png')),
                 )),
           )
         ],

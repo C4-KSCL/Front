@@ -29,7 +29,7 @@ class UserDataController extends GetxController {
   void _moveToPage(User? user) {
     if (user == null) {
       // Get.offAll(() => InitPage());
-      Get.offAll(() => MyPage());
+      Get.offAll(() => LoginPage());
     } else {
       Get.offAll(() => InitPage());
     }

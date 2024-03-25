@@ -31,12 +31,13 @@ class SelectImagePageState extends State<SelectImagePage> {
         : '';
     try {
       var request = http.MultipartRequest('POST', url);
-      request.fields['email'] = userEmail; // 이메일 값 추가
+      request.fields['email'] = userEmail;
       for (var pickedFile in pickedFiles!) {
         request.files.add(await http.MultipartFile.fromPath(
           'files',
           pickedFile!.path,
         ));
+        print(pickedFile!.path);
       }
       var response = await request.send();
       if (response.statusCode == 200) {
