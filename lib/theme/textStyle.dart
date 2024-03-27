@@ -63,6 +63,12 @@ const blueTextStyle2 = TextStyle(
   fontFamily: 'NotoSansKR_Bold_w700',
 );
 
+const blueTextStyle3 = TextStyle(
+  fontSize: 16,
+  color: blueColor7,
+  fontFamily: 'NotoSansKR_Bold_w700',
+);
+
 //검정색 글자
 //검정색, 16px, 두꺼운 글자 :
 const blackTextStyle1 = TextStyle(
@@ -89,6 +95,18 @@ const blackTextStyle4 = TextStyle(
   fontFamily: 'NotoSansKR_Medium_w500',
 );
 
+const blackTextStyle5 = TextStyle(
+  fontSize: 12,
+  color: blackColor2,
+  fontFamily: 'NotoSansKR_Medium_w500',
+);
+
 //파란색 글자
 
 
+//분홍색 글자
+const pinkTextStyle1 = TextStyle(
+  fontSize: 16,
+  color: pinkColor1,
+  fontFamily: 'NotoSansKR_Bold_w700',
+);

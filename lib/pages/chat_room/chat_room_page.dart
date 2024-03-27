@@ -1,10 +1,10 @@
-import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
 import 'package:frontend_matching/pages/chat_room/big_category.dart';
 import 'package:frontend_matching/pages/chat_room/middle_category.dart';
+import 'package:frontend_matching/pages/chat_room/quiz_page.dart';
 import 'package:frontend_matching/pages/chat_room/socket_controller.dart';
 import 'package:frontend_matching/theme/textStyle.dart';
 import 'package:get/get.dart';
@@ -69,6 +69,7 @@ class ChatRoomPage extends GetView<SocketController> {
                   itemCount: controller.readCounts.length,
                   itemBuilder: (BuildContext context, int index) => Obx(
                     () {
+                      //event가 null이 아닌경우에
                       return controller.chats[index]['userEmail'] ==
                               UserDataController.to.user.value!.email
                           ? Row(
@@ -100,28 +101,8 @@ class ChatRoomPage extends GetView<SocketController> {
               ),
             ),
           ),
-          Container(
-            decoration: const BoxDecoration(
-              color: blueColor1,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(8),
-                  topRight: Radius.circular(8),
-                  bottomLeft: Radius.circular(8)),
-            ),
-            child: Column(
-              children: [
-                SizedBox(
-                  width: Get.width * 0.4,
-                  height: Get.width * 0.4,
-                  child: Image.asset("assets/images/logo2.png"),
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: Text("확인하러가기"),
-                ),
-              ],
-            ),
-          ),
+          SendQuizChatBox(),
+          ReceiveQuizChatBox(),
           Container(
             color: whiteColor1,
             child: Row(

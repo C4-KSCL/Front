@@ -189,7 +189,6 @@ class FriendService {
         String age = friendData['friend']['age'];
         String userImage = friendData['friend']['userImage'];
 
-
         Friend friend = Friend(myMBTI: myMBTI, myKeyword: myKeyword, nickname: nickname, userImage: userImage, age: age, roomId: roomId);
 
         FriendController.to.friends.add(friend);

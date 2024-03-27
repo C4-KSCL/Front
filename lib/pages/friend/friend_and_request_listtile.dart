@@ -1,13 +1,13 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/pages/chat_room/chat_room_page.dart';
 import 'package:frontend_matching/services/chat_service.dart';
 import 'package:frontend_matching/services/friend_service.dart';
 import 'package:get/get.dart';
 
+import '../../theme/colors.dart';
 import '../../theme/textStyle.dart';
-
-
-
 
 ListTile FriendListTile({
   required String nickname,
@@ -26,17 +26,27 @@ ListTile FriendListTile({
           children: [
             Text(
               nickname,
-              style: blackTextStyle1,
+              style: blueTextStyle3,
             ),
-            Text(
-              myMBTI,
-              style: blueTextStyle1,
-            ),
-            Text(
-              age,
-              style: blackTextStyle1,
+            SizedBox(width: 10,),
+            Container(
+              width: 40,
+              height: 20,
+              decoration: BoxDecoration(
+                color: blueColor1,
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Center(
+                  child: Text(
+                    '$age세',
+                    style: whiteTextStyle2,
+                  )),
             ),
           ],
+        ),
+        Text(
+          myMBTI,
+          style: blackTextStyle1,
         ),
         Text(
           myKeyword,
