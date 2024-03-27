@@ -1,10 +1,12 @@
+import 'package:frontend_matching/pages/login/loginPage.dart';
+import 'package:frontend_matching/pages/signup/imageUpload/profileImagePage.dart';
+import 'package:frontend_matching/pages/signup/imageUpload/selectImagePage.dart';
 import 'package:get/get.dart';
 
 import '../pages/init_page.dart';
-import '../pages/login/loginPage.dart';
-import '../pages/matching/mainPage.dart';
 import '../models/user.dart';
 import '../models/userImage.dart';
+import '../pages/profile/myPage.dart';
 
 class UserDataController extends GetxController {
   static UserDataController get to => Get.find<UserDataController>();

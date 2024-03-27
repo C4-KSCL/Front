@@ -5,7 +5,9 @@ import 'package:frontend_matching/controllers/userDataController.dart';
 import 'package:frontend_matching/pages/init_page.dart';
 import 'package:frontend_matching/pages/login/loginPage.dart';
 import 'package:frontend_matching/pages/matching/mainPage.dart';
+import 'package:frontend_matching/pages/profile/myPage.dart';
 import 'package:frontend_matching/pages/signup/friendInfo.dart';
+import 'package:frontend_matching/pages/signup/imageUpload/profileImagePage.dart';
 import 'package:frontend_matching/pages/signup/imageUpload/selectImagePage.dart';
 import 'package:frontend_matching/pages/signup/schoolAuth.dart';
 import 'package:frontend_matching/theme/colors.dart';
@@ -17,12 +19,7 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 void main() {
   runApp(
     GetMaterialApp(
-      theme: ThemeData(
-        // appBarTheme: const AppBarTheme(
-        //   color: blueColor5,
-        // )
-      ),
-      home: InitPage(),
+      home: LoginPage(),
       initialBinding: BindingsBuilder(() {
         Get.put(SignupController());
         Get.put(UserDataController());

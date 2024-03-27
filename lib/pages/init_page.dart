@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:frontend_matching/pages/my_information/my_information_page.dart';
-import 'package:get/get.dart';
+// ignore_for_file: prefer_const_constructors, use_super_parameters
 
+import 'package:flutter/material.dart';
+import 'package:frontend_matching/pages/profile/myPage.dart';
+import 'package:get/get.dart';
 import '../components/my_bottom_navigationbar.dart';
 import '../controllers/bottomNavigationBar.dart';
 import 'chatting_list/chatting_list_page.dart';
@@ -13,22 +14,20 @@ class InitPage extends StatelessWidget {
 
   //탭별 페이지 정의
   static List<Widget> tabPages = <Widget>[
-     MainPage(),
-     FriendPage(),
-     ChattingListPage(),
-     MyInformationPage(),
+    MainPage(),
+    FriendPage(),
+    ChattingListPage(),
+    MyPage(),
   ];
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: Obx(
-            () => SafeArea(
+        () => SafeArea(
             child:
-            // static 변수를 이용해 컨트롤러 접근
-            tabPages[
-            BottomNavigationBarController.to.selectedIndex.value]),
+                // static 변수를 이용해 컨트롤러 접근
+                tabPages[BottomNavigationBarController.to.selectedIndex.value]),
       ),
       bottomNavigationBar: MyBottomNavigationBar(),
     );

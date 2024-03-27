@@ -5,6 +5,8 @@ import 'package:frontend_matching/components/gap.dart';
 import 'package:frontend_matching/components/genderButton.dart';
 import 'package:frontend_matching/components/textformField.dart';
 import 'package:frontend_matching/pages/init_page.dart';
+import 'package:frontend_matching/pages/signup/imageUpload/profileImagePage.dart';
+import 'package:frontend_matching/pages/signup/imageUpload/selectImagePage.dart';
 import 'package:frontend_matching/pages/signup/schoolAuth.dart';
 import 'package:get/get.dart';
 // ignore_for_file: unused_import
@@ -169,7 +171,7 @@ class FriendInfoPage extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => InitPage(),
+                      builder: (context) => ProfileImagePage(),
                     ),
                   );
                 },
