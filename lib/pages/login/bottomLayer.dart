@@ -16,38 +16,6 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-// Future<Map<String, dynamic>?> getUserData(String email, String password) async {
-//   final Uri url = Uri.parse('http://15.164.245.62:8000/auth/login');
-
-//   try {
-//     final response = await http.post(
-//       url,
-//       body: {
-//         'email': email,
-//         'password': password,
-//       },
-//     );
-
-//     if (response.statusCode == 200) {
-//       print('데이터 가져오기 성공!');
-//       Map<String, dynamic> data = json.decode(response.body);
-
-//       // 사용자 정보와 이미지 정보를 병합
-//       Map<String, dynamic> userData = data['user'];
-//       List<dynamic> images = data['images'];
-//       userData['images'] = images;
-
-//       return userData;
-//     } else {
-//       print('서버 에러: ${response.statusCode}');
-//       return null;
-//     }
-//   } catch (e) {
-//     print('에러 발생: $e');
-//     return null;
-//   }
-// }
-
 class BottomLayerLoginScreen extends StatefulWidget {
   const BottomLayerLoginScreen({super.key});
 
@@ -63,6 +31,12 @@ class _BottomLayerLoginScreenState extends State<BottomLayerLoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30),
+          )),
       padding: const EdgeInsets.all(20),
       child: Form(
         key: formkey,
@@ -70,20 +44,15 @@ class _BottomLayerLoginScreenState extends State<BottomLayerLoginScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              '로그인하기',
+              '로그인',
               style: TextStyle(fontSize: 28, fontWeight: FontWeight.w800),
             ),
             TextformVerify(
               typeController: idController,
               textType: '이메일',
             ),
-
             GetTextContainer(
-                typeController: pwController,
-                textLogo: 'assets/images/logo1.png',
-                textType: '비밀번호'),
-            ////=========== 비밀번호 입력 창 컨테이너 끝 ============
-            // ======== 비밀번호,아이디 찾기 버튼 ==========
+                typeController: pwController, textLogo: '', textType: '비밀번호'),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -112,7 +81,6 @@ class _BottomLayerLoginScreenState extends State<BottomLayerLoginScreen> {
             const SizedBox(
                 width: 500,
                 child: Divider(color: Colors.blueGrey, thickness: 2.0)),
-
             SizedBox(
               width: double.infinity,
               height: 50,
@@ -125,24 +93,18 @@ class _BottomLayerLoginScreenState extends State<BottomLayerLoginScreen> {
                   onPressed: () {
                     String email = idController.text;
                     String password = pwController.text;
-                    print("aaa");
+                    print("login check");
 
-                    // 데이터 전달
                     UserServices.loginUser(email, password);
-
-                    // MyPage 클래스로 이동
-                    // Get.to(() => MainPage());
                   },
                   child: const Text(
                     '로그인하기',
                     style: TextStyle(fontSize: 16, color: Colors.white),
                   )),
             ),
-
             const SizedBox(
               height: 10,
             ),
-
             SizedBox(
               width: double.infinity,
               height: 50,

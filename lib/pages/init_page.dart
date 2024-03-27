@@ -1,9 +1,8 @@
 // ignore_for_file: prefer_const_constructors, use_super_parameters
 
 import 'package:flutter/material.dart';
-import 'package:frontend_matching/pages/my_information/my_information_page.dart';
+import 'package:frontend_matching/pages/profile/myPage.dart';
 import 'package:get/get.dart';
-
 import '../components/my_bottom_navigationbar.dart';
 import '../controllers/bottomNavigationBar.dart';
 import 'chatting_list/chatting_list_page.dart';
@@ -18,7 +17,7 @@ class InitPage extends StatelessWidget {
     MainPage(),
     FriendPage(),
     ChattingListPage(),
-    MyInformationPage(),
+    MyPage(),
   ];
 
   @override

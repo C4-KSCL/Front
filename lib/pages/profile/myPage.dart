@@ -1,9 +1,13 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
+import 'package:frontend_matching/components/gap.dart';
 import 'package:frontend_matching/pages/matching/mainPage.dart';
 import 'package:frontend_matching/pages/profile/buttons/columnButton.dart';
 import 'package:frontend_matching/pages/profile/buttons/rowButton.dart';
 import 'package:frontend_matching/pages/profile/topLayer.dart';
 import 'package:frontend_matching/pages/profile/userAvatar.dart';
+import 'package:frontend_matching/theme/colors.dart';
 
 class MyPage extends StatelessWidget {
   const MyPage({super.key});
@@ -13,15 +17,15 @@ class MyPage extends StatelessWidget {
     final double medWidth = MediaQuery.of(context).size.width;
     final double medHeight = MediaQuery.of(context).size.height;
     final double statusBarHeight = MediaQuery.of(context).padding.top;
-    final mainPage = MainPage();
 
     return Scaffold(
-        backgroundColor: const Color(0xFFFCFCFF),
+        backgroundColor: blueColor3,
         body: SingleChildScrollView(
             child: Stack(children: [
-          const Image(image: AssetImage('assets/logo/login_image.png')),
+          //const Image(image: AssetImage('assets/images/brand.png')),
+
           Positioned(
-              top: medHeight / 3.5,
+              top: medHeight / 4.1,
               child: Container(
                   height: medHeight,
                   decoration: const BoxDecoration(
@@ -55,7 +59,7 @@ class MyPage extends StatelessWidget {
                   height: medHeight / 10,
                 ),
                 UserAvatar(
-                  img: MainPage.profileImagePath,
+                  img: 'assets/images/profile3.jpg',
                   medWidth: medWidth,
                 ),
                 const SizedBox(
@@ -101,20 +105,22 @@ class MyPage extends StatelessWidget {
                               medHeight: medHeight,
                               medWidth: medWidth,
                               pressed: () {},
-                              img: 'assets/logos/dropbox-fill.png',
-                              str: '맡긴 내역'),
+                              img: 'assets/icons/selected_friend.png',
+                              str: 'INFP'),
+                          SizedBox(width: 25),
                           RowButton(
                               medHeight: medHeight,
                               medWidth: medWidth,
                               pressed: () {},
-                              img: 'assets/map/truck-fill.png',
-                              str: '옮긴 내역'),
+                              img: 'assets/icons/selected_friend.png',
+                              str: '집순이'),
+                          SizedBox(width: 25),
                           RowButton(
                               medHeight: medHeight,
                               medWidth: medWidth,
                               pressed: () {},
-                              img: 'assets/health/heart-fill.png',
-                              str: '관심 내역')
+                              img: 'assets/icons/selected_friend.png',
+                              str: '우동추')
                         ],
                       ),
                       Padding(
@@ -126,19 +132,19 @@ class MyPage extends StatelessWidget {
                       ),
                       ColumnButton(
                           pressed: () {},
-                          img: 'assets/communication/chat-quote-fill.png',
+                          img: 'assets/icons/selected_friend.png',
                           str: '내가 쓴 댓글'),
                       ColumnButton(
                           pressed: () {},
-                          img: 'assets/communication/chat-quote-fill.png',
+                          img: 'assets/icons/selected_friend.png',
                           str: '내가 쓴 댓글'),
                       ColumnButton(
                           pressed: () {},
-                          img: 'assets/communication/chat-quote-fill.png',
+                          img: 'assets/icons/selected_friend.png',
                           str: '내가 쓴 댓글'),
                       ColumnButton(
                           pressed: () {},
-                          img: 'assets/communication/chat-quote-fill.png',
+                          img: 'assets/icons/selected_friend.png',
                           str: '내가 쓴 댓글'),
                     ],
                   ),
