@@ -10,6 +10,7 @@ import 'package:frontend_matching/pages/signup/friendInfo.dart';
 import 'package:frontend_matching/pages/signup/imageUpload/profileImagePage.dart';
 import 'package:frontend_matching/pages/signup/imageUpload/selectImagePage.dart';
 import 'package:frontend_matching/pages/signup/schoolAuth.dart';
+import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/bindings_interface.dart';
@@ -26,21 +27,4 @@ void main() {
       }),
     ),
   );
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const LoginPage(),
-    );
-  }
 }

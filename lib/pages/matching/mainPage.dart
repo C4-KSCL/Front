@@ -80,7 +80,8 @@ class _MainPageState extends State<MainPage> {
                     padding: const EdgeInsets.symmetric(
                         vertical: 8.0, horizontal: 8.0),
                     child: TextFormField(
-                      controller: sendingController, // 컨트롤러 설정
+                      controller: sendingController,
+                      // 컨트롤러 설정
                       maxLength: 50,
                       decoration: InputDecoration(
                         filled: true,
@@ -128,7 +129,8 @@ class _MainPageState extends State<MainPage> {
                   onTap: () {
                     // 마이 페이지로 이동
                   },
-                  child: Container(
+                  child:
+                  Container(
                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 25),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
@@ -142,13 +144,14 @@ class _MainPageState extends State<MainPage> {
                     ),
                     child: Row(
                       children: [
-                        ClipOval(
-                          child: Image.network(
-                            profileImagePath,
-                            width: 40, // 이미지 너비 조절
-                            height: 40, // 이미지 높이 조절
+                        if (UserDataController.to.user.value != null)
+                          ClipOval(
+                            child: Image.network(
+                              profileImagePath,
+                              width: 40, // 이미지 너비 조절
+                              height: 40, // 이미지 높이 조절
+                            ),
                           ),
-                        ),
                         const SizedBox(width: 8), // 간격 조절
 
                         Text(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:frontend_matching/services/time_convert_service.dart';
 import 'package:get/get.dart';
 
 import '../../theme/textStyle.dart';
@@ -36,7 +37,7 @@ ListTile ChatListTile({
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Text(
-          timestamp,
+          convertKoreaTime(utcTimeString: timestamp),
           style: greyTextStyle4,
         ),
         Container(
@@ -50,7 +51,7 @@ ListTile ChatListTile({
       ],
     ),
     onTap: () {
-      Get.to(ChatRoomPage(roomId: roomId,));
+      Get.to(ChatRoomPage(roomId: roomId, oppUserName: nickname,));
     },
   );
 }

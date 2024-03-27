@@ -1,13 +1,13 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/pages/chat_room/chat_room_page.dart';
 import 'package:frontend_matching/services/chat_service.dart';
 import 'package:frontend_matching/services/friend_service.dart';
 import 'package:get/get.dart';
 
+import '../../theme/colors.dart';
 import '../../theme/textStyle.dart';
-
-
-
 
 ListTile FriendListTile({
   required String nickname,
@@ -26,17 +26,27 @@ ListTile FriendListTile({
           children: [
             Text(
               nickname,
-              style: blackTextStyle1,
+              style: blueTextStyle3,
             ),
-            Text(
-              myMBTI,
-              style: blueTextStyle1,
-            ),
-            Text(
-              age,
-              style: blackTextStyle1,
+            SizedBox(width: 10,),
+            Container(
+              width: 40,
+              height: 20,
+              decoration: BoxDecoration(
+                color: blueColor1,
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Center(
+                  child: Text(
+                    '$age세',
+                    style: whiteTextStyle2,
+                  )),
             ),
           ],
+        ),
+        Text(
+          myMBTI,
+          style: blackTextStyle1,
         ),
         Text(
           myKeyword,
@@ -46,7 +56,7 @@ ListTile FriendListTile({
     ),
     trailing: TextButton(
       onPressed: () {
-        Get.to(ChatRoomPage(roomId: roomId));
+        Get.to(ChatRoomPage(roomId: roomId, oppUserName: nickname,));
       },
       child: Text("채팅방 입장 or 메모 기능"),
     ),
@@ -66,7 +76,7 @@ ListTile ReceivedRequest({
   required String roomId,
 }) {
   return ListTile(
-    leading: Image.asset('assets/images/profile1.jpg', fit: BoxFit.fill),
+    leading: Image.network(userImage, fit: BoxFit.fill),
     title: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -132,7 +142,7 @@ ListTile SendedRequest({
   required String roomId,
 })  {
   return ListTile(
-    leading: Image.asset('assets/images/profile1.jpg', fit: BoxFit.fill),
+    leading: Image.network(userImage, fit: BoxFit.fill),
     title: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

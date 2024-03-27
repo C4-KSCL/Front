@@ -57,6 +57,7 @@ class FriendService {
     print(response.body);
     if (response.statusCode == 200) {
       var sendedRequests = jsonDecode(response.body);
+      FriendController.to.receivedRequests.clear();
 
       if (sendedRequests['requests'] != null) {
         for (var sendedRequest in sendedRequests['requests']) {
@@ -187,7 +188,6 @@ class FriendService {
         String myKeyword = friendData['friend']['myKeyword'];
         String age = friendData['friend']['age'];
         String userImage = friendData['friend']['userImage'];
-
 
         Friend friend = Friend(myMBTI: myMBTI, myKeyword: myKeyword, nickname: nickname, userImage: userImage, age: age, roomId: roomId);
 

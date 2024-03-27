@@ -79,7 +79,7 @@ class FriendPage extends StatelessWidget {
                           child: TextButton(
                               onPressed: () {
                                 FriendController.to.pageNumber.value = 0;
-                                _carouselController.animateToPage(
+                                _carouselController.jumpToPage(
                                     FriendController.to.pageNumber.value);
                               },
                               child: Text(
@@ -100,7 +100,7 @@ class FriendPage extends StatelessWidget {
                         child: TextButton(
                           onPressed: () {
                             FriendController.to.pageNumber.value = 1;
-                            _carouselController.animateToPage(
+                            _carouselController.jumpToPage(
                                 FriendController.to.pageNumber.value);
                           },
                           child: Text(
@@ -121,7 +121,7 @@ class FriendPage extends StatelessWidget {
                         child: TextButton(
                             onPressed: () {
                               FriendController.to.pageNumber.value = 2;
-                              _carouselController.animateToPage(
+                              _carouselController.jumpToPage(
                                   FriendController.to.pageNumber.value);
                             },
                             child: Text(
