@@ -24,7 +24,7 @@ class SelectImagePageState extends State<SelectImagePage> {
   }
 
   Future<void> uploadImages(List<XFile?>? pickedFiles) async {
-    final url = Uri.parse('http://15.164.245.62:8000/signup/images');
+    final url = Uri.parse('http://15.164.245.62:8000/signup/image');
     SignupController signupController = Get.find<SignupController>();
     String userEmail = signupController.signupArray.isNotEmpty
         ? signupController.signupArray[0]
@@ -121,7 +121,7 @@ class SelectImagePageState extends State<SelectImagePage> {
                         child: IconButton(
                           padding: EdgeInsets.zero,
                           constraints: BoxConstraints(),
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.close,
                             color: Colors.white,
                             size: 15,

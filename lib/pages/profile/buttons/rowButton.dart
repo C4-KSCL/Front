@@ -20,7 +20,7 @@ class RowButton extends StatelessWidget {
         onPressed: pressed,
         child: Container(
           height: medHeight / 9,
-          width: medWidth / 3.6,
+          width: medWidth / 5.5,
           decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),

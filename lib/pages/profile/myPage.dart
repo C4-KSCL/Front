@@ -1,9 +1,13 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
+import 'package:frontend_matching/components/gap.dart';
 import 'package:frontend_matching/pages/matching/mainPage.dart';
 import 'package:frontend_matching/pages/profile/buttons/columnButton.dart';
 import 'package:frontend_matching/pages/profile/buttons/rowButton.dart';
 import 'package:frontend_matching/pages/profile/topLayer.dart';
 import 'package:frontend_matching/pages/profile/userAvatar.dart';
+import 'package:frontend_matching/theme/colors.dart';
 
 class MyPage extends StatelessWidget {
   const MyPage({super.key});
@@ -15,12 +19,13 @@ class MyPage extends StatelessWidget {
     final double statusBarHeight = MediaQuery.of(context).padding.top;
 
     return Scaffold(
-        backgroundColor: const Color(0xFFFCFCFF),
+        backgroundColor: blueColor3,
         body: SingleChildScrollView(
             child: Stack(children: [
-          const Image(image: AssetImage('assets/images/logo1.png')),
+          //const Image(image: AssetImage('assets/images/brand.png')),
+
           Positioned(
-              top: medHeight / 3.5,
+              top: medHeight / 4.1,
               child: Container(
                   height: medHeight,
                   decoration: const BoxDecoration(
@@ -54,7 +59,7 @@ class MyPage extends StatelessWidget {
                   height: medHeight / 10,
                 ),
                 UserAvatar(
-                  img: 'assets/images/logo1.png', //MainPage.profileImagePath,
+                  img: 'assets/images/profile3.jpg',
                   medWidth: medWidth,
                 ),
                 const SizedBox(
@@ -101,19 +106,21 @@ class MyPage extends StatelessWidget {
                               medWidth: medWidth,
                               pressed: () {},
                               img: 'assets/icons/selected_friend.png',
-                              str: '맡긴 내역'),
+                              str: 'INFP'),
+                          SizedBox(width: 25),
                           RowButton(
                               medHeight: medHeight,
                               medWidth: medWidth,
                               pressed: () {},
                               img: 'assets/icons/selected_friend.png',
-                              str: '옮긴 내역'),
+                              str: '집순이'),
+                          SizedBox(width: 25),
                           RowButton(
                               medHeight: medHeight,
                               medWidth: medWidth,
                               pressed: () {},
                               img: 'assets/icons/selected_friend.png',
-                              str: '관심 내역')
+                              str: '우동추')
                         ],
                       ),
                       Padding(

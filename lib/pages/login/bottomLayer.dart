@@ -31,6 +31,12 @@ class _BottomLayerLoginScreenState extends State<BottomLayerLoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30),
+          )),
       padding: const EdgeInsets.all(20),
       child: Form(
         key: formkey,
@@ -38,7 +44,7 @@ class _BottomLayerLoginScreenState extends State<BottomLayerLoginScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              '로그인하기',
+              '로그인',
               style: TextStyle(fontSize: 28, fontWeight: FontWeight.w800),
             ),
             TextformVerify(
@@ -46,9 +52,7 @@ class _BottomLayerLoginScreenState extends State<BottomLayerLoginScreen> {
               textType: '이메일',
             ),
             GetTextContainer(
-                typeController: pwController,
-                textLogo: 'assets/images/logo1.png',
-                textType: '비밀번호'),
+                typeController: pwController, textLogo: '', textType: '비밀번호'),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -91,11 +95,7 @@ class _BottomLayerLoginScreenState extends State<BottomLayerLoginScreen> {
                     String password = pwController.text;
                     print("login check");
 
-                    // 데이터 전달
                     UserServices.loginUser(email, password);
-
-                    // MyPage 클래스로 이동
-                    // Get.to(() => MainPage());
                   },
                   child: const Text(
                     '로그인하기',
