@@ -42,6 +42,7 @@ dependencies:
   group_button:
   flutter_slidable:
   intl:
+  firebase_core:
 
 dev_dependencies:
   flutter_test:

@@ -29,6 +29,8 @@ class ChatService {
 
     final response = await http.get(url, headers: headers);
 
+    List<ChatList> chatLists=[];
+
     print(response.statusCode);
     print(response.body);
     if (response.statusCode == 200) {
@@ -60,9 +62,10 @@ class ChatService {
             userImage: userImage,
           );
 
-          ChattingListController.to.chattingList.add(chatList);
+          chatLists.add(chatList);
         }
       }
+      ChattingListController.to.chattingList.assignAll(chatLists);
     }
   }
 

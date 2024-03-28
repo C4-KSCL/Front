@@ -50,6 +50,14 @@ const whiteTextStyle2 = TextStyle(
   fontFamily: 'NotoSansKR_Medium_w500',
 );
 
+//퀴즈 페이지에 쓰이는 흰색 글자
+const whiteTextStyle3 = TextStyle(
+  fontSize: 20,
+  color: whiteColor1,
+  fontFamily: 'NotoSansKR_Bold_w700',
+);
+
+
 //파란색, 16px, 두꺼운 글자
 const blueTextStyle1 = TextStyle(
   fontSize: 16,
@@ -99,6 +107,13 @@ const blackTextStyle5 = TextStyle(
   fontSize: 12,
   color: blackColor2,
   fontFamily: 'NotoSansKR_Medium_w500',
+);
+
+//퀴즈페이지에 쓰이는 글자
+const blackTextStyle6 = TextStyle(
+  fontSize: 20,
+  color: blackColor2,
+  fontFamily: 'NotoSansKR_Bold_w700',
 );
 
 //파란색 글자

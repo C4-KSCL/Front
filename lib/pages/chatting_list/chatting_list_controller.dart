@@ -5,6 +5,5 @@ import 'package:get/get.dart';
 class ChattingListController extends GetxController{
   static ChattingListController get to=>Get.find<ChattingListController>();
 
-  RxList<ChatList> chattingList=RxList<ChatList>();
-
+  RxList<ChatList> chattingList=<ChatList>[].obs;
 }

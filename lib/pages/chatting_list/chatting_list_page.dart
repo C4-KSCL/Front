@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
@@ -18,7 +20,7 @@ class ChattingListPage extends StatelessWidget {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ChattingListController.to.chattingList.clear();
-      ChatService.getLastChatList(); //마지막 채팅 내역 가져오기
+      ChatService.getLastChatList(); // 마지막 채팅 내역 가져오기
     });
 
     return Scaffold(
@@ -52,9 +54,7 @@ class ChattingListPage extends StatelessWidget {
                     foregroundColor: Colors.white,
                     icon: Icons.output,
                     label: '나가기',
-                    onPressed: (BuildContext context) {
-
-                    },
+                    onPressed: (BuildContext context) {},
                   ),
                 ],
               ),
