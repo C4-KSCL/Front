@@ -38,10 +38,11 @@ class UserServices {
 
       userDataController.accessToken = loginUserData['accessToken'];
       userDataController.refreshToken = loginUserData['refreshToken'];
-      print('@@@@@@@@@sucess@@@@@@@@@@');
+      print('login success');
       print(loginUserData['accessToken']);
+      print(loginUserData['refreshToken']);
     } else {
-      print('@@@@@@@@@fail@@@@@@@@@@');
+      print('login fail');
     }
   }
 }

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
 import 'package:frontend_matching/pages/matching/imageSlide.dart';
+import 'package:frontend_matching/pages/profile/myPage.dart';
 import 'package:get/get.dart';
 
 class MainPage extends StatefulWidget {
@@ -67,6 +68,7 @@ class _MainPageState extends State<MainPage> {
               if (controller.images[i].imagePath != null) {
                 String imagePath = controller.images[i].imagePath;
                 validImagePaths.add(imagePath);
+                print(imagePath);
               }
             }
           }
@@ -81,7 +83,6 @@ class _MainPageState extends State<MainPage> {
                         vertical: 8.0, horizontal: 8.0),
                     child: TextFormField(
                       controller: sendingController,
-                      // 컨트롤러 설정
                       maxLength: 50,
                       decoration: InputDecoration(
                         filled: true,
@@ -90,12 +91,13 @@ class _MainPageState extends State<MainPage> {
                         hintText: '여기에 입력하세요',
                         prefixIcon: IconButton(
                           icon: const Icon(Icons.emoji_emotions_rounded),
-                          onPressed: () {},
+                          onPressed: () {
+                            //친구추가
+                          },
                         ),
                         suffixIcon: IconButton(
                           icon: Icon(Icons.send),
                           onPressed: () {
-                            // TextField에서 입력한 값을 변수에 저장
                             _inputValue = sendingController.text;
                             print('Input value: $_inputValue');
                           },
@@ -127,10 +129,12 @@ class _MainPageState extends State<MainPage> {
                 left: MediaQuery.of(context).size.width / 1000.0,
                 child: InkWell(
                   onTap: () {
-                    // 마이 페이지로 이동
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const MyPage()));
                   },
-                  child:
-                  Container(
+                  child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 25),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(

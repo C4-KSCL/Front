@@ -42,6 +42,7 @@ dependencies:
   group_button:
   flutter_slidable:
   intl:
+  flutter_svg:
 
 dev_dependencies:
   flutter_test:
@@ -70,6 +71,7 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - assets/icons/profile_modify.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -20,15 +20,13 @@ class _UserAvatarState extends State<UserAvatar> {
           opacity: 0.4,
           child: CircleAvatar(
             radius: widget.medWidth / 5.2,
-            backgroundImage: AssetImage(widget.img),
-            // 배경 이미지로 설정하여 원형 유지
+            backgroundImage: NetworkImage(widget.img),
           ),
         ),
         CircleAvatar(
           radius: widget.medWidth / 5.5,
-          backgroundImage: AssetImage(widget.img),
-          // 배경 이미지로 설정하여 원형 유지
-        )
+          backgroundImage: NetworkImage(widget.img),
+        ),
       ],
     );
   }
