@@ -1,9 +1,11 @@
-// ignore_for_file: prefer_const_constructors, non_constant_identifier_names, avoid_unnecessary_containers, avoid_print, prefer_interpolation_to_compose_strings
+// ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:frontend_matching/components/gap.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
-import 'package:frontend_matching/pages/profile/buttons/InfoModifyButton.dart';
+import 'package:frontend_matching/pages/matching/mainPage.dart';
 import 'package:frontend_matching/pages/profile/buttons/columnButton.dart';
+import 'package:frontend_matching/pages/profile/buttons/rowButton.dart';
 import 'package:frontend_matching/pages/profile/topLayer.dart';
 import 'package:frontend_matching/pages/profile/userAvatar.dart';
 import 'package:frontend_matching/theme/colors.dart';
@@ -23,7 +25,6 @@ class MyPage extends StatelessWidget {
     String my_gender = '';
     String my_mbti = '';
     String my_profileImagePath = '';
-    String my_character = '';
 
     return Scaffold(
         backgroundColor: Colors.white,
@@ -91,8 +92,8 @@ class MyPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
-                        my_nickname,
+                      const Text(
+                        '닉네임',
                         style: TextStyle(
                             fontSize: 29, fontWeight: FontWeight.w600),
                       ),
@@ -102,18 +103,16 @@ class MyPage extends StatelessWidget {
                       OutlinedButton(
                           style: OutlinedButton.styleFrom(
                               side: const BorderSide(
-                                  color: Colors.black26, width: 1),
+                                  color: Colors.blue, width: 1),
                               backgroundColor: Colors.white,
                               shape: const RoundedRectangleBorder(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(12)))),
                           onPressed: () {},
-                          child: Text(
-                            my_gender,
+                          child: const Text(
+                            '정보수정',
                             style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: blueColor3),
+                                fontSize: 16, fontWeight: FontWeight.w600),
                           ))
                     ],
                   ),
@@ -125,52 +124,26 @@ class MyPage extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 8.0),
-                              child: Text(
-                                //MBTI
-                                my_mbti,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.blue,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(right: 8.0),
-                              child: Text(
-                                //이메일
-                                my_email,
-                                style: TextStyle(
-                                    fontSize: 14.0, color: Colors.grey),
-                              ),
-                            ),
-                            Text(
-                              //나이
-                              my_age + '살',
-                              style:
-                                  TextStyle(fontSize: 14.0, color: Colors.grey),
-                            )
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            InfoModifyButton(
+                            RowButton(
                                 medHeight: medHeight,
                                 medWidth: medWidth,
                                 pressed: () {},
-                                img: 'assets/icons/profile_modify.svg',
-                                str: '내 정보 수정하기'),
-                            InfoModifyButton(
+                                img: 'assets/icons/selected_friend.png',
+                                str: my_mbti),
+                            SizedBox(width: 25),
+                            RowButton(
                                 medHeight: medHeight,
                                 medWidth: medWidth,
                                 pressed: () {},
-                                img: 'assets/icons/image_modify.png',
-                                str: '내 사진 수정하기'),
-                            // 내 사진 수정하기 버튼
+                                img: 'assets/icons/selected_friend.png',
+                                str: my_age),
+                            SizedBox(width: 25),
+                            RowButton(
+                                medHeight: medHeight,
+                                medWidth: medWidth,
+                                pressed: () {},
+                                img: 'assets/icons/selected_friend.png',
+                                str: my_gender)
                           ],
                         ),
                         Padding(
@@ -182,16 +155,20 @@ class MyPage extends StatelessWidget {
                         ),
                         ColumnButton(
                             pressed: () {},
-                            img: 'assets/icons/setting_button.png',
-                            str: '환경설정'),
+                            img: 'assets/icons/selected_friend.png',
+                            str: '내가 쓴 댓글'),
                         ColumnButton(
                             pressed: () {},
-                            img: 'assets/icons/customer_center.png',
-                            str: '고객센터'),
+                            img: 'assets/icons/selected_friend.png',
+                            str: '내가 쓴 댓글'),
                         ColumnButton(
                             pressed: () {},
-                            img: 'assets/icons/delete_member.png',
-                            str: '탈퇴하기'),
+                            img: 'assets/icons/selected_friend.png',
+                            str: '내가 쓴 댓글'),
+                        ColumnButton(
+                            pressed: () {},
+                            img: 'assets/icons/selected_friend.png',
+                            str: '내가 쓴 댓글'),
                       ],
                     ),
                   )
