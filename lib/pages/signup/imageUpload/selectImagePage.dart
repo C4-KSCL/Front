@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_matching/controllers/userDataController.dart';
 import 'package:frontend_matching/pages/signup/schoolAuth.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -10,6 +11,7 @@ class SelectImagePage extends StatefulWidget {
   State<SelectImagePage> createState() => SelectImagePageState();
 }
 
+UserDataController userDataController = Get.find<UserDataController>();
 final picker = ImagePicker();
 XFile? image; // 카메라로 촬영한 이미지를 저장할 변수
 List<XFile?> multiImage = []; // 갤러리에서 여러장의 사진을 선택해서 저장할 변수
@@ -42,6 +44,7 @@ class SelectImagePageState extends State<SelectImagePage> {
       var response = await request.send();
       if (response.statusCode == 200) {
         print('Images uploaded successfully!');
+        userDataController.logout();
       } else {
         print('Failed to upload images: ${response.statusCode}');
       }

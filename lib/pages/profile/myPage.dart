@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
 import 'package:frontend_matching/pages/profile/buttons/InfoModifyButton.dart';
 import 'package:frontend_matching/pages/profile/buttons/columnButton.dart';
+import 'package:frontend_matching/pages/profile/imageModify.dart';
+import 'package:frontend_matching/pages/profile/infoModify.dart';
 import 'package:frontend_matching/pages/profile/topLayer.dart';
 import 'package:frontend_matching/pages/profile/userAvatar.dart';
 import 'package:frontend_matching/theme/colors.dart';
@@ -18,23 +20,28 @@ class MyPage extends StatelessWidget {
     final double medHeight = MediaQuery.of(context).size.height;
     final double statusBarHeight = MediaQuery.of(context).padding.top;
     String my_email = '';
+    String my_password = '';
     String my_nickname = '';
     String my_age = '';
     String my_gender = '';
     String my_mbti = '';
     String my_profileImagePath = '';
-    String my_character = '';
+    String my_keyword = '';
+    String accesstoken = '';
 
     return Scaffold(
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
             child: GetBuilder<UserDataController>(builder: (controller) {
           if (controller.user.value != null) {
+            accesstoken = controller.accessToken;
             my_email = controller.user.value!.email;
+            my_password = controller.user.value!.password;
             my_nickname = controller.user.value!.nickname;
             my_age = controller.user.value!.age;
             my_gender = controller.user.value!.gender;
             my_mbti = controller.user.value!.myMBTI!;
+            my_keyword = controller.user.value!.myKeyword!;
             if (my_gender == '0') {
               my_gender = '남';
             } else {
@@ -45,7 +52,6 @@ class MyPage extends StatelessWidget {
           }
 
           return Stack(children: [
-            //const Image(image: AssetImage('assets/images/')),
             Positioned(
                 top: medHeight / 4.1,
                 child: Container(
@@ -83,6 +89,10 @@ class MyPage extends StatelessWidget {
                   UserAvatar(
                     img: my_profileImagePath,
                     medWidth: medWidth,
+                    accessToken: accesstoken,
+                    deletePath: my_profileImagePath,
+                    email: my_email,
+                    password: my_password,
                   ),
                   const SizedBox(
                     height: 10,
@@ -158,19 +168,50 @@ class MyPage extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: Text(
+                                //keyword
+                                my_keyword,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.amber,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
                             InfoModifyButton(
                                 medHeight: medHeight,
                                 medWidth: medWidth,
-                                pressed: () {},
+                                pressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => InfoModifyPage(),
+                                    ),
+                                  );
+                                },
                                 img: 'assets/icons/profile_modify.svg',
                                 str: '내 정보 수정하기'),
                             InfoModifyButton(
                                 medHeight: medHeight,
                                 medWidth: medWidth,
-                                pressed: () {},
+                                pressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ImageModifyPage(),
+                                    ),
+                                  );
+                                },
                                 img: 'assets/icons/image_modify.png',
                                 str: '내 사진 수정하기'),
-                            // 내 사진 수정하기 버튼
                           ],
                         ),
                         Padding(

@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/controllers/bottomNavigationBar.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
+import 'package:frontend_matching/controllers/userProfileController.dart';
 import 'package:frontend_matching/pages/init_page.dart';
 import 'package:frontend_matching/pages/login/loginPage.dart';
 import 'package:frontend_matching/pages/matching/mainPage.dart';
@@ -24,6 +25,7 @@ void main() {
         Get.put(SignupController());
         Get.put(UserDataController());
         Get.put(BottomNavigationBarController());
+        Get.put(UserProfileController());
       }),
     ),
   );
