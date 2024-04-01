@@ -23,7 +23,7 @@ class TopLayer extends StatelessWidget {
           Padding(
             padding: EdgeInsets.fromLTRB(medWidth / 20, 0, 0, 0),
             child: Text(
-              '마이페이지',
+              'MyPage',
               style: TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.w700,

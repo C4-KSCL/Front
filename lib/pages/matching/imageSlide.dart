@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 class ImageSlider extends StatelessWidget {
   final List<String> imageArray;
 
-  // 생성자 추가
   const ImageSlider({required this.imageArray});
 
   @override
