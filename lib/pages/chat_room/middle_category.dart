@@ -2,6 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/pages/chat_room/socket_controller.dart';
+import 'package:frontend_matching/theme/colors.dart';
+import 'package:frontend_matching/theme/textStyle.dart';
+import 'package:get/get.dart';
 
 Widget middleCategory() {
   // 두 번째 GridView.builder를 구성하는 코드
@@ -12,12 +15,27 @@ Widget middleCategory() {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
-              onPressed: () {
-                SocketController.to.showSecondGridView.value = false;
-              },
-              icon: Icon(Icons.keyboard_arrow_left)),
-          Text("밸런스 게임"),
-          Text(""),
+            onPressed: () {
+              SocketController.to.showSecondGridView.value = false;
+              SocketController.to.clickQuizButtonIndex.value = -1;
+            },
+            icon: const Icon(Icons.keyboard_arrow_left),
+          ),
+          const Expanded(
+            child: Text(
+              "연애",
+              style: blackTextStyle2,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          const Opacity(
+            // 투명한 IconButton을 추가하여 균형을 맞춤
+            opacity: 0.0, // 완전 투명
+            child: IconButton(
+              onPressed: null, // 아무 동작도 하지 않음
+              icon: Icon(Icons.close), // 실제 아이콘과 동일한 아이콘 사용
+            ),
+          ),
         ],
       ),
       Expanded(
@@ -29,21 +47,104 @@ Widget middleCategory() {
             ),
             itemCount: 9, // 예시를 위해 아이템 개수를 9개로 설정
             itemBuilder: (context, index) {
-              return Container(
-                child: TextButton(
-                  onPressed: () {},
-                  child: Column(
-                    children: [
-                      Image.asset(
-                        'assets/images/logo2.png',
-                        width: 80,
-                        height: 80,
-                      ),
-                      Text("깻잎")
-                    ],
-                  ), // 이미지 경로는 실제 프로젝트에 맞게 조정하세요.
-                ),
-              );
+              return Obx(() => Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Stack(
+                      children: [
+                        SizedBox(
+                          width: 150,
+                          height: 150,
+                          child: TextButton(
+                            style: TextButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                // 모양 설정
+                                borderRadius:
+                                    BorderRadius.circular(10), // 둥근 모서리의 반지름
+                              ),
+                              minimumSize: Size(Get.width * 0.3, 30),
+                            ),
+                            onPressed: () {
+                              SocketController.to.clickQuizButton(index);
+                            },
+                            child: Text(
+                              "quiz name",
+                              style: blackTextStyle2,
+                            ),
+                          ),
+                        ),
+                        if (SocketController.to.clickQuizButtonIndex.value ==
+                            index)
+                          SizedBox(
+                            width: 200,
+                            height: 200,
+                            child: TextButton(
+                              style: TextButton.styleFrom(
+                                backgroundColor: Colors.white.withOpacity(0.5),
+                                shape: RoundedRectangleBorder(
+                                  // 모양 설정
+                                  borderRadius:
+                                      BorderRadius.circular(10), // 둥근 모서리의 반지름
+                                ),
+                                minimumSize: Size(Get.width * 0.3, 30),
+                              ),
+                              onPressed: () {
+                                //event message 전송
+                              },
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                // 하단 정렬
+                                children: [
+                                  Spacer(), // 상단에 공간을 추가하여 텍스트를 밀어내림
+                                  Text(
+                                    "전송",
+                                    style: blueTextStyle1,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ));
+
+              // SocketController.to.clickQuizButtonIndex.value == index
+              //     ? Padding(
+              //         padding: const EdgeInsets.all(15),
+              //         child: TextButton(
+              //           style: TextButton.styleFrom(
+              //             backgroundColor: Colors.white,
+              //             shape: RoundedRectangleBorder(
+              //               // 모양 설정
+              //               borderRadius:
+              //                   BorderRadius.circular(10), // 둥근 모서리의 반지름
+              //             ),
+              //             minimumSize: Size(Get.width * 0.3, 30),
+              //           ),
+              //           onPressed: () {
+              //             //event message 전송
+              //           },
+              //           child: Text("전송"),
+              //         ),
+              //       )
+              //     : Padding(
+              //       padding: const EdgeInsets.all(15),
+              //       child: TextButton(
+              //           style: TextButton.styleFrom(
+              //             backgroundColor: Colors.white,
+              //             shape: RoundedRectangleBorder(
+              //               // 모양 설정
+              //               borderRadius:
+              //                   BorderRadius.circular(10), // 둥근 모서리의 반지름
+              //             ),
+              //             minimumSize: Size(Get.width * 0.3, 30),
+              //           ),
+              //           onPressed: () {
+              //             SocketController.to.clickQuizButton(index);
+              //           },
+              //           child: Text("quiz name"),
+              //         ),
+              //     ));
             }),
       ),
     ],
