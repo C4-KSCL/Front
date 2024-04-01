@@ -102,7 +102,6 @@ class ChatRoomPage extends GetView<SocketController> {
             ),
           ),
           SendQuizChatBox(),
-          ReceiveQuizChatBox(),
           Container(
             color: whiteColor1,
             child: Row(

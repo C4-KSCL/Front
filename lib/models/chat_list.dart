@@ -1,10 +1,10 @@
 class ChatList {
   final String roomId;
-  final String nickname;
-  final String createdAt;
-  final String content;
-  final int notReadCounts;
-  final String userImage;
+  String nickname;
+  String createdAt;
+  String content;
+  int notReadCounts;
+  String userImage;
 
   ChatList({
     required this.roomId,

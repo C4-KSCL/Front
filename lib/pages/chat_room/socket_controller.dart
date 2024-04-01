@@ -16,6 +16,7 @@ class SocketController extends GetxController {
 
   var clickAddButton = false.obs; // +버튼 누름여부
   var showSecondGridView = false.obs; // 두번째 카테고리 여부
+  var clickQuizButtonIndex = (-1).obs; // Quiz 버튼 누름 여부
 
   //소켓 연결
   void init() {
@@ -147,5 +148,9 @@ class SocketController extends GetxController {
     _socket!.disconnect();
     chats.clear();
     super.onClose();
+  }
+
+  void clickQuizButton(int index){
+    clickQuizButtonIndex.value=index;
   }
 }

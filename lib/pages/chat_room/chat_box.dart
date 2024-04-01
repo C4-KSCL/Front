@@ -63,10 +63,11 @@ Widget SendQuizChatBox(){
     ),
     child: Column(
       children: [
+        Text("",style: blackTextStyle1,),
         SizedBox(
           width: Get.width * 0.4,
           height: Get.width * 0.4,
-          child: Image.asset("assets/images/logo2.png"),
+          child: Image.asset("assets/images/똥맛카레.png"),
         ),
         TextButton(
           style: TextButton.styleFrom(
@@ -79,11 +80,12 @@ Widget SendQuizChatBox(){
           onPressed: () {
             Get.bottomSheet(
               //quizId 를 통해서 api로 정보 받아오고 나면 QuizPage 열기
-              QuizPage(voidCallback: Get.back, imageUrl: 'https://matchingimage.s3.ap-northeast-2.amazonaws.com/defalut_user.png', content: '이뻐?'),
+              QuizPage(voidCallback: Get.back, imageUrl: 'assets/images/똥맛카레.png', content: '이뻐?'),
               backgroundColor: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),
+              isScrollControlled: true,
             );
           },
           child: Text("확인하기",style: blackTextStyle5,),
