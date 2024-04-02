@@ -7,6 +7,7 @@ import 'package:frontend_matching/pages/chat_room/button_layer.dart';
 import 'package:frontend_matching/pages/chat_room/middle_category.dart';
 import 'package:frontend_matching/pages/chat_room/quiz_page.dart';
 import 'package:frontend_matching/pages/chat_room/socket_controller.dart';
+import 'package:frontend_matching/services/chat_service.dart';
 import 'package:frontend_matching/theme/textStyle.dart';
 import 'package:get/get.dart';
 
@@ -111,9 +112,12 @@ class ChatRoomPage extends GetView<SocketController> {
                     children: [
                       IconButton(
                         onPressed: () {
-                          controller.clickAddButton.value
-                              ? controller.clickAddButton.value = false
-                              : controller.clickAddButton.value = true;
+                          ChatService.getBigCategories();
+                          controller.isChatEnabled.value
+                              ? null
+                              : controller.clickAddButton.value
+                                  ? controller.clickAddButton.value = false
+                                  : controller.clickAddButton.value = true;
                           //키보드가 열릴 때는 닫기
                           FocusScope.of(context).unfocus();
                         },
@@ -140,8 +144,11 @@ class ChatRoomPage extends GetView<SocketController> {
                       ),
                       IconButton(
                           onPressed: () {
-                            SocketController.to.sendMessage(
-                                roomId: roomId, content: chatController.text);
+                            controller.isChatEnabled.value
+                                ? null
+                                : SocketController.to.sendMessage(
+                                    roomId: roomId,
+                                    content: chatController.text);
                           },
                           icon: Image.asset(
                               "assets/icons/send_message_button.png")),

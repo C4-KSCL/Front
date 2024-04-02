@@ -4,6 +4,7 @@ class Friend {
   final String nickname;
   final String userImage;
   final String age;
+  final String gender;
   final String roomId;
 
   Friend({
@@ -12,6 +13,7 @@ class Friend {
     required this.nickname,
     required this.userImage,
     required this.age,
+    required this.gender,
     required this.roomId,
   });
 
@@ -22,6 +24,7 @@ class Friend {
       nickname: json['nickname'] as String,
       userImage: json['userImage'] as String,
       age: json['age'] as String,
+      gender: json['gender'] as String,
       roomId: json['roomId'] as String,
     );
   }
@@ -33,6 +36,7 @@ class Friend {
       'nickname': nickname,
       'userImage': userImage,
       'age': age,
+      'gender':gender,
       'roomId': roomId,
     };
   }

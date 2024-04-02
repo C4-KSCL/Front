@@ -3,32 +3,30 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:frontend_matching/services/time_convert_service.dart';
 import 'package:get/get.dart';
 
+import '../../models/chat_list.dart';
 import '../../theme/textStyle.dart';
 import '../chat_room/chat_room_page.dart';
 
 ListTile ChatListTile({
-  required String nickname,
-  required String content,
-  required String timestamp,
-  required int notReadCounts,
-  required String roomId,
-  required String userImage,
+  required ChatList chatListData,
 }) {
   return ListTile(
+
     leading: CircleAvatar(
       backgroundImage: NetworkImage(
-        userImage
+          chatListData.userImage
       ),
     ),
     title: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Text(
-          nickname,
+          chatListData.nickname,
           style: blackTextStyle1,
         ),
         Text(
-          content,
+          chatListData.content,
           style: greyTextStyle3,
         ),
       ],
@@ -37,7 +35,7 @@ ListTile ChatListTile({
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Text(
-          convertKoreaTime(utcTimeString: timestamp),
+          convertKoreaTime(utcTimeString: chatListData.createdAt),
           style: greyTextStyle4,
         ),
         Container(
@@ -45,13 +43,13 @@ ListTile ChatListTile({
               color: Colors.red, borderRadius: BorderRadius.circular(7)),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
-            child: Text(notReadCounts.toString()),
+            child: Text(chatListData.notReadCounts.toString(),style: whiteTextStyle2,),
           ),
         ),
       ],
     ),
     onTap: () {
-      Get.to(ChatRoomPage(roomId: roomId, oppUserName: nickname,));
+      Get.to(ChatRoomPage(roomId: chatListData.roomId, oppUserName: chatListData.nickname,));
     },
   );
 }

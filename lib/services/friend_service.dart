@@ -67,6 +67,7 @@ class FriendService {
           String nickname = sendedRequest['request']['nickname'];
           String userImage = sendedRequest['request']['userImage'];
           String age = sendedRequest['request']['age'];
+          String gender = sendedRequest['request']['gender'];
           String createdAt = sendedRequest['room']['createdAt'];
           String chatContent = sendedRequest['room']['chatting'][0]['content'];
           String roomId = sendedRequest['roomId'];
@@ -78,6 +79,7 @@ class FriendService {
             nickname: nickname,
             userImage: userImage,
             age: age,
+            gender: gender,
             createdAt: createdAt,
             chatContent: chatContent,
             roomId: roomId,
@@ -107,6 +109,7 @@ class FriendService {
           String nickname = sendedRequest['receive']['nickname'];
           String userImage = sendedRequest['receive']['userImage'];
           String age = sendedRequest['receive']['age'];
+          String gender = sendedRequest['receive']['gender'];
           String createdAt = sendedRequest['room']['createdAt'];
           String chatContent = sendedRequest['room']['chatting'][0]['content'];
           String roomId = sendedRequest['roomId'];
@@ -118,6 +121,7 @@ class FriendService {
             nickname: nickname,
             userImage: userImage,
             age: age,
+            gender: gender,
             createdAt: createdAt,
             chatContent: chatContent,
             roomId: roomId,
@@ -131,7 +135,7 @@ class FriendService {
 
   //받은 친구 요청 수락
   //받은 친구 요청 확인을 할때 requestId를 저장해놓고 가져와야함
-  static void acceptFriendRequest({
+  static Future<void> acceptFriendRequest({
     required String requestId,
   }) async {
     final url = Uri.parse('$baseUrl/$requests/accept');
@@ -145,7 +149,7 @@ class FriendService {
   }
 
   //받은 친구 요청 거절
-  static void rejectFriendRequest({
+  static Future<void> rejectFriendRequest({
     required String requestId,
   }) async {
     final url = Uri.parse('$baseUrl/$requests/reject');
@@ -159,7 +163,7 @@ class FriendService {
   }
 
   //보낸 친구 요청 삭제
-  static void deleteFriendRequest({
+  static Future<void> deleteFriendRequest({
     required String requestId,
   }) async {
     final url = Uri.parse('$baseUrl/$requests/$delete/$requestId');
@@ -171,7 +175,7 @@ class FriendService {
   }
 
   //친구 리스트 가져오기
-  static void getFriendList() async {
+  static Future<void> getFriendList() async {
     final url = Uri.parse('$baseUrl/$friends/get-list');
 
     final response = await http.get(url, headers: headers);
@@ -187,9 +191,18 @@ class FriendService {
         String nickname = friendData['friend']['nickname'];
         String myKeyword = friendData['friend']['myKeyword'];
         String age = friendData['friend']['age'];
+        String gender = friendData['friend']['gender'];
         String userImage = friendData['friend']['userImage'];
 
-        Friend friend = Friend(myMBTI: myMBTI, myKeyword: myKeyword, nickname: nickname, userImage: userImage, age: age, roomId: roomId);
+        Friend friend = Friend(
+          myMBTI: myMBTI,
+          myKeyword: myKeyword,
+          nickname: nickname,
+          userImage: userImage,
+          age: age,
+          gender: gender,
+          roomId: roomId,
+        );
 
         FriendController.to.friends.add(friend);
       }
@@ -197,7 +210,7 @@ class FriendService {
   }
 
   //친구 삭제
-  static void deleteFriend({
+  static Future<void> deleteFriend({
     required String oppEmail,
   }) async {
     final url = Uri.parse('$baseUrl/$friends/$delete/$oppEmail');

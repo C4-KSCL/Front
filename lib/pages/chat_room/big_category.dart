@@ -42,8 +42,9 @@ Widget bigCategory() {
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
           ),
-          itemCount: 9, // 예시를 위해 아이템 개수를 9개로 설정
+          itemCount: SocketController.to.bigCategories.length, // 예시를 위해 아이템 개수를 9개로 설정
           itemBuilder: (context, index) {
+            var bigCategory=SocketController.to.bigCategories[index];
             return Padding(
               padding: const EdgeInsets.all(10.0),
               child: SizedBox(
@@ -67,7 +68,7 @@ Widget bigCategory() {
                       Image.asset("assets/icons/heart.png"),
                       SizedBox(height: 10,),
                       Text(
-                        "연애",
+                        bigCategory,
                         style: blackTextStyle2,
                       ),
                       Spacer(),

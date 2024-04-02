@@ -17,7 +17,11 @@ class SocketController extends GetxController {
   var clickAddButton = false.obs; // +버튼 누름여부
   var showSecondGridView = false.obs; // 두번째 카테고리 여부
   var clickQuizButtonIndex = (-1).obs; // Quiz 버튼 누름 여부
-  var isFriend = false.obs; //친구 여부
+  var isFriend = true.obs; //친구 여부
+  var isChatEnabled = true.obs; //채팅 가능 여부
+
+  List<String> bigCategories=[];
+
 
   //소켓 연결
   void init() {
@@ -91,6 +95,11 @@ class SocketController extends GetxController {
       readCounts.insert(0, data['msg']['readCount']);
     });
 
+    // 'new event' 이벤트 listen
+    socket.on("new event", (_) {
+      print("밸런스 게임 성공적으로 전송");
+    });
+
     // 'delete message' 이벤트 listen
     socket.on("delete message", (data) {
       print(data);
@@ -101,6 +110,8 @@ class SocketController extends GetxController {
     socket.on("disconnect", (_) {
       print("소켓 연결 끊김");
     });
+
+
   }
 
   //소켓 연결 끊기
@@ -142,6 +153,18 @@ class SocketController extends GetxController {
       "chatId": chatId,
     };
     socket.emit("delete message", data);
+  }
+
+  // 새로운 이벤트(밸런스 게임)보내기
+  void newEvent({
+    required String smallCategoryId,
+  }) {
+    final socket = _socket!;
+
+    final data = {
+      "smallCategory": smallCategoryId,
+    };
+    socket.emit("new event", data);
   }
 
   @override

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:frontend_matching/models/chat_list.dart';
+import 'package:frontend_matching/pages/chat_room/socket_controller.dart';
 import 'package:frontend_matching/pages/chatting_list/chatting_list_controller.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -24,12 +25,12 @@ class ChatService {
   };
 
   //유저의 마지막 채팅들 가져오기 - 채팅방 리스트 구현
-  static void getLastChatList() async {
+  static Future<void> getLastChatList() async {
     final url = Uri.parse('$baseUrl/$chats/get-last-chats');
 
     final response = await http.get(url, headers: headers);
 
-    List<ChatList> chatLists=[];
+    List<ChatList> chatLists = [];
 
     print(response.statusCode);
     print(response.body);
@@ -71,7 +72,7 @@ class ChatService {
 
   // 그 방 채팅내용 가져오기
   // 채팅 내역 반환
-  static dynamic getRoomChats({required String roomId}) async {
+  static Future<dynamic> getRoomChats({required String roomId}) async {
     final url = Uri.parse('$baseUrl/$chats/get-chats/$roomId?page=1&limit=20');
 
     final response = await http.get(url, headers: headers);
@@ -86,7 +87,7 @@ class ChatService {
   }
 
   //채팅 방 삭제하기
-  static void deleteRoom({
+  static Future<void> deleteRoom({
     required String roomId,
   }) async {
     final url = Uri.parse('$baseUrl/$rooms/leave/$roomId');
@@ -98,12 +99,58 @@ class ChatService {
   }
 
   //속한 채팅 방들 리스트 가져오기
-  static void getRoomList() async {
-    final url = Uri.parse('$baseUrl/rooms/get-list/');
+  static Future<void> getRoomList() async {
+    final url = Uri.parse('$baseUrl/$rooms/get-list/');
 
     final response = await http.delete(url, headers: headers);
 
     print(response.statusCode);
     print(response.body);
   }
+
+  // bigCategory 가져오기
+  static Future<void> getBigCategories() async {
+    final url = Uri.parse('$baseUrl/$chats/get-big/');
+
+    final response = await http.get(url, headers: headers);
+
+    print(response.body);
+
+    final jsonData = json.decode(response.body);
+    final bigCategories = jsonData['categories'];
+
+    for (String bigCategory in bigCategories) {
+      SocketController.to.bigCategories.add(bigCategory);
+    }
+  }
+
+  // smallCategory 가져오기
+  static Future<void> getSmallCategories({required String bigCategoryName,}) async {
+    final url = Uri.parse('$baseUrl/$events/get-small/$bigCategoryName');
+
+    final response = await http.get(url, headers: headers);
+
+    print(response.body);
+  }
+
+  // 퀴즈 정보 불러오기
+  static Future<void> getQuizInfo({required String quizId,}) async {
+    final url = Uri.parse('$baseUrl/$events/get-event-page/$quizId');
+
+    final response = await http.get(url, headers: headers);
+
+    print(response.body);
+  }
+
+  // 퀴즈 답변 하기
+  static Future<void> updateQuizInfo({required String quizId,required String quizAnswer,}) async {
+    final url = Uri.parse('$baseUrl/$events/update-event-answer/$quizId');
+
+    String data ='{"content":"$quizAnswer"}';
+
+    final response = await http.patch(url, headers: headers,body: data);
+
+    print(response.body);
+  }
+
 }

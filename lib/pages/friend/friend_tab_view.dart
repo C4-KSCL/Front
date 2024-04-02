@@ -7,14 +7,9 @@ Widget FriendTabView() {
   return Obx(() => ListView.separated(
         itemCount: FriendController.to.friends.length,
         itemBuilder: (context, index) {
-          var FriendData = FriendController.to.friends[index];
+          var friendData = FriendController.to.friends[index];
           return FriendListTile(
-            nickname: FriendData.nickname,
-            userImage: FriendData.userImage,
-            myMBTI: FriendData.myMBTI,
-            age: FriendData.age,
-            myKeyword: FriendData.myKeyword,
-            roomId: FriendData.roomId,
+            friendData: friendData,
           );
         },
         separatorBuilder: (context, index) {

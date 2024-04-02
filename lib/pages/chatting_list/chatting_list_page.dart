@@ -28,11 +28,11 @@ class ChattingListPage extends StatelessWidget {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("채팅리스트"),
+            const Text("채팅 리스트"),
             Row(
               children: [
-                IconButton(onPressed: () {}, icon: Icon(Icons.search)),
-                IconButton(onPressed: () {}, icon: Icon(Icons.settings)),
+                IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
+                IconButton(onPressed: () {}, icon: const Icon(Icons.settings)),
               ],
             )
           ],
@@ -43,8 +43,8 @@ class ChattingListPage extends StatelessWidget {
           itemCount: ChattingListController.to.chattingList.length,
           itemBuilder: (context, index) {
             var chatListData = ChattingListController.to.chattingList[index];
-
             return Slidable(
+              key: ValueKey(chatListData.roomId) ,
               endActionPane: ActionPane(
                 extentRatio: 0.3,
                 motion: const DrawerMotion(),
@@ -59,12 +59,7 @@ class ChattingListPage extends StatelessWidget {
                 ],
               ),
               child: ChatListTile(
-                nickname: chatListData.nickname,
-                content: chatListData.content,
-                timestamp: chatListData.createdAt,
-                notReadCounts: chatListData.notReadCounts,
-                roomId: chatListData.roomId,
-                userImage: chatListData.userImage,
+                chatListData: chatListData,
               ),
             );
           },
