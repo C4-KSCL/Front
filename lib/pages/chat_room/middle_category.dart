@@ -58,7 +58,6 @@ Widget middleCategory() {
                             style: TextButton.styleFrom(
                               backgroundColor: Colors.white,
                               shape: RoundedRectangleBorder(
-                                // 모양 설정
                                 borderRadius:
                                     BorderRadius.circular(10), // 둥근 모서리의 반지름
                               ),
