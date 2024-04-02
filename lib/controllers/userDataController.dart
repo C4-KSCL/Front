@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import '../pages/init_page.dart';
 import '../models/user.dart';
 import '../models/userImage.dart';
-import '../pages/profile/myPage.dart';
 
 class UserDataController extends GetxController {
   static UserDataController get to => Get.find<UserDataController>();
@@ -25,10 +24,14 @@ class UserDataController extends GetxController {
     ever(user, _moveToPage); //user에 변화가 생기면 함수 실행
   }
 
+  //유저를 새로 반환받음
+  void updateUserInfo(User newUser) {
+    user.value = newUser;
+  }
+
   //User 정보에 따른 페이지 이동
   void _moveToPage(User? user) {
     if (user == null) {
-      // Get.offAll(() => InitPage());
       Get.offAll(() => LoginPage());
     } else {
       Get.offAll(() => InitPage());

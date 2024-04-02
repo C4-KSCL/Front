@@ -1,6 +1,8 @@
 // ignore_for_file: unnecessary_import, unused_import
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/controllers/bottomNavigationBar.dart';
+import 'package:frontend_matching/controllers/infoModifyController.dart';
+import 'package:frontend_matching/controllers/signupController.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
 import 'package:frontend_matching/controllers/userProfileController.dart';
 import 'package:frontend_matching/pages/init_page.dart';
@@ -26,6 +28,7 @@ void main() {
         Get.put(UserDataController());
         Get.put(BottomNavigationBarController());
         Get.put(UserProfileController());
+        Get.put(InfoModifyController());
       }),
     ),
   );
