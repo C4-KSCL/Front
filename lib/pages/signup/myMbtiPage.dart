@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/components/mbtiKeyword.dart';
+import 'package:frontend_matching/controllers/signupController.dart';
 import 'package:frontend_matching/pages/signup/myKeywordPage.dart';
 import 'package:frontend_matching/pages/signup/schoolAuth.dart';
 import 'package:get/get.dart';

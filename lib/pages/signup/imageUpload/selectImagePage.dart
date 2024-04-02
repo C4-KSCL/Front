@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_matching/controllers/signupController.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
 import 'package:frontend_matching/pages/signup/schoolAuth.dart';
 import 'dart:io';
