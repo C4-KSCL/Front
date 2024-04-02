@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
 import 'package:frontend_matching/pages/chat_room/big_category.dart';
+import 'package:frontend_matching/pages/chat_room/button_layer.dart';
 import 'package:frontend_matching/pages/chat_room/middle_category.dart';
 import 'package:frontend_matching/pages/chat_room/quiz_page.dart';
 import 'package:frontend_matching/pages/chat_room/socket_controller.dart';
@@ -101,50 +102,56 @@ class ChatRoomPage extends GetView<SocketController> {
               ),
             ),
           ),
-          SendQuizChatBox(),
-          Container(
-            color: whiteColor1,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    controller.clickAddButton.value
-                        ? controller.clickAddButton.value = false
-                        : controller.clickAddButton.value = true;
-                    //키보드가 열릴 때는 닫기
-                    FocusScope.of(context).unfocus();
-                  },
-                  icon: Obx(
-                    () => controller.clickAddButton.value
-                        ? const Icon(
-                            Icons.keyboard_arrow_down,
-                            color: blueColor1,
-                            size: 25,
-                          )
-                        : const Icon(
-                            Icons.add,
-                            color: blueColor1,
-                            size: 25,
-                          ),
+          SendQuizChatBox(), //나중에 삭제
+          SocketController.to.isFriend.value
+              ? Container(
+                  color: whiteColor1,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          controller.clickAddButton.value
+                              ? controller.clickAddButton.value = false
+                              : controller.clickAddButton.value = true;
+                          //키보드가 열릴 때는 닫기
+                          FocusScope.of(context).unfocus();
+                        },
+                        icon: Obx(
+                          () => controller.clickAddButton.value
+                              ? const Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: blueColor1,
+                                  size: 25,
+                                )
+                              : const Icon(
+                                  Icons.add,
+                                  color: blueColor1,
+                                  size: 25,
+                                ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: Get.width - 100,
+                        child: TextField(
+                          // focusNode: myFocusNode,
+                          controller: chatController,
+                        ),
+                      ),
+                      IconButton(
+                          onPressed: () {
+                            SocketController.to.sendMessage(
+                                roomId: roomId, content: chatController.text);
+                          },
+                          icon: Image.asset(
+                              "assets/icons/send_message_button.png")),
+                    ],
                   ),
+                )
+              : Align(
+                  alignment: Alignment.center,
+                  child: ButtonLayer(),
                 ),
-                SizedBox(
-                  width: Get.width - 100,
-                  child: TextField(
-                    // focusNode: myFocusNode,
-                    controller: chatController,
-                  ),
-                ),
-                IconButton(
-                    onPressed: () {
-                      SocketController.to.sendMessage(
-                          roomId: roomId, content: chatController.text);
-                    },
-                    icon: Image.asset("assets/icons/send_message_button.png")),
-              ],
-            ),
-          ),
           Obx(() => SocketController.to.clickAddButton.value
               ? SizedBox(
                   height: 250,
