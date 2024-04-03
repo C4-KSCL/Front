@@ -23,7 +23,7 @@ ListTile FriendListTile({
           children: [
             Text(
               friendData.nickname,
-              style: blueTextStyle3,
+              style: friendData.gender=="남" ? blueTextStyle3 : pinkTextStyle1,
             ),
             SizedBox(width: 10,),
             Container(
@@ -35,7 +35,7 @@ ListTile FriendListTile({
               ),
               child: Center(
                   child: Text(
-                    '$friendData.age세',
+                    '${friendData.age}세',
                     style: whiteTextStyle2,
                   )),
             ),
@@ -73,7 +73,7 @@ ListTile ReceivedRequest({
           children: [
             Text(
               receivedRequestData.nickname,
-              style: blackTextStyle1,
+              style: receivedRequestData.gender=="남" ? blueTextStyle3 : pinkTextStyle1,
             ),
             Text(
               receivedRequestData.myMBTI,
@@ -132,7 +132,7 @@ ListTile SendedRequest({
           children: [
             Text(
               sendedRequestData.nickname,
-              style: blackTextStyle1,
+              style: sendedRequestData.gender=="남" ? blueTextStyle3 : pinkTextStyle1,
             ),
             Text(
               sendedRequestData.myMBTI,
