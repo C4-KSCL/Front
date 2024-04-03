@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:frontend_matching/models/big_category.dart';
 import 'package:frontend_matching/models/chat_list.dart';
+import 'package:frontend_matching/models/small_category.dart';
 import 'package:frontend_matching/pages/chat_room/socket_controller.dart';
 import 'package:frontend_matching/pages/chatting_list/chatting_list_controller.dart';
 import 'package:get/get.dart';
@@ -110,31 +112,39 @@ class ChatService {
 
   // bigCategory 가져오기
   static Future<void> getBigCategories() async {
-    final url = Uri.parse('$baseUrl/$chats/get-big/');
+    final url = Uri.parse('$baseUrl/$events/get-big/');
+
+    final response = await http.get(url, headers: headers);
+
+    print(response.statusCode);
+    print(response.body);
+
+    final jsonData = json.decode(response.body);
+    SocketController.to.bigCategories = jsonData['categories']
+        .map((data) => BigCategory.fromJson(data))
+        .toList();
+  }
+
+  // smallCategory 가져오기
+  static Future<void> getSmallCategories({
+    required String bigCategoryName,
+  }) async {
+    final url = Uri.parse('$baseUrl/$events/get-small/$bigCategoryName');
 
     final response = await http.get(url, headers: headers);
 
     print(response.body);
 
     final jsonData = json.decode(response.body);
-    final bigCategories = jsonData['categories'];
-
-    for (String bigCategory in bigCategories) {
-      SocketController.to.bigCategories.add(bigCategory);
-    }
-  }
-
-  // smallCategory 가져오기
-  static Future<void> getSmallCategories({required String bigCategoryName,}) async {
-    final url = Uri.parse('$baseUrl/$events/get-small/$bigCategoryName');
-
-    final response = await http.get(url, headers: headers);
-
-    print(response.body);
+    SocketController.to.smallCategories = jsonData['categories']
+        .map((data) => SmallCategory.fromJson(data))
+        .toList();
   }
 
   // 퀴즈 정보 불러오기
-  static Future<void> getQuizInfo({required String quizId,}) async {
+  static Future<void> getQuizInfo({
+    required String quizId,
+  }) async {
     final url = Uri.parse('$baseUrl/$events/get-event-page/$quizId');
 
     final response = await http.get(url, headers: headers);
@@ -143,14 +153,16 @@ class ChatService {
   }
 
   // 퀴즈 답변 하기
-  static Future<void> updateQuizInfo({required String quizId,required String quizAnswer,}) async {
+  static Future<void> updateQuizInfo({
+    required String quizId,
+    required String quizAnswer,
+  }) async {
     final url = Uri.parse('$baseUrl/$events/update-event-answer/$quizId');
 
-    String data ='{"content":"$quizAnswer"}';
+    String data = '{"content":"$quizAnswer"}';
 
-    final response = await http.patch(url, headers: headers,body: data);
+    final response = await http.patch(url, headers: headers, body: data);
 
     print(response.body);
   }
-
 }

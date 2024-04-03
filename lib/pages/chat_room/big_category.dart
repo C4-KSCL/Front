@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_matching/models/big_category.dart';
 import 'package:frontend_matching/pages/chat_room/socket_controller.dart';
+import 'package:frontend_matching/services/chat_service.dart';
 import 'package:frontend_matching/theme/textStyle.dart';
 import 'package:get/get.dart';
 
@@ -36,47 +38,65 @@ Widget bigCategory() {
         ],
       ),
       Expanded(
-        child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-          ),
-          itemCount: SocketController.to.bigCategories.length, // 예시를 위해 아이템 개수를 9개로 설정
-          itemBuilder: (context, index) {
-            var bigCategory=SocketController.to.bigCategories[index];
-            return Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: SizedBox(
-                width: 150,
-                height: 150,
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      // 모양 설정
-                      borderRadius: BorderRadius.circular(10), // 둥근 모서리의 반지름
-                    ),
-                    minimumSize: Size(Get.width * 0.3, 30),
-                  ),
-                  onPressed: () {
-                    SocketController.to.showSecondGridView.value = true;
-                  },
-                  child: Column(
-                    children: [
-                      Spacer(),
-                      Image.asset("assets/icons/heart.png"),
-                      SizedBox(height: 10,),
-                      Text(
-                        bigCategory,
-                        style: blackTextStyle2,
-                      ),
-                      Spacer(),
-                    ],
-                  ),
+        child: FutureBuilder(
+          future: ChatService.getBigCategories(),
+          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // 데이터를 기다리는 동안 로딩 인디케이터를 보여줌
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              // 에러 발생 시
+              return Text("Error: ${snapshot.error}");
+            } else {
+              return GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
                 ),
-              ),
-            );
+                itemCount: SocketController.to.bigCategories.length,
+                itemBuilder: (context, index) {
+                  BigCategory bigCategory =
+                      SocketController.to.bigCategories[index];
+                  return Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: SizedBox(
+                      width: 150,
+                      height: 150,
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            // 모양 설정
+                            borderRadius:
+                                BorderRadius.circular(10), // 둥근 모서리의 반지름
+                          ),
+                          minimumSize: Size(Get.width * 0.3, 30),
+                        ),
+                        onPressed: () {
+                          SocketController.to.bigCategoryName=bigCategory.name;
+                          SocketController.to.showSecondGridView.value = true;
+                        },
+                        child: Column(
+                          children: [
+                            Spacer(),
+                            Image.asset("assets/icons/heart.png"),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              bigCategory.name,
+                              style: blackTextStyle2,
+                            ),
+                            Spacer(),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
+            }
           },
         ),
       ),

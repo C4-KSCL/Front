@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
 import 'package:frontend_matching/pages/chat_room/big_category.dart';
 import 'package:frontend_matching/pages/chat_room/button_layer.dart';
-import 'package:frontend_matching/pages/chat_room/middle_category.dart';
+import 'package:frontend_matching/pages/chat_room/small_category.dart';
 import 'package:frontend_matching/pages/chat_room/quiz_page.dart';
 import 'package:frontend_matching/pages/chat_room/socket_controller.dart';
 import 'package:frontend_matching/services/chat_service.dart';
@@ -114,10 +114,12 @@ class ChatRoomPage extends GetView<SocketController> {
                         onPressed: () {
                           ChatService.getBigCategories();
                           controller.isChatEnabled.value
-                              ? null
-                              : controller.clickAddButton.value
-                                  ? controller.clickAddButton.value = false
-                                  : controller.clickAddButton.value = true;
+                              ? {
+                                  controller.clickAddButton.value
+                                      ? controller.clickAddButton.value = false
+                                      : controller.clickAddButton.value = true
+                                }
+                              : null;
                           //키보드가 열릴 때는 닫기
                           FocusScope.of(context).unfocus();
                         },
@@ -145,13 +147,17 @@ class ChatRoomPage extends GetView<SocketController> {
                       IconButton(
                           onPressed: () {
                             controller.isChatEnabled.value
-                                ? null
-                                : SocketController.to.sendMessage(
+                                ? SocketController.to.sendMessage(
                                     roomId: roomId,
-                                    content: chatController.text);
+                                    content: chatController.text)
+                                : null;
                           },
                           icon: Image.asset(
-                              "assets/icons/send_message_button.png")),
+                            "assets/icons/send_message_button.png",
+                            color: controller.isChatEnabled.value
+                                ? blueColor1
+                                : greyColor1,
+                          )),
                     ],
                   ),
                 )
@@ -165,7 +171,7 @@ class ChatRoomPage extends GetView<SocketController> {
                   child: Center(
                       child: Obx(
                     () => SocketController.to.showSecondGridView.value
-                        ? middleCategory()
+                        ? smallCategory()
                         : bigCategory(),
                   )),
                 )

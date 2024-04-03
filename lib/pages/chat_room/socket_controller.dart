@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:frontend_matching/controllers/userDataController.dart';
+import 'package:frontend_matching/models/big_category.dart';
 import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
@@ -20,17 +21,18 @@ class SocketController extends GetxController {
   var isFriend = true.obs; //친구 여부
   var isChatEnabled = true.obs; //채팅 가능 여부
 
-  List<String> bigCategories=[];
+  // 객체 dynamic 말고 Bigcategory 등으로 바꿔보기
+  List<dynamic> bigCategories = [];
+  List<dynamic> smallCategories = [];
 
+  String? bigCategoryName;
 
   //소켓 연결
   void init() {
     _socket ??= IO.io(serverUrl, <String, dynamic>{
       'transports': ['websocket'], //전송 방식을 웹소켓으로 설정
       'autoConnect': false, //수동으로 연결해야함
-      'auth': {
-        'token': UserDataController.to.accessToken
-      },
+      'auth': {'token': UserDataController.to.accessToken},
     });
   }
 
@@ -96,7 +98,8 @@ class SocketController extends GetxController {
     });
 
     // 'new event' 이벤트 listen
-    socket.on("new event", (_) {
+    socket.on("new event", (data) {
+      print(data);
       print("밸런스 게임 성공적으로 전송");
     });
 
@@ -110,8 +113,6 @@ class SocketController extends GetxController {
     socket.on("disconnect", (_) {
       print("소켓 연결 끊김");
     });
-
-
   }
 
   //소켓 연결 끊기
@@ -174,7 +175,7 @@ class SocketController extends GetxController {
     super.onClose();
   }
 
-  void clickQuizButton(int index){
-    clickQuizButtonIndex.value=index;
+  void clickQuizButton(int index) {
+    clickQuizButtonIndex.value = index;
   }
 }
