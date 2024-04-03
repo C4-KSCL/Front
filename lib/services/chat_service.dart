@@ -44,6 +44,8 @@ class ChatService {
           String createdAt = lastChat['createdAt'];
           String content = lastChat['content'];
           int notReadCounts = lastChat['notReadCounts'];
+          bool isChatEnabled = lastChat['room']['publishing']=="true";
+          bool isReceivedRequest = !(lastChat['room']['joinRoom'].isEmpty);
 
           String nickname = "";
           String userImage = "";
@@ -63,6 +65,8 @@ class ChatService {
             content: content,
             notReadCounts: notReadCounts,
             userImage: userImage,
+            isChatEnabled: isChatEnabled,
+            isReceivedRequest: isReceivedRequest,
           );
 
           chatLists.add(chatList);

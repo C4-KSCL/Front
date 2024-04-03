@@ -18,8 +18,8 @@ class SocketController extends GetxController {
   var clickAddButton = false.obs; // +버튼 누름여부
   var showSecondGridView = false.obs; // 두번째 카테고리 여부
   var clickQuizButtonIndex = (-1).obs; // Quiz 버튼 누름 여부
-  var isFriend = true.obs; //친구 여부
-  var isChatEnabled = true.obs; //채팅 가능 여부
+  var isReceivedRequest = true.obs; //받은 요청이면 true, 보낸 요청이면 false
+  var isChatEnabled = true.obs; //채팅 가능 여부(친구가 아니면 채팅X)
 
   // 객체 dynamic 말고 Bigcategory 등으로 바꿔보기
   List<dynamic> bigCategories = [];
@@ -158,12 +158,12 @@ class SocketController extends GetxController {
 
   // 새로운 이벤트(밸런스 게임)보내기
   void newEvent({
-    required String smallCategoryId,
+    required String smallCategoryName,
   }) {
     final socket = _socket!;
 
     final data = {
-      "smallCategory": smallCategoryId,
+      "smallCategory": smallCategoryName,
     };
     socket.emit("new event", data);
   }

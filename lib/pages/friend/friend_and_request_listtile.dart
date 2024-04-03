@@ -53,9 +53,9 @@ ListTile FriendListTile({
     ),
     trailing: TextButton(
       onPressed: () {
-        Get.to(ChatRoomPage(roomId: friendData.roomId, oppUserName: friendData.nickname,));
+        // Get.to(ChatRoomPage(roomId: friendData.roomId, oppUserName: friendData.nickname,));
       },
-      child: Text("채팅방 입장 or 메모 기능"),
+      child: Text("마지막 연락?"),
     ),
     onTap: () {},
   );

@@ -11,6 +11,7 @@ import 'package:get/get.dart';
 Widget smallCategory() {
   // 두 번째 GridView.builder를 구성하는 코드
   // 여기서는 단순화를 위해 동일한 구조를 사용했으나, 필요에 따라 다르게 구성할 수 있습니다.
+
   return Column(
     children: [
       Row(
@@ -23,9 +24,9 @@ Widget smallCategory() {
             },
             icon: const Icon(Icons.keyboard_arrow_left),
           ),
-          const Expanded(
+          Expanded(
             child: Text(
-              "연애",
+              SocketController.to.bigCategoryName!,
               style: blackTextStyle2,
               textAlign: TextAlign.center,
             ),
@@ -108,10 +109,10 @@ Widget smallCategory() {
                                       ),
                                       onPressed: () {
                                         print("전송클릭");
-                                        SocketController.to.newEvent(
-                                            smallCategoryId:
-                                                smallCategory.id.toString());
                                         //event message 전송
+                                        SocketController.to.newEvent(
+                                            smallCategoryName:
+                                                smallCategory.name);
                                       },
                                       child: const Column(
                                         mainAxisAlignment:
@@ -130,44 +131,6 @@ Widget smallCategory() {
                               ],
                             ),
                           ));
-
-                      // SocketController.to.clickQuizButtonIndex.value == index
-                      //     ? Padding(
-                      //         padding: const EdgeInsets.all(15),
-                      //         child: TextButton(
-                      //           style: TextButton.styleFrom(
-                      //             backgroundColor: Colors.white,
-                      //             shape: RoundedRectangleBorder(
-                      //               // 모양 설정
-                      //               borderRadius:
-                      //                   BorderRadius.circular(10), // 둥근 모서리의 반지름
-                      //             ),
-                      //             minimumSize: Size(Get.width * 0.3, 30),
-                      //           ),
-                      //           onPressed: () {
-                      //             //event message 전송
-                      //           },
-                      //           child: Text("전송"),
-                      //         ),
-                      //       )
-                      //     : Padding(
-                      //       padding: const EdgeInsets.all(15),
-                      //       child: TextButton(
-                      //           style: TextButton.styleFrom(
-                      //             backgroundColor: Colors.white,
-                      //             shape: RoundedRectangleBorder(
-                      //               // 모양 설정
-                      //               borderRadius:
-                      //                   BorderRadius.circular(10), // 둥근 모서리의 반지름
-                      //             ),
-                      //             minimumSize: Size(Get.width * 0.3, 30),
-                      //           ),
-                      //           onPressed: () {
-                      //             SocketController.to.clickQuizButton(index);
-                      //           },
-                      //           child: Text("quiz name"),
-                      //         ),
-                      //     ));
                     });
               }
             }),

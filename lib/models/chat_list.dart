@@ -5,6 +5,8 @@ class ChatList {
   String content;
   int notReadCounts;
   String userImage;
+  bool isChatEnabled;
+  bool isReceivedRequest;
 
   ChatList({
     required this.roomId,
@@ -13,27 +15,33 @@ class ChatList {
     required this.content,
     required this.notReadCounts,
     required this.userImage,
+    this.isChatEnabled = false,
+    this.isReceivedRequest = false,
   });
 
   factory ChatList.fromJson(Map<String, dynamic> json) {
     return ChatList(
       roomId: json['roomId'],
-      nickname: json['nickName'], // JSON 예시에 'receive' 대신 'nickName' 사용
+      nickname: json['nickname'], // 키 값을 올바르게 수정
       createdAt: json['createdAt'],
       content: json['content'],
       notReadCounts: json['notReadCounts'],
-      userImage: json['userImage'], // 초기값 설정, 필요시 수정 가능
+      userImage: json['userImage'],
+      isChatEnabled: json['isChatEnabled'] ?? false, // JSON에 없는 경우 기본값 사용
+      isReceivedRequest: json['isReceivedRequest'] ?? false, // JSON에 없는 경우 기본값 사용
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'roomId': roomId,
-      'nickName': nickname,
+      'nickname': nickname,
       'createdAt': createdAt,
       'content': content,
       'notReadCounts': notReadCounts,
       'userImage': userImage,
+      'isChatEnabled': isChatEnabled,
+      'isReceivedRequest': isReceivedRequest,
     };
   }
 }

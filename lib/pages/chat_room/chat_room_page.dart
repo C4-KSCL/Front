@@ -103,9 +103,10 @@ class ChatRoomPage extends GetView<SocketController> {
               ),
             ),
           ),
-          SendQuizChatBox(), //나중에 삭제
-          SocketController.to.isFriend.value
-              ? Container(
+          SocketController.to.isChatEnabled.value
+              ?
+              // 채팅 키보드
+              Container(
                   color: whiteColor1,
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -113,13 +114,10 @@ class ChatRoomPage extends GetView<SocketController> {
                       IconButton(
                         onPressed: () {
                           ChatService.getBigCategories();
-                          controller.isChatEnabled.value
-                              ? {
-                                  controller.clickAddButton.value
-                                      ? controller.clickAddButton.value = false
-                                      : controller.clickAddButton.value = true
-                                }
-                              : null;
+                          controller.clickAddButton.value
+                              ? controller.clickAddButton.value = false
+                              : controller.clickAddButton.value = true;
+
                           //키보드가 열릴 때는 닫기
                           FocusScope.of(context).unfocus();
                         },
@@ -146,24 +144,20 @@ class ChatRoomPage extends GetView<SocketController> {
                       ),
                       IconButton(
                           onPressed: () {
-                            controller.isChatEnabled.value
-                                ? SocketController.to.sendMessage(
-                                    roomId: roomId,
-                                    content: chatController.text)
-                                : null;
+                            SocketController.to.sendMessage(
+                                roomId: roomId, content: chatController.text);
                           },
                           icon: Image.asset(
-                            "assets/icons/send_message_button.png",
-                            color: controller.isChatEnabled.value
-                                ? blueColor1
-                                : greyColor1,
-                          )),
+                              "assets/icons/send_message_button.png",
+                              color: blueColor1)),
                     ],
                   ),
                 )
-              : Align(
+              :
+              //버튼 칸 (수락,거절 / 취소)
+              Align(
                   alignment: Alignment.center,
-                  child: ButtonLayer(),
+                  child: SocketController.to.isReceivedRequest.value ? AcceptOrRejectButtonLayer() : CancelButtonLayer(),
                 ),
           Obx(() => SocketController.to.clickAddButton.value
               ? SizedBox(
