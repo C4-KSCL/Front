@@ -5,7 +5,7 @@ class Friend {
   final String userImage;
   final String age;
   final String gender;
-  final String roomId;
+  final String? roomId;
 
   Friend({
     required this.myMBTI,
@@ -14,7 +14,7 @@ class Friend {
     required this.userImage,
     required this.age,
     required this.gender,
-    required this.roomId,
+     this.roomId,
   });
 
   factory Friend.fromJson(Map<String, dynamic> json) {

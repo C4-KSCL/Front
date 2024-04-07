@@ -84,10 +84,11 @@ class ChatService {
     final response = await http.get(url, headers: headers);
 
     print(response.statusCode);
+    print(response.body);
 
     final jsonData = json.decode(response.body);
     final lastChats = jsonData['chats'];
-    print(lastChats);
+    // print(lastChats);
 
     return lastChats;
   }

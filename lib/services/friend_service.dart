@@ -97,6 +97,37 @@ class FriendService {
 
     final response = await http.get(url, headers: headers);
 
+  // 받는 json 형식
+  // {
+  //   "requests": [
+  //     {
+  //       "id": 6,
+  //       "roomId": "1712388914296",
+  //       "reqUser": "a@naver.com",
+  //       "recUser": "c@naver.com",
+  //       "status": "rejected",
+  //       "createdAt": "2024-04-06T16:53:46.000Z",
+  //       "room": {
+  //         "id": "1712388914296",
+  //         "name": "1712388914296",
+  //         "createdAt": "2024-04-06T16:53:46.000Z",
+  //         "publishing": "deleted",
+  //         "chatting": [
+  //           {"content": "hahaha"}
+  //          ]
+  //        },
+  //       "receive": {
+  //         "myMBTI": "ISTP",
+  //         "myKeyword": "집순이,헬린이",
+  //         "nickname": "c",
+  //         "userImage": "https://matchingimage.s3.ap-northeast-2.amazonaws.com/defalut_user.png",
+  //         "age": "21",
+  //         "gender": "남"
+  //        }
+  //      }
+  //    ]
+  // }
+
     print(response.statusCode);
     print(response.body);
     if (response.statusCode == 200) {
@@ -180,13 +211,35 @@ class FriendService {
 
     final response = await http.get(url, headers: headers);
 
+    // 받는 json 형식
+    // {
+    //     "friends": [
+    //       {
+    //         "id": 1,
+    //         "user1": "a@naver.com",
+    //         "user2": "b@naver.com",
+    //         "createdAt": "2024-04-06T15:53:49.000Z",
+    //         "friend": {
+    //           "myMBTI": "ISFJ",
+    //           "myKeyword": "집순이,헬린이",
+    //           "nickname": "b",
+    //           "userImage": "https://matchingimage.s3.ap-northeast-2.amazonaws.com/profile/1712379300363-%EA%B0%95%EC%95%84%EC%A7%80%20%EC%82%AC%EC%A7%84.jpg",
+    //           "age": "27",
+    //           "gender": "남"
+    //          },
+    //         "room": null
+    //        }
+    //     ]
+    // }
+
     print(response.statusCode);
     print(response.body);
     if (response.statusCode == 200) {
       var friendsData = jsonDecode(response.body);
 
       for (var friendData in friendsData['friends']) {
-        String roomId = friendData['room']['id'];
+        int id=friendData['id'];
+        String? roomId = friendData['room'] ==null ? null : friendData['room']['roomId'];
         String myMBTI = friendData['friend']['myMBTI'];
         String nickname = friendData['friend']['nickname'];
         String myKeyword = friendData['friend']['myKeyword'];
