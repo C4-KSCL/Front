@@ -8,6 +8,7 @@ import 'package:frontend_matching/pages/profile/imageModifyPage.dart';
 import 'package:frontend_matching/pages/profile/infoModifyPage.dart';
 import 'package:frontend_matching/pages/profile/topLayer.dart';
 import 'package:frontend_matching/pages/profile/userAvatar.dart';
+import 'package:frontend_matching/services/matching_service.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 
@@ -222,7 +223,11 @@ class MyPage extends StatelessWidget {
                                   color: Colors.blueGrey, thickness: 0.5)),
                         ),
                         ColumnButton(
-                            pressed: () {},
+                            pressed: () async {
+                              await MatchingService.fetchFriendMatching(
+                                accesstoken,
+                              );
+                            },
                             img: 'assets/icons/setting_button.png',
                             str: '환경설정'),
                         ColumnButton(

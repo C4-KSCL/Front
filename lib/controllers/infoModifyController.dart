@@ -19,16 +19,17 @@ class InfoModifyController extends GetxController {
   ).obs;
 
   Future<void> InfoModify(
-      String accessToken,
-      String refreshToken,
-      String password,
-      String nickname,
-      String phoneNumber,
-      String birthdate,
-      String gender,
-      String myMBTI,
-      String myKeyword,
-      String friendKeyword) async {
+    String accessToken,
+    String refreshToken,
+    String password,
+    String nickname,
+    String phoneNumber,
+    String age,
+    String gender,
+    String myMBTI,
+    String myKeyword,
+    String friendKeyword,
+  ) async {
     final url = Uri.parse('http://15.164.245.62:8000/edit/info');
     final response = await http.post(
       url,
@@ -41,7 +42,7 @@ class InfoModifyController extends GetxController {
         'password': password,
         'nickname': nickname,
         'phoneNumber': phoneNumber,
-        'birthdate': birthdate,
+        'age': age,
         'gender': gender,
         'myMBTI': myMBTI,
         'myKeyword': myKeyword,
@@ -49,9 +50,14 @@ class InfoModifyController extends GetxController {
       }),
     );
 
+    print(response.statusCode);
+    print(response.body);
+
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      userInfo.value = User.fromJson(data);
+      print(data);
+
+      userInfo.value = User.fromJson(data['user']);
       Get.find<UserDataController>().updateUserInfo(userInfo.value);
       print('개인정보 수정 성공');
     } else {
