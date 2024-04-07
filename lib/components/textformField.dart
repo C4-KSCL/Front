@@ -20,7 +20,6 @@ class GetTextContainer extends StatefulWidget {
 
 class _GetTextContainerState extends State<GetTextContainer> {
   @override
-  @override
   Widget build(BuildContext context) {
     String textLogo = widget.textLogo;
     String textType = widget.textType;

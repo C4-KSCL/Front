@@ -1,9 +1,15 @@
 // ignore_for_file: prefer_const_constructors, invalid_use_of_protected_member, unnecessary_null_comparison, prefer_conditional_assignment
 
 import 'package:flutter/material.dart';
+import 'package:frontend_matching/components/gap.dart';
+import 'package:frontend_matching/components/genderButton.dart';
+import 'package:frontend_matching/components/mbtiKeyword.dart';
+import 'package:frontend_matching/components/textField.dart';
+import 'package:frontend_matching/controllers/settingModifyController.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
 import 'package:frontend_matching/pages/matching/imageSlide.dart';
 import 'package:frontend_matching/pages/profile/myPage.dart';
+import 'package:frontend_matching/services/friend_setting.dart';
 import 'package:get/get.dart';
 
 class MainPage extends StatefulWidget {
@@ -15,6 +21,9 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   final TextEditingController sendingController = TextEditingController();
+  final TextEditingController minAgeController = TextEditingController();
+  final TextEditingController maxAgeController = TextEditingController();
+  String accessToken = '';
   String _inputValue = '';
   String email = '';
   String nickname = '';
@@ -28,6 +37,23 @@ class _MainPageState extends State<MainPage> {
   List<String> validImagePaths = [];
   String profileImagePath =
       'https://matchingimage.s3.ap-northeast-2.amazonaws.com/defalut_user.png';
+
+  String selectedMBTI = '';
+  int genderInt = 10;
+  String genderString = '';
+
+  late SettingModifyController settingModifyController;
+  FriendSettingService settingService = FriendSettingService();
+
+  @override
+  void initState() {
+    super.initState();
+    settingModifyController = Get.put(SettingModifyController());
+    final controller = Get.find<UserDataController>();
+    if (controller.user.value != null) {
+      accessToken = controller.accessToken;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,6 +101,11 @@ class _MainPageState extends State<MainPage> {
 
           return Stack(
             children: [
+              // Positioned.fill(
+              //     child: Image.asset(
+              //   'assets/images/soulmatie.png',
+              //   fit: BoxFit.fill,
+              // )),
               Column(
                 children: [
                   ImageSlider(imageArray: validImagePaths),
@@ -119,7 +150,112 @@ class _MainPageState extends State<MainPage> {
                 right: 16.0,
                 child: ElevatedButton(
                   onPressed: () {
-                    // 매칭 설정페이지로 이동
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (BuildContext context) {
+                        return FractionallySizedBox(
+                          heightFactor: 0.85,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.8),
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(30),
+                                topRight: Radius.circular(30),
+                              ),
+                            ),
+                            child: Center(
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Gap(),
+                                    Text(
+                                      '    이상형 설정하기',
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(fontSize: 27),
+                                    ),
+                                    Gap(),
+                                    Row(
+                                      children: [
+                                        SizedBox(width: 50),
+                                        GenderButton(
+                                          onGenderSelected: (selectedValue) {
+                                            genderInt =
+                                                selectedValue; //gender 숫자값 대입
+                                            if (genderInt == 1) {
+                                              genderString = "남";
+                                            } else {
+                                              genderString = "여";
+                                            }
+                                            print(genderString);
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                    Gap(),
+                                    MbtiKeyWord(
+                                      title: 'mbti',
+                                      onMbtiSelected: (String mbti) {
+                                        setState(() {
+                                          selectedMBTI = mbti;
+                                        });
+                                      },
+                                    ),
+                                    Row(
+                                      children: [
+                                        NumberInputField(
+                                          controller: minAgeController,
+                                          hintText: '최소나이',
+                                        ),
+                                        Icon(Icons.remove),
+                                        NumberInputField(
+                                          controller: maxAgeController,
+                                          hintText: '최대나이',
+                                        ),
+                                      ],
+                                    ),
+                                    Gap(),
+                                    Gap(),
+                                    Center(
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Color(0xFF7EA5F3),
+                                          minimumSize: Size(300, 50),
+                                        ),
+                                        child: const Text('변경',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            )),
+                                        onPressed: () async {
+                                          settingModifyController
+                                              .addToSettingArray(selectedMBTI);
+                                          settingModifyController
+                                              .addToSettingArray(
+                                                  maxAgeController.text);
+                                          settingModifyController
+                                              .addToSettingArray(
+                                                  minAgeController.text);
+                                          settingModifyController
+                                              .addToSettingArray(genderString);
+                                          print(settingModifyController);
+
+                                          await settingService
+                                              .updateFriendSetting(
+                                            accessToken,
+                                            selectedMBTI,
+                                            maxAgeController.text,
+                                            minAgeController.text,
+                                            genderString,
+                                          );
+                                        },
+                                      ),
+                                    )
+                                  ]),
+                            ),
+                          ),
+                        );
+                      },
+                    );
                   },
                   child: const Text('매칭 설정'),
                 ),
@@ -152,12 +288,11 @@ class _MainPageState extends State<MainPage> {
                           ClipOval(
                             child: Image.network(
                               profileImagePath,
-                              width: 40, // 이미지 너비 조절
-                              height: 40, // 이미지 높이 조절
+                              width: 40,
+                              height: 40,
                             ),
                           ),
-                        const SizedBox(width: 8), // 간격 조절
-
+                        const SizedBox(width: 8),
                         Text(
                           email,
                           style: TextStyle(color: Colors.white),
@@ -200,7 +335,6 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void dispose() {
-    // 컨트롤러 해제
     sendingController.dispose();
     super.dispose();
   }

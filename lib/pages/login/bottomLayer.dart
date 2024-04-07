@@ -24,7 +24,6 @@ class BottomLayerLoginScreen extends StatefulWidget {
 }
 
 class _BottomLayerLoginScreenState extends State<BottomLayerLoginScreen> {
-  final formkey = GlobalKey<FormState>();
   TextEditingController idController = TextEditingController();
   TextEditingController pwController = TextEditingController();
 
@@ -39,7 +38,6 @@ class _BottomLayerLoginScreenState extends State<BottomLayerLoginScreen> {
           )),
       padding: const EdgeInsets.all(20),
       child: Form(
-        key: formkey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

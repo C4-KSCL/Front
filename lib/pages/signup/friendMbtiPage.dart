@@ -57,7 +57,6 @@ class _FriendMbtiPageState extends State<FriendMbtiPage> {
             SizedBox(
               height: 50,
             ),
-            // MbtiKeyWord 위젯을 호출할 때 onMbtiSelected 함수를 정의합니다.
             MbtiKeyWord(
               title: 'mbti',
               onMbtiSelected: (String mbti) {
@@ -77,7 +76,6 @@ class _FriendMbtiPageState extends State<FriendMbtiPage> {
                     color: Colors.white,
                   )),
               onPressed: () {
-                // 사용할 때 selectedMBTI를 사용합니다.
                 signupController.addToSignupArray(selectedMBTI);
                 print(signupController.signupArray);
 

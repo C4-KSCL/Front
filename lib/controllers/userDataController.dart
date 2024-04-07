@@ -2,6 +2,7 @@ import 'package:frontend_matching/pages/login/loginPage.dart';
 import 'package:frontend_matching/pages/signup/imageUpload/profileImagePage.dart';
 import 'package:frontend_matching/pages/signup/imageUpload/selectImagePage.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../pages/init_page.dart';
 import '../models/user.dart';
@@ -10,6 +11,7 @@ import '../models/userImage.dart';
 class UserDataController extends GetxController {
   static UserDataController get to => Get.find<UserDataController>();
   Rxn<User?> user = Rxn<User?>(null);
+  RxList<XFile?> userImages = <XFile?>[].obs;
   List<dynamic> images = [];
   var accessToken = '';
   var refreshToken = '';
