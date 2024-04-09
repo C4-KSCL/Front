@@ -129,9 +129,9 @@ class FriendInfoPage extends StatelessWidget {
                 onGenderSelected: (selectedValue) {
                   genderInt = selectedValue; //gender 숫자값 대입
                   if (genderInt == 1) {
-                    genderString = "0";
+                    genderString = "남";
                   } else {
-                    genderString = "1";
+                    genderString = "여";
                   }
                   print(genderString);
                 },

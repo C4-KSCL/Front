@@ -5,16 +5,17 @@ import 'package:frontend_matching/components/gap.dart';
 import 'package:frontend_matching/components/genderButton.dart';
 import 'package:frontend_matching/components/mbtiKeyword.dart';
 import 'package:frontend_matching/components/textField.dart';
+import 'package:frontend_matching/controllers/findFriendController.dart';
 import 'package:frontend_matching/controllers/settingModifyController.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
 import 'package:frontend_matching/pages/matching/imageSlide.dart';
+import 'package:frontend_matching/pages/matching/matchingView.dart';
 import 'package:frontend_matching/pages/profile/myPage.dart';
 import 'package:frontend_matching/services/friend_setting.dart';
 import 'package:get/get.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
-
   @override
   _MainPageState createState() => _MainPageState();
 }
@@ -81,7 +82,7 @@ class _MainPageState extends State<MainPage> {
             age = controller.user.value!.age;
             gender = controller.user.value!.gender;
             mbti = controller.user.value!.myMBTI!;
-            if (gender == '0') {
+            if (gender == '남') {
               gender = '남';
             } else {
               gender = '여';
@@ -101,11 +102,6 @@ class _MainPageState extends State<MainPage> {
 
           return Stack(
             children: [
-              // Positioned.fill(
-              //     child: Image.asset(
-              //   'assets/images/soulmatie.png',
-              //   fit: BoxFit.fill,
-              // )),
               Column(
                 children: [
                   ImageSlider(imageArray: validImagePaths),
@@ -122,9 +118,8 @@ class _MainPageState extends State<MainPage> {
                         hintText: '여기에 입력하세요',
                         prefixIcon: IconButton(
                           icon: const Icon(Icons.emoji_emotions_rounded),
-                          onPressed: () {
-                            //친구추가
-                          },
+                          //친구추가
+                          onPressed: () {},
                         ),
                         suffixIcon: IconButton(
                           icon: Icon(Icons.send),
@@ -143,6 +138,18 @@ class _MainPageState extends State<MainPage> {
                       },
                     ),
                   ),
+                  ElevatedButton(
+                    child: Text('매칭하기'),
+                    onPressed: () async {
+                      await FindFriendController.findFriends(accessToken);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MatchingView(),
+                        ),
+                      );
+                    },
+                  )
                 ],
               ),
               Positioned(
@@ -182,7 +189,7 @@ class _MainPageState extends State<MainPage> {
                                           onGenderSelected: (selectedValue) {
                                             genderInt =
                                                 selectedValue; //gender 숫자값 대입
-                                            if (genderInt == 1) {
+                                            if (genderInt == '남') {
                                               genderString = "남";
                                             } else {
                                               genderString = "여";
