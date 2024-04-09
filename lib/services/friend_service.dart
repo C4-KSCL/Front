@@ -67,6 +67,7 @@ class FriendService {
           String nickname = sendedRequest['request']['nickname'];
           String userImage = sendedRequest['request']['userImage'];
           String age = sendedRequest['request']['age'];
+          String gender = sendedRequest['request']['gender'];
           String createdAt = sendedRequest['room']['createdAt'];
           String chatContent = sendedRequest['room']['chatting'][0]['content'];
           String roomId = sendedRequest['roomId'];
@@ -78,6 +79,7 @@ class FriendService {
             nickname: nickname,
             userImage: userImage,
             age: age,
+            gender: gender,
             createdAt: createdAt,
             chatContent: chatContent,
             roomId: roomId,
@@ -95,6 +97,37 @@ class FriendService {
 
     final response = await http.get(url, headers: headers);
 
+  // 받는 json 형식
+  // {
+  //   "requests": [
+  //     {
+  //       "id": 6,
+  //       "roomId": "1712388914296",
+  //       "reqUser": "a@naver.com",
+  //       "recUser": "c@naver.com",
+  //       "status": "rejected",
+  //       "createdAt": "2024-04-06T16:53:46.000Z",
+  //       "room": {
+  //         "id": "1712388914296",
+  //         "name": "1712388914296",
+  //         "createdAt": "2024-04-06T16:53:46.000Z",
+  //         "publishing": "deleted",
+  //         "chatting": [
+  //           {"content": "hahaha"}
+  //          ]
+  //        },
+  //       "receive": {
+  //         "myMBTI": "ISTP",
+  //         "myKeyword": "집순이,헬린이",
+  //         "nickname": "c",
+  //         "userImage": "https://matchingimage.s3.ap-northeast-2.amazonaws.com/defalut_user.png",
+  //         "age": "21",
+  //         "gender": "남"
+  //        }
+  //      }
+  //    ]
+  // }
+
     print(response.statusCode);
     print(response.body);
     if (response.statusCode == 200) {
@@ -107,6 +140,7 @@ class FriendService {
           String nickname = sendedRequest['receive']['nickname'];
           String userImage = sendedRequest['receive']['userImage'];
           String age = sendedRequest['receive']['age'];
+          String gender = sendedRequest['receive']['gender'];
           String createdAt = sendedRequest['room']['createdAt'];
           String chatContent = sendedRequest['room']['chatting'][0]['content'];
           String roomId = sendedRequest['roomId'];
@@ -118,12 +152,13 @@ class FriendService {
             nickname: nickname,
             userImage: userImage,
             age: age,
+            gender: gender,
             createdAt: createdAt,
             chatContent: chatContent,
             roomId: roomId,
           );
 
-          FriendController.to.sendedRequests.add(request);
+          FriendController.to.sentRequests.add(request);
         }
       }
     }
@@ -131,7 +166,7 @@ class FriendService {
 
   //받은 친구 요청 수락
   //받은 친구 요청 확인을 할때 requestId를 저장해놓고 가져와야함
-  static void acceptFriendRequest({
+  static Future<void> acceptFriendRequest({
     required String requestId,
   }) async {
     final url = Uri.parse('$baseUrl/$requests/accept');
@@ -145,7 +180,7 @@ class FriendService {
   }
 
   //받은 친구 요청 거절
-  static void rejectFriendRequest({
+  static Future<void> rejectFriendRequest({
     required String requestId,
   }) async {
     final url = Uri.parse('$baseUrl/$requests/reject');
@@ -159,7 +194,7 @@ class FriendService {
   }
 
   //보낸 친구 요청 삭제
-  static void deleteFriendRequest({
+  static Future<void> deleteFriendRequest({
     required String requestId,
   }) async {
     final url = Uri.parse('$baseUrl/$requests/$delete/$requestId');
@@ -171,10 +206,31 @@ class FriendService {
   }
 
   //친구 리스트 가져오기
-  static void getFriendList() async {
+  static Future<void> getFriendList() async {
     final url = Uri.parse('$baseUrl/$friends/get-list');
 
     final response = await http.get(url, headers: headers);
+
+    // 받는 json 형식
+    // {
+    //     "friends": [
+    //       {
+    //         "id": 1,
+    //         "user1": "a@naver.com",
+    //         "user2": "b@naver.com",
+    //         "createdAt": "2024-04-06T15:53:49.000Z",
+    //         "friend": {
+    //           "myMBTI": "ISFJ",
+    //           "myKeyword": "집순이,헬린이",
+    //           "nickname": "b",
+    //           "userImage": "https://matchingimage.s3.ap-northeast-2.amazonaws.com/profile/1712379300363-%EA%B0%95%EC%95%84%EC%A7%80%20%EC%82%AC%EC%A7%84.jpg",
+    //           "age": "27",
+    //           "gender": "남"
+    //          },
+    //         "room": null
+    //        }
+    //     ]
+    // }
 
     print(response.statusCode);
     print(response.body);
@@ -182,14 +238,24 @@ class FriendService {
       var friendsData = jsonDecode(response.body);
 
       for (var friendData in friendsData['friends']) {
-        String roomId = friendData['room']['id'];
+        int id=friendData['id'];
+        String? roomId = friendData['room'] ==null ? null : friendData['room']['roomId'];
         String myMBTI = friendData['friend']['myMBTI'];
         String nickname = friendData['friend']['nickname'];
         String myKeyword = friendData['friend']['myKeyword'];
         String age = friendData['friend']['age'];
+        String gender = friendData['friend']['gender'];
         String userImage = friendData['friend']['userImage'];
 
-        Friend friend = Friend(myMBTI: myMBTI, myKeyword: myKeyword, nickname: nickname, userImage: userImage, age: age, roomId: roomId);
+        Friend friend = Friend(
+          myMBTI: myMBTI,
+          myKeyword: myKeyword,
+          nickname: nickname,
+          userImage: userImage,
+          age: age,
+          gender: gender,
+          roomId: roomId,
+        );
 
         FriendController.to.friends.add(friend);
       }
@@ -197,7 +263,7 @@ class FriendService {
   }
 
   //친구 삭제
-  static void deleteFriend({
+  static Future<void> deleteFriend({
     required String oppEmail,
   }) async {
     final url = Uri.parse('$baseUrl/$friends/$delete/$oppEmail');

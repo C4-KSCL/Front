@@ -30,7 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.6
+  cupertino_icons:
   get:
   dio:
   image_picker:
@@ -44,6 +44,9 @@ dependencies:
   intl:
   firebase_core:
   flutter_svg:
+  path:
+  path_provider:
+  sqflite:
 
 dev_dependencies:
   flutter_test:
@@ -86,15 +89,14 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: NotoSansKR_Regular_w400
+    - family: NotoSansKR
       fonts:
-        - asset: lib/theme/fonts/NotoSansKR-Regular.ttf
-    - family: NotoSansKR_Medium_w500
-      fonts:
-        - asset: lib/theme/fonts/NotoSansKR-Medium.ttf
-    - family: NotoSansKR_Bold_w700
-      fonts:
-        - asset: lib/theme/fonts/NotoSansKR-Bold.ttf
+        - asset: assets/fonts/NotoSansKR-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/NotoSansKR-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/NotoSansKR-Bold.ttf
+          weight: 700
   
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

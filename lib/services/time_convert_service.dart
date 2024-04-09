@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 String convertKoreaTime({required String utcTimeString}) {
   DateTime utcTime = DateTime.parse(utcTimeString);
@@ -36,4 +37,14 @@ String convertKoreaTime({required String utcTimeString}) {
     // 그 이외에는 년도와 날짜 출력
     return DateFormat('yyyy-MM-dd').format(utcTime);
   }
+}
+
+String convertHourAndMinuteTime({required String utcTimeString}) {
+  // UTC 시간을 DateTime 객체로 파싱
+  DateTime utcTime = DateTime.parse(utcTimeString);
+
+  // DateFormat을 사용하여 "오후 12:33" 형식으로 변환
+  String formattedTime = DateFormat('a hh:mm', 'ko_KR').format(utcTime);
+
+  return formattedTime;
 }

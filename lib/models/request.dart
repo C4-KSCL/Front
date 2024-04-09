@@ -5,6 +5,7 @@ class Request {
   final String nickname;
   final String userImage;
   final String age;
+  final String gender;
   final String createdAt;
   final String chatContent;
   final String roomId;
@@ -16,6 +17,7 @@ class Request {
     required this.nickname,
     required this.userImage,
     required this.age,
+    required this.gender,
     required this.createdAt,
     required this.chatContent,
     required this.roomId,
@@ -29,6 +31,7 @@ class Request {
       nickname: json['nickname'],
       userImage: json['userImage'],
       age: json['age'],
+      gender: json['gender'],
       createdAt: json['createdAt'],
       chatContent: json['chatContent'],
       roomId: json['roomId'],
@@ -43,6 +46,7 @@ class Request {
       'nickname': nickname,
       'userImage': userImage,
       'age': age,
+      'gender':gender,
       'createdAt': createdAt,
       'chatContent': chatContent,
       'roomId': roomId,
