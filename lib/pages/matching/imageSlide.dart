@@ -1,28 +1,26 @@
-// ignore_for_file: sized_box_for_whitespace, prefer_const_constructors
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ImageSlider extends StatelessWidget {
   final List<String> imageArray;
 
-  const ImageSlider({required this.imageArray});
+  const ImageSlider({Key? key, required this.imageArray}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 500,
       child: PageView.builder(
+        key: const PageStorageKey<String>(
+            'imageSlider'), // 고정된 키를 사용하여 슬라이더의 상태를 유지
         scrollDirection: Axis.horizontal,
         itemCount: imageArray.length,
         itemBuilder: (context, index) {
-          print(imageArray[index]);
           return Image.network(
             imageArray[index],
             fit: BoxFit.contain,
             errorBuilder:
                 (BuildContext context, Object error, StackTrace? stackTrace) {
-              print('Image loading error: $error');
               return Center(child: Text('Image loading error'));
             },
           );

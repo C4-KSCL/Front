@@ -2,13 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
+import 'package:frontend_matching/pages/matching/matchingView.dart';
 import 'package:frontend_matching/pages/profile/buttons/InfoModifyButton.dart';
 import 'package:frontend_matching/pages/profile/buttons/columnButton.dart';
 import 'package:frontend_matching/pages/profile/imageModifyPage.dart';
 import 'package:frontend_matching/pages/profile/infoModifyPage.dart';
 import 'package:frontend_matching/pages/profile/topLayer.dart';
 import 'package:frontend_matching/pages/profile/userAvatar.dart';
-import 'package:frontend_matching/services/matching_service.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 
@@ -43,7 +43,7 @@ class MyPage extends StatelessWidget {
             my_gender = controller.user.value!.gender;
             my_mbti = controller.user.value!.myMBTI!;
             my_keyword = controller.user.value!.myKeyword!;
-            if (my_gender == '0') {
+            if (my_gender == '남') {
               my_gender = '남';
             } else {
               my_gender = '여';
@@ -223,11 +223,7 @@ class MyPage extends StatelessWidget {
                                   color: Colors.blueGrey, thickness: 0.5)),
                         ),
                         ColumnButton(
-                            pressed: () async {
-                              await MatchingService.fetchFriendMatching(
-                                accesstoken,
-                              );
-                            },
+                            pressed: () {},
                             img: 'assets/icons/setting_button.png',
                             str: '환경설정'),
                         ColumnButton(

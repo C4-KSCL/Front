@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-final _formkey = GlobalKey<FormState>();
-
 class TextformVerify extends StatefulWidget {
   final String textType;
   final TextEditingController typeController;
@@ -48,7 +46,6 @@ class _TextformVerifyState extends State<TextformVerify> {
           ),
           // 아이디 입력 창
           Form(
-            key: _formkey,
             child: Container(
               padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
               child: TextFormField(
