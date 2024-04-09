@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
+import 'package:frontend_matching/models/chat.dart';
 import 'package:frontend_matching/pages/chat_room/big_category.dart';
 import 'package:frontend_matching/pages/chat_room/button_layer.dart';
 import 'package:frontend_matching/pages/chat_room/small_category.dart';
@@ -10,9 +11,31 @@ import 'package:frontend_matching/pages/chat_room/socket_controller.dart';
 import 'package:frontend_matching/services/chat_service.dart';
 import 'package:frontend_matching/theme/textStyle.dart';
 import 'package:get/get.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 
 import '../../theme/colors.dart';
 import 'chat_box.dart';
+
+// 채팅 타입
+enum ChatType {
+  sentTextChat,
+  receivedTextChat,
+  sentEventChat,
+  receivedEventChat;
+
+  static ChatType getChatType(bool isTextChatType, bool isUserEmail) {
+    if (isTextChatType && isUserEmail) {
+      return ChatType.sentTextChat;
+    } else if (isTextChatType && !isUserEmail) {
+      return ChatType.receivedTextChat;
+    } else if (!isTextChatType && isUserEmail) {
+      return ChatType.sentEventChat;
+    } else {
+      return ChatType.receivedEventChat;
+    }
+  }
+}
 
 class ChatRoomPage extends GetView<SocketController> {
   const ChatRoomPage(
@@ -68,30 +91,31 @@ class ChatRoomPage extends GetView<SocketController> {
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: ListView.separated(
                   reverse: true,
-                  itemCount: controller.readCounts.length,
+                  itemCount: controller.chats.length,
                   itemBuilder: (BuildContext context, int index) => Obx(
                     () {
-                      //event가 null이 아닌경우에
-                      return controller.chats[index]['userEmail'] ==
+                      Chat chat = controller.chats[index];
+                      bool isTextChatType =
+                          chat.type == "text" ? true : false;
+                      bool isUserEmail = chat.userEmail ==
                               UserDataController.to.user.value!.email
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                if (controller.readCounts[index] == 1)
-                                  Text(controller.readCounts[index].toString()),
-                                SendTextChatBox(
-                                    text: controller.chats[index]['content']),
-                              ],
-                            )
-                          : Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                ReceiveTextChatBox(
-                                    text: controller.chats[index]['content']),
-                                if (controller.readCounts[index] == 1)
-                                  Text(controller.readCounts[index].toString()),
-                              ],
-                            );
+                          ? true
+                          : false;
+                      ChatType chatType =
+                          ChatType.getChatType(isTextChatType, isUserEmail);
+
+                      switch(chatType){
+                        case ChatType.sentTextChat :
+                          return SentTextChatBox(chat: chat);
+                        case ChatType.sentEventChat :
+                          return SentQuizChatBox(chat: chat);
+                        case ChatType.receivedTextChat :
+                          return ReceiveTextChatBox(chat: chat);
+                        case ChatType.receivedEventChat :
+                          return ReceiveQuizChatBox(chat: chat);
+                        default:
+                          return SentQuizChatBox(chat: chat);
+                      }
                     },
                   ),
                   separatorBuilder: (BuildContext context, int index) {
@@ -157,7 +181,9 @@ class ChatRoomPage extends GetView<SocketController> {
               //버튼 칸 (수락,거절 / 취소)
               Align(
                   alignment: Alignment.center,
-                  child: SocketController.to.isReceivedRequest.value ? AcceptOrRejectButtonLayer() : CancelButtonLayer(),
+                  child: SocketController.to.isReceivedRequest.value
+                      ? AcceptOrRejectButtonLayer()
+                      : CancelButtonLayer(),
                 ),
           Obx(() => SocketController.to.clickAddButton.value
               ? SizedBox(

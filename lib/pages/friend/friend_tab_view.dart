@@ -3,7 +3,7 @@ import 'package:frontend_matching/pages/friend/friend_and_request_listtile.dart'
 import 'package:frontend_matching/pages/friend/friend_controller.dart';
 import 'package:get/get.dart';
 
-Widget FriendTabView() {
+Widget friendTabView() {
   return Obx(() => ListView.separated(
         itemCount: FriendController.to.friends.length,
         itemBuilder: (context, index) {

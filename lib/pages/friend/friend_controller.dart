@@ -8,7 +8,7 @@ class FriendController extends GetxController{
 
   Rx<int> pageNumber = 0.obs;
   RxList<Friend> friends=RxList<Friend>();
-  RxList<Request> sendedRequests=RxList<Request>();
+  RxList<Request> sentRequests=RxList<Request>();
   RxList<Request> receivedRequests=RxList<Request>();
 
 }

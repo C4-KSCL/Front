@@ -1,6 +1,6 @@
 class BigCategory {
   final String name;
-  final String? imageId; // null이 가능하므로 nullable 타입으로 선언
+  final int? imageId; // null이 가능하므로 nullable 타입으로 선언
   final String? eventImage; // 마찬가지로 null이 가능
 
   BigCategory({

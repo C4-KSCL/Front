@@ -120,43 +120,43 @@ ListTile ReceivedRequest({
   );
 }
 
-ListTile SendedRequest({
-  required Request sendedRequestData,
+ListTile sentRequest({
+  required Request sentRequestData,
 })  {
   return ListTile(
-    leading: Image.network(sendedRequestData.userImage, fit: BoxFit.fill),
+    leading: Image.network(sentRequestData.userImage, fit: BoxFit.fill),
     title: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
             Text(
-              sendedRequestData.nickname,
-              style: sendedRequestData.gender=="남" ? blueTextStyle3 : pinkTextStyle1,
+              sentRequestData.nickname,
+              style: sentRequestData.gender=="남" ? blueTextStyle3 : pinkTextStyle1,
             ),
             Text(
-              sendedRequestData.myMBTI,
+              sentRequestData.myMBTI,
               style: blueTextStyle1,
             ),
             Text(
-              sendedRequestData.age,
+              sentRequestData.age,
               style: blackTextStyle1,
             ),
           ],
         ),
         Text(
-          sendedRequestData.myKeyword,
+          sentRequestData.myKeyword,
           style: greyTextStyle3,
         ),
         Text(
-          sendedRequestData.chatContent,
+          sentRequestData.chatContent,
           style: blackTextStyle1,
         ),
       ],
     ),
     trailing: TextButton(
       onPressed: () {
-        FriendService.deleteFriendRequest(requestId: sendedRequestData.requestId.toString());
+        FriendService.deleteFriendRequest(requestId: sentRequestData.requestId.toString());
       },
       child: Text('취소'),
     ),

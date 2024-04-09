@@ -4,7 +4,9 @@ class SmallCategory {
   final String bigName;
   final String selectOne; // 첫번째 답변
   final String selectTwo; // 두번째 답변
-  final String? imageId; // 이미지 ID는 null일 수 있으므로 nullable 타입으로 선언
+  final String content;
+  final int? imageId;
+  final EventImage? eventImage;
 
   SmallCategory({
     required this.id,
@@ -12,7 +14,9 @@ class SmallCategory {
     required this.bigName,
     required this.selectOne,
     required this.selectTwo,
-    this.imageId,
+    required this.content,
+    required this.imageId,
+    required this.eventImage,
   });
 
   // JSON에서 SmallModel 객체로 변환하는 팩토리 생성자
@@ -23,7 +27,9 @@ class SmallCategory {
       bigName: json['bigName'],
       selectOne: json['selectOne'],
       selectTwo: json['selectTwo'],
+      content: json['content'],
       imageId: json['imageId'],
+      eventImage: json['eventImage'] != null ? EventImage.fromJson(json['eventImage']) : null,
     );
   }
 
@@ -35,7 +41,21 @@ class SmallCategory {
       'bigName': bigName,
       'selectOne': selectOne,
       'selectTwo': selectTwo,
+      'content':content,
       'imageId': imageId,
+      'eventImage' : eventImage,
     };
+  }
+}
+
+class EventImage {
+  final String filepath;
+
+  EventImage({required this.filepath});
+
+  factory EventImage.fromJson(Map<String, dynamic> json) {
+    return EventImage(
+      filepath: json['filepath'],
+    );
   }
 }

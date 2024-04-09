@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:frontend_matching/controllers/userDataController.dart';
 import 'package:frontend_matching/models/big_category.dart';
+import 'package:frontend_matching/models/chat.dart';
 import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
@@ -12,8 +14,7 @@ class SocketController extends GetxController {
 
   IO.Socket? _socket; //소켓IO 객체
   var serverUrl = 'http://15.164.245.62:8000'; //서버 url
-  RxList<dynamic> chats = [].obs; //채팅 객체를 담는 배열
-  RxList readCounts = [].obs; //채팅의 읽음 여부를 담는 배열
+  RxList chats = [].obs; //채팅 객체를 담는 배열
 
   var clickAddButton = false.obs; // +버튼 누름여부
   var showSecondGridView = false.obs; // 두번째 카테고리 여부
@@ -39,13 +40,8 @@ class SocketController extends GetxController {
   //초기 톡방 내용 가져오기
   void fetchInitialMessages({required String roomId}) async {
     chats.clear();
-    readCounts.clear();
     // http.get을 통해 채팅방 내용 가져오기
-    var initMessages = await ChatService.getRoomChats(roomId: roomId);
-    for (var chat in initMessages) {
-      chats.add(chat);
-      readCounts.add(chat['readCount']);
-    }
+    await ChatService.getRoomChats(roomId: roomId);
   }
 
   void connect({required String roomId}) async {
@@ -71,6 +67,7 @@ class SocketController extends GetxController {
     socket.off("user join in room");
     socket.off("new message");
     socket.off("delete message");
+    socket.off("new event");
 
     // 소켓 'connect' 이벤트 listen
     socket.on("connect", (_) {
@@ -81,11 +78,6 @@ class SocketController extends GetxController {
     socket.on("user join in room", (data) {
       print(data);
       print(chats.length.toString());
-      for (int i = 0; i < chats.length; i++) {
-        if (chats[i]['userEmail'] != data['userEmail']) {
-          readCounts[i] = 0;
-        }
-      }
       print("user join in room 도착");
     });
 
@@ -93,14 +85,14 @@ class SocketController extends GetxController {
     socket.on("new message", (data) {
       print(data);
       print("new message 도착");
-      chats.insert(0, data['msg']);
-      readCounts.insert(0, data['msg']['readCount']);
+      chats.insert(0, Chat.fromJson(data['msg']));
     });
 
     // 'new event' 이벤트 listen
     socket.on("new event", (data) {
       print(data);
       print("밸런스 게임 성공적으로 전송");
+      chats.insert(0, Chat.fromJson(data['msg']));
     });
 
     // 'delete message' 이벤트 listen

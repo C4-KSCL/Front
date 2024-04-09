@@ -158,7 +158,7 @@ class FriendService {
             roomId: roomId,
           );
 
-          FriendController.to.sendedRequests.add(request);
+          FriendController.to.sentRequests.add(request);
         }
       }
     }

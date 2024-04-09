@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 import '../controllers/userDataController.dart';
+import '../models/chat.dart';
 
 class ChatService {
   static const baseUrl = 'http://15.164.245.62:8000';
@@ -36,6 +37,64 @@ class ChatService {
 
     print(response.statusCode);
     print(response.body);
+
+    // 받는 json 형식
+    //   {
+    //     "lastChats": [
+    //       {
+    //         "id": 57,
+    //         "roomId": "1712559680697",
+    //         "nickName": "b",
+    //         "userEmail": "b@naver.com",
+    //         "createdAt": "2024-04-08T20:07:18.000Z",
+    //         "content": "hohohoho",
+    //         "readCount": 1,
+    //         "type": "text",
+    //         "room": {
+    //         "id": "1712559680697",
+    //         "name": "1712559680697",
+    //         "createdAt": "2024-04-08T16:01:21.000Z",
+    //         "publishing": "true",
+    //         "joinRoom": [
+    //           {
+    //             "join": true,
+    //             "user": {
+    //               "email": "c@naver.com",
+    //               "nickname": "c",
+    //               "userImage": "https://matchingimage.s3.ap-northeast-2.amazonaws.com/defalut_user.png",
+    //               "gender": "여"
+    //             }
+    //           }
+    //         ],
+    //         "addRequest": [],
+    //         "joinCount": 2
+    //         },
+    //         "notReadCounts": 1
+    //       },
+    //     {
+    //       //삭제된 유저
+    //       "id": 14,
+    //       "roomId": "1712386390259",
+    //       "nickName": null,
+    //       "userEmail": null,
+    //       "createdAt": "2024-04-07T19:24:24.000Z",
+    //       "content": "a@naver.com님이 방을 떠났습니다.",
+    //       "readCount": 1,
+    //       "type": "text",
+    //       "room": {
+    //         "id": "1712386390259",
+    //         "name": "1712386390259",
+    //         "createdAt": "2024-04-06T15:53:10.000Z",
+    //         "publishing": "true",
+    //         "joinRoom": [],
+    //         "addRequest": [],
+    //         "joinCount": 1
+    //         },
+    //       "notReadCounts": 3
+    //     }
+    //   ]
+    // }
+
     if (response.statusCode == 200) {
       var lastChats = jsonDecode(response.body);
       if (lastChats['lastChats'] != null) {
@@ -43,19 +102,24 @@ class ChatService {
           String roomId = lastChat['roomId'];
           String createdAt = lastChat['createdAt'];
           String content = lastChat['content'];
+          String type = lastChat['type'];
           int notReadCounts = lastChat['notReadCounts'];
-          bool isChatEnabled = lastChat['room']['publishing']=="true";
-          bool isReceivedRequest = !(lastChat['room']['joinRoom'].isEmpty);
+          bool isChatEnabled = lastChat['room']['publishing'] == "true";
+          //
+          bool isReceivedRequest = lastChat['room']['addRequest'].isEmpty ? false : lastChat['room']['addRequest'][0]
+                  ['reqUser'] !=
+              UserDataController.to.user.value!.email;
 
           String nickname = "";
           String userImage = "";
-          if (lastChat['room']['joinRoom'].isEmpty) {
-            nickname = lastChat['room']['addRequest'][0]['receive']['nickname'];
-            userImage =
-                lastChat['room']['addRequest'][0]['receive']['userImage'];
-          } else {
+          if (lastChat['room']['joinRoom'].isNotEmpty) {
             nickname = lastChat['room']['joinRoom'][0]['user']['nickname'];
             userImage = lastChat['room']['joinRoom'][0]['user']['userImage'];
+          } else if (lastChat['room']['joinRoom'].isEmpty &&
+              lastChat['room']['addRequest'].isEmpty) {
+            nickname = "삭제된 유저";
+            userImage =
+                "https://matchingimage.s3.ap-northeast-2.amazonaws.com/defalut_user.png";
           }
 
           var chatList = ChatList(
@@ -63,6 +127,7 @@ class ChatService {
             nickname: nickname,
             createdAt: createdAt,
             content: content,
+            type: type,
             notReadCounts: notReadCounts,
             userImage: userImage,
             isChatEnabled: isChatEnabled,
@@ -78,7 +143,7 @@ class ChatService {
 
   // 그 방 채팅내용 가져오기
   // 채팅 내역 반환
-  static Future<dynamic> getRoomChats({required String roomId}) async {
+  static Future<void> getRoomChats({required String roomId}) async {
     final url = Uri.parse('$baseUrl/$chats/get-chats/$roomId?page=1&limit=20');
 
     final response = await http.get(url, headers: headers);
@@ -87,10 +152,7 @@ class ChatService {
     print(response.body);
 
     final jsonData = json.decode(response.body);
-    final lastChats = jsonData['chats'];
-    // print(lastChats);
-
-    return lastChats;
+    SocketController.to.chats.value= jsonData['chats'].map((data)=>Chat.fromJson(data)).toList();
   }
 
   //채팅 방 삭제하기

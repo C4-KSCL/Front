@@ -25,11 +25,12 @@ Widget ChatListTile({
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Text(
-          chatListData.nickname,
+          chatListData.nickname ??= "알 수 없음",
           style: blackTextStyle1,
         ),
         Text(
-          chatListData.content,
+          chatListData.type == "text" ?
+          chatListData.content : "퀴즈를 보냈습니다.",
           style: greyTextStyle3,
         ),
       ],
@@ -57,7 +58,7 @@ Widget ChatListTile({
       SocketController.to.isChatEnabled.value=chatListData.isChatEnabled;
       print("받은 요청인가? : ${chatListData.isReceivedRequest}");
       SocketController.to.isReceivedRequest.value=chatListData.isReceivedRequest;
-      Get.to(ChatRoomPage(roomId: chatListData.roomId, oppUserName: chatListData.nickname,));
+      Get.to(ChatRoomPage(roomId: chatListData.roomId, oppUserName: chatListData.nickname ??= "알 수 없음",));
     },
   );
 }
