@@ -6,6 +6,7 @@ class ChatList {
   String content;
   String type;
   int notReadCounts;
+  int? friendRequestId;
   String userImage;
   bool isChatEnabled;
   bool isReceivedRequest;
@@ -18,6 +19,7 @@ class ChatList {
     required this.content,
     required this.type,
     required this.notReadCounts,
+    this.friendRequestId,
     required this.userImage,
     this.isChatEnabled = false,
     this.isReceivedRequest = false,
@@ -33,6 +35,7 @@ class ChatList {
       content: json['content'],
       type: json['type'],
       notReadCounts: json['notReadCounts'],
+      friendRequestId: json['friendRequestId'],
       userImage: json['userImage'],
       isChatEnabled: json['isChatEnabled'] ?? false,
       // JSON에 없는 경우 기본값 사용
@@ -50,6 +53,7 @@ class ChatList {
       'content': content,
       'type':type,
       'notReadCounts': notReadCounts,
+      'friendRequestId':friendRequestId,
       'userImage': userImage,
       'isChatEnabled': isChatEnabled,
       'isReceivedRequest': isReceivedRequest,

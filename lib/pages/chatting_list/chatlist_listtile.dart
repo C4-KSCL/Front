@@ -72,6 +72,7 @@ Widget ChatListTile({
       SocketController.to.isReceivedRequest.value =
           chatListData.isReceivedRequest;
       Get.to(ChatRoomPage(
+        friendRequestId: chatListData.friendRequestId,
         roomId: chatListData.roomId,
         oppUserName: chatListData.nickname ??= "알 수 없음",
       ));

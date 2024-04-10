@@ -38,11 +38,15 @@ enum ChatType {
 }
 
 class ChatRoomPage extends GetView<SocketController> {
-  const ChatRoomPage(
-      {super.key, required this.roomId, required this.oppUserName});
+  ChatRoomPage(
+      {super.key,
+      this.friendRequestId,
+      required this.roomId,
+      required this.oppUserName});
 
   final String roomId;
   final String oppUserName;
+  int? friendRequestId;
 
   @override
   Widget build(BuildContext context) {
@@ -95,8 +99,7 @@ class ChatRoomPage extends GetView<SocketController> {
                   itemBuilder: (BuildContext context, int index) => Obx(
                     () {
                       Chat chat = controller.chats[index];
-                      bool isTextChatType =
-                          chat.type == "text" ? true : false;
+                      bool isTextChatType = chat.type == "text" ? true : false;
                       bool isUserEmail = chat.userEmail ==
                               UserDataController.to.user.value!.email
                           ? true
@@ -104,14 +107,14 @@ class ChatRoomPage extends GetView<SocketController> {
                       ChatType chatType =
                           ChatType.getChatType(isTextChatType, isUserEmail);
 
-                      switch(chatType){
-                        case ChatType.sentTextChat :
+                      switch (chatType) {
+                        case ChatType.sentTextChat:
                           return SentTextChatBox(chat: chat);
-                        case ChatType.sentEventChat :
+                        case ChatType.sentEventChat:
                           return SentQuizChatBox(chat: chat);
-                        case ChatType.receivedTextChat :
+                        case ChatType.receivedTextChat:
                           return ReceiveTextChatBox(chat: chat);
-                        case ChatType.receivedEventChat :
+                        case ChatType.receivedEventChat:
                           return ReceiveQuizChatBox(chat: chat);
                         default:
                           return SentQuizChatBox(chat: chat);
@@ -127,64 +130,66 @@ class ChatRoomPage extends GetView<SocketController> {
               ),
             ),
           ),
-          SocketController.to.isChatEnabled.value
-              ?
-              // 채팅 키보드
-              Container(
-                  color: whiteColor1,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          ChatService.getBigCategories();
-                          controller.clickAddButton.value
-                              ? controller.clickAddButton.value = false
-                              : controller.clickAddButton.value = true;
-
-                          //키보드가 열릴 때는 닫기
-                          FocusScope.of(context).unfocus();
-                        },
-                        icon: Obx(
-                          () => controller.clickAddButton.value
-                              ? const Icon(
-                                  Icons.keyboard_arrow_down,
-                                  color: blueColor1,
-                                  size: 25,
-                                )
-                              : const Icon(
-                                  Icons.add,
-                                  color: blueColor1,
-                                  size: 25,
-                                ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: Get.width - 100,
-                        child: TextField(
-                          // focusNode: myFocusNode,
-                          controller: chatController,
-                        ),
-                      ),
-                      IconButton(
+          Obx(
+            () => SocketController.to.isChatEnabled.value
+                ?
+                // 채팅 키보드
+                Container(
+                    color: whiteColor1,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
                           onPressed: () {
-                            SocketController.to.sendMessage(
-                                roomId: roomId, content: chatController.text);
+                            ChatService.getBigCategories();
+                            controller.clickAddButton.value
+                                ? controller.clickAddButton.value = false
+                                : controller.clickAddButton.value = true;
+
+                            //키보드가 열릴 때는 닫기
+                            FocusScope.of(context).unfocus();
                           },
-                          icon: Image.asset(
-                              "assets/icons/send_message_button.png",
-                              color: blueColor1)),
-                    ],
+                          icon: Obx(
+                            () => controller.clickAddButton.value
+                                ? const Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: blueColor1,
+                                    size: 25,
+                                  )
+                                : const Icon(
+                                    Icons.add,
+                                    color: blueColor1,
+                                    size: 25,
+                                  ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: Get.width - 100,
+                          child: TextField(
+                            // focusNode: myFocusNode,
+                            controller: chatController,
+                          ),
+                        ),
+                        IconButton(
+                            onPressed: () {
+                              SocketController.to.sendMessage(
+                                  roomId: roomId, content: chatController.text);
+                            },
+                            icon: Image.asset(
+                                "assets/icons/send_message_button.png",
+                                color: blueColor1)),
+                      ],
+                    ),
+                  )
+                :
+                //버튼 칸 (수락,거절 / 취소)
+                Align(
+                    alignment: Alignment.center,
+                    child: SocketController.to.isReceivedRequest.value
+                        ? AcceptOrRejectButtonLayer(friendRequestId)
+                        : CancelButtonLayer(friendRequestId),
                   ),
-                )
-              :
-              //버튼 칸 (수락,거절 / 취소)
-              Align(
-                  alignment: Alignment.center,
-                  child: SocketController.to.isReceivedRequest.value
-                      ? AcceptOrRejectButtonLayer()
-                      : CancelButtonLayer(),
-                ),
+          ),
           Obx(() => SocketController.to.clickAddButton.value
               ? SizedBox(
                   height: 250,
