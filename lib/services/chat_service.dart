@@ -100,9 +100,11 @@ class ChatService {
       if (lastChats['lastChats'] != null) {
         for (var lastChat in lastChats['lastChats']) {
           String roomId = lastChat['roomId'];
+          String userEmail = lastChat['userEmail'] ??= "삭제된 유저";
           String createdAt = lastChat['createdAt'];
           String content = lastChat['content'];
           String type = lastChat['type'];
+          int friendRequestId = lastChat['room']['addRequest'].isNotEmpty ? lastChat['room']['addRequest'][0]['id'] : -1;
           int notReadCounts = lastChat['notReadCounts'];
           bool isChatEnabled = lastChat['room']['publishing'] == "true";
           //
@@ -124,11 +126,13 @@ class ChatService {
 
           var chatList = ChatList(
             roomId: roomId,
+            userEmail: userEmail,
             nickname: nickname,
             createdAt: createdAt,
             content: content,
             type: type,
             notReadCounts: notReadCounts,
+            friendRequestId: friendRequestId,
             userImage: userImage,
             isChatEnabled: isChatEnabled,
             isReceivedRequest: isReceivedRequest,
