@@ -11,12 +11,14 @@ class ButtonTextFieldBox extends StatefulWidget {
   final VoidCallback onPressed;
   final String buttonText;
   final TextEditingController textEditingController;
+  final String TEXT;
 
   ButtonTextFieldBox({
     required this.hintText,
     required this.onPressed,
     required this.buttonText,
     required this.textEditingController,
+    required this.TEXT,
   });
 
   @override
@@ -67,7 +69,7 @@ class _ButtonTextFieldBoxState extends State<ButtonTextFieldBox> {
                 width: 5,
               ),
               Text(
-                '학교 이메일',
+                widget.TEXT,
                 style: TextStyle(fontSize: 15),
               )
             ],
