@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:frontend_matching/controllers/userDataController.dart';
 import 'package:frontend_matching/pages/chat_room/socket_controller.dart';
 import 'package:frontend_matching/services/time_convert_service.dart';
 import 'package:get/get.dart';
@@ -13,12 +14,11 @@ Widget ChatListTile({
 }) {
   Get.put(SocketController());
 
+  print(UserDataController.to.user.value!.email);
+  print(chatListData.userEmail);
   return ListTile(
-
     leading: CircleAvatar(
-      backgroundImage: NetworkImage(
-          chatListData.userImage
-      ),
+      backgroundImage: NetworkImage(chatListData.userImage),
     ),
     title: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,36 +29,52 @@ Widget ChatListTile({
           style: blackTextStyle1,
         ),
         Text(
-          chatListData.type == "text" ?
-          chatListData.content : "퀴즈를 보냈습니다.",
+          chatListData.type == "text" ? chatListData.content : "퀴즈를 보냈습니다.",
           style: greyTextStyle3,
         ),
       ],
     ),
     trailing: Column(
       crossAxisAlignment: CrossAxisAlignment.end,
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(
           convertKoreaTime(utcTimeString: chatListData.createdAt),
           style: greyTextStyle4,
         ),
+        const SizedBox(height: 10,),
+        if(chatListData.notReadCounts!=0)
         Container(
           decoration: BoxDecoration(
-              color: Colors.red, borderRadius: BorderRadius.circular(7)),
+            color: chatListData.userEmail ==
+                    UserDataController.to.user.value!.email
+                ? Colors.transparent
+                : Colors.red,
+            borderRadius: BorderRadius.circular(7),
+          ),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
-            child: Text(chatListData.notReadCounts.toString(),style: whiteTextStyle2,),
+            child: Text(
+              chatListData.userEmail ==
+                      UserDataController.to.user.value!.email
+                  ? "" : chatListData.notReadCounts.toString()
+                  ,
+              style: whiteTextStyle2,
+            ),
           ),
         ),
       ],
     ),
     onTap: () {
       print("챗 가능 : ${chatListData.isChatEnabled}");
-      SocketController.to.isChatEnabled.value=chatListData.isChatEnabled;
+      SocketController.to.isChatEnabled.value = chatListData.isChatEnabled;
       print("받은 요청인가? : ${chatListData.isReceivedRequest}");
-      SocketController.to.isReceivedRequest.value=chatListData.isReceivedRequest;
-      Get.to(ChatRoomPage(roomId: chatListData.roomId, oppUserName: chatListData.nickname ??= "알 수 없음",));
+      SocketController.to.isReceivedRequest.value =
+          chatListData.isReceivedRequest;
+      Get.to(ChatRoomPage(
+        roomId: chatListData.roomId,
+        oppUserName: chatListData.nickname ??= "알 수 없음",
+      ));
     },
   );
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_matching/services/friend_service.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:frontend_matching/theme/textStyle.dart';
 import 'package:get/get.dart';
@@ -23,6 +24,7 @@ Widget AcceptOrRejectButtonLayer() {
               ),
             ),
             onPressed: () {
+
               //친구 수락
             },
             child: const Text(

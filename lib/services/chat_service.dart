@@ -100,6 +100,7 @@ class ChatService {
       if (lastChats['lastChats'] != null) {
         for (var lastChat in lastChats['lastChats']) {
           String roomId = lastChat['roomId'];
+          String userEmail = lastChat['userEmail'] ??= "삭제된 유저";
           String createdAt = lastChat['createdAt'];
           String content = lastChat['content'];
           String type = lastChat['type'];
@@ -124,6 +125,7 @@ class ChatService {
 
           var chatList = ChatList(
             roomId: roomId,
+            userEmail: userEmail,
             nickname: nickname,
             createdAt: createdAt,
             content: content,

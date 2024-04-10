@@ -1,5 +1,6 @@
 class ChatList {
   final String roomId;
+  String? userEmail;
   String? nickname;
   String createdAt;
   String content;
@@ -11,6 +12,7 @@ class ChatList {
 
   ChatList({
     required this.roomId,
+    required this.userEmail,
     this.nickname,
     required this.createdAt,
     required this.content,
@@ -24,6 +26,7 @@ class ChatList {
   factory ChatList.fromJson(Map<String, dynamic> json) {
     return ChatList(
       roomId: json['roomId'],
+      userEmail: json['userEmail'],
       nickname: json['nickname'],
       // 키 값을 올바르게 수정
       createdAt: json['createdAt'],
@@ -41,6 +44,7 @@ class ChatList {
   Map<String, dynamic> toJson() {
     return {
       'roomId': roomId,
+      'userEmail':userEmail,
       'nickname': nickname,
       'createdAt': createdAt,
       'content': content,
