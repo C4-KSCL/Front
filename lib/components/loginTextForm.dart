@@ -1,44 +1,30 @@
 // ignore_for_file: unused_local_variable, prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:frontend_matching/theme/colors.dart';
-import 'package:frontend_matching/theme/textStyle.dart';
 
-class GetTextContainer extends StatefulWidget {
+class LoginTextForm extends StatefulWidget {
   //logo는 이미지, type은 아이디인지 패스워드인지
   final String textLogo;
   final String textType;
   final TextEditingController typeController;
 
-  GetTextContainer({
+  LoginTextForm({
     required this.typeController,
     required this.textLogo,
     required this.textType,
   });
 
   @override
-  State<GetTextContainer> createState() => _GetTextContainerState();
+  State<LoginTextForm> createState() => _LoginTextFormState();
 }
 
-class _GetTextContainerState extends State<GetTextContainer> {
+class _LoginTextFormState extends State<LoginTextForm> {
   @override
   Widget build(BuildContext context) {
     String textLogo = widget.textLogo;
     String textType = widget.textType;
     TextEditingController typeController = widget.typeController;
     return Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
-              blurRadius: 5.0,
-              spreadRadius: 1.0,
-              offset: const Offset(5, 5),
-            ),
-          ],
-        ),
         padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,15 +50,13 @@ class _GetTextContainerState extends State<GetTextContainer> {
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   hintText: '입력해주세요',
-                  hintStyle: greyTextStyle1,
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: whiteColor1, width: 2.0),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: blueColor4, width: 2.0),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  //둥근 테두리 만들어주는 위젯
+                  border: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(12))),
+                  //텍스트 폼 필드가 선택됐을 때 테두리가 파란색으로 변함.
+                  focusedBorder: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                      borderSide: BorderSide(color: Colors.blue)),
                 ),
               ),
             ),

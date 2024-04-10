@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:frontend_matching/components/personalKeyword.dart';
 import 'package:frontend_matching/controllers/signupController.dart';
 import 'package:frontend_matching/pages/signup/friendMbtiPage.dart';
-import 'package:frontend_matching/pages/signup/schoolAuth.dart';
 import 'package:get/get.dart';
 
 class MyKeywordPage extends StatefulWidget {
