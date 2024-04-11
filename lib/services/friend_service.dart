@@ -56,21 +56,21 @@ class FriendService {
     print(response.statusCode);
     print(response.body);
     if (response.statusCode == 200) {
-      var sendedRequests = jsonDecode(response.body);
+      var sentRequests = jsonDecode(response.body);
       FriendController.to.receivedRequests.clear();
 
-      if (sendedRequests['requests'] != null) {
-        for (var sendedRequest in sendedRequests['requests']) {
-          int requestId = sendedRequest['id'];
-          String myMBTI = sendedRequest['request']['myMBTI'];
-          String myKeyword = sendedRequest['request']['myKeyword'];
-          String nickname = sendedRequest['request']['nickname'];
-          String userImage = sendedRequest['request']['userImage'];
-          String age = sendedRequest['request']['age'];
-          String gender = sendedRequest['request']['gender'];
-          String createdAt = sendedRequest['room']['createdAt'];
-          String chatContent = sendedRequest['room']['chatting'][0]['content'];
-          String roomId = sendedRequest['roomId'];
+      if (sentRequests['requests'] != null) {
+        for (var sentRequest in sentRequests['requests']) {
+          int requestId = sentRequest['id'];
+          String myMBTI = sentRequest['request']['myMBTI'];
+          String myKeyword = sentRequest['request']['myKeyword'];
+          String nickname = sentRequest['request']['nickname'];
+          String userImage = sentRequest['request']['userImage'];
+          String age = sentRequest['request']['age'];
+          String gender = sentRequest['request']['gender'];
+          String createdAt = sentRequest['room']['createdAt'];
+          String chatContent = sentRequest['room']['chatting'][0]['content'];
+          String roomId = sentRequest['roomId'];
 
           var request = Request(
             requestId: requestId,

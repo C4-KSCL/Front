@@ -157,6 +157,10 @@ class ChatService {
 
     final jsonData = json.decode(response.body);
     SocketController.to.chats.value= jsonData['chats'].map((data)=>Chat.fromJson(data)).toList();
+    for(var chat in jsonData['chats']){
+      var readCount=chat['readCount'];
+      SocketController.to.readCounts.add(readCount.toString());
+    }
   }
 
   //채팅 방 삭제하기

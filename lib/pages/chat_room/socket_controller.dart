@@ -5,6 +5,7 @@ import 'package:frontend_matching/controllers/userDataController.dart';
 import 'package:frontend_matching/models/big_category.dart';
 import 'package:frontend_matching/models/chat.dart';
 import 'package:get/get.dart';
+import 'package:path/path.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../../services/chat_service.dart';
@@ -15,12 +16,14 @@ class SocketController extends GetxController {
   IO.Socket? _socket; //소켓IO 객체
   var serverUrl = 'http://15.164.245.62:8000'; //서버 url
   RxList chats = [].obs; //채팅 객체를 담는 배열
+  RxList readCounts = [].obs; //채팅 읽음 여부를 담는 배열
 
-  var clickAddButton = false.obs; // +버튼 누름여부
-  var showSecondGridView = false.obs; // 두번째 카테고리 여부
-  var clickQuizButtonIndex = (-1).obs; // Quiz 버튼 누름 여부
-  var isReceivedRequest = true.obs; //받은 요청이면 true, 보낸 요청이면 false
-  var isChatEnabled = true.obs; //채팅 가능 여부(친구가 아니면 채팅X)
+  RxBool clickAddButton = false.obs; // +버튼 누름여부
+  RxBool showSecondGridView = false.obs; // 두번째 카테고리 여부
+  RxInt clickQuizButtonIndex = (-1).obs; // Quiz 버튼 누름 여부
+  RxBool isReceivedRequest = true.obs; //받은 요청이면 true, 보낸 요청이면 false
+  RxBool isChatEnabled = true.obs; //채팅 가능 여부(친구가 아니면 채팅X)
+  RxBool isQuizAnswerd = false.obs; //퀴즈 답변 여부
 
   // 객체 dynamic 말고 Bigcategory 등으로 바꿔보기
   List<dynamic> bigCategories = [];
@@ -79,6 +82,13 @@ class SocketController extends GetxController {
       print(data);
       print(chats.length.toString());
       print("user join in room 도착");
+      // 이메일 비교해서 1대신 0 넣기
+      var joinUserEmail = data['userEmail'];
+      for (int i = 0; i < chats.length; i++) {
+        if (chats[i].userEmail != joinUserEmail) {
+          // readCounts[i]
+        }
+      }
     });
 
     // 'new message' 이벤트 listen

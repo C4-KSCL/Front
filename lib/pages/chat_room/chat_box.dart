@@ -10,6 +10,8 @@ import '../../theme/textStyle.dart';
 Widget SentTextChatBox({
   required Chat chat,
 }) {
+
+
   return Row(
     mainAxisAlignment: MainAxisAlignment.end,
     children: [

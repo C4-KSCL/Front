@@ -70,6 +70,9 @@ class ChatRoomPage extends GetView<SocketController> {
             color: Colors.black,
           ),
           onPressed: () {
+            // 나중에 지워야될거 /////////////////////////////////////////////
+            ChatService.getLastChatList();
+            ///////////////////////////////////////////////////////////////
             controller.disconnect();
             Get.back();
           },
