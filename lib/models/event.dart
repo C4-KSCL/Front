@@ -1,4 +1,5 @@
 import 'package:frontend_matching/models/small_category.dart';
+import 'package:get/get.dart';
 
 class Event {
   final int id;
@@ -6,8 +7,8 @@ class Event {
   final int category;
   final String user1;
   final String user2;
-  final String? user1Choice;
-  final String? user2Choice;
+  final Rx<String?> user1Choice;
+  final Rx<String?> user2Choice;
   final String createdAt;
   final SmallCategory smallCategory;
 
@@ -17,11 +18,12 @@ class Event {
     required this.category,
     required this.user1,
     required this.user2,
-    this.user1Choice,
-    this.user2Choice,
+    String? user1Choice,
+    String? user2Choice,
     required this.createdAt,
     required this.smallCategory,
-  });
+  }) : user1Choice = Rx<String?>(user1Choice),
+        user2Choice = Rx<String?>(user2Choice);
 
   factory Event.fromJson(Map<String, dynamic> json) {
     return Event(

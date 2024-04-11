@@ -14,8 +14,6 @@ Widget ChatListTile({
 }) {
   Get.put(SocketController());
 
-  print(UserDataController.to.user.value!.email);
-  print(chatListData.userEmail);
   return ListTile(
     leading: CircleAvatar(
       backgroundImage: NetworkImage(chatListData.userImage),

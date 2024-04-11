@@ -10,8 +10,6 @@ import '../../theme/textStyle.dart';
 Widget SentTextChatBox({
   required Chat chat,
 }) {
-
-
   return Row(
     mainAxisAlignment: MainAxisAlignment.end,
     children: [
@@ -131,7 +129,7 @@ Widget SentQuizChatBox({
                   //quizId 를 통해서 api로 정보 받아오고 나면 QuizPage 열기
                   QuizPage(
                     voidCallback: Get.back,
-                    chat: chat,
+                    chat: chat, isSentQuiz: true,
                   ),
                   backgroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
@@ -168,11 +166,15 @@ Widget ReceiveQuizChatBox({
         ),
         child: Column(
           children: [
+            Text(
+              chat.event!.smallCategory.name,
+              style: blackTextStyle1,
+            ),
             SizedBox(
               width: Get.width * 0.4,
               height: Get.width * 0.4,
               child:
-                  Image.network(chat.event!.smallCategory.eventImage!.filepath),
+              Image.network(chat.event!.smallCategory.eventImage!.filepath),
             ),
             TextButton(
               style: TextButton.styleFrom(
@@ -188,12 +190,13 @@ Widget ReceiveQuizChatBox({
                   //quizId 를 통해서 api로 정보 받아오고 나면 QuizPage 열기
                   QuizPage(
                     voidCallback: Get.back,
-                    chat: chat,
+                    chat: chat, isSentQuiz: false,
                   ),
                   backgroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
+                  isScrollControlled: true,
                 );
               },
               child: const Text(

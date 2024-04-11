@@ -11,6 +11,7 @@ import 'package:http/http.dart' as http;
 
 import '../controllers/userDataController.dart';
 import '../models/chat.dart';
+import '../models/event.dart';
 
 class ChatService {
   static const baseUrl = 'http://15.164.245.62:8000';
@@ -157,10 +158,6 @@ class ChatService {
 
     final jsonData = json.decode(response.body);
     SocketController.to.chats.value= jsonData['chats'].map((data)=>Chat.fromJson(data)).toList();
-    for(var chat in jsonData['chats']){
-      var readCount=chat['readCount'];
-      SocketController.to.readCounts.add(readCount.toString());
-    }
   }
 
   //채팅 방 삭제하기
@@ -229,8 +226,9 @@ class ChatService {
 
   // 퀴즈 답변 하기
   static Future<void> updateQuizInfo({
-    required String quizId,
+    required int quizId,
     required String quizAnswer,
+    required bool isSentQuiz,
   }) async {
     final url = Uri.parse('$baseUrl/$events/update-event-answer/$quizId');
 
@@ -238,6 +236,12 @@ class ChatService {
 
     final response = await http.patch(url, headers: headers, body: data);
 
+    final jsonData = json.decode(response.body);
+    if(isSentQuiz){
+
+    }
+
+    print(response.statusCode);
     print(response.body);
   }
 }

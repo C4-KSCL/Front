@@ -4,6 +4,7 @@ import 'package:frontend_matching/components/button.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
 import 'package:frontend_matching/models/chat.dart';
 import 'package:frontend_matching/pages/chat_room/socket_controller.dart';
+import 'package:frontend_matching/services/chat_service.dart';
 import 'package:get/get.dart';
 
 import '../../theme/colors.dart';
@@ -12,17 +13,31 @@ import '../../theme/textStyle.dart';
 Widget QuizPage({
   required VoidCallback voidCallback,
   required Chat chat,
+  required bool isSentQuiz,
 }) {
-  if (chat.event!.user1 ==
-      UserDataController.to.user.value!.nickname) { //사용자가 Quiz를 보낸 사람
-    if (chat.event!.user1Choice != null) {
-      SocketController.to.isQuizAnswerd.value = true;
+  //초기화
+  SocketController.to.isQuizAnswered.value = false;
+
+  String? oppUserChoice, userChoice;
+
+  if (isSentQuiz) {
+    oppUserChoice = chat.event!.user2Choice.value;
+    userChoice = chat.event!.user1Choice.value;
+  } else {
+    oppUserChoice = chat.event!.user1Choice.value;
+    userChoice = chat.event!.user2Choice.value;
+  }
+
+  if (isSentQuiz) {
+    if (chat.event!.user1Choice.value != null) {
+      SocketController.to.isQuizAnswered.value = true;
     }
   } else {
-    if (chat.event!.user2Choice != null) {
-      SocketController.to.isQuizAnswerd.value = true;
+    if (chat.event!.user2Choice.value != null) {
+      SocketController.to.isQuizAnswered.value = true;
     }
   }
+  print(chat.event!.id);
 
   return Container(
     padding: EdgeInsets.all(16), // 내부 여백을 조정합니다.
@@ -41,13 +56,12 @@ Widget QuizPage({
             IconButton(
                 icon: const Icon(Icons.close),
                 onPressed: voidCallback // 'X' 버튼을 누르면 BottomSheet을 종료합니다.
-            ),
+                ),
           ],
         ),
         // Quiz 관련 이미지
         Center(
-          child: Image.network(
-              chat.event!.smallCategory.eventImage!.filepath),
+          child: Image.network(chat.event!.smallCategory.eventImage!.filepath),
         ),
         const SizedBox(
           height: 20,
@@ -61,76 +75,88 @@ Widget QuizPage({
           height: 20,
         ),
         // Quiz의 답변 여부에 따라 답변을 선택하는 버튼들 or 상대의 답변을 보여주는 화면
-        SocketController.to.isQuizAnswerd.value ?
-        Column(
-          children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                constraints: BoxConstraints(
-                  maxWidth: Get.width * 0.75,
-                ),
-                decoration: const BoxDecoration(
-                  color: greyColor3,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(8),
-                      topRight: Radius.circular(8),
-                      bottomRight: Radius.circular(8)),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(chat.event!.user2Choice == null ?
-                  '"아직 선택하지 않았습니다."' : '"${chat.event!.user2Choice
-                      .toString()}"',
-                    style: blackTextStyle6,
+        Obx(() => SocketController.to.isQuizAnswered.value
+            ? Column(
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      constraints: BoxConstraints(
+                        maxWidth: Get.width * 0.75,
+                      ),
+                      decoration: const BoxDecoration(
+                        color: greyColor3,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(8),
+                            topRight: Radius.circular(8),
+                            bottomRight: Radius.circular(8)),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          oppUserChoice == null
+                              ? '"아직 선택하지 않았습니다."'
+                              : '"${chat.event!.user2Choice.toString()}"',
+                          style: blackTextStyle6,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ),),
-            const SizedBox(
-              height: 20,
-            ),
-            Align(
-              alignment: Alignment.centerRight, // 두 번째 Container를 우측으로 정렬
-              child: Container(
-                constraints: BoxConstraints(maxWidth: Get.width * 0.75),
-                decoration: const BoxDecoration(
-                  color: blueColor1,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(8),
-                      topRight: Radius.circular(8),
-                      bottomLeft: Radius.circular(8)),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    chat.event!.user1Choice == null ?
-                    '"아직 선택하지 않았습니다."' : '"${chat.event!.user1Choice
-                        .toString()}"',
-                    style: whiteTextStyle3,
+                  const SizedBox(
+                    height: 20,
                   ),
-                ),
-              ),),
-          ],
-        ) : Column(
-          children: [
-            ColorBottomButton(
-              text: chat.event!.smallCategory.selectOne,
-              backgroundColor: blueColor1,
-              onPressed: () {},
-              textStyle: blackTextStyle1,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            ColorBottomButton(
-              text: chat.event!.smallCategory.selectTwo,
-              backgroundColor: pinkColor1,
-              onPressed: () {},
-              textStyle: blackTextStyle1,
-            ),
-          ],
-        )
+                  Align(
+                    alignment: Alignment.centerRight, // 두 번째 Container를 우측으로 정렬
+                    child: Container(
+                      constraints: BoxConstraints(maxWidth: Get.width * 0.75),
+                      decoration: const BoxDecoration(
+                        color: blueColor1,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(8),
+                            topRight: Radius.circular(8),
+                            bottomLeft: Radius.circular(8)),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          '"${userChoice}"',
+                          style: whiteTextStyle3,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            : Column(
+                children: [
+                  ColorBottomButton(
+                    text: chat.event!.smallCategory.selectOne,
+                    backgroundColor: blueColor1,
+                    onPressed: () async {
+                      await ChatService.updateQuizInfo(
+                        quizId: chat.event!.id,
+                        quizAnswer: chat.event!.smallCategory.selectOne, isSentQuiz: isSentQuiz,
+                      ).then((value) => SocketController.to.isQuizAnswered.value=true);
+                    },
+                    textStyle: blackTextStyle1,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  ColorBottomButton(
+                    text: chat.event!.smallCategory.selectTwo,
+                    backgroundColor: pinkColor1,
+                    onPressed: () async{
+                      await ChatService.updateQuizInfo(
+                        quizId: chat.event!.id,
+                        quizAnswer: chat.event!.smallCategory.selectTwo, isSentQuiz: isSentQuiz,
+                      ).then((value) => SocketController.to.isQuizAnswered.value=true);
 
+                    },
+                    textStyle: blackTextStyle1,
+                  ),
+                ],
+              ))
       ],
     ),
   );
