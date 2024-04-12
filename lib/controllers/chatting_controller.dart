@@ -1,21 +1,25 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:frontend_matching/controllers/chatting_list_controller.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
 import 'package:frontend_matching/models/big_category.dart';
 import 'package:frontend_matching/models/chat.dart';
 import 'package:get/get.dart';
 import 'package:path/path.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:http/http.dart' as http;
 
-import '../../models/event.dart';
-import '../../services/chat_service.dart';
+import '../models/chat_list.dart';
+import '../models/event.dart';
+import '../models/small_category.dart';
+import '../services/chat_service.dart';
 
-class SocketController extends GetxController {
-  static SocketController get to => Get.find<SocketController>();
+class ChattingController extends GetxController {
+  static ChattingController get to => Get.find<ChattingController>();
 
   IO.Socket? _socket; //소켓IO 객체
-  var serverUrl = 'http://15.164.245.62:8000'; //서버 url
+  static const baseUrl = 'http://15.164.245.62:8000'; //서버 url
   RxList chats = [].obs; //채팅 객체를 담는 배열
 
   RxBool clickAddButton = false.obs; // +버튼 누름여부
@@ -34,9 +38,23 @@ class SocketController extends GetxController {
 
   String? bigCategoryName;
 
+  static const rooms = 'rooms';
+  static const send = 'send';
+  // static const chats = 'chats';
+  static const delete = 'delete';
+  static const events = 'events';
+
+  static String accessToken = UserDataController.to.accessToken;
+
+  static Map<String, String> headers = {
+    "Content-type": "application/json",
+    "accessToken": accessToken
+  };
+
+  //Socket.io 관련 함수
   //소켓 연결
   void init() {
-    _socket ??= IO.io(serverUrl, <String, dynamic>{
+    _socket ??= IO.io(baseUrl, <String, dynamic>{
       'transports': ['websocket'], //전송 방식을 웹소켓으로 설정
       'autoConnect': false, //수동으로 연결해야함
       'auth': {'token': UserDataController.to.accessToken},
@@ -47,7 +65,7 @@ class SocketController extends GetxController {
   void fetchInitialMessages({required String roomId}) async {
     chats.clear();
     // http.get을 통해 채팅방 내용 가져오기
-    await ChatService.getRoomChats(roomId: roomId);
+    await getRoomChats(roomId: roomId);
   }
 
   void connect({required String roomId}) async {
@@ -183,5 +201,107 @@ class SocketController extends GetxController {
 
   void clickQuizButton(int index) {
     clickQuizButtonIndex.value = index;
+  }
+
+  // 채팅 관련 http 메소드
+
+
+  // 그 방 채팅내용 가져오기
+  // 채팅 내역 반환
+  static Future<void> getRoomChats({required String roomId}) async {
+    final url = Uri.parse('$baseUrl/chats/get-chats/$roomId?page=1&limit=20');
+
+    final response = await http.get(url, headers: headers);
+
+    print(response.statusCode);
+    print(response.body);
+
+    final jsonData = json.decode(response.body);
+    ChattingController.to.chats.value= jsonData['chats'].map((data)=>Chat.fromJson(data)).toList();
+  }
+
+  //채팅 방 삭제하기
+  static Future<void> deleteRoom({
+    required String roomId,
+  }) async {
+    final url = Uri.parse('$baseUrl/$rooms/leave/$roomId');
+
+    final response = await http.delete(url, headers: headers);
+
+    print(response.statusCode);
+    print(response.body);
+  }
+
+  //속한 채팅 방들 리스트 가져오기
+  static Future<void> getRoomList() async {
+    final url = Uri.parse('$baseUrl/$rooms/get-list/');
+
+    final response = await http.delete(url, headers: headers);
+
+    print(response.statusCode);
+    print(response.body);
+  }
+
+  // bigCategory 가져오기
+  static Future<void> getBigCategories() async {
+    final url = Uri.parse('$baseUrl/$events/get-big/');
+
+    final response = await http.get(url, headers: headers);
+
+    print(response.statusCode);
+    print(response.body);
+
+    final jsonData = json.decode(response.body);
+    ChattingController.to.bigCategories = jsonData['categories']
+        .map((data) => BigCategory.fromJson(data))
+        .toList();
+  }
+
+  // smallCategory 가져오기
+  static Future<void> getSmallCategories({
+    required String bigCategoryName,
+  }) async {
+    final url = Uri.parse('$baseUrl/$events/get-small/$bigCategoryName');
+
+    final response = await http.get(url, headers: headers);
+
+    print(response.body);
+
+    final jsonData = json.decode(response.body);
+    ChattingController.to.smallCategories = jsonData['categories']
+        .map((data) => SmallCategory.fromJson(data))
+        .toList();
+  }
+
+  // 퀴즈 정보 불러오기
+  static Future<void> getQuizInfo({
+    required String quizId,
+  }) async {
+    final url = Uri.parse('$baseUrl/$events/get-event-page/$quizId');
+
+    final response = await http.get(url, headers: headers);
+
+    print(response.body);
+  }
+
+  // 퀴즈 답변 하기
+  static Future<void> updateQuizInfo({
+    required int quizId,
+    required String quizAnswer,
+    required bool isSentQuiz,
+  }) async {
+    final url = Uri.parse('$baseUrl/$events/update-event-answer/$quizId');
+
+    String data = '{"content":"$quizAnswer"}';
+
+    final response = await http.patch(url, headers: headers, body: data);
+
+    final jsonData = json.decode(response.body);
+    if(isSentQuiz){
+
+    }
+
+    print(response.statusCode);
+    print(response.body);
   }
 }

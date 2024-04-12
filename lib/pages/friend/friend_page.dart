@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:frontend_matching/pages/friend/friend_controller.dart';
+import 'package:frontend_matching/controllers/friend_controller.dart';
 import 'package:frontend_matching/pages/friend/friend_tab_view.dart';
 import 'package:frontend_matching/pages/friend/received_friend_request_tab_view.dart';
 import 'package:frontend_matching/pages/friend/sent_friend_request_tab_view.dart';
@@ -29,9 +29,9 @@ class FriendPage extends StatelessWidget {
       FriendController.to.friends.clear();
       FriendController.to.receivedRequests.clear();
       FriendController.to.sentRequests.clear();
-      FriendService.getFriendList();
-      FriendService.getFriendReceivedRequest(); //request:{[]}오면 에러
-      FriendService.getFriendSendedRequest();
+      FriendController.getFriendList();
+      FriendController.getFriendReceivedRequest(); //request:{[]}오면 에러
+      FriendController.getFriendSendedRequest();
     });
 
     return Scaffold(
@@ -49,7 +49,7 @@ class FriendPage extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
-              FriendService.sendFriendRequest(
+              FriendController.sendFriendRequest(
                   oppEmail: oppController.text,
                   content: contentController.text);
             },

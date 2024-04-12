@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:frontend_matching/controllers/chatting_controller.dart';
 import 'package:frontend_matching/models/friend.dart';
 import 'package:frontend_matching/models/request.dart';
 import 'package:frontend_matching/pages/chat_room/chat_room_page.dart';
@@ -8,6 +9,7 @@ import 'package:frontend_matching/services/chat_service.dart';
 import 'package:frontend_matching/services/friend_service.dart';
 import 'package:get/get.dart';
 
+import '../../controllers/friend_controller.dart';
 import '../../theme/colors.dart';
 import '../../theme/textStyle.dart';
 
@@ -100,17 +102,17 @@ ListTile ReceivedRequest({
       children: [
         TextButton(
           onPressed: () async {
-            await FriendService.acceptFriendRequest(requestId: receivedRequestData.requestId.toString());
-            FriendService.getFriendReceivedRequest();
-            FriendService.getFriendList();
+            await FriendController.acceptFriendRequest(requestId: receivedRequestData.requestId.toString());
+            FriendController.getFriendReceivedRequest();
+            FriendController.getFriendList();
           },
           child: const Text('수락'),
         ),
         TextButton(
           onPressed: () async{
-            await FriendService.rejectFriendRequest(requestId: receivedRequestData.requestId.toString()); //친구 거절
-            await ChatService.deleteRoom(roomId: receivedRequestData.roomId); //채팅방 나가기
-            FriendService.getFriendReceivedRequest(); //내역 리프레쉬
+            await FriendController.rejectFriendRequest(requestId: receivedRequestData.requestId.toString()); //친구 거절
+            await ChattingController.deleteRoom(roomId: receivedRequestData.roomId); //채팅방 나가기
+            FriendController.getFriendReceivedRequest(); //내역 리프레쉬
           },
           child: const Text('거절'),
         ),
@@ -156,7 +158,7 @@ ListTile sentRequest({
     ),
     trailing: TextButton(
       onPressed: () {
-        FriendService.deleteFriendRequest(requestId: sentRequestData.requestId.toString());
+        FriendController.deleteFriendRequest(requestId: sentRequestData.requestId.toString());
       },
       child: Text('취소'),
     ),

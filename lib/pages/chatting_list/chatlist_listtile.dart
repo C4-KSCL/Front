@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
-import 'package:frontend_matching/pages/chat_room/socket_controller.dart';
+import 'package:frontend_matching/controllers/chatting_controller.dart';
 import 'package:frontend_matching/services/time_convert_service.dart';
 import 'package:get/get.dart';
 
@@ -12,7 +12,7 @@ import '../chat_room/chat_room_page.dart';
 Widget ChatListTile({
   required ChatList chatListData,
 }) {
-  Get.put(SocketController());
+  Get.put(ChattingController());
 
   return ListTile(
     leading: CircleAvatar(
@@ -65,9 +65,9 @@ Widget ChatListTile({
     ),
     onTap: () {
       print("챗 가능 : ${chatListData.isChatEnabled}");
-      SocketController.to.isChatEnabled.value = chatListData.isChatEnabled;
+      ChattingController.to.isChatEnabled.value = chatListData.isChatEnabled;
       print("받은 요청인가? : ${chatListData.isReceivedRequest}");
-      SocketController.to.isReceivedRequest.value =
+      ChattingController.to.isReceivedRequest.value =
           chatListData.isReceivedRequest;
       Get.to(ChatRoomPage(
         friendRequestId: chatListData.friendRequestId,

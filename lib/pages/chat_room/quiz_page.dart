@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend_matching/components/button.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
 import 'package:frontend_matching/models/chat.dart';
-import 'package:frontend_matching/pages/chat_room/socket_controller.dart';
+import 'package:frontend_matching/controllers/chatting_controller.dart';
 import 'package:frontend_matching/services/chat_service.dart';
 import 'package:get/get.dart';
 
@@ -16,7 +16,7 @@ Widget QuizPage({
   required bool isSentQuiz,
 }) {
   //초기화
-  SocketController.to.isQuizAnswered.value = false;
+  ChattingController.to.isQuizAnswered.value = false;
 
   String? oppUserChoice, userChoice;
 
@@ -30,11 +30,11 @@ Widget QuizPage({
 
   if (isSentQuiz) {
     if (chat.event!.user1Choice.value != null) {
-      SocketController.to.isQuizAnswered.value = true;
+      ChattingController.to.isQuizAnswered.value = true;
     }
   } else {
     if (chat.event!.user2Choice.value != null) {
-      SocketController.to.isQuizAnswered.value = true;
+      ChattingController.to.isQuizAnswered.value = true;
     }
   }
   print(chat.event!.id);
@@ -75,7 +75,7 @@ Widget QuizPage({
           height: 20,
         ),
         // Quiz의 답변 여부에 따라 답변을 선택하는 버튼들 or 상대의 답변을 보여주는 화면
-        Obx(() => SocketController.to.isQuizAnswered.value
+        Obx(() => ChattingController.to.isQuizAnswered.value
             ? Column(
                 children: [
                   Align(
@@ -133,10 +133,10 @@ Widget QuizPage({
                     text: chat.event!.smallCategory.selectOne,
                     backgroundColor: blueColor1,
                     onPressed: () async {
-                      await ChatService.updateQuizInfo(
+                      await ChattingController.updateQuizInfo(
                         quizId: chat.event!.id,
                         quizAnswer: chat.event!.smallCategory.selectOne, isSentQuiz: isSentQuiz,
-                      ).then((value) => SocketController.to.isQuizAnswered.value=true);
+                      ).then((value) => ChattingController.to.isQuizAnswered.value=true);
                     },
                     textStyle: blackTextStyle1,
                   ),
@@ -147,10 +147,10 @@ Widget QuizPage({
                     text: chat.event!.smallCategory.selectTwo,
                     backgroundColor: pinkColor1,
                     onPressed: () async{
-                      await ChatService.updateQuizInfo(
+                      await ChattingController.updateQuizInfo(
                         quizId: chat.event!.id,
                         quizAnswer: chat.event!.smallCategory.selectTwo, isSentQuiz: isSentQuiz,
-                      ).then((value) => SocketController.to.isQuizAnswered.value=true);
+                      ).then((value) => ChattingController.to.isQuizAnswered.value=true);
 
                     },
                     textStyle: blackTextStyle1,

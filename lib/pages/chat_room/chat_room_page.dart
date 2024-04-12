@@ -1,13 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:frontend_matching/controllers/chatting_list_controller.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
 import 'package:frontend_matching/models/chat.dart';
 import 'package:frontend_matching/pages/chat_room/big_category.dart';
 import 'package:frontend_matching/pages/chat_room/button_layer.dart';
 import 'package:frontend_matching/pages/chat_room/small_category.dart';
 import 'package:frontend_matching/pages/chat_room/quiz_page.dart';
-import 'package:frontend_matching/pages/chat_room/socket_controller.dart';
+import 'package:frontend_matching/controllers/chatting_controller.dart';
 import 'package:frontend_matching/services/chat_service.dart';
 import 'package:frontend_matching/theme/textStyle.dart';
 import 'package:get/get.dart';
@@ -37,7 +38,7 @@ enum ChatType {
   }
 }
 
-class ChatRoomPage extends GetView<SocketController> {
+class ChatRoomPage extends GetView<ChattingController> {
   ChatRoomPage(
       {super.key,
       this.friendRequestId,
@@ -50,14 +51,14 @@ class ChatRoomPage extends GetView<SocketController> {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(SocketController());
+    Get.put(ChattingController());
 
     var chatController = TextEditingController();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       print("앱 리로딩");
-      SocketController.to.init();
-      SocketController.to.connect(roomId: roomId); //웹소켓 연결
+      ChattingController.to.init();
+      ChattingController.to.connect(roomId: roomId); //웹소켓 연결
     });
 
     return Scaffold(
@@ -71,7 +72,7 @@ class ChatRoomPage extends GetView<SocketController> {
           ),
           onPressed: () {
             // 나중에 지워야될거 /////////////////////////////////////////////
-            ChatService.getLastChatList();
+            ChattingListController.getLastChatList();
             ///////////////////////////////////////////////////////////////
             controller.disconnect();
             Get.back();
@@ -134,7 +135,7 @@ class ChatRoomPage extends GetView<SocketController> {
             ),
           ),
           Obx(
-            () => SocketController.to.isChatEnabled.value
+            () => ChattingController.to.isChatEnabled.value
                 ?
                 // 채팅 키보드
                 Container(
@@ -144,7 +145,7 @@ class ChatRoomPage extends GetView<SocketController> {
                       children: [
                         IconButton(
                           onPressed: () {
-                            ChatService.getBigCategories();
+                            ChattingController.getBigCategories();
                             controller.clickAddButton.value
                                 ? controller.clickAddButton.value = false
                                 : controller.clickAddButton.value = true;
@@ -175,7 +176,7 @@ class ChatRoomPage extends GetView<SocketController> {
                         ),
                         IconButton(
                             onPressed: () {
-                              SocketController.to.sendMessage(
+                              ChattingController.to.sendMessage(
                                   roomId: roomId, content: chatController.text);
                             },
                             icon: Image.asset(
@@ -188,17 +189,17 @@ class ChatRoomPage extends GetView<SocketController> {
                 //버튼 칸 (수락,거절 / 취소)
                 Align(
                     alignment: Alignment.center,
-                    child: SocketController.to.isReceivedRequest.value
+                    child: ChattingController.to.isReceivedRequest.value
                         ? AcceptOrRejectButtonLayer(friendRequestId)
                         : CancelButtonLayer(friendRequestId),
                   ),
           ),
-          Obx(() => SocketController.to.clickAddButton.value
+          Obx(() => ChattingController.to.clickAddButton.value
               ? SizedBox(
                   height: 250,
                   child: Center(
                       child: Obx(
-                    () => SocketController.to.showSecondGridView.value
+                    () => ChattingController.to.showSecondGridView.value
                         ? smallCategory()
                         : bigCategory(),
                   )),

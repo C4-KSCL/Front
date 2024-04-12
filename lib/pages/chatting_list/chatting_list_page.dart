@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
 import 'package:frontend_matching/pages/chatting_list/chatlist_listtile.dart';
-import 'package:frontend_matching/pages/chatting_list/chatting_list_controller.dart';
+import 'package:frontend_matching/controllers/chatting_list_controller.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get.dart';
 
@@ -20,7 +20,7 @@ class ChattingListPage extends StatelessWidget {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ChattingListController.to.chattingList.clear();
-      ChatService.getLastChatList(); // 마지막 채팅 내역 가져오기
+      ChattingListController.getLastChatList(); // 마지막 채팅 내역 가져오기
     });
 
     return Scaffold(
