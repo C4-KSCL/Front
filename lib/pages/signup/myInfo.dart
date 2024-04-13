@@ -2,10 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/components/genderButton.dart';
+import 'package:frontend_matching/components/textField.dart';
 import 'package:frontend_matching/components/textformField.dart';
 import 'package:frontend_matching/controllers/signupController.dart';
 import 'package:frontend_matching/pages/signup/myMbtiPage.dart';
 import 'package:frontend_matching/pages/signup/schoolAuth.dart';
+import 'package:frontend_matching/services/nickname_check.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
@@ -76,10 +78,17 @@ class _InfoAuthPageState extends State<InfoAuthPage> {
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 13.0, vertical: 8.0),
-              child: GetTextContainer(
-                  typeController: nicknameController,
-                  textLogo: 'textLogo',
-                  textType: '닉네임'),
+              child: ButtonTextFieldBox(
+                hintText: '입력해주세요',
+                buttonText: '인증하기',
+                textEditingController: nicknameController,
+                TEXT: '닉네임',
+                onPressed: () async {
+                  String nickname = nicknameController.text;
+
+                  var code = await NickNameCheck.checknickname(nickname);
+                },
+              ),
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 13.0, vertical: 8.0),
@@ -106,9 +115,9 @@ class _InfoAuthPageState extends State<InfoAuthPage> {
                     onGenderSelected: (selectedValue) {
                       genderInt = selectedValue; //gender 숫자값 대입
                       if (genderInt == 1) {
-                        genderString = "0";
+                        genderString = "남";
                       } else {
-                        genderString = "1";
+                        genderString = "여";
                       }
                       print(genderString);
                     },

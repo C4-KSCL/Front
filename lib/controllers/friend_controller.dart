@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:frontend_matching/controllers/userDataController.dart';
 import 'package:frontend_matching/models/friend.dart';
 import 'package:frontend_matching/models/request.dart';
-import 'package:frontend_matching/services/friend_service.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 

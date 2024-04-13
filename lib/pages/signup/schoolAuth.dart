@@ -51,11 +51,27 @@ class _SchoolAuthPageState extends State<SchoolAuthPage> {
   final TextEditingController authController = TextEditingController();
   late SignupController signupController;
   String verify = '';
+  bool isElevationButtonEnabled = false;
+
+  void checkElevationButtonStatus() {
+    setState(() {
+      isElevationButtonEnabled = authController.text.isNotEmpty;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     signupController = Get.put(SignupController());
+
+    authController.addListener(checkElevationButtonStatus);
+  }
+
+  @override
+  void dispose() {
+    authController.removeListener(checkElevationButtonStatus);
+    authController.dispose();
+    super.dispose();
   }
 
   Widget build(BuildContext context) {
@@ -91,6 +107,7 @@ class _SchoolAuthPageState extends State<SchoolAuthPage> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 13.0, vertical: 8.0),
             child: ButtonTextFieldBox(
+              TEXT: '학교 이메일',
               hintText: '입력해주세요',
               onPressed: () async {
                 String email = schoolEmailController.text;
@@ -123,37 +140,39 @@ class _SchoolAuthPageState extends State<SchoolAuthPage> {
                   backgroundColor: Color(0xFF7EA5F3),
                   minimumSize: Size(300, 50),
                 ),
-                onPressed: () {
-                  if (authController.text == verify) {
-                    String schoolEmail = schoolEmailController.text;
-                    signupController.addToSignupArray(schoolEmail);
-                    print(signupController.signupArray);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => InfoAuthPage(),
-                      ),
-                    );
-                  } else {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('인증 실패'),
-                          content: Text('인증번호가 올바르지 않습니다.'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: const Text('확인'),
+                onPressed: isElevationButtonEnabled
+                    ? () {
+                        if (authController.text == verify) {
+                          String schoolEmail = schoolEmailController.text;
+                          signupController.addToSignupArray(schoolEmail);
+                          print(signupController.signupArray);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => InfoAuthPage(),
                             ),
-                          ],
-                        );
-                      },
-                    );
-                  }
-                },
+                          );
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('인증 실패'),
+                                content: Text('인증번호가 올바르지 않습니다.'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text('확인'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
+                      }
+                    : null,
                 child: const Text(
                   '다음으로',
                   style: TextStyle(

@@ -1,9 +1,5 @@
-//유저 정보를 담는 모델
-import 'dart:ffi';
-import 'dart:ui';
-
 class User {
-  int userNumber; //회원번호
+  int? userNumber; //회원번호
   String email; //이메일
   String password; //비밀번호
   String nickname; //닉네임

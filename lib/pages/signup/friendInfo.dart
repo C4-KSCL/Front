@@ -112,29 +112,38 @@ class FriendInfoPage extends StatelessWidget {
                 ),
               ),
               Gap(),
-              GetTextContainer(
-                typeController: maxageController,
-                textLogo: '',
-                textType: '최대나이',
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 13.0, vertical: 8.0),
+                child: GetTextContainer(
+                  typeController: maxageController,
+                  textLogo: '',
+                  textType: '최대나이',
+                ),
               ),
               Gap(),
-              GetTextContainer(
-                typeController: minageController,
-                textLogo: '',
-                textType: '최소나이',
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 13.0, vertical: 8.0),
+                child: GetTextContainer(
+                  typeController: minageController,
+                  textLogo: '',
+                  textType: '최소나이',
+                ),
               ),
               Gap(),
               Gap(),
-              GenderButton(
-                onGenderSelected: (selectedValue) {
-                  genderInt = selectedValue; //gender 숫자값 대입
-                  if (genderInt == 1) {
-                    genderString = "0";
-                  } else {
-                    genderString = "1";
-                  }
-                  print(genderString);
-                },
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 13.0, vertical: 8.0),
+                child: GenderButton(
+                  onGenderSelected: (selectedValue) {
+                    genderInt = selectedValue;
+                    if (genderInt == 1) {
+                      genderString = "남";
+                    } else {
+                      genderString = "여";
+                    }
+                    print(genderString);
+                  },
+                ),
               ),
               Gap(),
               Gap(),

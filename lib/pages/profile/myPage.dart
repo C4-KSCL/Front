@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
+import 'package:frontend_matching/pages/matching/matchingView.dart';
 import 'package:frontend_matching/pages/profile/buttons/InfoModifyButton.dart';
 import 'package:frontend_matching/pages/profile/buttons/columnButton.dart';
 import 'package:frontend_matching/pages/profile/imageModifyPage.dart';
@@ -42,7 +43,7 @@ class MyPage extends StatelessWidget {
             my_gender = controller.user.value!.gender;
             my_mbti = controller.user.value!.myMBTI!;
             my_keyword = controller.user.value!.myKeyword!;
-            if (my_gender == '0') {
+            if (my_gender == '남') {
               my_gender = '남';
             } else {
               my_gender = '여';

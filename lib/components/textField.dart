@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:frontend_matching/theme/textStyle.dart';
+import 'package:flutter/services.dart';
 
 //버튼이 들어있는 텍스트 필드
 class ButtonTextFieldBox extends StatefulWidget {
@@ -10,12 +11,14 @@ class ButtonTextFieldBox extends StatefulWidget {
   final VoidCallback onPressed;
   final String buttonText;
   final TextEditingController textEditingController;
+  final String TEXT;
 
   ButtonTextFieldBox({
     required this.hintText,
     required this.onPressed,
     required this.buttonText,
     required this.textEditingController,
+    required this.TEXT,
   });
 
   @override
@@ -66,7 +69,7 @@ class _ButtonTextFieldBoxState extends State<ButtonTextFieldBox> {
                 width: 5,
               ),
               Text(
-                '학교 이메일',
+                widget.TEXT,
                 style: TextStyle(fontSize: 15),
               )
             ],
@@ -160,4 +163,49 @@ Container IconTextFieldBox({
       controller: textEditingController,
     ),
   );
+}
+
+class NumberInputField extends StatelessWidget {
+  final TextEditingController controller; // TextEditingController 추가
+  final String hintText; // hintText 추가
+
+  // 생성자에서 필수 매개변수로 받음
+  NumberInputField({
+    required this.controller,
+    required this.hintText,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    return Container(
+      width: screenWidth * 0.37,
+      padding: EdgeInsets.symmetric(horizontal: 40.0),
+      margin: EdgeInsets.all(20.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      child: TextField(
+        controller: controller, // 사용할 컨트롤러
+        keyboardType: TextInputType.number,
+        inputFormatters: <TextInputFormatter>[
+          FilteringTextInputFormatter.digitsOnly,
+        ],
+        decoration: InputDecoration(
+          hintText: hintText, // hintText 사용
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.symmetric(vertical: 10.0),
+        ),
+      ),
+    );
+  }
 }

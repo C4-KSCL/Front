@@ -13,7 +13,6 @@ import 'package:http/http.dart' as http;
 import '../models/chat_list.dart';
 import '../models/event.dart';
 import '../models/small_category.dart';
-import '../services/chat_service.dart';
 
 class ChattingController extends GetxController {
   static ChattingController get to => Get.find<ChattingController>();

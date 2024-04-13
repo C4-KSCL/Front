@@ -41,7 +41,6 @@ class _ProfileImagePageState extends State<ProfileImagePage> {
       var response = await request.send();
       if (response.statusCode == 200) {
         print('Profile image uploaded successfully!');
-        // 여기서 업로드가 완료되었음을 알 수 있도록 처리할 수 있습니다.
       } else {
         print('Failed to upload profile image: ${response.statusCode}');
       }

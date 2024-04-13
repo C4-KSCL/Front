@@ -3,6 +3,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:frontend_matching/components/loginTextForm.dart';
+import 'package:frontend_matching/components/loginVerifyTextForm.dart';
 import 'package:frontend_matching/components/textformField.dart';
 import 'package:frontend_matching/components/textformVerify.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
@@ -24,7 +26,6 @@ class BottomLayerLoginScreen extends StatefulWidget {
 }
 
 class _BottomLayerLoginScreenState extends State<BottomLayerLoginScreen> {
-  final formkey = GlobalKey<FormState>();
   TextEditingController idController = TextEditingController();
   TextEditingController pwController = TextEditingController();
 
@@ -39,7 +40,6 @@ class _BottomLayerLoginScreenState extends State<BottomLayerLoginScreen> {
           )),
       padding: const EdgeInsets.all(20),
       child: Form(
-        key: formkey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -47,11 +47,11 @@ class _BottomLayerLoginScreenState extends State<BottomLayerLoginScreen> {
               '로그인',
               style: TextStyle(fontSize: 28, fontWeight: FontWeight.w800),
             ),
-            TextformVerify(
+            LoginVerifyTextform(
               typeController: idController,
               textType: '이메일',
             ),
-            GetTextContainer(
+            LoginTextForm(
                 typeController: pwController, textLogo: '', textType: '비밀번호'),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

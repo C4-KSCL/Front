@@ -71,7 +71,6 @@ class _UserAvatarState extends State<UserAvatar> {
             onPressed: () async {
               await userProfileController.deleteProfileImage(
                   widget.accessToken, widget.deletePath);
-              UserServices.loginUser(widget.email, widget.password);
             },
           ),
         ),
@@ -83,7 +82,6 @@ class _UserAvatarState extends State<UserAvatar> {
             onPressed: () async {
               await userProfileController
                   .uploadProfileImage(widget.accessToken);
-              UserServices.loginUser(widget.email, widget.password);
             },
           ),
         ),

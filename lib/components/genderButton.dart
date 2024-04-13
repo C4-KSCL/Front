@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 
 class GenderButton extends StatefulWidget {
-  final void Function(int) onGenderSelected; // 추가: 선택된 값 콜백 함수
+  final void Function(int) onGenderSelected;
 
   const GenderButton({Key? key, required this.onGenderSelected})
       : super(key: key);
@@ -22,7 +22,6 @@ class _GenderButtonState extends State<GenderButton> {
           selected = index;
         });
 
-        // 추가: 선택된 값 콜백 함수 호출
         widget.onGenderSelected(selected);
       },
       child: Text(
@@ -34,6 +33,7 @@ class _GenderButtonState extends State<GenderButton> {
       style: OutlinedButton.styleFrom(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         backgroundColor: (selected == index) ? Color(0xFF7EA5F3) : Colors.white,
+        minimumSize: Size(140, 40),
       ),
     );
   }

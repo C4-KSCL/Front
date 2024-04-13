@@ -4,10 +4,8 @@ import 'package:frontend_matching/controllers/friend_controller.dart';
 import 'package:frontend_matching/pages/friend/friend_tab_view.dart';
 import 'package:frontend_matching/pages/friend/received_friend_request_tab_view.dart';
 import 'package:frontend_matching/pages/friend/sent_friend_request_tab_view.dart';
-import 'package:frontend_matching/services/friend_service.dart';
 import 'package:get/get.dart';
 
-import '../../services/chat_service.dart';
 import '../../theme/colors.dart';
 import '../../theme/textStyle.dart';
 import 'friend_and_request_listtile.dart';
@@ -141,7 +139,7 @@ class FriendPage extends StatelessWidget {
               sentFriendRequestTabView(),
             ],
             options: CarouselOptions(
-                height: 400,
+                height: Get.height*0.7,
                 //mediaquery로 수정필요
                 scrollDirection: Axis.horizontal,
                 viewportFraction: 1,
