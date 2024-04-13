@@ -71,7 +71,7 @@ Widget ReceiveTextChatBox({
       Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Text(chat.readCount == 1 ? "1" : ""),
+          Text(chat.readCount.value == 1 ? "1" : ""),
           Text(convertHourAndMinuteTime(
               utcTimeString: chat.createdAt.toString())),
         ],
@@ -85,12 +85,13 @@ Widget SentQuizChatBox({
 }) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.end,
+    crossAxisAlignment: CrossAxisAlignment.end,
     children: [
       Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Text(chat.readCount == 1 ? "1" : ""),
+          Text(chat.readCount.value == 1 ? "1" : ""),
           Text(convertHourAndMinuteTime(
               utcTimeString: chat.createdAt.toString())),
         ],
@@ -155,6 +156,7 @@ Widget ReceiveQuizChatBox({
 }) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.end,
     children: [
       Container(
         decoration: const BoxDecoration(

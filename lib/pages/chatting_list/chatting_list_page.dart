@@ -28,7 +28,7 @@ class ChattingListPage extends StatelessWidget {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text("채팅 리스트"),
+            const Text("채팅"),
             Row(
               children: [
                 IconButton(onPressed: () {}, icon: const Icon(Icons.search)),

@@ -57,7 +57,7 @@ ListTile FriendListTile({
       onPressed: () {
         // Get.to(ChatRoomPage(roomId: friendData.roomId, oppUserName: friendData.nickname,));
       },
-      child: Text("마지막 연락?"),
+      child: Text(""),
     ),
     onTap: () {},
   );

@@ -56,7 +56,7 @@ Widget QuizPage({
             IconButton(
                 icon: const Icon(Icons.close),
                 onPressed: voidCallback // 'X' 버튼을 누르면 BottomSheet을 종료합니다.
-                ),
+            ),
           ],
         ),
         // Quiz 관련 이미지
@@ -75,88 +75,104 @@ Widget QuizPage({
           height: 20,
         ),
         // Quiz의 답변 여부에 따라 답변을 선택하는 버튼들 or 상대의 답변을 보여주는 화면
-        Obx(() => ChattingController.to.isQuizAnswered.value
+        Obx(() =>
+        ChattingController.to.isQuizAnswered.value
             ? Column(
-                children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      constraints: BoxConstraints(
-                        maxWidth: Get.width * 0.75,
-                      ),
-                      decoration: const BoxDecoration(
-                        color: greyColor3,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(8),
-                            topRight: Radius.circular(8),
-                            bottomRight: Radius.circular(8)),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          oppUserChoice == null
-                              ? '"아직 선택하지 않았습니다."'
-                              : '"${chat.event!.user2Choice.toString()}"',
-                          style: blackTextStyle6,
-                        ),
-                      ),
-                    ),
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Container(
+                constraints: BoxConstraints(
+                  maxWidth: Get.width * 0.75,
+                ),
+                decoration: const BoxDecoration(
+                  color: greyColor3,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(8),
+                      topRight: Radius.circular(8),
+                      bottomRight: Radius.circular(8)),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    oppUserChoice == null
+                        ? '"아직 선택하지 않았습니다."'
+                        : '"${chat.event!.user2Choice.toString()}"',
+                    style: blackTextStyle6,
                   ),
-                  const SizedBox(
-                    height: 20,
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Align(
+              alignment: Alignment.centerRight, // 두 번째 Container를 우측으로 정렬
+              child: Container(
+                constraints: BoxConstraints(maxWidth: Get.width * 0.75),
+                decoration: const BoxDecoration(
+                  color: blueColor1,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(8),
+                      topRight: Radius.circular(8),
+                      bottomLeft: Radius.circular(8)),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text( isSentQuiz ?
+                    '"${chat.event!.user1Choice.value}"' : '"${chat.event!.user2Choice.value}"' ,
+                    style: whiteTextStyle3,
                   ),
-                  Align(
-                    alignment: Alignment.centerRight, // 두 번째 Container를 우측으로 정렬
-                    child: Container(
-                      constraints: BoxConstraints(maxWidth: Get.width * 0.75),
-                      decoration: const BoxDecoration(
-                        color: blueColor1,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(8),
-                            topRight: Radius.circular(8),
-                            bottomLeft: Radius.circular(8)),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          '"${userChoice}"',
-                          style: whiteTextStyle3,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              )
+                ),
+              ),
+            ),
+          ],
+        )
             : Column(
-                children: [
-                  ColorBottomButton(
-                    text: chat.event!.smallCategory.selectOne,
-                    backgroundColor: blueColor1,
-                    onPressed: () async {
-                      await ChattingController.updateQuizInfo(
-                        quizId: chat.event!.id,
-                        quizAnswer: chat.event!.smallCategory.selectOne, isSentQuiz: isSentQuiz,
-                      ).then((value) => ChattingController.to.isQuizAnswered.value=true);
-                    },
-                    textStyle: blackTextStyle1,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  ColorBottomButton(
-                    text: chat.event!.smallCategory.selectTwo,
-                    backgroundColor: pinkColor1,
-                    onPressed: () async{
-                      await ChattingController.updateQuizInfo(
-                        quizId: chat.event!.id,
-                        quizAnswer: chat.event!.smallCategory.selectTwo, isSentQuiz: isSentQuiz,
-                      ).then((value) => ChattingController.to.isQuizAnswered.value=true);
-
-                    },
-                    textStyle: blackTextStyle1,
-                  ),
-                ],
-              ))
+          children: [
+            ColorBottomButton(
+              text: chat.event!.smallCategory.selectOne,
+              backgroundColor: blueColor1,
+              onPressed: () async {
+                await ChattingController.updateQuizInfo(
+                  quizId: chat.event!.id,
+                  quizAnswer: chat.event!.smallCategory.selectOne,
+                  isSentQuiz: isSentQuiz,
+                ).then((value) {
+                  if (isSentQuiz) {
+                    chat.event!.user1Choice.value = value;
+                  } else {
+                    chat.event!.user2Choice.value = value;
+                  }
+                  ChattingController.to.isQuizAnswered.value = true;
+                });
+              },
+              textStyle: blackTextStyle1,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            ColorBottomButton(
+              text: chat.event!.smallCategory.selectTwo,
+              backgroundColor: pinkColor1,
+              onPressed: () async {
+                await ChattingController.updateQuizInfo(
+                  quizId: chat.event!.id,
+                  quizAnswer: chat.event!.smallCategory.selectTwo,
+                  isSentQuiz: isSentQuiz,
+                ).then((value) {
+                  if (isSentQuiz) {
+                    chat.event!.user1Choice.value = value;
+                  } else {
+                    chat.event!.user2Choice.value = value;
+                  }
+                  ChattingController.to.isQuizAnswered.value = true;
+                });
+              },
+              textStyle: blackTextStyle1,
+            ),
+          ],
+        ))
       ],
     ),
   );

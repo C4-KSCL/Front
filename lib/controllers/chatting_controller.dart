@@ -285,7 +285,7 @@ class ChattingController extends GetxController {
   }
 
   // 퀴즈 답변 하기
-  static Future<void> updateQuizInfo({
+  static Future<String> updateQuizInfo({
     required int quizId,
     required String quizAnswer,
     required bool isSentQuiz,
@@ -296,12 +296,14 @@ class ChattingController extends GetxController {
 
     final response = await http.patch(url, headers: headers, body: data);
 
-    final jsonData = json.decode(response.body);
-    if(isSentQuiz){
-
-    }
-
     print(response.statusCode);
     print(response.body);
+
+    final jsonData = json.decode(response.body);
+    if(isSentQuiz){
+      return jsonData['event']['user1Choice'];
+    } else{
+      return jsonData['event']['user2Choice'];
+    }
   }
 }

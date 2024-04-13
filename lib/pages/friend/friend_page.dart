@@ -36,26 +36,21 @@ class FriendPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("친구창"),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text("친구"),
+            Row(
+              children: [
+                IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
+                IconButton(onPressed: () {}, icon: const Icon(Icons.settings)),
+              ],
+            )
+          ],
+        ),
       ),
       body: Column(
         children: [
-          /////////테스트용/////////
-          TextField(
-            controller: oppController,
-          ),
-          TextField(
-            controller: contentController,
-          ),
-          TextButton(
-            onPressed: () {
-              FriendController.sendFriendRequest(
-                  oppEmail: oppController.text,
-                  content: contentController.text);
-            },
-            child: Text("요청"),
-          ),
-          ////////////////////////
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Container(
