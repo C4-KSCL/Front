@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:frontend_matching/controllers/friend_controller.dart';
+import 'package:frontend_matching/models/friend.dart';
 import 'package:frontend_matching/pages/friend/friend_tab_view.dart';
 import 'package:frontend_matching/pages/friend/received_friend_request_tab_view.dart';
 import 'package:frontend_matching/pages/friend/sent_friend_request_tab_view.dart';
@@ -49,6 +50,17 @@ class FriendPage extends StatelessWidget {
       ),
       body: Column(
         children: [
+          /////////////////////////////////
+          TextField(
+            controller: oppController,
+          ),
+          TextField(
+            controller: contentController,
+          ),
+          TextButton(onPressed: (){
+            FriendController.sendFriendRequest(oppEmail: oppController.text, content: contentController.text);
+          }, child: Text("친구추가")),
+          //////////////////////////////////
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Container(

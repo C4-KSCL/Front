@@ -47,6 +47,7 @@ Widget AcceptOrRejectButtonLayer(int? friendRequestId) {
             ),
             onPressed: () {
               FriendController.rejectFriendRequest(requestId: friendRequestId.toString());
+              Get.back();
             },
             child: const Text(
               "거절",
@@ -77,6 +78,7 @@ Widget CancelButtonLayer(int? friendRequestId) {
         ),
         onPressed: () {
           FriendController.deleteFriendRequest(requestId: friendRequestId.toString());
+          Get.back();
         },
         child: const Text(
           "취소",

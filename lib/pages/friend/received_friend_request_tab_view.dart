@@ -13,7 +13,7 @@ Widget receivedFriendRequestTabView() {
           );
         },
         separatorBuilder: (context, index) {
-          return const Divider();
+          return const SizedBox(height: 5,);
         },
       ));
 }

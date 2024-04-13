@@ -65,7 +65,7 @@ class ChattingListPage extends StatelessWidget {
             );
           },
           separatorBuilder: (BuildContext context, int index) {
-            return const Divider();
+            return const SizedBox(height: 5,);
           },
         ),
       ),

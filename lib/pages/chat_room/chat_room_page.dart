@@ -135,8 +135,8 @@ class ChatRoomPage extends GetView<ChattingController> {
                     },
                   ),
                   separatorBuilder: (BuildContext context, int index) {
-                    return SizedBox(
-                      height: 5,
+                    return const SizedBox(
+                      height: 5
                     );
                   },
                 ),
@@ -200,12 +200,18 @@ class ChatRoomPage extends GetView<ChattingController> {
                   )
                 :
                 //버튼 칸 (수락,거절 / 취소)
-                Align(
-                    alignment: Alignment.center,
-                    child: ChattingController.to.isReceivedRequest.value
-                        ? AcceptOrRejectButtonLayer(friendRequestId)
-                        : CancelButtonLayer(friendRequestId),
-                  ),
+                Column(
+                  children: [
+                    const SizedBox(height: 50,),
+                    Align(
+                        alignment: Alignment.center,
+                        child: ChattingController.to.isReceivedRequest.value
+                            ? AcceptOrRejectButtonLayer(friendRequestId)
+                            : CancelButtonLayer(friendRequestId),
+                      ),
+                    const SizedBox(height: 50,)
+                  ],
+                ),
           ),
           Obx(() => ChattingController.to.clickAddButton.value
               ? SizedBox(
