@@ -1,4 +1,5 @@
 import 'package:frontend_matching/models/event.dart';
+import 'package:get/get.dart';
 
 class Chat {
   final int id;
@@ -7,21 +8,21 @@ class Chat {
   final String? userEmail;
   final String createdAt;
   final String content;
-  final int readCount;
+  final Rx<int> readCount;
   final String type;
   final Event? event;
 
   Chat({
     required this.id,
     required this.roomId,
-    required this.nickName,
-    required this.userEmail,
+    this.nickName,
+    this.userEmail,
     required this.createdAt,
     required this.content,
-    required this.readCount,
+    required int readCount,
     required this.type,
     this.event,
-  });
+  }) : this.readCount = readCount.obs;
 
   factory Chat.fromJson(Map<String, dynamic> json) {
     return Chat(

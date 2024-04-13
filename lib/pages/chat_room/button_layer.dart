@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend_matching/pages/chat_room/socket_controller.dart';
+import 'package:frontend_matching/controllers/chatting_controller.dart';
+import 'package:frontend_matching/controllers/friend_controller.dart';
 import 'package:frontend_matching/services/friend_service.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:frontend_matching/theme/textStyle.dart';
@@ -26,8 +27,8 @@ Widget AcceptOrRejectButtonLayer(int? friendRequestId) {
             ),
             onPressed: () {
               //친구 수락
-              FriendService.acceptFriendRequest(requestId: friendRequestId.toString());
-              SocketController.to.isChatEnabled.value=true;
+              FriendController.acceptFriendRequest(requestId: friendRequestId.toString());
+              ChattingController.to.isChatEnabled.value=true;
 
             },
             child: const Text(
@@ -46,7 +47,7 @@ Widget AcceptOrRejectButtonLayer(int? friendRequestId) {
               ),
             ),
             onPressed: () {
-              FriendService.rejectFriendRequest(requestId: friendRequestId.toString());
+              FriendController.rejectFriendRequest(requestId: friendRequestId.toString());
             },
             child: const Text(
               "거절",
@@ -76,7 +77,7 @@ Widget CancelButtonLayer(int? friendRequestId) {
           ),
         ),
         onPressed: () {
-          FriendService.deleteFriendRequest(requestId: friendRequestId.toString());
+          FriendController.deleteFriendRequest(requestId: friendRequestId.toString());
         },
         child: const Text(
           "취소",

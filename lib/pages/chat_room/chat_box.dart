@@ -17,7 +17,7 @@ Widget SentTextChatBox({
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Text(chat.readCount == 1 ? "1" : ""),
+          Text(chat.readCount.value == 1 ? "1" : ""),
           Text(convertHourAndMinuteTime(
               utcTimeString: chat.createdAt.toString())),
         ],
@@ -71,7 +71,7 @@ Widget ReceiveTextChatBox({
       Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Text(chat.readCount == 1 ? "1" : ""),
+          Text(chat.readCount.value == 1 ? "1" : ""),
           Text(convertHourAndMinuteTime(
               utcTimeString: chat.createdAt.toString())),
         ],
@@ -85,12 +85,13 @@ Widget SentQuizChatBox({
 }) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.end,
+    crossAxisAlignment: CrossAxisAlignment.end,
     children: [
       Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Text(chat.readCount == 1 ? "1" : ""),
+          Text(chat.readCount.value == 1 ? "1" : ""),
           Text(convertHourAndMinuteTime(
               utcTimeString: chat.createdAt.toString())),
         ],
@@ -107,7 +108,7 @@ Widget SentQuizChatBox({
           children: [
             Text(
               chat.event!.smallCategory.name,
-              style: blackTextStyle1,
+              style: whiteTextStyle1,
             ),
             SizedBox(
               width: Get.width * 0.4,
@@ -129,7 +130,7 @@ Widget SentQuizChatBox({
                   //quizId 를 통해서 api로 정보 받아오고 나면 QuizPage 열기
                   QuizPage(
                     voidCallback: Get.back,
-                    chat: chat,
+                    chat: chat, isSentQuiz: true,
                   ),
                   backgroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
@@ -140,7 +141,7 @@ Widget SentQuizChatBox({
               },
               child: const Text(
                 "확인하기",
-                style: blackTextStyle5,
+                style: blackTextStyle1,
               ),
             ),
           ],
@@ -155,6 +156,7 @@ Widget ReceiveQuizChatBox({
 }) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.end,
     children: [
       Container(
         decoration: const BoxDecoration(
@@ -166,11 +168,15 @@ Widget ReceiveQuizChatBox({
         ),
         child: Column(
           children: [
+            Text(
+              chat.event!.smallCategory.name,
+              style: blackTextStyle1,
+            ),
             SizedBox(
               width: Get.width * 0.4,
               height: Get.width * 0.4,
               child:
-                  Image.network(chat.event!.smallCategory.eventImage!.filepath),
+              Image.network(chat.event!.smallCategory.eventImage!.filepath),
             ),
             TextButton(
               style: TextButton.styleFrom(
@@ -186,17 +192,18 @@ Widget ReceiveQuizChatBox({
                   //quizId 를 통해서 api로 정보 받아오고 나면 QuizPage 열기
                   QuizPage(
                     voidCallback: Get.back,
-                    chat: chat,
+                    chat: chat, isSentQuiz: false,
                   ),
                   backgroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
+                  isScrollControlled: true,
                 );
               },
               child: const Text(
                 "확인하기",
-                style: blackTextStyle5,
+                style: blackTextStyle1,
               ),
             ),
           ],
@@ -206,7 +213,7 @@ Widget ReceiveQuizChatBox({
       Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Text(chat.readCount == 1 ? "1" : ""),
+          Text(chat.readCount.value == 1 ? "1" : ""),
           Text(convertHourAndMinuteTime(
               utcTimeString: chat.createdAt.toString())),
         ],

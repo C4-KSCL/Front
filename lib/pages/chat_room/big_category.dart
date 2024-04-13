@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/models/big_category.dart';
-import 'package:frontend_matching/pages/chat_room/socket_controller.dart';
+import 'package:frontend_matching/controllers/chatting_controller.dart';
 import 'package:frontend_matching/services/chat_service.dart';
 import 'package:frontend_matching/theme/textStyle.dart';
 import 'package:get/get.dart';
@@ -30,8 +30,8 @@ Widget bigCategory() {
           IconButton(
             // 실제 사용할 IconButton
             onPressed: () {
-              SocketController.to.clickAddButton.value = false;
-              SocketController.to.clickQuizButtonIndex.value = -1;
+              ChattingController.to.clickAddButton.value = false;
+              ChattingController.to.clickQuizButtonIndex.value = -1;
             },
             icon: const Icon(Icons.close),
           ),
@@ -39,7 +39,7 @@ Widget bigCategory() {
       ),
       Expanded(
         child: FutureBuilder(
-          future: ChatService.getBigCategories(),
+          future: ChattingController.getBigCategories(),
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               // 데이터를 기다리는 동안 로딩 인디케이터를 보여줌
@@ -54,10 +54,10 @@ Widget bigCategory() {
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                 ),
-                itemCount: SocketController.to.bigCategories.length,
+                itemCount: ChattingController.to.bigCategories.length,
                 itemBuilder: (context, index) {
                   BigCategory bigCategory =
-                      SocketController.to.bigCategories[index];
+                      ChattingController.to.bigCategories[index];
                   return Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: SizedBox(
@@ -74,8 +74,8 @@ Widget bigCategory() {
                           minimumSize: Size(Get.width * 0.3, 30),
                         ),
                         onPressed: () {
-                          SocketController.to.bigCategoryName=bigCategory.name;
-                          SocketController.to.showSecondGridView.value = true;
+                          ChattingController.to.bigCategoryName=bigCategory.name;
+                          ChattingController.to.showSecondGridView.value = true;
                         },
                         child: Column(
                           children: [

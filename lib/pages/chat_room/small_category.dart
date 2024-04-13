@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/models/small_category.dart';
-import 'package:frontend_matching/pages/chat_room/socket_controller.dart';
+import 'package:frontend_matching/controllers/chatting_controller.dart';
 import 'package:frontend_matching/services/chat_service.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:frontend_matching/theme/textStyle.dart';
@@ -19,14 +19,14 @@ Widget smallCategory() {
         children: [
           IconButton(
             onPressed: () {
-              SocketController.to.showSecondGridView.value = false;
-              SocketController.to.clickQuizButtonIndex.value = -1;
+              ChattingController.to.showSecondGridView.value = false;
+              ChattingController.to.clickQuizButtonIndex.value = -1;
             },
             icon: const Icon(Icons.keyboard_arrow_left),
           ),
           Expanded(
             child: Text(
-              SocketController.to.bigCategoryName!,
+              ChattingController.to.bigCategoryName!,
               style: blackTextStyle2,
               textAlign: TextAlign.center,
             ),
@@ -43,7 +43,7 @@ Widget smallCategory() {
       ),
       Expanded(
         child: FutureBuilder(
-            future: ChatService.getSmallCategories(bigCategoryName: SocketController.to.bigCategoryName!),
+            future: ChattingController.getSmallCategories(bigCategoryName: ChattingController.to.bigCategoryName!),
             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 // 데이터를 기다리는 동안 로딩 인디케이터를 보여줌
@@ -59,11 +59,11 @@ Widget smallCategory() {
                       crossAxisSpacing: 10,
                       mainAxisSpacing: 10,
                     ),
-                    itemCount: SocketController.to.smallCategories.length,
+                    itemCount: ChattingController.to.smallCategories.length,
                     // 예시를 위해 아이템 개수를 9개로 설정
                     itemBuilder: (context, index) {
                       SmallCategory smallCategory =
-                          SocketController.to.smallCategories[index];
+                          ChattingController.to.smallCategories[index];
                       return Obx(() => Padding(
                             padding: const EdgeInsets.all(10),
                             child: Stack(
@@ -81,7 +81,7 @@ Widget smallCategory() {
                                       minimumSize: Size(Get.width * 0.3, 30),
                                     ),
                                     onPressed: () {
-                                      SocketController.to
+                                      ChattingController.to
                                           .clickQuizButton(index);
                                     },
                                     child: Text(
@@ -90,7 +90,7 @@ Widget smallCategory() {
                                     ),
                                   ),
                                 ),
-                                if (SocketController
+                                if (ChattingController
                                         .to.clickQuizButtonIndex.value ==
                                     index)
                                   SizedBox(
@@ -110,7 +110,7 @@ Widget smallCategory() {
                                       onPressed: () {
                                         print("전송클릭");
                                         //event message 전송
-                                        SocketController.to.newEvent(
+                                        ChattingController.to.newEvent(
                                             smallCategoryName:
                                                 smallCategory.name);
                                       },

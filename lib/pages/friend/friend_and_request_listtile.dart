@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:frontend_matching/controllers/chatting_controller.dart';
 import 'package:frontend_matching/models/friend.dart';
 import 'package:frontend_matching/models/request.dart';
 import 'package:frontend_matching/pages/chat_room/chat_room_page.dart';
@@ -8,6 +9,7 @@ import 'package:frontend_matching/services/chat_service.dart';
 import 'package:frontend_matching/services/friend_service.dart';
 import 'package:get/get.dart';
 
+import '../../controllers/friend_controller.dart';
 import '../../theme/colors.dart';
 import '../../theme/textStyle.dart';
 
@@ -25,7 +27,7 @@ ListTile FriendListTile({
               friendData.nickname,
               style: friendData.gender=="남" ? blueTextStyle3 : pinkTextStyle1,
             ),
-            SizedBox(width: 10,),
+            const SizedBox(width: 10,),
             Container(
               width: 40,
               height: 20,
@@ -55,7 +57,7 @@ ListTile FriendListTile({
       onPressed: () {
         // Get.to(ChatRoomPage(roomId: friendData.roomId, oppUserName: friendData.nickname,));
       },
-      child: Text("마지막 연락?"),
+      child: Text(""),
     ),
     onTap: () {},
   );
@@ -67,50 +69,56 @@ ListTile ReceivedRequest({
   return ListTile(
     leading: Image.network(receivedRequestData.userImage, fit: BoxFit.fill),
     title: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text(
-              receivedRequestData.nickname,
-              style: receivedRequestData.gender=="남" ? blueTextStyle3 : pinkTextStyle1,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Row(
+        children: [
+          Text(
+            receivedRequestData.nickname,
+            style: receivedRequestData.gender=="남" ? blueTextStyle3 : pinkTextStyle1,
+          ),
+          const SizedBox(width: 10,),
+          Container(
+            width: 40,
+            height: 20,
+            decoration: BoxDecoration(
+              color: blueColor1,
+              borderRadius: BorderRadius.circular(6),
             ),
-            Text(
-              receivedRequestData.myMBTI,
-              style: blueTextStyle1,
-            ),
-            Text(
-              receivedRequestData.age,
-              style: blackTextStyle1,
-            ),
-          ],
-        ),
-        Text(
-          receivedRequestData.myKeyword,
-          style: greyTextStyle3,
-        ),
-        Text(
-          receivedRequestData.chatContent,
-          style: blackTextStyle1,
-        ),
-      ],
-    ),
+            child: Center(
+                child: Text(
+                  '${receivedRequestData.age}세',
+                  style: whiteTextStyle2,
+                )),
+          ),
+        ],
+      ),
+      Text(
+        receivedRequestData.myMBTI,
+        style: blackTextStyle1,
+      ),
+      Text(
+        receivedRequestData.myKeyword,
+        style: greyTextStyle3,
+      ),
+    ],
+  ),
     trailing: Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         TextButton(
           onPressed: () async {
-            await FriendService.acceptFriendRequest(requestId: receivedRequestData.requestId.toString());
-            FriendService.getFriendReceivedRequest();
-            FriendService.getFriendList();
+            await FriendController.acceptFriendRequest(requestId: receivedRequestData.requestId.toString());
+            FriendController.getFriendReceivedRequest();
+            FriendController.getFriendList();
           },
           child: const Text('수락'),
         ),
         TextButton(
           onPressed: () async{
-            await FriendService.rejectFriendRequest(requestId: receivedRequestData.requestId.toString()); //친구 거절
-            await ChatService.deleteRoom(roomId: receivedRequestData.roomId); //채팅방 나가기
-            FriendService.getFriendReceivedRequest(); //내역 리프레쉬
+            await FriendController.rejectFriendRequest(requestId: receivedRequestData.requestId.toString()); //친구 거절
+            await ChattingController.deleteRoom(roomId: receivedRequestData.roomId); //채팅방 나가기
+            FriendController.getFriendReceivedRequest(); //내역 리프레쉬
           },
           child: const Text('거절'),
         ),
@@ -134,29 +142,35 @@ ListTile sentRequest({
               sentRequestData.nickname,
               style: sentRequestData.gender=="남" ? blueTextStyle3 : pinkTextStyle1,
             ),
-            Text(
-              sentRequestData.myMBTI,
-              style: blueTextStyle1,
-            ),
-            Text(
-              sentRequestData.age,
-              style: blackTextStyle1,
+            const SizedBox(width: 10,),
+            Container(
+              width: 40,
+              height: 20,
+              decoration: BoxDecoration(
+                color: blueColor1,
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Center(
+                  child: Text(
+                    '${sentRequestData.age}세',
+                    style: whiteTextStyle2,
+                  )),
             ),
           ],
+        ),
+        Text(
+          sentRequestData.myMBTI,
+          style: blackTextStyle1,
         ),
         Text(
           sentRequestData.myKeyword,
           style: greyTextStyle3,
         ),
-        Text(
-          sentRequestData.chatContent,
-          style: blackTextStyle1,
-        ),
       ],
     ),
     trailing: TextButton(
       onPressed: () {
-        FriendService.deleteFriendRequest(requestId: sentRequestData.requestId.toString());
+        FriendController.deleteFriendRequest(requestId: sentRequestData.requestId.toString());
       },
       child: Text('취소'),
     ),

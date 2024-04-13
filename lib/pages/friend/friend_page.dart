@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:frontend_matching/pages/friend/friend_controller.dart';
+import 'package:frontend_matching/controllers/friend_controller.dart';
 import 'package:frontend_matching/pages/friend/friend_tab_view.dart';
 import 'package:frontend_matching/pages/friend/received_friend_request_tab_view.dart';
 import 'package:frontend_matching/pages/friend/sent_friend_request_tab_view.dart';
@@ -29,33 +29,28 @@ class FriendPage extends StatelessWidget {
       FriendController.to.friends.clear();
       FriendController.to.receivedRequests.clear();
       FriendController.to.sentRequests.clear();
-      FriendService.getFriendList();
-      FriendService.getFriendReceivedRequest(); //request:{[]}오면 에러
-      FriendService.getFriendSendedRequest();
+      FriendController.getFriendList();
+      FriendController.getFriendReceivedRequest(); //request:{[]}오면 에러
+      FriendController.getFriendSendedRequest();
     });
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("친구창"),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text("친구"),
+            Row(
+              children: [
+                IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
+                IconButton(onPressed: () {}, icon: const Icon(Icons.settings)),
+              ],
+            )
+          ],
+        ),
       ),
       body: Column(
         children: [
-          /////////테스트용/////////
-          TextField(
-            controller: oppController,
-          ),
-          TextField(
-            controller: contentController,
-          ),
-          TextButton(
-            onPressed: () {
-              FriendService.sendFriendRequest(
-                  oppEmail: oppController.text,
-                  content: contentController.text);
-            },
-            child: Text("요청"),
-          ),
-          ////////////////////////
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Container(
