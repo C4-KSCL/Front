@@ -9,7 +9,7 @@ import 'package:frontend_matching/pages/chat_room/button_layer.dart';
 import 'package:frontend_matching/pages/chat_room/small_category.dart';
 import 'package:frontend_matching/pages/chat_room/quiz_page.dart';
 import 'package:frontend_matching/controllers/chatting_controller.dart';
-import 'package:frontend_matching/services/chat_service.dart';
+
 import 'package:frontend_matching/theme/textStyle.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -20,10 +20,10 @@ import 'chat_box.dart';
 
 // 채팅 타입
 enum ChatType {
-  sentTextChat,
-  receivedTextChat,
-  sentEventChat,
-  receivedEventChat;
+  sentTextChat, // 보낸 텍스트 메세지
+  receivedTextChat, // 받은 텍스트 메세지
+  sentEventChat, // 보낸 이벤트 메세지
+  receivedEventChat; // 받은 이벤트 메세지
 
   static ChatType getChatType(bool isTextChatType, bool isUserEmail) {
     if (isTextChatType && isUserEmail) {
@@ -53,7 +53,16 @@ class ChatRoomPage extends GetView<ChattingController> {
   Widget build(BuildContext context) {
     Get.put(ChattingController());
 
+    final FocusNode focusNode = FocusNode();
     var chatController = TextEditingController();
+
+    MyTextFieldWidget() => focusNode.addListener(() {
+        if (focusNode.hasFocus) {
+          ChattingController.to.clickAddButton.value=false;
+        }
+      });
+
+    MyTextFieldWidget();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       print("앱 리로딩");
@@ -145,13 +154,17 @@ class ChatRoomPage extends GetView<ChattingController> {
                       children: [
                         IconButton(
                           onPressed: () {
+                            if(focusNode.hasFocus){
+                              print("포커스 있음...........");
+                              focusNode.unfocus();
+                            }
+                            if(!focusNode.hasFocus){
+                              print("포커스 없음...........");
+                            }
                             ChattingController.getBigCategories();
                             controller.clickAddButton.value
                                 ? controller.clickAddButton.value = false
                                 : controller.clickAddButton.value = true;
-
-                            //키보드가 열릴 때는 닫기
-                            FocusScope.of(context).unfocus();
                           },
                           icon: Obx(
                             () => controller.clickAddButton.value
@@ -170,7 +183,7 @@ class ChatRoomPage extends GetView<ChattingController> {
                         SizedBox(
                           width: Get.width - 100,
                           child: TextField(
-                            // focusNode: myFocusNode,
+                             focusNode: focusNode,
                             controller: chatController,
                           ),
                         ),

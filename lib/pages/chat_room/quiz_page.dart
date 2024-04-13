@@ -4,7 +4,6 @@ import 'package:frontend_matching/components/button.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
 import 'package:frontend_matching/models/chat.dart';
 import 'package:frontend_matching/controllers/chatting_controller.dart';
-import 'package:frontend_matching/services/chat_service.dart';
 import 'package:get/get.dart';
 
 import '../../theme/colors.dart';

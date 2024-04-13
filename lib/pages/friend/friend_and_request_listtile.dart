@@ -5,8 +5,6 @@ import 'package:frontend_matching/controllers/chatting_controller.dart';
 import 'package:frontend_matching/models/friend.dart';
 import 'package:frontend_matching/models/request.dart';
 import 'package:frontend_matching/pages/chat_room/chat_room_page.dart';
-import 'package:frontend_matching/services/chat_service.dart';
-import 'package:frontend_matching/services/friend_service.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/friend_controller.dart';

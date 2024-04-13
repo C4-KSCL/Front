@@ -8,7 +8,6 @@ import 'package:frontend_matching/controllers/chatting_list_controller.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get.dart';
 
-import '../../services/chat_service.dart';
 import '../friend/friend_and_request_listtile.dart';
 
 class ChattingListPage extends StatelessWidget {
@@ -46,7 +45,7 @@ class ChattingListPage extends StatelessWidget {
             return Slidable(
               key: ValueKey(chatListData.roomId) ,
               endActionPane: ActionPane(
-                extentRatio: 0.3,
+                extentRatio: 0.25,
                 motion: const DrawerMotion(),
                 children: [
                   SlidableAction(
@@ -54,7 +53,9 @@ class ChattingListPage extends StatelessWidget {
                     foregroundColor: Colors.white,
                     icon: Icons.output,
                     label: '나가기',
-                    onPressed: (BuildContext context) {},
+                    onPressed: (BuildContext context) {
+                      //채팅방 나가기
+                    },
                   ),
                 ],
               ),
