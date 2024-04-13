@@ -27,7 +27,7 @@ ListTile FriendListTile({
               friendData.nickname,
               style: friendData.gender=="남" ? blueTextStyle3 : pinkTextStyle1,
             ),
-            SizedBox(width: 10,),
+            const SizedBox(width: 10,),
             Container(
               width: 40,
               height: 20,
@@ -69,34 +69,40 @@ ListTile ReceivedRequest({
   return ListTile(
     leading: Image.network(receivedRequestData.userImage, fit: BoxFit.fill),
     title: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text(
-              receivedRequestData.nickname,
-              style: receivedRequestData.gender=="남" ? blueTextStyle3 : pinkTextStyle1,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Row(
+        children: [
+          Text(
+            receivedRequestData.nickname,
+            style: receivedRequestData.gender=="남" ? blueTextStyle3 : pinkTextStyle1,
+          ),
+          const SizedBox(width: 10,),
+          Container(
+            width: 40,
+            height: 20,
+            decoration: BoxDecoration(
+              color: blueColor1,
+              borderRadius: BorderRadius.circular(6),
             ),
-            Text(
-              receivedRequestData.myMBTI,
-              style: blueTextStyle1,
-            ),
-            Text(
-              receivedRequestData.age,
-              style: blackTextStyle1,
-            ),
-          ],
-        ),
-        Text(
-          receivedRequestData.myKeyword,
-          style: greyTextStyle3,
-        ),
-        Text(
-          receivedRequestData.chatContent,
-          style: blackTextStyle1,
-        ),
-      ],
-    ),
+            child: Center(
+                child: Text(
+                  '${receivedRequestData.age}세',
+                  style: whiteTextStyle2,
+                )),
+          ),
+        ],
+      ),
+      Text(
+        receivedRequestData.myMBTI,
+        style: blackTextStyle1,
+      ),
+      Text(
+        receivedRequestData.myKeyword,
+        style: greyTextStyle3,
+      ),
+    ],
+  ),
     trailing: Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -136,23 +142,29 @@ ListTile sentRequest({
               sentRequestData.nickname,
               style: sentRequestData.gender=="남" ? blueTextStyle3 : pinkTextStyle1,
             ),
-            Text(
-              sentRequestData.myMBTI,
-              style: blueTextStyle1,
-            ),
-            Text(
-              sentRequestData.age,
-              style: blackTextStyle1,
+            const SizedBox(width: 10,),
+            Container(
+              width: 40,
+              height: 20,
+              decoration: BoxDecoration(
+                color: blueColor1,
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Center(
+                  child: Text(
+                    '${sentRequestData.age}세',
+                    style: whiteTextStyle2,
+                  )),
             ),
           ],
         ),
         Text(
-          sentRequestData.myKeyword,
-          style: greyTextStyle3,
+          sentRequestData.myMBTI,
+          style: blackTextStyle1,
         ),
         Text(
-          sentRequestData.chatContent,
-          style: blackTextStyle1,
+          sentRequestData.myKeyword,
+          style: greyTextStyle3,
         ),
       ],
     ),

@@ -17,7 +17,7 @@ Widget SentTextChatBox({
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Text(chat.readCount == 1 ? "1" : ""),
+          Text(chat.readCount.value == 1 ? "1" : ""),
           Text(convertHourAndMinuteTime(
               utcTimeString: chat.createdAt.toString())),
         ],
@@ -108,7 +108,7 @@ Widget SentQuizChatBox({
           children: [
             Text(
               chat.event!.smallCategory.name,
-              style: blackTextStyle1,
+              style: whiteTextStyle1,
             ),
             SizedBox(
               width: Get.width * 0.4,
@@ -141,7 +141,7 @@ Widget SentQuizChatBox({
               },
               child: const Text(
                 "확인하기",
-                style: blackTextStyle5,
+                style: blackTextStyle1,
               ),
             ),
           ],
@@ -203,7 +203,7 @@ Widget ReceiveQuizChatBox({
               },
               child: const Text(
                 "확인하기",
-                style: blackTextStyle5,
+                style: blackTextStyle1,
               ),
             ),
           ],
@@ -213,7 +213,7 @@ Widget ReceiveQuizChatBox({
       Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Text(chat.readCount == 1 ? "1" : ""),
+          Text(chat.readCount.value == 1 ? "1" : ""),
           Text(convertHourAndMinuteTime(
               utcTimeString: chat.createdAt.toString())),
         ],
