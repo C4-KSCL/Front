@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:frontend_matching/controllers/friend_controller.dart';
 import 'package:frontend_matching/models/friend.dart';
-import 'package:frontend_matching/pages/friend/friend_tab_view.dart';
-import 'package:frontend_matching/pages/friend/received_friend_request_tab_view.dart';
-import 'package:frontend_matching/pages/friend/sent_friend_request_tab_view.dart';
+import 'package:frontend_matching/pages/friend/friend_setting_page.dart';
+import 'package:frontend_matching/pages/friend/friend_page_tab_view.dart';
 import 'package:get/get.dart';
 
 import '../../theme/colors.dart';
@@ -42,7 +41,21 @@ class FriendPage extends StatelessWidget {
             Row(
               children: [
                 IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
-                IconButton(onPressed: () {}, icon: const Icon(Icons.settings)),
+                PopupMenuButton<String>(
+                  onSelected: (String result) {
+                    switch(result){
+                      case "1":
+                        Get.to(FriendSettingPage());
+                        break;
+                    }
+                  },
+                  itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                    const PopupMenuItem<String>(
+                      value: "1",
+                      child: Text('친구 관리'),
+                    ),
+                  ],
+                ),
               ],
             )
           ],
@@ -61,6 +74,8 @@ class FriendPage extends StatelessWidget {
             FriendController.sendFriendRequest(oppEmail: oppController.text, content: contentController.text);
           }, child: Text("친구추가")),
           //////////////////////////////////
+
+          // [ 친구 / 받은 요청 / 보낸 요청 ] 메뉴 바
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Container(
@@ -143,6 +158,7 @@ class FriendPage extends StatelessWidget {
           const SizedBox(
             height: 20,
           ),
+          // 탭 뷰
           CarouselSlider(
             carouselController: _carouselController,
             items: [
@@ -152,7 +168,6 @@ class FriendPage extends StatelessWidget {
             ],
             options: CarouselOptions(
                 height: Get.height*0.7,
-                //mediaquery로 수정필요
                 scrollDirection: Axis.horizontal,
                 viewportFraction: 1,
                 enableInfiniteScroll: false,

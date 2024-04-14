@@ -11,7 +11,7 @@ import '../../controllers/friend_controller.dart';
 import '../../theme/colors.dart';
 import '../../theme/textStyle.dart';
 
-ListTile FriendListTile({
+ListTile friendListTile({
   required Friend friendData,
 }) {
   return ListTile(
@@ -23,7 +23,7 @@ ListTile FriendListTile({
           children: [
             Text(
               friendData.nickname,
-              style: friendData.gender=="남" ? blueTextStyle3 : pinkTextStyle1,
+              style: friendData.gender == "남" ? blueTextStyle3 : pinkTextStyle1,
             ),
             const SizedBox(width: 10,),
             Container(
@@ -61,87 +61,92 @@ ListTile FriendListTile({
   );
 }
 
-ListTile ReceivedRequest({
+ListTile receivedRequestListTile({
   required Request receivedRequestData,
 }) {
   return ListTile(
     leading: Image.network(receivedRequestData.userImage, fit: BoxFit.fill),
     title: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Row(
-        children: [
-          Text(
-            receivedRequestData.nickname,
-            style: receivedRequestData.gender=="남" ? blueTextStyle3 : pinkTextStyle1,
-          ),
-          const SizedBox(width: 10,),
-          Container(
-            width: 40,
-            height: 20,
-            decoration: BoxDecoration(
-              color: blueColor1,
-              borderRadius: BorderRadius.circular(6),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              receivedRequestData.nickname,
+              style: receivedRequestData.gender == "남"
+                  ? blueTextStyle3
+                  : pinkTextStyle1,
             ),
-            child: Center(
-                child: Text(
-                  '${receivedRequestData.age}세',
-                  style: whiteTextStyle2,
-                )),
-          ),
-        ],
-      ),
-      Text(
-        receivedRequestData.myMBTI,
-        style: blackTextStyle1,
-      ),
-      Text(
-        receivedRequestData.myKeyword,
-        style: greyTextStyle3,
-      ),
-      // Row(
-      //   mainAxisSize: MainAxisSize.min,
-      //   mainAxisAlignment: MainAxisAlignment.center,
-      //   children: [
-      //     TextButton(
-      //       onPressed: () async {
-      //         await FriendController.acceptFriendRequest(requestId: receivedRequestData.requestId.toString());
-      //         FriendController.getFriendReceivedRequest();
-      //         FriendController.getFriendList();
-      //       },
-      //       child: const Text('수락',style: blueTextStyle1,),
-      //     ),
-      //     TextButton(
-      //       onPressed: () async{
-      //         await FriendController.rejectFriendRequest(requestId: receivedRequestData.requestId.toString()); //친구 거절
-      //         await ChattingController.deleteRoom(roomId: receivedRequestData.roomId); //채팅방 나가기
-      //         FriendController.getFriendReceivedRequest(); //내역 리프레쉬
-      //       },
-      //       child: const Text('거절',style: redTextStyle1,),
-      //     ),
-      //   ],
-      // ),
-    ],
-  ),
+            const SizedBox(width: 10,),
+            Container(
+              width: 40,
+              height: 20,
+              decoration: BoxDecoration(
+                color: blueColor1,
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Center(
+                  child: Text(
+                    '${receivedRequestData.age}세',
+                    style: whiteTextStyle2,
+                  )),
+            ),
+          ],
+        ),
+        Text(
+          receivedRequestData.myMBTI,
+          style: blackTextStyle1,
+        ),
+        Text(
+          receivedRequestData.myKeyword,
+          style: greyTextStyle3,
+        ),
+        // Row(
+        //   mainAxisSize: MainAxisSize.min,
+        //   mainAxisAlignment: MainAxisAlignment.center,
+        //   children: [
+        //     TextButton(
+        //       onPressed: () async {
+        //         await FriendController.acceptFriendRequest(requestId: receivedRequestData.requestId.toString());
+        //         FriendController.getFriendReceivedRequest();
+        //         FriendController.getFriendList();
+        //       },
+        //       child: const Text('수락',style: blueTextStyle1,),
+        //     ),
+        //     TextButton(
+        //       onPressed: () async{
+        //         await FriendController.rejectFriendRequest(requestId: receivedRequestData.requestId.toString()); //친구 거절
+        //         await ChattingController.deleteRoom(roomId: receivedRequestData.roomId); //채팅방 나가기
+        //         FriendController.getFriendReceivedRequest(); //내역 리프레쉬
+        //       },
+        //       child: const Text('거절',style: redTextStyle1,),
+        //     ),
+        //   ],
+        // ),
+      ],
+    ),
     trailing: Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         TextButton(
           onPressed: () async {
-            await FriendController.acceptFriendRequest(requestId: receivedRequestData.requestId.toString());
+            await FriendController.acceptFriendRequest(
+                requestId: receivedRequestData.requestId.toString());
             FriendController.getFriendReceivedRequest();
             FriendController.getFriendList();
           },
-          child: const Text('수락',style: blueTextStyle1,),
+          child: const Text('수락', style: blueTextStyle1,),
         ),
         TextButton(
-          onPressed: () async{
-            await FriendController.rejectFriendRequest(requestId: receivedRequestData.requestId.toString()); //친구 거절
-            await ChattingController.deleteRoom(roomId: receivedRequestData.roomId); //채팅방 나가기
+          onPressed: () async {
+            await FriendController.rejectFriendRequest(
+                requestId: receivedRequestData.requestId.toString()); //친구 거절
+            await ChattingController.deleteRoom(
+                roomId: receivedRequestData.roomId); //채팅방 나가기
             FriendController.getFriendReceivedRequest(); //내역 리프레쉬
           },
-          child: const Text('거절',style: redTextStyle1,),
+          child: const Text('거절', style: redTextStyle1,),
         ),
       ],
     ),
@@ -149,9 +154,9 @@ ListTile ReceivedRequest({
   );
 }
 
-ListTile sentRequest({
+ListTile sentRequestListTile({
   required Request sentRequestData,
-})  {
+}) {
   return ListTile(
     leading: Image.network(sentRequestData.userImage, fit: BoxFit.fill),
     title: Column(
@@ -161,7 +166,9 @@ ListTile sentRequest({
           children: [
             Text(
               sentRequestData.nickname,
-              style: sentRequestData.gender=="남" ? blueTextStyle3 : pinkTextStyle1,
+              style: sentRequestData.gender == "남"
+                  ? blueTextStyle3
+                  : pinkTextStyle1,
             ),
             const SizedBox(width: 10,),
             Container(
@@ -191,9 +198,123 @@ ListTile sentRequest({
     ),
     trailing: TextButton(
       onPressed: () {
-        FriendController.deleteFriendRequest(requestId: sentRequestData.requestId.toString());
+        FriendController.deleteFriendRequest(
+            requestId: sentRequestData.requestId.toString());
       },
       child: Text('취소', style: redTextStyle1,),
+    ),
+    onTap: () {},
+  );
+}
+
+ListTile friendSettingListTile({
+  required Friend friendData,
+}) {
+  return ListTile(
+    leading: Image.network(friendData.userImage, fit: BoxFit.fill),
+    title: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              friendData.nickname,
+              style: friendData.gender == "남" ? blueTextStyle3 : pinkTextStyle1,
+            ),
+            const SizedBox(width: 10,),
+            Container(
+              width: 40,
+              height: 20,
+              decoration: BoxDecoration(
+                color: blueColor1,
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Center(
+                  child: Text(
+                    '${friendData.age}세',
+                    style: whiteTextStyle2,
+                  )),
+            ),
+          ],
+        ),
+        Text(
+          friendData.myMBTI,
+          style: blackTextStyle1,
+        ),
+        Text(
+          friendData.myKeyword,
+          style: greyTextStyle3,
+        ),
+      ],
+    ),
+    trailing: TextButton(
+      onPressed: () async{
+        try {
+          await FriendController.blockFriend(oppEmail: friendData.userEmail);
+          await FriendController.getFriendList();
+          await FriendController.getBlockedFriendList();
+        } catch (e) {
+          print('An error occurred: $e');
+        }
+      },
+      child: Text("차단", style: redTextStyle1,),
+    ),
+    onTap: () {},
+  );
+}
+
+ListTile blockedFriendSettingListTile({
+  required Friend friendData,
+}) {
+  return ListTile(
+    leading: Image.network(friendData.userImage, fit: BoxFit.fill),
+    title: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              friendData.nickname,
+              style: friendData.gender == "남" ? blueTextStyle3 : pinkTextStyle1,
+            ),
+            const SizedBox(width: 10,),
+            Container(
+              width: 40,
+              height: 20,
+              decoration: BoxDecoration(
+                color: blueColor1,
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Center(
+                  child: Text(
+                    '${friendData.age}세',
+                    style: whiteTextStyle2,
+                  )),
+            ),
+          ],
+        ),
+        Text(
+          friendData.myMBTI,
+          style: blackTextStyle1,
+        ),
+        Text(
+          friendData.myKeyword,
+          style: greyTextStyle3,
+        ),
+      ],
+    ),
+    trailing: TextButton(
+      onPressed: () async {
+        try {
+          await FriendController.unblockFriend(oppEmail: friendData.userEmail);
+          await FriendController.getFriendList();
+          await FriendController.getBlockedFriendList();
+        } catch (e) {
+          print('An error occurred: $e');
+        }
+
+      },
+      child: Text("차단 취소", style: blueTextStyle1,),
     ),
     onTap: () {},
   );

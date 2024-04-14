@@ -29,6 +29,12 @@ void main() async{
   runApp(
     GetMaterialApp(
       home: LoginPage(),
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        popupMenuTheme: PopupMenuThemeData(
+          color: Colors.white, // 팝업 메뉴의 배경 색상 설정
+        ),
+      ),
       initialBinding: BindingsBuilder(() {
         Get.put(SignupController());
         Get.put(UserDataController());

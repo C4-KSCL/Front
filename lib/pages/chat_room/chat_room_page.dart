@@ -57,10 +57,10 @@ class ChatRoomPage extends GetView<ChattingController> {
     var chatController = TextEditingController();
 
     MyTextFieldWidget() => focusNode.addListener(() {
-        if (focusNode.hasFocus) {
-          ChattingController.to.clickAddButton.value=false;
-        }
-      });
+          if (focusNode.hasFocus) {
+            ChattingController.to.clickAddButton.value = false;
+          }
+        });
 
     MyTextFieldWidget();
 
@@ -135,14 +135,13 @@ class ChatRoomPage extends GetView<ChattingController> {
                     },
                   ),
                   separatorBuilder: (BuildContext context, int index) {
-                    return const SizedBox(
-                      height: 5
-                    );
+                    return const SizedBox(height: 5);
                   },
                 ),
               ),
             ),
           ),
+          const SizedBox(height: 5),
           Obx(
             () => ChattingController.to.isChatEnabled.value
                 ?
@@ -154,11 +153,11 @@ class ChatRoomPage extends GetView<ChattingController> {
                       children: [
                         IconButton(
                           onPressed: () {
-                            if(focusNode.hasFocus){
+                            if (focusNode.hasFocus) {
                               print("포커스 있음...........");
                               focusNode.unfocus();
                             }
-                            if(!focusNode.hasFocus){
+                            if (!focusNode.hasFocus) {
                               print("포커스 없음...........");
                             }
                             ChattingController.getBigCategories();
@@ -183,7 +182,7 @@ class ChatRoomPage extends GetView<ChattingController> {
                         SizedBox(
                           width: Get.width - 100,
                           child: TextField(
-                             focusNode: focusNode,
+                            focusNode: focusNode,
                             controller: chatController,
                           ),
                         ),
@@ -201,17 +200,21 @@ class ChatRoomPage extends GetView<ChattingController> {
                 :
                 //버튼 칸 (수락,거절 / 취소)
                 Column(
-                  children: [
-                    const SizedBox(height: 50,),
-                    Align(
+                    children: [
+                      const SizedBox(
+                        height: 50,
+                      ),
+                      Align(
                         alignment: Alignment.center,
                         child: ChattingController.to.isReceivedRequest.value
                             ? AcceptOrRejectButtonLayer(friendRequestId)
                             : CancelButtonLayer(friendRequestId),
                       ),
-                    const SizedBox(height: 50,)
-                  ],
-                ),
+                      const SizedBox(
+                        height: 50,
+                      )
+                    ],
+                  ),
           ),
           Obx(() => ChattingController.to.clickAddButton.value
               ? SizedBox(
