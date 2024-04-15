@@ -32,7 +32,11 @@ void main() async{
       theme: ThemeData(
         primarySwatch: Colors.blue,
         popupMenuTheme: PopupMenuThemeData(
-          color: Colors.white, // 팝업 메뉴의 배경 색상 설정
+          color: greyColor3.withOpacity(0.9),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          elevation: 0,
         ),
       ),
       initialBinding: BindingsBuilder(() {

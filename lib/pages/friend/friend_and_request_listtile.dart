@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/controllers/chatting_controller.dart';
+import 'package:frontend_matching/controllers/chatting_list_controller.dart';
 import 'package:frontend_matching/models/friend.dart';
 import 'package:frontend_matching/models/request.dart';
 import 'package:frontend_matching/pages/chat_room/chat_room_page.dart';
@@ -15,6 +16,7 @@ ListTile friendListTile({
   required Friend friendData,
 }) {
   return ListTile(
+    key: ValueKey(friendData.id),
     leading: Image.network(friendData.userImage, fit: BoxFit.fill),
     title: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,6 +67,7 @@ ListTile receivedRequestListTile({
   required Request receivedRequestData,
 }) {
   return ListTile(
+    key: ValueKey(receivedRequestData.requestId),
     leading: Image.network(receivedRequestData.userImage, fit: BoxFit.fill),
     title: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,7 +145,7 @@ ListTile receivedRequestListTile({
           onPressed: () async {
             await FriendController.rejectFriendRequest(
                 requestId: receivedRequestData.requestId.toString()); //친구 거절
-            await ChattingController.deleteRoom(
+            await ChattingListController.leaveRoom(
                 roomId: receivedRequestData.roomId); //채팅방 나가기
             FriendController.getFriendReceivedRequest(); //내역 리프레쉬
           },
@@ -158,6 +161,7 @@ ListTile sentRequestListTile({
   required Request sentRequestData,
 }) {
   return ListTile(
+    key: ValueKey(sentRequestData.requestId),
     leading: Image.network(sentRequestData.userImage, fit: BoxFit.fill),
     title: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -211,6 +215,7 @@ ListTile friendSettingListTile({
   required Friend friendData,
 }) {
   return ListTile(
+    key: ValueKey(friendData.id),
     leading: Image.network(friendData.userImage, fit: BoxFit.fill),
     title: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -250,14 +255,14 @@ ListTile friendSettingListTile({
     trailing: TextButton(
       onPressed: () async{
         try {
-          await FriendController.blockFriend(oppEmail: friendData.userEmail);
+          await FriendController.blockFriend(oppEmail: friendData.oppEmail);
           await FriendController.getFriendList();
           await FriendController.getBlockedFriendList();
         } catch (e) {
           print('An error occurred: $e');
         }
       },
-      child: Text("차단", style: redTextStyle1,),
+      child: Text("차단", style: blackTextStyle1,),
     ),
     onTap: () {},
   );
@@ -267,6 +272,7 @@ ListTile blockedFriendSettingListTile({
   required Friend friendData,
 }) {
   return ListTile(
+    key: ValueKey(friendData.id),
     leading: Image.network(friendData.userImage, fit: BoxFit.fill),
     title: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -306,7 +312,7 @@ ListTile blockedFriendSettingListTile({
     trailing: TextButton(
       onPressed: () async {
         try {
-          await FriendController.unblockFriend(oppEmail: friendData.userEmail);
+          await FriendController.unblockFriend(oppEmail: friendData.oppEmail);
           await FriendController.getFriendList();
           await FriendController.getBlockedFriendList();
         } catch (e) {
@@ -314,7 +320,7 @@ ListTile blockedFriendSettingListTile({
         }
 
       },
-      child: Text("차단 취소", style: blueTextStyle1,),
+      child: Text("차단 취소", style: blackTextStyle1,),
     ),
     onTap: () {},
   );

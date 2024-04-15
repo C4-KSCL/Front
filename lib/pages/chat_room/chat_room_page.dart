@@ -187,9 +187,11 @@ class ChatRoomPage extends GetView<ChattingController> {
                           ),
                         ),
                         IconButton(
-                            onPressed: () {
+                            onPressed: (){
                               ChattingController.to.sendMessage(
                                   roomId: roomId, content: chatController.text);
+                              chatController.clear();
+
                             },
                             icon: Image.asset(
                                 "assets/icons/send_message_button.png",

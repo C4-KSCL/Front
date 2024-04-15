@@ -15,6 +15,7 @@ Widget ChatListTile({
   Get.put(ChattingController());
 
   return ListTile(
+    key: ValueKey(chatListData.roomId),
     leading: CircleAvatar(
       backgroundImage: NetworkImage(chatListData.userImage),
     ),

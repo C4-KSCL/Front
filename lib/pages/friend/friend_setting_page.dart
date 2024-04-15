@@ -14,9 +14,17 @@ class FriendSettingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FriendController.to.friends.clear();
+      FriendController.to.blockedFriends.clear();
+      FriendController.getFriendList();
+      FriendController.getBlockedFriendList();
+    });
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("친구 관리"),
+        title: const Text("친구 관리"),
         centerTitle: true,
       ),
       body: Column(
@@ -30,7 +38,7 @@ class FriendSettingPage extends StatelessWidget {
                 ),
                 child: Obx(
                   () => Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(6.0),

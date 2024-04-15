@@ -219,18 +219,6 @@ class ChattingController extends GetxController {
     ChattingController.to.chats.value= jsonData['chats'].map((data)=>Chat.fromJson(data)).toList();
   }
 
-  //채팅 방 삭제하기
-  static Future<void> deleteRoom({
-    required String roomId,
-  }) async {
-    final url = Uri.parse('$baseUrl/$rooms/leave/$roomId');
-
-    final response = await http.delete(url, headers: headers);
-
-    print(response.statusCode);
-    print(response.body);
-  }
-
   //속한 채팅 방들 리스트 가져오기
   static Future<void> getRoomList() async {
     final url = Uri.parse('$baseUrl/$rooms/get-list/');

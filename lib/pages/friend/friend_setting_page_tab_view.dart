@@ -21,7 +21,7 @@ Widget settingBlockedFriendTabView() {
     itemCount: FriendController.to.blockedFriends.length,
     itemBuilder: (context, index) {
       var friendData = FriendController.to.blockedFriends[index];
-      return friendListTile(
+      return blockedFriendSettingListTile(
         friendData: friendData,
       );
     },
