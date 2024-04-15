@@ -6,11 +6,11 @@ import 'package:frontend_matching/components/genderButton.dart';
 import 'package:frontend_matching/components/mbtiKeyword.dart';
 import 'package:frontend_matching/components/textField.dart';
 import 'package:frontend_matching/controllers/findFriendController.dart';
+import 'package:frontend_matching/controllers/friend_controller.dart';
 import 'package:frontend_matching/controllers/settingModifyController.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
 import 'package:frontend_matching/pages/matching/imageSlide.dart';
 import 'package:frontend_matching/pages/profile/myPage.dart';
-import 'package:frontend_matching/services/friend_service.dart';
 import 'package:frontend_matching/services/friend_setting.dart';
 import 'package:get/get.dart';
 
@@ -123,7 +123,7 @@ class _MainPageState extends State<MatchingPage> {
                         onPressed: () {
                           _inputValue = sendingController.text;
                           print('Input value: $_inputValue');
-                          FriendService.sendFriendRequest(
+                          FriendController.sendFriendRequest(
                               oppEmail: email, content: _inputValue);
                         },
                       ),
