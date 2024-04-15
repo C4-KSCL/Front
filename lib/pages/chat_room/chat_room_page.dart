@@ -9,7 +9,7 @@ import 'package:frontend_matching/pages/chat_room/button_layer.dart';
 import 'package:frontend_matching/pages/chat_room/small_category.dart';
 import 'package:frontend_matching/pages/chat_room/quiz_page.dart';
 import 'package:frontend_matching/controllers/chatting_controller.dart';
-
+import 'package:frontend_matching/services/time_convert_service.dart';
 import 'package:frontend_matching/theme/textStyle.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -112,6 +112,21 @@ class ChatRoomPage extends GetView<ChattingController> {
                   itemBuilder: (BuildContext context, int index) => Obx(
                     () {
                       Chat chat = controller.chats[index];
+
+                      //날짜 비교
+                      String? DateText = controller.chatDate;
+                      String currentChatDate = extractDate(chat.createdAt);
+                      print(DateText);
+                      print(currentChatDate);
+
+                      if (controller.chatDate != currentChatDate) {
+                        print("다름");
+                        controller.chatDate = currentChatDate;
+                      } else {
+                        DateText = null;
+                      }
+
+                      // 채팅 타입 비교
                       bool isTextChatType = chat.type == "text" ? true : false;
                       bool isUserEmail = chat.userEmail ==
                               UserDataController.to.user.value!.email
@@ -122,15 +137,27 @@ class ChatRoomPage extends GetView<ChattingController> {
 
                       switch (chatType) {
                         case ChatType.sentTextChat:
-                          return SentTextChatBox(chat: chat);
+                          return SentTextChatBox(
+                            chat: chat,
+                            chatDate: DateText,
+                          );
                         case ChatType.sentEventChat:
-                          return SentQuizChatBox(chat: chat);
+                          return SentQuizChatBox(
+                            chat: chat,
+                            chatDate: DateText,
+                          );
                         case ChatType.receivedTextChat:
-                          return ReceiveTextChatBox(chat: chat);
+                          return ReceiveTextChatBox(
+                            chat: chat,
+                            chatDate: DateText,
+                          );
                         case ChatType.receivedEventChat:
-                          return ReceiveQuizChatBox(chat: chat);
+                          return ReceiveQuizChatBox(
+                            chat: chat,
+                            chatDate: DateText,
+                          );
                         default:
-                          return SentQuizChatBox(chat: chat);
+                          return const Text("알수 없는 채팅");
                       }
                     },
                   ),
@@ -187,11 +214,10 @@ class ChatRoomPage extends GetView<ChattingController> {
                           ),
                         ),
                         IconButton(
-                            onPressed: (){
+                            onPressed: () {
                               ChattingController.to.sendMessage(
                                   roomId: roomId, content: chatController.text);
                               chatController.clear();
-
                             },
                             icon: Image.asset(
                                 "assets/icons/send_message_button.png",

@@ -38,7 +38,7 @@ Widget ChatListTile({
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(
-          convertKoreaTime(utcTimeString: chatListData.createdAt),
+          convertHowMuchTimeAge(utcTimeString: chatListData.createdAt),
           style: greyTextStyle4,
         ),
         const SizedBox(height: 10,),
