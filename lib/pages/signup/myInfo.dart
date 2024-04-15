@@ -10,6 +10,7 @@ import 'package:frontend_matching/pages/signup/schoolAuth.dart';
 import 'package:frontend_matching/services/nickname_check.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart';
 
 class InfoAuthPage extends StatefulWidget {
   const InfoAuthPage({Key? key}) : super(key: key);
@@ -31,9 +32,57 @@ class _InfoAuthPageState extends State<InfoAuthPage> {
   // 성별 선택을 위한 변수 추가
   bool isMaleSelected = false;
   bool isFemaleSelected = false;
-
   int genderInt = 0;
   String genderString = "";
+
+  bool isNicknameValid = false; // 닉네임 검사 성공 여부
+  bool isElevationButtonEnabled = false; // 버튼 활성화
+
+  void checkElevationButtonStatus() {
+    bool isFieldsFilled = passwordController.text.isNotEmpty &&
+        nicknameController.text.isNotEmpty &&
+        numberController.text.isNotEmpty &&
+        ageController.text.isNotEmpty &&
+        genderString.isNotEmpty;
+
+    setState(() {
+      isElevationButtonEnabled = isFieldsFilled;
+      print('Is fields filled: $isFieldsFilled');
+      updateNicknameValid(isNicknameValid);
+      print('ddd $isNicknameValid');
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    passwordController.addListener(checkElevationButtonStatus);
+    nicknameController.addListener(checkElevationButtonStatus);
+    numberController.addListener(checkElevationButtonStatus);
+    ageController.addListener(checkElevationButtonStatus);
+  }
+
+  @override
+  void dispose() {
+    passwordController.removeListener(checkElevationButtonStatus);
+    passwordController.dispose();
+    nicknameController.removeListener(checkElevationButtonStatus);
+    nicknameController.dispose();
+    numberController.removeListener(checkElevationButtonStatus);
+    numberController.dispose();
+    ageController.removeListener(checkElevationButtonStatus);
+    ageController.dispose();
+    super.dispose();
+  }
+
+  void updateNicknameValid(bool isValid) {
+    setState(() {
+      isNicknameValid = isValid;
+      print(isValid);
+      print("isNicknameValid updated to: $isNicknameValid");
+      checkElevationButtonStatus();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +135,8 @@ class _InfoAuthPageState extends State<InfoAuthPage> {
                 onPressed: () async {
                   String nickname = nicknameController.text;
 
-                  var code = await NickNameCheck.checknickname(nickname);
+                  await NickNameCheck.checknickname(
+                      nickname, context, updateNicknameValid);
                 },
               ),
             ),
@@ -111,15 +161,12 @@ class _InfoAuthPageState extends State<InfoAuthPage> {
                 children: [
                   Text('성별'),
                   GenderButton(
-                    // 선택된 값 콜백 함수 - 성별 받아옴
                     onGenderSelected: (selectedValue) {
-                      genderInt = selectedValue; //gender 숫자값 대입
-                      if (genderInt == 1) {
-                        genderString = "남";
-                      } else {
-                        genderString = "여";
-                      }
-                      print(genderString);
+                      setState(() {
+                        genderInt = selectedValue;
+                        genderString = (genderInt == 1) ? "남" : "여";
+                        // 성별 선택시 상태 업데이트
+                      });
                     },
                   ),
                 ],
@@ -133,29 +180,30 @@ class _InfoAuthPageState extends State<InfoAuthPage> {
                 backgroundColor: Color(0xFF7EA5F3),
                 minimumSize: Size(300, 50),
               ),
-              onPressed: () {
-                // signupController에(배열) 회원정보 입력값 대입
-                String password = passwordController.text;
-                String nickname = nicknameController.text;
-                String phoneNumber = numberController.text;
+              onPressed: isElevationButtonEnabled && isNicknameValid
+                  ? () {
+                      String password = passwordController.text;
+                      String nickname = nicknameController.text;
+                      String phoneNumber = numberController.text;
 
-                String age = ageController.text;
+                      String age = ageController.text;
 
-                signupController.addToSignupArray(password);
-                signupController.addToSignupArray(nickname);
-                signupController.addToSignupArray(phoneNumber);
-                signupController.addToSignupArray(age);
-                signupController.addToSignupArray(genderString);
+                      signupController.addToSignupArray(password);
+                      signupController.addToSignupArray(nickname);
+                      signupController.addToSignupArray(phoneNumber);
+                      signupController.addToSignupArray(age);
+                      signupController.addToSignupArray(genderString);
 
-                print(signupController.signupArray);
+                      print(signupController.signupArray);
 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MyMbtiPage(),
-                  ),
-                );
-              },
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MyMbtiPage(),
+                        ),
+                      );
+                    }
+                  : null,
               child: const Text('다음으로',
                   style: TextStyle(
                     color: Colors.white,
