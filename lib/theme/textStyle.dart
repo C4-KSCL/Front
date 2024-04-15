@@ -129,4 +129,11 @@ const pinkTextStyle1 = TextStyle(
   fontWeight: FontWeight.w700, // Bold 처리 대신 w700 사용
 );
 
+const redTextStyle1 = TextStyle(
+  fontSize: 16,
+  color: Colors.red,
+  fontFamily: 'NotoSansKR',
+  fontWeight: FontWeight.w700, // Bold 처리 대신 w700 사용
+);
+
 // 다른 TextStyle 정의도 위와 같은 방식으로 수정

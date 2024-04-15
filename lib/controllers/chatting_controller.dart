@@ -5,6 +5,7 @@ import 'package:frontend_matching/controllers/chatting_list_controller.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
 import 'package:frontend_matching/models/big_category.dart';
 import 'package:frontend_matching/models/chat.dart';
+import 'package:frontend_matching/services/time_convert_service.dart';
 import 'package:get/get.dart';
 import 'package:path/path.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -36,6 +37,7 @@ class ChattingController extends GetxController {
   List<dynamic> smallCategories = [];
 
   String? bigCategoryName;
+  String? chatDate;
 
   static const rooms = 'rooms';
   static const send = 'send';
@@ -217,18 +219,7 @@ class ChattingController extends GetxController {
 
     final jsonData = json.decode(response.body);
     ChattingController.to.chats.value= jsonData['chats'].map((data)=>Chat.fromJson(data)).toList();
-  }
-
-  //채팅 방 삭제하기
-  static Future<void> deleteRoom({
-    required String roomId,
-  }) async {
-    final url = Uri.parse('$baseUrl/$rooms/leave/$roomId');
-
-    final response = await http.delete(url, headers: headers);
-
-    print(response.statusCode);
-    print(response.body);
+    ChattingController.to.chatDate=extractDate(ChattingController.to.chats[0].createdAt);
   }
 
   //속한 채팅 방들 리스트 가져오기

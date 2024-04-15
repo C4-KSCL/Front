@@ -6,19 +6,21 @@ import 'package:frontend_matching/models/request.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
-class FriendController extends GetxController{
+class FriendController extends GetxController {
   static FriendController get to => Get.find();
 
   Rx<int> pageNumber = 0.obs;
-  RxList<Friend> friends=RxList<Friend>();
-  RxList<Request> sentRequests=RxList<Request>();
-  RxList<Request> receivedRequests=RxList<Request>();
+  RxList<Friend> friends = RxList<Friend>(); // 친구 리스트
+  RxList<Request> sentRequests = RxList<Request>(); // 보낸 요청 리스트
+  RxList<Request> receivedRequests = RxList<Request>(); // 받은 요청 리스트
+  RxList<Friend> blockedFriends = RxList<Friend>(); // 차단된 친구 리스트
 
   static const baseUrl = 'http://15.164.245.62:8000';
   static const requests = 'requests';
   static const send = 'send';
   static const accept = 'accept';
   static const reject = 'reject';
+
   // static const friends = 'friends';
   static const delete = 'delete';
 
@@ -233,12 +235,17 @@ class FriendController extends GetxController{
 
     print(response.statusCode);
     print(response.body);
+    FriendController.to.friends.clear(); //초기화
+
     if (response.statusCode == 200) {
       var friendsData = jsonDecode(response.body);
 
       for (var friendData in friendsData['friends']) {
-        int id=friendData['id'];
-        String? roomId = friendData['room'] ==null ? null : friendData['room']['roomId'];
+        int id = friendData['id'];
+        String userEmail = friendData['userEmail'];
+        String oppEmail = friendData['oppEmail'];
+        String? roomId =
+            friendData['room'] == null ? null : friendData['room']['roomId'];
         String myMBTI = friendData['friend']['myMBTI'];
         String nickname = friendData['friend']['nickname'];
         String myKeyword = friendData['friend']['myKeyword'];
@@ -247,6 +254,9 @@ class FriendController extends GetxController{
         String userImage = friendData['friend']['userImage'];
 
         Friend friend = Friend(
+          id: id,
+          userEmail: userEmail,
+          oppEmail: oppEmail,
           myMBTI: myMBTI,
           myKeyword: myKeyword,
           nickname: nickname,
@@ -267,12 +277,83 @@ class FriendController extends GetxController{
   }) async {
     final url = Uri.parse('$baseUrl/friends/$delete/$oppEmail');
 
-    final response = await http.get(
-      url,
-      headers: headers,
-    );
+    final response = await http.get(url, headers: headers);
 
     print(response.statusCode);
     print(response.body);
+  }
+
+  // 친구 차단
+  static Future<void> blockFriend({
+    required String oppEmail,
+  }) async {
+    final url = Uri.parse('$baseUrl/friends/blocking');
+
+    String data = '{"oppEmail" :"$oppEmail"}';
+    print(data);
+
+    final response = await http.patch(url, headers: headers,body: data);
+
+    print(response.statusCode);
+    print(response.body);
+  }
+
+  // 친구 차단 해제
+  static Future<void> unblockFriend({
+    required String oppEmail,
+  }) async {
+    final url = Uri.parse('$baseUrl/friends/unblocking');
+
+    String data = '{"oppEmail" :"$oppEmail"}';
+
+    final response = await http.patch(url, headers: headers,body: data);
+
+    print(response.statusCode);
+    print(response.body);
+  }
+
+  // 차단한 친구 리스트 불러오기
+  static Future<void> getBlockedFriendList() async {
+    final url = Uri.parse('$baseUrl/friends/get-blocking-friend');
+
+    final response = await http.get(url, headers: headers);
+
+    print(response.statusCode);
+    print(response.body);
+
+    FriendController.to.blockedFriends.clear(); //초기화
+
+    if (response.statusCode == 200) {
+      var blockedFriendsData = jsonDecode(response.body);
+
+      for (var friendData in blockedFriendsData) {
+        int id = friendData['id'];
+        String userEmail = friendData['userEmail'];
+        String oppEmail = friendData['oppEmail'];
+        String? roomId =
+        friendData['room'] == null ? null : friendData['room']['roomId'];
+        String myMBTI = friendData['friend']['myMBTI'];
+        String nickname = friendData['friend']['nickname'];
+        String myKeyword = friendData['friend']['myKeyword'];
+        String age = friendData['friend']['age'];
+        String gender = friendData['friend']['gender'];
+        String userImage = friendData['friend']['userImage'];
+
+        Friend friend = Friend(
+          id: id,
+          userEmail: userEmail,
+          oppEmail: oppEmail,
+          myMBTI: myMBTI,
+          myKeyword: myKeyword,
+          nickname: nickname,
+          userImage: userImage,
+          age: age,
+          gender: gender,
+          roomId: roomId,
+        );
+
+        FriendController.to.blockedFriends.add(friend);
+      }
+    }
   }
 }

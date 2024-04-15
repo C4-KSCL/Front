@@ -136,4 +136,16 @@ class ChattingListController extends GetxController{
       ChattingListController.to.chattingList.assignAll(chatLists);
     }
   }
+
+  //채팅 방 나가기
+  static Future<void> leaveRoom({
+    required String roomId,
+  }) async {
+    final url = Uri.parse('$baseUrl/rooms/leave/$roomId');
+
+    final response = await http.patch(url, headers: headers);
+
+    print(response.statusCode);
+    print(response.body);
+  }
 }

@@ -1,4 +1,7 @@
 class Friend {
+  final int id;
+  final String userEmail;
+  final String oppEmail;
   final String myMBTI;
   final String myKeyword;
   final String nickname;
@@ -8,6 +11,9 @@ class Friend {
   final String? roomId;
 
   Friend({
+    required this.id,
+    required this.userEmail,
+    required this.oppEmail,
     required this.myMBTI,
     required this.myKeyword,
     required this.nickname,
@@ -19,6 +25,9 @@ class Friend {
 
   factory Friend.fromJson(Map<String, dynamic> json) {
     return Friend(
+      id: json['id'] as int,
+      userEmail:json['myMBTI'] as String,
+      oppEmail: json['oppEmail'] as String,
       myMBTI: json['myMBTI'] as String,
       myKeyword: json['myKeyword'] as String,
       nickname: json['nickname'] as String,
@@ -31,6 +40,9 @@ class Friend {
 
   Map<String, dynamic> toJson() {
     return {
+      'id':id,
+      'userEmail':userEmail,
+      'oppEmail':oppEmail,
       'myMBTI': myMBTI,
       'myKeyword': myKeyword,
       'nickname': nickname,

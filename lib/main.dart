@@ -29,6 +29,16 @@ void main() async{
   runApp(
     GetMaterialApp(
       home: LoginPage(),
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        popupMenuTheme: PopupMenuThemeData(
+          color: greyColor3.withOpacity(0.9),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          elevation: 0,
+        ),
+      ),
       initialBinding: BindingsBuilder(() {
         Get.put(SignupController());
         Get.put(UserDataController());

@@ -53,8 +53,9 @@ class ChattingListPage extends StatelessWidget {
                     foregroundColor: Colors.white,
                     icon: Icons.output,
                     label: '나가기',
-                    onPressed: (BuildContext context) {
-                      //채팅방 나가기
+                    onPressed: (BuildContext context) async{
+                      await ChattingListController.leaveRoom(roomId: chatListData.roomId);
+                      await ChattingListController.getLastChatList();
                     },
                   ),
                 ],
@@ -65,7 +66,7 @@ class ChattingListPage extends StatelessWidget {
             );
           },
           separatorBuilder: (BuildContext context, int index) {
-            return const Divider();
+            return const SizedBox(height: 5,);
           },
         ),
       ),

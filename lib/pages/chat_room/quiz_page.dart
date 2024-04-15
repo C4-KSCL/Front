@@ -78,6 +78,7 @@ Widget QuizPage({
         ChattingController.to.isQuizAnswered.value
             ? Column(
           children: [
+            //
             Align(
               alignment: Alignment.centerLeft,
               child: Container(
@@ -96,7 +97,7 @@ Widget QuizPage({
                   child: Text(
                     oppUserChoice == null
                         ? '"아직 선택하지 않았습니다."'
-                        : '"${chat.event!.user2Choice.toString()}"',
+                        : isSentQuiz ? '"${chat.event!.user2Choice.toString()}"' :'"${chat.event!.user1Choice.toString()}"',
                     style: blackTextStyle6,
                   ),
                 ),

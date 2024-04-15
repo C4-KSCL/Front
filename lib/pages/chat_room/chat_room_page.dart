@@ -9,7 +9,7 @@ import 'package:frontend_matching/pages/chat_room/button_layer.dart';
 import 'package:frontend_matching/pages/chat_room/small_category.dart';
 import 'package:frontend_matching/pages/chat_room/quiz_page.dart';
 import 'package:frontend_matching/controllers/chatting_controller.dart';
-
+import 'package:frontend_matching/services/time_convert_service.dart';
 import 'package:frontend_matching/theme/textStyle.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -57,10 +57,10 @@ class ChatRoomPage extends GetView<ChattingController> {
     var chatController = TextEditingController();
 
     MyTextFieldWidget() => focusNode.addListener(() {
-        if (focusNode.hasFocus) {
-          ChattingController.to.clickAddButton.value=false;
-        }
-      });
+          if (focusNode.hasFocus) {
+            ChattingController.to.clickAddButton.value = false;
+          }
+        });
 
     MyTextFieldWidget();
 
@@ -112,6 +112,21 @@ class ChatRoomPage extends GetView<ChattingController> {
                   itemBuilder: (BuildContext context, int index) => Obx(
                     () {
                       Chat chat = controller.chats[index];
+
+                      //날짜 비교
+                      String? DateText = controller.chatDate;
+                      String currentChatDate = extractDate(chat.createdAt);
+                      print(DateText);
+                      print(currentChatDate);
+
+                      if (controller.chatDate != currentChatDate) {
+                        print("다름");
+                        controller.chatDate = currentChatDate;
+                      } else {
+                        DateText = null;
+                      }
+
+                      // 채팅 타입 비교
                       bool isTextChatType = chat.type == "text" ? true : false;
                       bool isUserEmail = chat.userEmail ==
                               UserDataController.to.user.value!.email
@@ -122,27 +137,38 @@ class ChatRoomPage extends GetView<ChattingController> {
 
                       switch (chatType) {
                         case ChatType.sentTextChat:
-                          return SentTextChatBox(chat: chat);
+                          return SentTextChatBox(
+                            chat: chat,
+                            chatDate: DateText,
+                          );
                         case ChatType.sentEventChat:
-                          return SentQuizChatBox(chat: chat);
+                          return SentQuizChatBox(
+                            chat: chat,
+                            chatDate: DateText,
+                          );
                         case ChatType.receivedTextChat:
-                          return ReceiveTextChatBox(chat: chat);
+                          return ReceiveTextChatBox(
+                            chat: chat,
+                            chatDate: DateText,
+                          );
                         case ChatType.receivedEventChat:
-                          return ReceiveQuizChatBox(chat: chat);
+                          return ReceiveQuizChatBox(
+                            chat: chat,
+                            chatDate: DateText,
+                          );
                         default:
-                          return SentQuizChatBox(chat: chat);
+                          return const Text("알수 없는 채팅");
                       }
                     },
                   ),
                   separatorBuilder: (BuildContext context, int index) {
-                    return SizedBox(
-                      height: 5,
-                    );
+                    return const SizedBox(height: 5);
                   },
                 ),
               ),
             ),
           ),
+          const SizedBox(height: 5),
           Obx(
             () => ChattingController.to.isChatEnabled.value
                 ?
@@ -154,11 +180,11 @@ class ChatRoomPage extends GetView<ChattingController> {
                       children: [
                         IconButton(
                           onPressed: () {
-                            if(focusNode.hasFocus){
+                            if (focusNode.hasFocus) {
                               print("포커스 있음...........");
                               focusNode.unfocus();
                             }
-                            if(!focusNode.hasFocus){
+                            if (!focusNode.hasFocus) {
                               print("포커스 없음...........");
                             }
                             ChattingController.getBigCategories();
@@ -183,7 +209,7 @@ class ChatRoomPage extends GetView<ChattingController> {
                         SizedBox(
                           width: Get.width - 100,
                           child: TextField(
-                             focusNode: focusNode,
+                            focusNode: focusNode,
                             controller: chatController,
                           ),
                         ),
@@ -191,6 +217,7 @@ class ChatRoomPage extends GetView<ChattingController> {
                             onPressed: () {
                               ChattingController.to.sendMessage(
                                   roomId: roomId, content: chatController.text);
+                              chatController.clear();
                             },
                             icon: Image.asset(
                                 "assets/icons/send_message_button.png",
@@ -200,11 +227,21 @@ class ChatRoomPage extends GetView<ChattingController> {
                   )
                 :
                 //버튼 칸 (수락,거절 / 취소)
-                Align(
-                    alignment: Alignment.center,
-                    child: ChattingController.to.isReceivedRequest.value
-                        ? AcceptOrRejectButtonLayer(friendRequestId)
-                        : CancelButtonLayer(friendRequestId),
+                Column(
+                    children: [
+                      const SizedBox(
+                        height: 50,
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: ChattingController.to.isReceivedRequest.value
+                            ? AcceptOrRejectButtonLayer(friendRequestId)
+                            : CancelButtonLayer(friendRequestId),
+                      ),
+                      const SizedBox(
+                        height: 50,
+                      )
+                    ],
                   ),
           ),
           Obx(() => ChattingController.to.clickAddButton.value
