@@ -11,6 +11,7 @@ import 'package:frontend_matching/controllers/userDataController.dart';
 import 'package:frontend_matching/pages/matching/imageSlide.dart';
 import 'package:frontend_matching/pages/matching/matchingView.dart';
 import 'package:frontend_matching/pages/profile/myPage.dart';
+import 'package:frontend_matching/services/friend_service.dart';
 import 'package:frontend_matching/services/friend_setting.dart';
 import 'package:get/get.dart';
 
@@ -118,7 +119,6 @@ class _MainPageState extends State<MainPage> {
                         hintText: '여기에 입력하세요',
                         prefixIcon: IconButton(
                           icon: const Icon(Icons.emoji_emotions_rounded),
-                          //친구추가
                           onPressed: () {},
                         ),
                         suffixIcon: IconButton(
