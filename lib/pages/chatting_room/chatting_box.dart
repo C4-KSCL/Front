@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/models/chat.dart';
-import 'package:frontend_matching/pages/chat_room/quiz_page.dart';
+import 'package:frontend_matching/pages/chatting_room/quiz_page.dart';
 import 'package:frontend_matching/services/time_convert_service.dart';
 import 'package:get/get.dart';
 
@@ -44,8 +44,8 @@ Widget SentTextChatBox({
           ),
         ],
       ),
-      if(chatDate!=null)
-        timeBox(chatDate: extractDate(chatDate)),
+      // if(chatDate!=null)
+      //   timeBox(chatDate: extractDate(chatDate)),
     ],
   );
 }
@@ -88,8 +88,8 @@ Widget ReceiveTextChatBox({
           ),
         ],
       ),
-      if(chatDate!=null)
-        timeBox(chatDate: extractDate(chatDate)),
+      // if(chatDate!=null)
+      //   timeBox(chatDate: extractDate(chatDate)),
     ],
   );
 }
@@ -167,8 +167,8 @@ Widget SentQuizChatBox({
           ),
         ],
       ),
-      if(chatDate!=null)
-        timeBox(chatDate: extractDate(chatDate)),
+      // if(chatDate!=null)
+      //   timeBox(chatDate: extractDate(chatDate)),
     ],
   );
 }
@@ -246,8 +246,8 @@ Widget ReceiveQuizChatBox({
           ),
         ],
       ),
-      if(chatDate!=null)
-        timeBox(chatDate: extractDate(chatDate)),
+      // if(chatDate!=null)
+      //   timeBox(chatDate: extractDate(chatDate)),
     ],
   );
 }
