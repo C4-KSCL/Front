@@ -5,7 +5,8 @@ import 'package:frontend_matching/controllers/chatting_controller.dart';
 import 'package:frontend_matching/controllers/chatting_list_controller.dart';
 import 'package:frontend_matching/models/friend.dart';
 import 'package:frontend_matching/models/request.dart';
-import 'package:frontend_matching/pages/chat_room/chat_room_page.dart';
+import 'package:frontend_matching/pages/chatting_room/chatting_room_page.dart';
+import 'package:frontend_matching/pages/friend/friend_profile_page.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/friend_controller.dart';
@@ -25,21 +26,24 @@ ListTile friendListTile({
           children: [
             Text(
               friendData.nickname,
-              style: friendData.gender == "남" ? blueTextStyle3 : pinkTextStyle1,
+              style: blackTextStyle1,
+              // style: friendData.gender == "남" ? blueTextStyle3 : pinkTextStyle1,
             ),
-            const SizedBox(width: 10,),
+            const SizedBox(
+              width: 10,
+            ),
             Container(
               width: 40,
               height: 20,
               decoration: BoxDecoration(
-                color: blueColor1,
+                color: friendData.gender == "남" ? blueColor1 : pinkColor1,
                 borderRadius: BorderRadius.circular(6),
               ),
               child: Center(
                   child: Text(
-                    '${friendData.age}세',
-                    style: whiteTextStyle2,
-                  )),
+                '${friendData.age}세',
+                style: whiteTextStyle2,
+              )),
             ),
           ],
         ),
@@ -59,7 +63,16 @@ ListTile friendListTile({
       },
       child: Text(""),
     ),
-    onTap: () {},
+    onTap: () async {
+      //친구 프로필 페이지
+      FriendController.getFriendData(friendEmail: friendData.oppEmail);
+      Get.bottomSheet(
+        FriendProfilePage(
+          friendData: friendData,
+        ),
+        isScrollControlled: true,
+      );
+    },
   );
 }
 
@@ -80,7 +93,9 @@ ListTile receivedRequestListTile({
                   ? blueTextStyle3
                   : pinkTextStyle1,
             ),
-            const SizedBox(width: 10,),
+            const SizedBox(
+              width: 10,
+            ),
             Container(
               width: 40,
               height: 20,
@@ -90,9 +105,9 @@ ListTile receivedRequestListTile({
               ),
               child: Center(
                   child: Text(
-                    '${receivedRequestData.age}세',
-                    style: whiteTextStyle2,
-                  )),
+                '${receivedRequestData.age}세',
+                style: whiteTextStyle2,
+              )),
             ),
           ],
         ),
@@ -139,7 +154,10 @@ ListTile receivedRequestListTile({
             FriendController.getFriendReceivedRequest();
             FriendController.getFriendList();
           },
-          child: const Text('수락', style: blueTextStyle1,),
+          child: const Text(
+            '수락',
+            style: blueTextStyle1,
+          ),
         ),
         TextButton(
           onPressed: () async {
@@ -149,7 +167,10 @@ ListTile receivedRequestListTile({
                 roomId: receivedRequestData.roomId); //채팅방 나가기
             FriendController.getFriendReceivedRequest(); //내역 리프레쉬
           },
-          child: const Text('거절', style: redTextStyle1,),
+          child: const Text(
+            '거절',
+            style: redTextStyle1,
+          ),
         ),
       ],
     ),
@@ -174,7 +195,9 @@ ListTile sentRequestListTile({
                   ? blueTextStyle3
                   : pinkTextStyle1,
             ),
-            const SizedBox(width: 10,),
+            const SizedBox(
+              width: 10,
+            ),
             Container(
               width: 40,
               height: 20,
@@ -184,9 +207,9 @@ ListTile sentRequestListTile({
               ),
               child: Center(
                   child: Text(
-                    '${sentRequestData.age}세',
-                    style: whiteTextStyle2,
-                  )),
+                '${sentRequestData.age}세',
+                style: whiteTextStyle2,
+              )),
             ),
           ],
         ),
@@ -205,7 +228,10 @@ ListTile sentRequestListTile({
         FriendController.deleteFriendRequest(
             requestId: sentRequestData.requestId.toString());
       },
-      child: Text('취소', style: redTextStyle1,),
+      child: Text(
+        '취소',
+        style: redTextStyle1,
+      ),
     ),
     onTap: () {},
   );
@@ -226,7 +252,9 @@ ListTile friendSettingListTile({
               friendData.nickname,
               style: friendData.gender == "남" ? blueTextStyle3 : pinkTextStyle1,
             ),
-            const SizedBox(width: 10,),
+            const SizedBox(
+              width: 10,
+            ),
             Container(
               width: 40,
               height: 20,
@@ -236,9 +264,9 @@ ListTile friendSettingListTile({
               ),
               child: Center(
                   child: Text(
-                    '${friendData.age}세',
-                    style: whiteTextStyle2,
-                  )),
+                '${friendData.age}세',
+                style: whiteTextStyle2,
+              )),
             ),
           ],
         ),
@@ -253,7 +281,7 @@ ListTile friendSettingListTile({
       ],
     ),
     trailing: TextButton(
-      onPressed: () async{
+      onPressed: () async {
         try {
           await FriendController.blockFriend(oppEmail: friendData.oppEmail);
           await FriendController.getFriendList();
@@ -262,7 +290,10 @@ ListTile friendSettingListTile({
           print('An error occurred: $e');
         }
       },
-      child: Text("차단", style: blackTextStyle1,),
+      child: Text(
+        "차단",
+        style: blackTextStyle1,
+      ),
     ),
     onTap: () {},
   );
@@ -283,7 +314,9 @@ ListTile blockedFriendSettingListTile({
               friendData.nickname,
               style: friendData.gender == "남" ? blueTextStyle3 : pinkTextStyle1,
             ),
-            const SizedBox(width: 10,),
+            const SizedBox(
+              width: 10,
+            ),
             Container(
               width: 40,
               height: 20,
@@ -293,9 +326,9 @@ ListTile blockedFriendSettingListTile({
               ),
               child: Center(
                   child: Text(
-                    '${friendData.age}세',
-                    style: whiteTextStyle2,
-                  )),
+                '${friendData.age}세',
+                style: whiteTextStyle2,
+              )),
             ),
           ],
         ),
@@ -318,9 +351,11 @@ ListTile blockedFriendSettingListTile({
         } catch (e) {
           print('An error occurred: $e');
         }
-
       },
-      child: Text("차단 취소", style: blackTextStyle1,),
+      child: Text(
+        "차단 취소",
+        style: blackTextStyle1,
+      ),
     ),
     onTap: () {},
   );
