@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_matching/controllers/friend_controller.dart';
 import 'package:frontend_matching/models/friend.dart';
+import 'package:frontend_matching/models/userImage.dart';
 import 'package:frontend_matching/pages/chatting_room/chatting_room_page.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:frontend_matching/theme/textStyle.dart';
 import 'package:get/get.dart';
+import 'package:page_indicator/page_indicator.dart';
+import 'package:path/path.dart';
 
 Widget FriendProfilePage({required Friend friendData}) {
   return Padding(
     padding: const EdgeInsets.fromLTRB(10, 0, 10, 50),
     child: Container(
-      margin: EdgeInsets.all(10.0),
+      margin: const EdgeInsets.all(10.0),
       width: Get.width * 0.6,
       height: Get.height * 0.6,
       decoration: BoxDecoration(
@@ -51,22 +55,32 @@ Widget FriendProfilePage({required Friend friendData}) {
                   )
                 ],
               ),
-              IconButton(onPressed: Get.back, icon: Icon(Icons.close))
+              IconButton(onPressed: Get.back, icon: const Icon(Icons.close))
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
-          Divider(),
-          SizedBox(
+          const Divider(),
+          const SizedBox(
             height: 10,
           ),
-          Container(
-            height: 200,
-            width: 200,
-            color: Colors.black,
-          ),
-          SizedBox(
+          // 친구의 사진 보여주는 슬라이더
+          // http 요청을 통해 이미지 정보 못받으면 검정 화면
+          FriendController.to.friendImageData.isNotEmpty
+              ? PageIndicatorContainer(
+                  length: FriendController.to.friendImageData.length,
+                  child: PageView.builder(itemBuilder: (context,index){
+                    UserImage friendImage=FriendController.to.friendImageData[index];
+                    return Image.network(friendImage.imagePath);
+                  }),
+                )
+              : Container(
+                  height: 200,
+                  width: 200,
+                  color: Colors.black,
+                ),
+          const SizedBox(
             height: 10,
           ),
           Text(friendData.myKeyword),
@@ -78,7 +92,7 @@ Widget FriendProfilePage({required Friend friendData}) {
                   oppUserName: friendData.nickname,
                 ));
               },
-              child: Text("채팅방 이동"))
+              child: const Text("채팅방 이동"))
         ],
       ),
     ),
