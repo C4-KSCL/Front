@@ -9,7 +9,10 @@ import 'package:get/get.dart';
 import 'package:page_indicator/page_indicator.dart';
 import 'package:path/path.dart';
 
-Widget FriendProfilePage({required Friend friendData}) {
+Widget FriendProfilePage({
+  required Friend friendData,
+  required VoidCallback voidCallback,
+}) {
   return Padding(
     padding: const EdgeInsets.fromLTRB(10, 0, 10, 50),
     child: Container(
@@ -55,7 +58,7 @@ Widget FriendProfilePage({required Friend friendData}) {
                   )
                 ],
               ),
-              IconButton(onPressed: Get.back, icon: const Icon(Icons.close))
+              IconButton(onPressed: voidCallback, icon: const Icon(Icons.close))
             ],
           ),
           const SizedBox(
@@ -67,19 +70,23 @@ Widget FriendProfilePage({required Friend friendData}) {
           ),
           // 친구의 사진 보여주는 슬라이더
           // http 요청을 통해 이미지 정보 못받으면 검정 화면
-          FriendController.to.friendImageData.isNotEmpty
-              ? PageIndicatorContainer(
-                  length: FriendController.to.friendImageData.length,
-                  child: PageView.builder(itemBuilder: (context,index){
-                    UserImage friendImage=FriendController.to.friendImageData[index];
-                    return Image.network(friendImage.imagePath);
-                  }),
-                )
-              : Container(
-                  height: 200,
-                  width: 200,
-                  color: Colors.black,
-                ),
+          Obx(
+            () => FriendController.to.friendImageData.isNotEmpty
+                ? PageIndicatorContainer(
+                    length: FriendController.to.friendImageData.length,
+                    child: PageView.builder(itemBuilder: (context, index) {
+                      UserImage friendImage =
+                          FriendController.to.friendImageData[index];
+                      return Image.network(friendImage.imagePath);
+                    }),
+                  )
+                : Container(
+                    height: 200,
+                    width: 200,
+                    color: Colors.black,
+                  ),
+          ),
+
           const SizedBox(
             height: 10,
           ),

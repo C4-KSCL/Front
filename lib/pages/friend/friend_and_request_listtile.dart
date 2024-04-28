@@ -51,10 +51,10 @@ ListTile friendListTile({
           friendData.myMBTI,
           style: blackTextStyle1,
         ),
-        Text(
-          friendData.myKeyword,
-          style: greyTextStyle3,
-        ),
+        // Text(
+        //   friendData.myKeyword,
+        //   style: greyTextStyle3,
+        // ),
       ],
     ),
     trailing: TextButton(
@@ -64,11 +64,13 @@ ListTile friendListTile({
       child: Text(""),
     ),
     onTap: () async {
-      //친구 프로필 페이지
+      //친구 정보 받아오기
       FriendController.getFriendData(friendEmail: friendData.oppEmail);
+      //친구 프로필 페이지 열기
       Get.bottomSheet(
         FriendProfilePage(
           friendData: friendData,
+          voidCallback: Get.back,
         ),
         isScrollControlled: true,
       );

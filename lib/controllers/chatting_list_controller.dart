@@ -10,7 +10,7 @@ class ChattingListController extends GetxController{
 
   static const baseUrl = 'http://15.164.245.62:8000'; //서버 url
 
-  RxList<ChatList> chattingList=<ChatList>[].obs;
+  RxList<ChatList> chattingList=<ChatList>[].obs; //채팅 리스트
 
   static String accessToken = UserDataController.to.accessToken;
 

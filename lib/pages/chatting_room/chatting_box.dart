@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_matching/controllers/chatting_controller.dart';
 import 'package:frontend_matching/models/chat.dart';
 import 'package:frontend_matching/pages/chatting_room/quiz_page.dart';
 import 'package:frontend_matching/services/time_convert_service.dart';
@@ -144,10 +145,9 @@ Widget SentQuizChatBox({
                   ),
                   onPressed: () {
                     Get.bottomSheet(
-                      //quizId 를 통해서 api로 정보 받아오고 나면 QuizPage 열기
                       QuizPage(
                         voidCallback: Get.back,
-                        chat: chat,
+                        quizId: chat.event!.id.toString(),
                         isSentQuiz: true,
                       ),
                       backgroundColor: Colors.white,
@@ -189,7 +189,7 @@ Widget ReceiveQuizChatBox({
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(8),
                   topRight: Radius.circular(8),
-                  bottomLeft: Radius.circular(8)),
+                  bottomRight: Radius.circular(8)),
             ),
             child: Column(
               children: [
@@ -214,10 +214,9 @@ Widget ReceiveQuizChatBox({
                   ),
                   onPressed: () {
                     Get.bottomSheet(
-                      //quizId 를 통해서 api로 정보 받아오고 나면 QuizPage 열기
                       QuizPage(
                         voidCallback: Get.back,
-                        chat: chat,
+                        quizId: chat.event!.id.toString(),
                         isSentQuiz: false,
                       ),
                       backgroundColor: Colors.white,

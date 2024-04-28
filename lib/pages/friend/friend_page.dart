@@ -42,7 +42,6 @@ class FriendPage extends StatelessWidget {
             const Text("친구"),
             Row(
               children: [
-                IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
                 PopupMenuButton<String>(
                   onSelected: (String result) {
                     switch (result) {
@@ -64,130 +63,128 @@ class FriendPage extends StatelessWidget {
           ],
         ),
       ),
-      body: Expanded(
-        child: Column(
-          children: [
-            // /////////////////////////////////
-            // TextField(
-            //   controller: oppController,
-            // ),
-            // TextField(
-            //   controller: contentController,
-            // ),
-            // TextButton(onPressed: (){
-            //   FriendController.sendFriendRequest(oppEmail: oppController.text, content: contentController.text);
-            // }, child: Text("친구추가")),
-            // //////////////////////////////////
+      body: Column(
+        children: [
+          // /////////////////////////////////
+          // TextField(
+          //   controller: oppController,
+          // ),
+          // TextField(
+          //   controller: contentController,
+          // ),
+          // TextButton(onPressed: (){
+          //   FriendController.sendFriendRequest(oppEmail: oppController.text, content: contentController.text);
+          // }, child: Text("친구추가")),
+          // //////////////////////////////////
 
-            // [ 친구 / 받은 요청 / 보낸 요청 ] 메뉴 바
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Container(
-                  decoration: BoxDecoration(
-                    color: greyColor3,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Obx(
-                    () => Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(6.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: FriendController.to.pageNumber.value == 0
-                                    ? whiteColor1
-                                    : greyColor3,
-                                borderRadius: BorderRadius.circular(8)),
-                            width: 100,
-                            child: TextButton(
-                                onPressed: () {
-                                  FriendController.to.pageNumber.value = 0;
-                                  _carouselController.jumpToPage(
-                                      FriendController.to.pageNumber.value);
-                                },
-                                child: Text(
-                                  '친구',
-                                  style:
-                                      FriendController.to.pageNumber.value == 0
-                                          ? blueTextStyle2
-                                          : greyTextStyle5,
-                                )),
-                          ),
-                        ),
-                        Container(
+          // [ 친구 / 받은 요청 / 보낸 요청 ] 메뉴 바
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Container(
+                decoration: BoxDecoration(
+                  color: greyColor3,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Obx(
+                  () => Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(6.0),
+                        child: Container(
                           decoration: BoxDecoration(
-                              color: FriendController.to.pageNumber.value == 1
+                              color: FriendController.to.pageNumber.value == 0
                                   ? whiteColor1
                                   : greyColor3,
                               borderRadius: BorderRadius.circular(8)),
-                          width: 120,
-                          child: TextButton(
-                            onPressed: () {
-                              FriendController.to.pageNumber.value = 1;
-                              _carouselController.jumpToPage(
-                                  FriendController.to.pageNumber.value);
-                            },
-                            child: Text(
-                              '받은 요청',
-                              style: FriendController.to.pageNumber.value == 1
-                                  ? blueTextStyle2
-                                  : greyTextStyle5,
-                            ),
-                          ),
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                              color: FriendController.to.pageNumber.value == 2
-                                  ? whiteColor1
-                                  : greyColor3,
-                              borderRadius: BorderRadius.circular(8)),
-                          width: 120,
+                          width: 100,
                           child: TextButton(
                               onPressed: () {
-                                FriendController.to.pageNumber.value = 2;
+                                FriendController.to.pageNumber.value = 0;
                                 _carouselController.jumpToPage(
                                     FriendController.to.pageNumber.value);
                               },
                               child: Text(
-                                '보낸 요청',
-                                style: FriendController.to.pageNumber.value == 2
-                                    ? blueTextStyle2
-                                    : greyTextStyle5,
+                                '친구',
+                                style:
+                                    FriendController.to.pageNumber.value == 0
+                                        ? blueTextStyle2
+                                        : greyTextStyle5,
                               )),
                         ),
-                      ],
-                    ),
-                  )),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                            color: FriendController.to.pageNumber.value == 1
+                                ? whiteColor1
+                                : greyColor3,
+                            borderRadius: BorderRadius.circular(8)),
+                        width: 120,
+                        child: TextButton(
+                          onPressed: () {
+                            FriendController.to.pageNumber.value = 1;
+                            _carouselController.jumpToPage(
+                                FriendController.to.pageNumber.value);
+                          },
+                          child: Text(
+                            '받은 요청',
+                            style: FriendController.to.pageNumber.value == 1
+                                ? blueTextStyle2
+                                : greyTextStyle5,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                            color: FriendController.to.pageNumber.value == 2
+                                ? whiteColor1
+                                : greyColor3,
+                            borderRadius: BorderRadius.circular(8)),
+                        width: 120,
+                        child: TextButton(
+                            onPressed: () {
+                              FriendController.to.pageNumber.value = 2;
+                              _carouselController.jumpToPage(
+                                  FriendController.to.pageNumber.value);
+                            },
+                            child: Text(
+                              '보낸 요청',
+                              style: FriendController.to.pageNumber.value == 2
+                                  ? blueTextStyle2
+                                  : greyTextStyle5,
+                            )),
+                      ),
+                    ],
+                  ),
+                )),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          // 탭 뷰
+          Expanded(
+            child: CarouselSlider(
+              carouselController: _carouselController,
+              items: [
+                friendTabView(),
+                receivedFriendRequestTabView(),
+                sentFriendRequestTabView(),
+              ],
+              options: CarouselOptions(
+                  // 높이 관련해서 수정해야함 ///////////////////
+                  height: Get.height * 0.7,
+                  ///////////////////////////////////////////////
+                  scrollDirection: Axis.horizontal,
+                  viewportFraction: 1,
+                  enableInfiniteScroll: false,
+                  initialPage: FriendController.to.pageNumber.value,
+                  onPageChanged: (index, reason) {
+                    FriendController.to.pageNumber.value =
+                        index; // 현재 페이지 인덱스를 _pageNumber 변수에 할당
+                  }),
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            // 탭 뷰
-            Expanded(
-              child: CarouselSlider(
-                carouselController: _carouselController,
-                items: [
-                  friendTabView(),
-                  receivedFriendRequestTabView(),
-                  sentFriendRequestTabView(),
-                ],
-                options: CarouselOptions(
-                    // 높이 관련해서 수정해야함 ///////////////////
-                    height: Get.height * 0.7,
-                    ///////////////////////////////////////////////
-                    scrollDirection: Axis.horizontal,
-                    viewportFraction: 1,
-                    enableInfiniteScroll: false,
-                    initialPage: FriendController.to.pageNumber.value,
-                    onPageChanged: (index, reason) {
-                      FriendController.to.pageNumber.value =
-                          index; // 현재 페이지 인덱스를 _pageNumber 변수에 할당
-                    }),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

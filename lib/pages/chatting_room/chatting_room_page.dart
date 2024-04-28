@@ -113,14 +113,14 @@ class ChatRoomPage extends GetView<ChattingController> {
                     () {
                       Chat chat = controller.chats[index];
 
-                      //날짜 비교
+                      //날짜 비교 ///////////
                       String? DateText = controller.chatDate;
                       String currentChatDate = extractDate(chat.createdAt);
-                      print(DateText);
-                      print(currentChatDate);
+                      // print(DateText);
+                      // print(currentChatDate);
 
                       if (controller.chatDate != currentChatDate) {
-                        print("다름");
+                        // print("다름");
                         controller.chatDate = currentChatDate;
                       } else {
                         DateText = null;

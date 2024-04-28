@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:frontend_matching/controllers/userDataController.dart';
 import 'package:frontend_matching/models/friend.dart';
 import 'package:frontend_matching/models/request.dart';
+import 'package:frontend_matching/models/user.dart';
+import 'package:frontend_matching/models/userImage.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
@@ -15,13 +17,14 @@ class FriendController extends GetxController {
   RxList<Request> receivedRequests = RxList<Request>(); // 받은 요청 리스트
   RxList<Friend> blockedFriends = RxList<Friend>(); // 차단된 친구 리스트
 
+  Rxn<User> friendData = Rxn<User>(null); // 친구 정보
+  RxList<UserImage> friendImageData = RxList<UserImage>(); // 친구 이미지 담는 파일
+
   static const baseUrl = 'http://15.164.245.62:8000';
   static const requests = 'requests';
   static const send = 'send';
   static const accept = 'accept';
   static const reject = 'reject';
-
-  // static const friends = 'friends';
   static const delete = 'delete';
 
   static String accessToken = UserDataController.to.accessToken;
@@ -32,17 +35,42 @@ class FriendController extends GetxController {
   };
 
   //친구 요청 보내기
-  static void sendFriendRequest({
+  static Future<void> sendFriendRequest({
     required String oppEmail,
     required String content,
   }) async {
     final url = Uri.parse('$baseUrl/$requests/send');
 
-    print(accessToken);
-
     String data = '{"oppEmail": "$oppEmail", "content":"$content"}';
 
     final response = await http.post(url, headers: headers, body: data);
+
+    // 이미 친구인 경우, 받은 요청이 있을 경우, 보낸 요청이 있을 경우
+    if(response.statusCode==400){
+      var errMsg=jsonDecode(response.body);
+      // 이미 친구인 경우
+      if(errMsg['msg']=="already friend : request"){
+
+      }
+      // 받은 요청이거나 보낸 요청이 있을 경우
+      else if(errMsg['msg']['error_msg']=="already exist : request"){
+        // 보낸 요청이 있을 경우
+        String requestId=errMsg['msg']['requestId'];
+        if(errMsg['msg']['reqUser']==UserDataController.to.user.value!.email){
+          // 보낸 요청이 있다고 알려주기
+          print("보낸 요청 있음");
+        }
+        // 받은 요청이 있을 경우 요청을 수락
+        else{
+          await acceptFriendRequest(requestId: requestId);
+        }
+
+      }
+
+    } // 삭제된 유저일 경우
+    else if(response.statusCode==404){
+      // 삭제된 유저라고 알려주기
+    }
 
     print(response.statusCode);
     print(response.body);
@@ -355,5 +383,76 @@ class FriendController extends GetxController {
         FriendController.to.blockedFriends.add(friend);
       }
     }
+  }
+
+  // 친구 정보 받아오기 - 프로필 페이지
+  static Future<void> getFriendData({
+    required String friendEmail,
+  }) async {
+    final url = Uri.parse('$baseUrl/findfriend/getimage');
+
+    String data = '{"friendEmail" :"$friendEmail"}';
+
+    final response = await http.post(url, headers: headers,body: data);
+
+    // 받는 데이터
+  //   {
+  //     "user": {
+  //       "userNumber": 7,
+  //       "email": "ch@naver.com",
+  //       "password": "ch",
+  //       "nickname": "chovy",
+  //       "phoneNumber": "1234",
+  //       "age": "12",
+  //       "gender": "여",
+  //       "myMBTI": "INFP",
+  //       "friendMBTI": "INFP",
+  //       "myKeyword": "먹보",
+  //       "friendKeyword": "우동추d",
+  //       "userCreated": "2024-04-08 14:54:06",
+  //       "suspend": 0,
+  //       "manager": 0,
+  //       "friendGender": "여",
+  //       "friendMaxAge": "100",
+  //       "friendMinAge": "1",
+  //       "requestTime": "2024-04-15 20:07:48",
+  //       "userImage": "https://matchingimage.s3.ap-northeast-2.amazonaws.com/profile/1712729048538-chovy3.jpg",
+  //       "userImageKey": "profile/1712729048538-chovy3.jpg",
+  //       "deleteTime": null
+  //     },
+  //   "images": [
+  //     {
+  //       "imageNumber": 7,
+  //       "userNumber": 7,
+  //       "imagePath": "https://matchingimage.s3.ap-northeast-2.amazonaws.com/image/1712555678093-chovy1.jpg",
+  //       "imageCreated": "2024-04-08 14:54:38",
+  //       "imageKey": "image/1712555678093-chovy1.jpg"
+  //     },
+  //     {
+  //       "imageNumber": 8,
+  //       "userNumber": 7,
+  //       "imagePath": "https://matchingimage.s3.ap-northeast-2.amazonaws.com/image/1712555678094-chovy2.jpg",
+  //       "imageCreated": "2024-04-08 14:54:38",
+  //       "imageKey": "image/1712555678094-chovy2.jpg"
+  //     },
+  //     {
+  //       "imageNumber": 9,
+  //       "userNumber": 7,
+  //       "imagePath": "https://matchingimage.s3.ap-northeast-2.amazonaws.com/image/1712555678125-chovy3.jpg",
+  //       "imageCreated": "2024-04-08 14:54:38",
+  //       "imageKey": "image/1712555678125-chovy3.jpg"
+  //     }
+  //   ]
+  // }
+
+    print(response.statusCode);
+    print(response.body);
+
+    var jsonData=jsonDecode(response.body);
+
+    FriendController.to.friendData.value=User.fromJson(jsonData['user']);
+    FriendController.to.friendImageData = RxList<UserImage>.from(jsonData['images']
+        .map((data) => UserImage.fromJson(data))
+        .toList());
   }
 }

@@ -21,10 +21,11 @@ class ChattingController extends GetxController {
   IO.Socket? _socket; //소켓IO 객체
   static const baseUrl = 'http://15.164.245.62:8000'; //서버 url
   RxList chats = [].obs; //채팅 객체를 담는 배열
+  Rx<Event?> eventData = Rx<Event?>(null); // event 객체 하나를 담는 변수
 
   RxBool clickAddButton = false.obs; // +버튼 누름여부
   RxBool showSecondGridView = false.obs; // 두번째 카테고리 여부
-  RxInt clickQuizButtonIndex = (-1).obs; // Quiz 버튼 누름 여부
+  RxInt clickQuizButtonIndex = (-1).obs; // 퀴즈 페이지 button index
   RxBool isReceivedRequest = true.obs; //받은 요청이면 true, 보낸 요청이면 false
   RxBool isChatEnabled = true.obs; //채팅 가능 여부(친구가 아니면 채팅X)
   RxBool isQuizAnswered = false.obs; //퀴즈 답변 여부
@@ -93,6 +94,7 @@ class ChattingController extends GetxController {
     socket.off("new message");
     socket.off("delete message");
     socket.off("new event");
+    socket.off("answer to event");
 
     // 소켓 'connect' 이벤트 listen
     socket.on("connect", (_) {
@@ -102,7 +104,6 @@ class ChattingController extends GetxController {
     // 'user join in room' 이벤트 listen
     socket.on("user join in room", (data) {
       print(data);
-      print(chats.length.toString());
       print("user join in room 도착");
 
       // 안 읽은 채팅 1->0 으로 변환
@@ -126,6 +127,18 @@ class ChattingController extends GetxController {
       print(data);
       print("밸런스 게임 성공적으로 전송");
       chats.insert(0, Chat.fromJson(data['msg']));
+    });
+
+    // 'answer to event' 이벤트 listen
+    socket.on("answer to event", (data) {
+      print(data);
+      print("밸런스 게임 답변 받음");
+      // 받은 이벤트 id가 컨트롤러 안에 있는 이벤트 id와 같으면 변경 -> UI 실시간 변경 가능
+      if(eventData.value!.id==data['event']['id']){
+        eventData.value!.user1Choice.value=data['event']['user1Choice'];
+        eventData.value!.user2Choice.value=data['event']['user2Choice'];
+        ChattingController.to.isQuizAnswered.value = true;
+      }
     });
 
     // 'delete message' 이벤트 listen
@@ -191,6 +204,21 @@ class ChattingController extends GetxController {
       "smallCategory": smallCategoryName,
     };
     socket.emit("new event", data);
+  }
+
+  // 이벤트(밸런스 게임) 답변 보내기
+  void answerToEvent({
+    required int eventId,
+    required String selectedContent,
+  }) {
+    final socket = _socket!;
+
+    final data = {
+      "eventId":eventId,
+      "content": selectedContent,
+    };
+    socket.emit("answer to event", data);
+
   }
 
   @override
@@ -272,28 +300,33 @@ class ChattingController extends GetxController {
     final response = await http.get(url, headers: headers);
 
     print(response.body);
+
+    final jsonData = json.decode(response.body);
+    if(response.statusCode==200){
+      ChattingController.to.eventData.value=Event.fromJson(jsonData['event']);
+    }
   }
 
   // 퀴즈 답변 하기
-  static Future<String> updateQuizInfo({
-    required int quizId,
-    required String quizAnswer,
-    required bool isSentQuiz,
-  }) async {
-    final url = Uri.parse('$baseUrl/$events/update-event-answer/$quizId');
-
-    String data = '{"content":"$quizAnswer"}';
-
-    final response = await http.patch(url, headers: headers, body: data);
-
-    print(response.statusCode);
-    print(response.body);
-
-    final jsonData = json.decode(response.body);
-    if(isSentQuiz){
-      return jsonData['event']['user1Choice'];
-    } else{
-      return jsonData['event']['user2Choice'];
-    }
-  }
+  // static Future<String> updateQuizInfo({
+  //   required int quizId,
+  //   required String quizAnswer,
+  //   required bool isSentQuiz,
+  // }) async {
+  //   final url = Uri.parse('$baseUrl/$events/update-event-answer/$quizId');
+  //
+  //   String data = '{"content":"$quizAnswer"}';
+  //
+  //   final response = await http.patch(url, headers: headers, body: data);
+  //
+  //   print(response.statusCode);
+  //   print(response.body);
+  //
+  //   final jsonData = json.decode(response.body);
+  //   if(isSentQuiz){
+  //     return jsonData['event']['user1Choice'];
+  //   } else{
+  //     return jsonData['event']['user2Choice'];
+  //   }
+  // }
 }
