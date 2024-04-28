@@ -52,6 +52,7 @@ class ChatRoomPage extends GetView<ChattingController> {
   @override
   Widget build(BuildContext context) {
     Get.put(ChattingController());
+    Get.put(ChattingListController()); ////////////////없애야함///////////////
 
     final FocusNode focusNode = FocusNode();
     var chatController = TextEditingController();
@@ -84,6 +85,7 @@ class ChatRoomPage extends GetView<ChattingController> {
             ChattingListController.getLastChatList();
             ///////////////////////////////////////////////////////////////
             controller.disconnect();
+            ChattingController.to.resetIsChatEnabled();
             Get.back();
           },
         ),

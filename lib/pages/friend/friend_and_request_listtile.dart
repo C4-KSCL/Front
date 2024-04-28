@@ -6,7 +6,7 @@ import 'package:frontend_matching/controllers/chatting_list_controller.dart';
 import 'package:frontend_matching/models/friend.dart';
 import 'package:frontend_matching/models/request.dart';
 import 'package:frontend_matching/pages/chatting_room/chatting_room_page.dart';
-import 'package:frontend_matching/pages/friend/friend_profile_page.dart';
+import 'package:frontend_matching/pages/friend/profile_page.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/friend_controller.dart';
@@ -49,30 +49,19 @@ ListTile friendListTile({
         ),
         Text(
           friendData.myMBTI,
-          style: blackTextStyle1,
+          style: const TextStyle(color: greyColor4),
         ),
-        // Text(
-        //   friendData.myKeyword,
-        //   style: greyTextStyle3,
-        // ),
       ],
     ),
-    trailing: TextButton(
-      onPressed: () {
-        // Get.to(ChatRoomPage(roomId: friendData.roomId, oppUserName: friendData.nickname,));
-      },
-      child: Text(""),
-    ),
-    onTap: () async {
-      //친구 정보 받아오기
-      FriendController.getFriendData(friendEmail: friendData.oppEmail);
-      //친구 프로필 페이지 열기
+    onTap: () {
+      //프로필 페이지 열기
       Get.bottomSheet(
         FriendProfilePage(
-          friendData: friendData,
+          userData: friendData,
           voidCallback: Get.back,
         ),
         isScrollControlled: true,
+
       );
     },
   );
@@ -91,9 +80,7 @@ ListTile receivedRequestListTile({
           children: [
             Text(
               receivedRequestData.nickname,
-              style: receivedRequestData.gender == "남"
-                  ? blueTextStyle3
-                  : pinkTextStyle1,
+              style: blackTextStyle1,
             ),
             const SizedBox(
               width: 10,
@@ -102,7 +89,7 @@ ListTile receivedRequestListTile({
               width: 40,
               height: 20,
               decoration: BoxDecoration(
-                color: blueColor1,
+                color: receivedRequestData.gender == "남" ? blueColor1 : pinkColor1,
                 borderRadius: BorderRadius.circular(6),
               ),
               child: Center(
@@ -115,11 +102,7 @@ ListTile receivedRequestListTile({
         ),
         Text(
           receivedRequestData.myMBTI,
-          style: blackTextStyle1,
-        ),
-        Text(
-          receivedRequestData.myKeyword,
-          style: greyTextStyle3,
+          style: const TextStyle(color: greyColor4),
         ),
         // Row(
         //   mainAxisSize: MainAxisSize.min,
@@ -145,38 +128,55 @@ ListTile receivedRequestListTile({
         // ),
       ],
     ),
-    trailing: Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        TextButton(
-          onPressed: () async {
-            await FriendController.acceptFriendRequest(
-                requestId: receivedRequestData.requestId.toString());
-            FriendController.getFriendReceivedRequest();
-            FriendController.getFriendList();
-          },
-          child: const Text(
-            '수락',
-            style: blueTextStyle1,
-          ),
-        ),
-        TextButton(
-          onPressed: () async {
-            await FriendController.rejectFriendRequest(
-                requestId: receivedRequestData.requestId.toString()); //친구 거절
-            await ChattingListController.leaveRoom(
-                roomId: receivedRequestData.roomId); //채팅방 나가기
-            FriendController.getFriendReceivedRequest(); //내역 리프레쉬
-          },
-          child: const Text(
-            '거절',
-            style: redTextStyle1,
-          ),
-        ),
-      ],
+    trailing:
+    IconButton(
+      onPressed: () {
+        Get.to(ChatRoomPage(roomId: receivedRequestData.roomId, oppUserName: receivedRequestData.nickname));
+        ChattingController.to.isReceivedRequest.value=true;
+      },
+      icon: Image.asset("assets/icons/question_message.png"),
     ),
-    onTap: () {},
+    // Row(
+    //   mainAxisSize: MainAxisSize.min,
+    //   mainAxisAlignment: MainAxisAlignment.end,
+    //   children: [
+    //     TextButton(
+    //       onPressed: () async {
+    //         await FriendController.acceptFriendRequest(
+    //             requestId: receivedRequestData.requestId.toString());
+    //         FriendController.getFriendReceivedRequest();
+    //         FriendController.getFriendList();
+    //       },
+    //       child: const Text(
+    //         '수락',
+    //         style: blueTextStyle1,
+    //       ),
+    //     ),
+    //     TextButton(
+    //       onPressed: () async {
+    //         await FriendController.rejectFriendRequest(
+    //             requestId: receivedRequestData.requestId.toString()); //친구 거절
+    //         await ChattingListController.leaveRoom(
+    //             roomId: receivedRequestData.roomId); //채팅방 나가기
+    //         FriendController.getFriendReceivedRequest(); //내역 리프레쉬
+    //       },
+    //       child: const Text(
+    //         '거절',
+    //         style: redTextStyle1,
+    //       ),
+    //     ),
+    //   ],
+    // ),
+    onTap: () {
+      //프로필 페이지 열기
+      Get.bottomSheet(
+        RequestProfilePage(
+          userData: receivedRequestData,
+          voidCallback: Get.back,
+        ),
+        isScrollControlled: true,
+      );
+    },
   );
 }
 
@@ -193,9 +193,7 @@ ListTile sentRequestListTile({
           children: [
             Text(
               sentRequestData.nickname,
-              style: sentRequestData.gender == "남"
-                  ? blueTextStyle3
-                  : pinkTextStyle1,
+              style: blackTextStyle1,
             ),
             const SizedBox(
               width: 10,
@@ -204,7 +202,7 @@ ListTile sentRequestListTile({
               width: 40,
               height: 20,
               decoration: BoxDecoration(
-                color: blueColor1,
+                color: sentRequestData.gender == "남" ? blueColor1 : pinkColor1,
                 borderRadius: BorderRadius.circular(6),
               ),
               child: Center(
@@ -217,25 +215,26 @@ ListTile sentRequestListTile({
         ),
         Text(
           sentRequestData.myMBTI,
-          style: blackTextStyle1,
-        ),
-        Text(
-          sentRequestData.myKeyword,
-          style: greyTextStyle3,
+          style: const TextStyle(color: greyColor4),
         ),
       ],
     ),
-    trailing: TextButton(
+    trailing: IconButton(
       onPressed: () {
-        FriendController.deleteFriendRequest(
-            requestId: sentRequestData.requestId.toString());
+        ChattingController.to.isReceivedRequest.value=false;
+        Get.to(ChatRoomPage(roomId: sentRequestData.roomId, oppUserName: sentRequestData.nickname));
       },
-      child: Text(
-        '취소',
-        style: redTextStyle1,
-      ),
+      icon: Image.asset("assets/icons/question_message.png"),
     ),
-    onTap: () {},
+    onTap: () {
+      Get.bottomSheet(
+        RequestProfilePage(
+          userData: sentRequestData,
+          voidCallback: Get.back,
+        ),
+        isScrollControlled: true,
+      );
+    },
   );
 }
 
@@ -252,7 +251,7 @@ ListTile friendSettingListTile({
           children: [
             Text(
               friendData.nickname,
-              style: friendData.gender == "남" ? blueTextStyle3 : pinkTextStyle1,
+              style: blackTextStyle1,
             ),
             const SizedBox(
               width: 10,
@@ -261,7 +260,7 @@ ListTile friendSettingListTile({
               width: 40,
               height: 20,
               decoration: BoxDecoration(
-                color: blueColor1,
+                color: friendData.gender == "남" ? blueColor1 : pinkColor1,
                 borderRadius: BorderRadius.circular(6),
               ),
               child: Center(
@@ -274,11 +273,7 @@ ListTile friendSettingListTile({
         ),
         Text(
           friendData.myMBTI,
-          style: blackTextStyle1,
-        ),
-        Text(
-          friendData.myKeyword,
-          style: greyTextStyle3,
+          style: const TextStyle(color: greyColor4),
         ),
       ],
     ),
@@ -292,7 +287,7 @@ ListTile friendSettingListTile({
           print('An error occurred: $e');
         }
       },
-      child: Text(
+      child: const Text(
         "차단",
         style: blackTextStyle1,
       ),
@@ -314,7 +309,7 @@ ListTile blockedFriendSettingListTile({
           children: [
             Text(
               friendData.nickname,
-              style: friendData.gender == "남" ? blueTextStyle3 : pinkTextStyle1,
+              style: blackTextStyle1,
             ),
             const SizedBox(
               width: 10,
@@ -323,7 +318,7 @@ ListTile blockedFriendSettingListTile({
               width: 40,
               height: 20,
               decoration: BoxDecoration(
-                color: blueColor1,
+                color: friendData.gender == "남" ? blueColor1 : pinkColor1,
                 borderRadius: BorderRadius.circular(6),
               ),
               child: Center(
@@ -336,11 +331,7 @@ ListTile blockedFriendSettingListTile({
         ),
         Text(
           friendData.myMBTI,
-          style: blackTextStyle1,
-        ),
-        Text(
-          friendData.myKeyword,
-          style: greyTextStyle3,
+          style: const TextStyle(color: greyColor4),
         ),
       ],
     ),
@@ -354,7 +345,7 @@ ListTile blockedFriendSettingListTile({
           print('An error occurred: $e');
         }
       },
-      child: Text(
+      child: const Text(
         "차단 취소",
         style: blackTextStyle1,
       ),

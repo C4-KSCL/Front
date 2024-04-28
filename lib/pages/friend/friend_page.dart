@@ -31,7 +31,7 @@ class FriendPage extends StatelessWidget {
       FriendController.to.sentRequests.clear();
       FriendController.getFriendList();
       FriendController.getFriendReceivedRequest(); //request:{[]}오면 에러
-      FriendController.getFriendSendedRequest();
+      FriendController.getFriendSentRequest();
     });
 
     return Scaffold(

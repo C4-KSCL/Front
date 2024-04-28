@@ -85,24 +85,26 @@ class FriendController extends GetxController {
     print(response.statusCode);
     print(response.body);
     if (response.statusCode == 200) {
-      var sentRequests = jsonDecode(response.body);
+      var receivedRequests = jsonDecode(response.body);
       FriendController.to.receivedRequests.clear();
 
-      if (sentRequests['requests'] != null) {
-        for (var sentRequest in sentRequests['requests']) {
-          int requestId = sentRequest['id'];
-          String myMBTI = sentRequest['request']['myMBTI'];
-          String myKeyword = sentRequest['request']['myKeyword'];
-          String nickname = sentRequest['request']['nickname'];
-          String userImage = sentRequest['request']['userImage'];
-          String age = sentRequest['request']['age'];
-          String gender = sentRequest['request']['gender'];
-          String createdAt = sentRequest['room']['createdAt'];
-          String chatContent = sentRequest['room']['chatting'][0]['content'];
-          String roomId = sentRequest['roomId'];
+      if (receivedRequests['requests'] != null) {
+        for (var receivedRequest in receivedRequests['requests']) {
+          int requestId = receivedRequest['id'];
+          String userEmail = receivedRequest['reqUser'];
+          String myMBTI = receivedRequest['request']['myMBTI'];
+          String myKeyword = receivedRequest['request']['myKeyword'];
+          String nickname = receivedRequest['request']['nickname'];
+          String userImage = receivedRequest['request']['userImage'];
+          String age = receivedRequest['request']['age'];
+          String gender = receivedRequest['request']['gender'];
+          String createdAt = receivedRequest['room']['createdAt'];
+          String chatContent = receivedRequest['room']['chatting'][0]['content'];
+          String roomId = receivedRequest['roomId'];
 
           var request = Request(
             requestId: requestId,
+            userEmail:userEmail,
             myMBTI: myMBTI,
             myKeyword: myKeyword,
             nickname: nickname,
@@ -121,7 +123,7 @@ class FriendController extends GetxController {
   }
 
   //보낸 친구 요청 확인
-  static void getFriendSendedRequest() async {
+  static void getFriendSentRequest() async {
     final url = Uri.parse('$baseUrl/$requests/get-sended');
 
     final response = await http.get(url, headers: headers);
@@ -136,6 +138,7 @@ class FriendController extends GetxController {
     //       "recUser": "c@naver.com",
     //       "status": "rejected",
     //       "createdAt": "2024-04-06T16:53:46.000Z",
+    //       "updatedAt":null
     //       "room": {
     //         "id": "1712388914296",
     //         "name": "1712388914296",
@@ -160,22 +163,24 @@ class FriendController extends GetxController {
     print(response.statusCode);
     print(response.body);
     if (response.statusCode == 200) {
-      var sendedRequests = jsonDecode(response.body);
-      if (sendedRequests['requests'] != null) {
-        for (var sendedRequest in sendedRequests['requests']) {
-          int requestId = sendedRequest['id'];
-          String myMBTI = sendedRequest['receive']['myMBTI'];
-          String myKeyword = sendedRequest['receive']['myKeyword'];
-          String nickname = sendedRequest['receive']['nickname'];
-          String userImage = sendedRequest['receive']['userImage'];
-          String age = sendedRequest['receive']['age'];
-          String gender = sendedRequest['receive']['gender'];
-          String createdAt = sendedRequest['room']['createdAt'];
-          String chatContent = sendedRequest['room']['chatting'][0]['content'];
-          String roomId = sendedRequest['roomId'];
+      var sentRequests = jsonDecode(response.body);
+      if (sentRequests['requests'] != null) {
+        for (var sentRequest in sentRequests['requests']) {
+          int requestId = sentRequest['id'];
+          String userEmail = sentRequest['recUser'];
+          String myMBTI = sentRequest['receive']['myMBTI'];
+          String myKeyword = sentRequest['receive']['myKeyword'];
+          String nickname = sentRequest['receive']['nickname'];
+          String userImage = sentRequest['receive']['userImage'];
+          String age = sentRequest['receive']['age'];
+          String gender = sentRequest['receive']['gender'];
+          String createdAt = sentRequest['room']['createdAt'];
+          String chatContent = sentRequest['room']['chatting'][0]['content'];
+          String roomId = sentRequest['roomId'];
 
           var request = Request(
             requestId: requestId,
+            userEmail:userEmail,
             myMBTI: myMBTI,
             myKeyword: myKeyword,
             nickname: nickname,
@@ -256,7 +261,7 @@ class FriendController extends GetxController {
     //           "age": "27",
     //           "gender": "남"
     //          },
-    //         "room": null
+    //         "room": "1712735768037"
     //        }
     //     ]
     // }

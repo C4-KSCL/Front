@@ -1,5 +1,6 @@
 class Request {
   final int requestId;
+  final String userEmail;
   final String myMBTI;
   final String myKeyword;
   final String nickname;
@@ -12,6 +13,7 @@ class Request {
 
   Request({
     required this.requestId,
+    required this.userEmail,
     required this.myMBTI,
     required this.myKeyword,
     required this.nickname,
@@ -26,6 +28,7 @@ class Request {
   factory Request.fromJson(Map<String, dynamic> json) {
     return Request(
       requestId: json['requestId'],
+      userEmail: json['userEmail'],
       myMBTI: json['myMBTI'],
       myKeyword: json['myKeyword'],
       nickname: json['nickname'],
@@ -41,6 +44,7 @@ class Request {
   Map<String, dynamic> toJson() {
     return {
       'requestId': requestId,
+      'userEmail':userEmail,
       'myMBTI': myMBTI,
       'myKeyword': myKeyword,
       'nickname': nickname,

@@ -98,6 +98,7 @@ class ChattingListController extends GetxController{
           String type = lastChat['type'];
           int friendRequestId = lastChat['room']['addRequest'].isNotEmpty ? lastChat['room']['addRequest'][0]['id'] : -1;
           int notReadCounts = lastChat['notReadCounts'];
+
           bool isChatEnabled = lastChat['room']['publishing'] == "true";
           //
           bool isReceivedRequest = lastChat['room']['addRequest'].isEmpty ? false : lastChat['room']['addRequest'][0]

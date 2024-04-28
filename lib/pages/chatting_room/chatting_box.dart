@@ -21,11 +21,12 @@ Widget SentTextChatBox({
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(chat.readCount.value == 1 ? "1" : ""),
+              Text(chat.readCount.value == 1 ? "1" : "",style: const TextStyle(color:blueColor1),),
               Text(convertHourAndMinuteTime(
                   utcTimeString: chat.createdAt.toString())),
             ],
           ),
+          const SizedBox(width: 4,),
           Container(
             constraints: BoxConstraints(maxWidth: Get.width * 0.75),
             decoration: const BoxDecoration(
@@ -79,10 +80,11 @@ Widget ReceiveTextChatBox({
               ),
             ),
           ),
+          const SizedBox(width: 4,),
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text(chat.readCount.value == 1 ? "1" : ""),
+              Text(chat.readCount.value == 1 ? "1" : "",style: const TextStyle(color:blueColor1),),
               Text(convertHourAndMinuteTime(
                   utcTimeString: chat.createdAt.toString())),
             ],
@@ -109,11 +111,12 @@ Widget SentQuizChatBox({
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(chat.readCount.value == 1 ? "1" : ""),
+              Text(chat.readCount.value == 1 ? "1" : "",style: const TextStyle(color:blueColor1),),
               Text(convertHourAndMinuteTime(
                   utcTimeString: chat.createdAt.toString())),
             ],
           ),
+          const SizedBox(width: 4,),
           Container(
             decoration: const BoxDecoration(
               color: blueColor1,
@@ -234,11 +237,12 @@ Widget ReceiveQuizChatBox({
               ],
             ),
           ),
+          const SizedBox(width: 4,),
           // readCount와 시간 표시
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text(chat.readCount.value == 1 ? "1" : ""),
+              Text(chat.readCount.value == 1 ? "1" : "",style: const TextStyle(color:blueColor1),),
               Text(convertHourAndMinuteTime(
                   utcTimeString: chat.createdAt.toString())),
             ],

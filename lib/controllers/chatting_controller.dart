@@ -27,7 +27,7 @@ class ChattingController extends GetxController {
   RxBool showSecondGridView = false.obs; // 두번째 카테고리 여부
   RxInt clickQuizButtonIndex = (-1).obs; // 퀴즈 페이지 button index
   RxBool isReceivedRequest = true.obs; //받은 요청이면 true, 보낸 요청이면 false
-  RxBool isChatEnabled = true.obs; //채팅 가능 여부(친구가 아니면 채팅X)
+  RxBool isChatEnabled = false.obs; //채팅 가능 여부(친구가 아니면 채팅X)
   RxBool isQuizAnswered = false.obs; //퀴즈 답변 여부
 
   RxString userChoice="".obs;
@@ -52,6 +52,10 @@ class ChattingController extends GetxController {
     "Content-type": "application/json",
     "accessToken": accessToken
   };
+
+  void resetIsChatEnabled(){
+    isChatEnabled.value=false;
+  }
 
   //Socket.io 관련 함수
   //소켓 연결
