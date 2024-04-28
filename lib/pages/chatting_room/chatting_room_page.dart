@@ -4,10 +4,10 @@ import 'package:flutter/widgets.dart';
 import 'package:frontend_matching/controllers/chatting_list_controller.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
 import 'package:frontend_matching/models/chat.dart';
-import 'package:frontend_matching/pages/chat_room/big_category.dart';
-import 'package:frontend_matching/pages/chat_room/button_layer.dart';
-import 'package:frontend_matching/pages/chat_room/small_category.dart';
-import 'package:frontend_matching/pages/chat_room/quiz_page.dart';
+import 'package:frontend_matching/pages/chatting_room/big_category.dart';
+import 'package:frontend_matching/pages/chatting_room/button_layer.dart';
+import 'package:frontend_matching/pages/chatting_room/small_category.dart';
+import 'package:frontend_matching/pages/chatting_room/quiz_page.dart';
 import 'package:frontend_matching/controllers/chatting_controller.dart';
 import 'package:frontend_matching/services/time_convert_service.dart';
 import 'package:frontend_matching/theme/textStyle.dart';
@@ -16,7 +16,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
 import '../../theme/colors.dart';
-import 'chat_box.dart';
+import 'chatting_box.dart';
 
 // 채팅 타입
 enum ChatType {
@@ -52,6 +52,7 @@ class ChatRoomPage extends GetView<ChattingController> {
   @override
   Widget build(BuildContext context) {
     Get.put(ChattingController());
+    Get.put(ChattingListController()); ////////////////없애야함///////////////
 
     final FocusNode focusNode = FocusNode();
     var chatController = TextEditingController();
@@ -84,6 +85,7 @@ class ChatRoomPage extends GetView<ChattingController> {
             ChattingListController.getLastChatList();
             ///////////////////////////////////////////////////////////////
             controller.disconnect();
+            ChattingController.to.resetIsChatEnabled();
             Get.back();
           },
         ),
@@ -113,14 +115,14 @@ class ChatRoomPage extends GetView<ChattingController> {
                     () {
                       Chat chat = controller.chats[index];
 
-                      //날짜 비교
+                      //날짜 비교 ///////////
                       String? DateText = controller.chatDate;
                       String currentChatDate = extractDate(chat.createdAt);
-                      print(DateText);
-                      print(currentChatDate);
+                      // print(DateText);
+                      // print(currentChatDate);
 
                       if (controller.chatDate != currentChatDate) {
-                        print("다름");
+                        // print("다름");
                         controller.chatDate = currentChatDate;
                       } else {
                         DateText = null;

@@ -1,14 +1,14 @@
 class Friend {
   final int id;
-  final String userEmail;
-  final String oppEmail;
-  final String myMBTI;
-  final String myKeyword;
-  final String nickname;
-  final String userImage;
-  final String age;
-  final String gender;
-  final String? roomId;
+  final String userEmail; // 사용자 이메일
+  final String oppEmail; // 친구 이메일
+  final String myMBTI; //친구 mbti
+  final String myKeyword; //친구 키워드
+  final String nickname; // 친구 닉네임
+  final String userImage; //친구 프로필 이미지
+  final String age; // 친구 나이
+  final String gender; // 친구 성별
+  final String? roomId; // 친구와 연결된 채팅방 id
 
   Friend({
     required this.id,

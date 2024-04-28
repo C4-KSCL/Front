@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_matching/controllers/chatting_controller.dart';
 import 'package:frontend_matching/models/chat.dart';
-import 'package:frontend_matching/pages/chat_room/quiz_page.dart';
+import 'package:frontend_matching/pages/chatting_room/quiz_page.dart';
 import 'package:frontend_matching/services/time_convert_service.dart';
 import 'package:get/get.dart';
 
@@ -20,11 +21,12 @@ Widget SentTextChatBox({
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(chat.readCount.value == 1 ? "1" : ""),
+              Text(chat.readCount.value == 1 ? "1" : "",style: const TextStyle(color:blueColor1),),
               Text(convertHourAndMinuteTime(
                   utcTimeString: chat.createdAt.toString())),
             ],
           ),
+          const SizedBox(width: 4,),
           Container(
             constraints: BoxConstraints(maxWidth: Get.width * 0.75),
             decoration: const BoxDecoration(
@@ -44,8 +46,8 @@ Widget SentTextChatBox({
           ),
         ],
       ),
-      if(chatDate!=null)
-        timeBox(chatDate: extractDate(chatDate)),
+      // if(chatDate!=null)
+      //   timeBox(chatDate: extractDate(chatDate)),
     ],
   );
 }
@@ -78,18 +80,19 @@ Widget ReceiveTextChatBox({
               ),
             ),
           ),
+          const SizedBox(width: 4,),
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text(chat.readCount.value == 1 ? "1" : ""),
+              Text(chat.readCount.value == 1 ? "1" : "",style: const TextStyle(color:blueColor1),),
               Text(convertHourAndMinuteTime(
                   utcTimeString: chat.createdAt.toString())),
             ],
           ),
         ],
       ),
-      if(chatDate!=null)
-        timeBox(chatDate: extractDate(chatDate)),
+      // if(chatDate!=null)
+      //   timeBox(chatDate: extractDate(chatDate)),
     ],
   );
 }
@@ -108,11 +111,12 @@ Widget SentQuizChatBox({
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(chat.readCount.value == 1 ? "1" : ""),
+              Text(chat.readCount.value == 1 ? "1" : "",style: const TextStyle(color:blueColor1),),
               Text(convertHourAndMinuteTime(
                   utcTimeString: chat.createdAt.toString())),
             ],
           ),
+          const SizedBox(width: 4,),
           Container(
             decoration: const BoxDecoration(
               color: blueColor1,
@@ -144,10 +148,9 @@ Widget SentQuizChatBox({
                   ),
                   onPressed: () {
                     Get.bottomSheet(
-                      //quizId 를 통해서 api로 정보 받아오고 나면 QuizPage 열기
                       QuizPage(
                         voidCallback: Get.back,
-                        chat: chat,
+                        quizId: chat.event!.id.toString(),
                         isSentQuiz: true,
                       ),
                       backgroundColor: Colors.white,
@@ -167,8 +170,8 @@ Widget SentQuizChatBox({
           ),
         ],
       ),
-      if(chatDate!=null)
-        timeBox(chatDate: extractDate(chatDate)),
+      // if(chatDate!=null)
+      //   timeBox(chatDate: extractDate(chatDate)),
     ],
   );
 }
@@ -189,7 +192,7 @@ Widget ReceiveQuizChatBox({
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(8),
                   topRight: Radius.circular(8),
-                  bottomLeft: Radius.circular(8)),
+                  bottomRight: Radius.circular(8)),
             ),
             child: Column(
               children: [
@@ -214,10 +217,9 @@ Widget ReceiveQuizChatBox({
                   ),
                   onPressed: () {
                     Get.bottomSheet(
-                      //quizId 를 통해서 api로 정보 받아오고 나면 QuizPage 열기
                       QuizPage(
                         voidCallback: Get.back,
-                        chat: chat,
+                        quizId: chat.event!.id.toString(),
                         isSentQuiz: false,
                       ),
                       backgroundColor: Colors.white,
@@ -235,19 +237,20 @@ Widget ReceiveQuizChatBox({
               ],
             ),
           ),
+          const SizedBox(width: 4,),
           // readCount와 시간 표시
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text(chat.readCount.value == 1 ? "1" : ""),
+              Text(chat.readCount.value == 1 ? "1" : "",style: const TextStyle(color:blueColor1),),
               Text(convertHourAndMinuteTime(
                   utcTimeString: chat.createdAt.toString())),
             ],
           ),
         ],
       ),
-      if(chatDate!=null)
-        timeBox(chatDate: extractDate(chatDate)),
+      // if(chatDate!=null)
+      //   timeBox(chatDate: extractDate(chatDate)),
     ],
   );
 }

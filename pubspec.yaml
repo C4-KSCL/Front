@@ -43,6 +43,8 @@ dependencies:
   flutter_slidable:
   intl:
   firebase_core:
+  firebase_messaging:
+  flutter_local_notifications:
   flutter_svg:
   path:
   path_provider:

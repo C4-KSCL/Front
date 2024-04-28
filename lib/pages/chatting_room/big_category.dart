@@ -42,7 +42,7 @@ Widget bigCategory() {
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               // 데이터를 기다리는 동안 로딩 인디케이터를 보여줌
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
               // 에러 발생 시
               return Text("Error: ${snapshot.error}");

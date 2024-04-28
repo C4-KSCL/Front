@@ -10,7 +10,7 @@ class ChattingListController extends GetxController{
 
   static const baseUrl = 'http://15.164.245.62:8000'; //서버 url
 
-  RxList<ChatList> chattingList=<ChatList>[].obs;
+  RxList<ChatList> chattingList=<ChatList>[].obs; //채팅 리스트
 
   static String accessToken = UserDataController.to.accessToken;
 
@@ -98,6 +98,7 @@ class ChattingListController extends GetxController{
           String type = lastChat['type'];
           int friendRequestId = lastChat['room']['addRequest'].isNotEmpty ? lastChat['room']['addRequest'][0]['id'] : -1;
           int notReadCounts = lastChat['notReadCounts'];
+
           bool isChatEnabled = lastChat['room']['publishing'] == "true";
           //
           bool isReceivedRequest = lastChat['room']['addRequest'].isEmpty ? false : lastChat['room']['addRequest'][0]
