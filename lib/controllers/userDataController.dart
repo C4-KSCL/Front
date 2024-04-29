@@ -12,6 +12,7 @@ class UserDataController extends GetxController {
   SignupController signupController = Get.find<SignupController>();
   Rxn<User?> user = Rxn<User?>(null);
   RxList<XFile?> userImages = <XFile?>[].obs;
+  Rx<String> matchingUserNumbers="1,2,3".obs; // 매칭 친구 userNumbers
 
   RxList<User> matchingFriendInfoList = RxList<User>();
   RxList<List<UserImage>> matchingFriendImageList = RxList<List<UserImage>>();

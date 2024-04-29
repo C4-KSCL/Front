@@ -46,8 +46,7 @@ class UserServices {
       print(loginUserData['accessToken']);
       print(loginUserData['refreshToken']);
 
-      FindFriendController.findFriends(userDataController.accessToken);
-      print(userDataController.accessToken);
+      FindFriendController.findFriends();
       FriendController.getFriendList();
       FriendController.getFriendReceivedRequest();
       FriendController.getFriendSentRequest();
