@@ -26,12 +26,7 @@ class FriendPage extends StatelessWidget {
     //컨트롤러 제거 코드도 생각해보기 Get.delete<FriendController>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      FriendController.to.friends.clear();
-      FriendController.to.receivedRequests.clear();
-      FriendController.to.sentRequests.clear();
-      FriendController.getFriendList();
-      FriendController.getFriendReceivedRequest(); //request:{[]}오면 에러
-      FriendController.getFriendSentRequest();
+      print("친구창 리로딩");
     });
 
     return Scaffold(

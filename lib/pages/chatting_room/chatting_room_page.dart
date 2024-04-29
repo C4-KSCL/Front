@@ -66,7 +66,7 @@ class ChatRoomPage extends GetView<ChattingController> {
     MyTextFieldWidget();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      print("앱 리로딩");
+      print("채팅방 화면 리로딩");
       ChattingController.to.init();
       ChattingController.to.connect(roomId: roomId); //웹소켓 연결
     });

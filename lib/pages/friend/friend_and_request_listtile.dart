@@ -61,7 +61,6 @@ ListTile friendListTile({
           voidCallback: Get.back,
         ),
         isScrollControlled: true,
-
       );
     },
   );
@@ -89,7 +88,8 @@ ListTile receivedRequestListTile({
               width: 40,
               height: 20,
               decoration: BoxDecoration(
-                color: receivedRequestData.gender == "남" ? blueColor1 : pinkColor1,
+                color:
+                    receivedRequestData.gender == "남" ? blueColor1 : pinkColor1,
                 borderRadius: BorderRadius.circular(6),
               ),
               child: Center(
@@ -128,11 +128,14 @@ ListTile receivedRequestListTile({
         // ),
       ],
     ),
-    trailing:
-    IconButton(
+    trailing: IconButton(
       onPressed: () {
-        Get.to(ChatRoomPage(roomId: receivedRequestData.roomId, oppUserName: receivedRequestData.nickname));
-        ChattingController.to.isReceivedRequest.value=true;
+        Get.to(ChatRoomPage(
+          roomId: receivedRequestData.roomId,
+          oppUserName: receivedRequestData.nickname,
+          friendRequestId: receivedRequestData.requestId,
+        ));
+        ChattingController.to.isReceivedRequest.value = true;
       },
       icon: Image.asset("assets/icons/question_message.png"),
     ),
@@ -221,8 +224,12 @@ ListTile sentRequestListTile({
     ),
     trailing: IconButton(
       onPressed: () {
-        ChattingController.to.isReceivedRequest.value=false;
-        Get.to(ChatRoomPage(roomId: sentRequestData.roomId, oppUserName: sentRequestData.nickname));
+        ChattingController.to.isReceivedRequest.value = false;
+        Get.to(ChatRoomPage(
+          roomId: sentRequestData.roomId,
+          oppUserName: sentRequestData.nickname,
+          friendRequestId: sentRequestData.requestId,
+        ));
       },
       icon: Image.asset("assets/icons/question_message.png"),
     ),

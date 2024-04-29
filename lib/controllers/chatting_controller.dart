@@ -255,7 +255,7 @@ class ChattingController extends GetxController {
     ChattingController.to.chatDate=extractDate(ChattingController.to.chats[0].createdAt);
   }
 
-  //속한 채팅 방들 리스트 가져오기
+  //속한 채팅 방들 리스트 받아오기
   static Future<void> getRoomList() async {
     final url = Uri.parse('$baseUrl/$rooms/get-list/');
 

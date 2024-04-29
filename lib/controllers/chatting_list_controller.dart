@@ -25,7 +25,7 @@ class ChattingListController extends GetxController{
 
     final response = await http.get(url, headers: headers);
 
-    List<ChatList> chatLists = [];
+    List<ChatList> tempChatList = [];
 
     print(response.statusCode);
     print(response.body);
@@ -131,10 +131,10 @@ class ChattingListController extends GetxController{
             isReceivedRequest: isReceivedRequest,
           );
 
-          chatLists.add(chatList);
+          tempChatList.add(chatList);
         }
       }
-      ChattingListController.to.chattingList.assignAll(chatLists);
+      ChattingListController.to.chattingList.assignAll(tempChatList);
     }
   }
 
