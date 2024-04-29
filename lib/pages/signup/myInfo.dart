@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api, prefer_const_constructors, unused_import, prefer_const_literals_to_create_immutables
+// ignore_for_file: library_private_types_in_public_api, prefer_const_constructors, unused_import, prefer_const_literals_to_create_immutables, avoid_print
 
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/components/genderButton.dart';
@@ -8,6 +8,7 @@ import 'package:frontend_matching/controllers/signupController.dart';
 import 'package:frontend_matching/pages/signup/myMbtiPage.dart';
 import 'package:frontend_matching/pages/signup/schoolAuth.dart';
 import 'package:frontend_matching/services/nickname_check.dart';
+import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
@@ -34,55 +35,6 @@ class _InfoAuthPageState extends State<InfoAuthPage> {
   bool isFemaleSelected = false;
   int genderInt = 0;
   String genderString = "";
-
-  bool isNicknameValid = false; // 닉네임 검사 성공 여부
-  bool isElevationButtonEnabled = false; // 버튼 활성화
-
-  void checkElevationButtonStatus() {
-    bool isFieldsFilled = passwordController.text.isNotEmpty &&
-        nicknameController.text.isNotEmpty &&
-        numberController.text.isNotEmpty &&
-        ageController.text.isNotEmpty &&
-        genderString.isNotEmpty;
-
-    setState(() {
-      isElevationButtonEnabled = isFieldsFilled;
-      print('Is fields filled: $isFieldsFilled');
-      updateNicknameValid(isNicknameValid);
-      print('ddd $isNicknameValid');
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    passwordController.addListener(checkElevationButtonStatus);
-    nicknameController.addListener(checkElevationButtonStatus);
-    numberController.addListener(checkElevationButtonStatus);
-    ageController.addListener(checkElevationButtonStatus);
-  }
-
-  @override
-  void dispose() {
-    passwordController.removeListener(checkElevationButtonStatus);
-    passwordController.dispose();
-    nicknameController.removeListener(checkElevationButtonStatus);
-    nicknameController.dispose();
-    numberController.removeListener(checkElevationButtonStatus);
-    numberController.dispose();
-    ageController.removeListener(checkElevationButtonStatus);
-    ageController.dispose();
-    super.dispose();
-  }
-
-  void updateNicknameValid(bool isValid) {
-    setState(() {
-      isNicknameValid = isValid;
-      print(isValid);
-      print("isNicknameValid updated to: $isNicknameValid");
-      checkElevationButtonStatus();
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,6 +63,7 @@ class _InfoAuthPageState extends State<InfoAuthPage> {
           IconButton(icon: const Icon(Icons.search), onPressed: () => {})
         ],
       ),
+      backgroundColor: blueColor5,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -123,6 +76,10 @@ class _InfoAuthPageState extends State<InfoAuthPage> {
                 typeController: passwordController,
                 textLogo: 'textLogo',
                 textType: '비밀번호',
+                onChanged: (value) {
+                  signupController.password.value = value;
+                  print("패스워드 상태좀보자 : ${signupController.password.value}");
+                },
               ),
             ),
             Padding(
@@ -133,26 +90,30 @@ class _InfoAuthPageState extends State<InfoAuthPage> {
                 textEditingController: nicknameController,
                 TEXT: '닉네임',
                 onPressed: () async {
+                  // 닉네임 인증
                   String nickname = nicknameController.text;
-
-                  await NickNameCheck.checknickname(
-                      nickname, context, updateNicknameValid);
+                  signupController.checkNickname(nickname, context);
                 },
               ),
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 13.0, vertical: 8.0),
               child: GetTextContainer(
-                  typeController: numberController,
-                  textLogo: 'textLogo',
-                  textType: '전화번호'),
+                typeController: numberController,
+                textLogo: 'textLogo',
+                textType: '전화번호',
+                onChanged: (value) =>
+                    signupController.phoneNumber.value = value,
+              ),
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 13.0, vertical: 8.0),
               child: GetTextContainer(
-                  typeController: ageController,
-                  textLogo: 'textLogo',
-                  textType: '나이'),
+                typeController: ageController,
+                textLogo: 'textLogo',
+                textType: '나이',
+                onChanged: (value) => signupController.age.value = value,
+              ),
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 13.0, vertical: 8.0),
@@ -166,6 +127,7 @@ class _InfoAuthPageState extends State<InfoAuthPage> {
                         genderInt = selectedValue;
                         genderString = (genderInt == 1) ? "남" : "여";
                         // 성별 선택시 상태 업데이트
+                        signupController.setGender(genderString);
                       });
                     },
                   ),
@@ -175,38 +137,43 @@ class _InfoAuthPageState extends State<InfoAuthPage> {
             SizedBox(
               height: 10,
             ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF7EA5F3),
-                minimumSize: Size(300, 50),
-              ),
-              onPressed: isElevationButtonEnabled && isNicknameValid
-                  ? () {
-                      String password = passwordController.text;
-                      String nickname = nicknameController.text;
-                      String phoneNumber = numberController.text;
+            SizedBox(
+              width: 350,
+              height: 50,
+              child: Obx(() => ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF7EA5F3),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                    ),
+                    onPressed: signupController.isElevationButtonEnabled.value
+                        ? () {
+                            String password = passwordController.text;
+                            String nickname = nicknameController.text;
+                            String phoneNumber = numberController.text;
 
-                      String age = ageController.text;
+                            String age = ageController.text;
 
-                      signupController.addToSignupArray(password);
-                      signupController.addToSignupArray(nickname);
-                      signupController.addToSignupArray(phoneNumber);
-                      signupController.addToSignupArray(age);
-                      signupController.addToSignupArray(genderString);
+                            signupController.addToSignupArray(password);
+                            signupController.addToSignupArray(nickname);
+                            signupController.addToSignupArray(phoneNumber);
+                            signupController.addToSignupArray(age);
+                            signupController.addToSignupArray(genderString);
 
-                      print(signupController.signupArray);
+                            print(signupController.signupArray);
 
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MyMbtiPage(),
-                        ),
-                      );
-                    }
-                  : null,
-              child: const Text('다음으로',
-                  style: TextStyle(
-                    color: Colors.white,
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MyMbtiPage(),
+                              ),
+                            );
+                          }
+                        : null,
+                    child: const Text('다음으로',
+                        style: TextStyle(
+                          color: Colors.white,
+                        )),
                   )),
             )
           ],

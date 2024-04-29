@@ -14,18 +14,19 @@ import 'package:frontend_matching/pages/profile/myPage.dart';
 import 'package:frontend_matching/services/friend_setting.dart';
 import 'package:get/get.dart';
 
-class MatchingPage extends StatefulWidget {
+class TestMatching extends StatefulWidget {
   final int idx;
-  const MatchingPage({required this.idx});
+  const TestMatching({required this.idx});
   @override
-  _MainPageState createState() => _MainPageState();
+  _TestMatchingState createState() => _TestMatchingState();
 }
 
-class _MainPageState extends State<MatchingPage> {
+class _TestMatchingState extends State<TestMatching> {
   final TextEditingController sendingController = TextEditingController();
   final TextEditingController minAgeController = TextEditingController();
   final TextEditingController maxAgeController = TextEditingController();
   String accessToken = '';
+  String _inputValue = '';
   String email = '';
   String nickname = '';
   String age = '';
@@ -113,21 +114,12 @@ class _MainPageState extends State<MatchingPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ImageSlider(imageArray: validImagePaths),
-                Row(
-                  children: [
-                    Text(
-                      nickname,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(age,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        )),
-                  ],
+                Text(
+                  nickname,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const Padding(
                   padding: EdgeInsets.all(16.0),

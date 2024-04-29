@@ -17,7 +17,7 @@ class TextformVerify extends StatefulWidget {
 
 class _TextformVerifyState extends State<TextformVerify> {
   String? validateEmail(String? email) {
-    RegExp emailRegex = RegExp(r'^[\w\.-]+@[\w-]+\.\w{2,3}(\.\w{2,3})?$');
+    RegExp emailRegex = RegExp(r'^[\w\.-]+@kmu\.ac\.kr$'); // @kmu.ac.kr만 가능
     final isEmailValid = emailRegex.hasMatch(email ?? '');
     if (!isEmailValid) {
       return 'Please enter a valid email';

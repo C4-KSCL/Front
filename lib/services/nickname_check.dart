@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class NickNameCheck {
-  static Future<String?> checknickname(String nickname, BuildContext context,
-      Function updateNicknameValid) async {
+  static Future<bool?> checknickname(
+      String nickname, BuildContext context) async {
     final url = Uri.parse('http://15.164.245.62:8000/signup/checknickname');
     try {
       final response = await http.post(
@@ -32,7 +32,7 @@ class NickNameCheck {
             );
           },
         );
-        updateNicknameValid(true); // 다음으로 버튼 홠ㅇ화
+        return true; // 버튼 상태 on
       } else if (response.statusCode == 301) {
         print('이미 사용 중인 닉네임입니다.');
         showDialog(
@@ -52,7 +52,7 @@ class NickNameCheck {
             );
           },
         );
-        updateNicknameValid(false);
+        return false; // 버튼 상태 off
       } else {
         print('서버 에러가 발생했습니다. 에러 코드: ${response.statusCode}');
         showDialog(
@@ -72,11 +72,11 @@ class NickNameCheck {
             );
           },
         );
+        return false;
       }
-      updateNicknameValid(false);
     } catch (e) {
       print('닉네임 확인 중 에러가 발생했습니다: $e');
-      updateNicknameValid(false);
+      return false;
     }
   }
 }

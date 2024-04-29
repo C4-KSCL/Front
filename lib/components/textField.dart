@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:frontend_matching/theme/textStyle.dart';
 import 'package:flutter/services.dart';
@@ -65,12 +66,14 @@ class _ButtonTextFieldBoxState extends State<ButtonTextFieldBox> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(
-                width: 5,
-              ),
-              Text(
-                widget.TEXT,
-                style: TextStyle(fontSize: 15),
+              Expanded(
+                child: Container(
+                  color: blueColor5,
+                  child: Text(
+                    widget.TEXT,
+                    style: TextStyle(fontSize: 15),
+                  ),
+                ),
               )
             ],
           ),

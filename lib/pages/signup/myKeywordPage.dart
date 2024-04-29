@@ -1,9 +1,13 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:frontend_matching/components/personalKeyword.dart';
+import 'package:frontend_matching/components/gap.dart';
+import 'package:frontend_matching/components/hobbyKeyword.dart';
+import 'package:frontend_matching/components/mindKeyword.dart';
 import 'package:frontend_matching/controllers/signupController.dart';
 import 'package:frontend_matching/pages/signup/friendMbtiPage.dart';
+import 'package:frontend_matching/theme/colors.dart';
+import 'package:frontend_matching/theme/textStyle.dart';
 import 'package:get/get.dart';
 
 class MyKeywordPage extends StatefulWidget {
@@ -15,13 +19,15 @@ class MyKeywordPage extends StatefulWidget {
 
 class _MyKeywordPageState extends State<MyKeywordPage> {
   SignupController signupController = Get.find<SignupController>();
-  List<String> selectedKeywords = [];
+  List<String> selectedHobbyKeywords = [];
+  List<String> selectedMindKeywords = [];
   bool isElevationButtonEnabled = false; // ElevationButton 활성/비활성 상태
 
   // ElevationButton 활성/비활성 여부를 체크하는 함수
   void checkElevationButtonStatus() {
     setState(() {
-      isElevationButtonEnabled = selectedKeywords.isNotEmpty;
+      isElevationButtonEnabled =
+          selectedHobbyKeywords.isNotEmpty && selectedMindKeywords.isNotEmpty;
     });
   }
 
@@ -43,6 +49,7 @@ class _MyKeywordPageState extends State<MyKeywordPage> {
           IconButton(icon: Icon(Icons.search), onPressed: () => {})
         ],
       ),
+      backgroundColor: blueColor5,
       body: Container(
         child: Column(
           children: [
@@ -61,42 +68,62 @@ class _MyKeywordPageState extends State<MyKeywordPage> {
                 fontSize: 35,
               ),
             ),
+            Gap(),
             SizedBox(
-              height: 50,
+              height: 30,
+              child: Text('취미 키워드', style: greyTextStyle1),
             ),
-            // PersonalKeyWord를 사용할 때, 콜백 함수를 전달
-            PersonalKeyWord(
+            HobbyKeyWord(
               onKeywordsSelected: (keywords) {
-                selectedKeywords = keywords;
+                selectedHobbyKeywords = keywords;
                 checkElevationButtonStatus();
               },
             ),
-            const SizedBox(height: 30),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF7EA5F3),
-                minimumSize: const Size(300, 50),
-              ),
-              onPressed: isElevationButtonEnabled
-                  ? () {
-                      debugPrint('Final Selected Keywords: $selectedKeywords');
-                      String combinedKeywords = selectedKeywords.join(',');
-                      print(combinedKeywords);
-                      signupController.addToSignupArray(combinedKeywords);
-                      print(signupController.signupArray);
+            SizedBox(
+              height: 30,
+              child: Text('성격 키워드', style: greyTextStyle1),
+            ),
+            MindKeyWord(
+              onKeywordsSelected: (keywords) {
+                selectedMindKeywords = keywords;
+                checkElevationButtonStatus();
+              },
+            ),
+            const SizedBox(height: 10),
+            SizedBox(
+              width: 350,
+              height: 50,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF7EA5F3),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15)),
+                ),
+                onPressed: isElevationButtonEnabled
+                    ? () {
+                        String HobbyKeywords = selectedHobbyKeywords.join(',');
+                        String MindKeywords = selectedMindKeywords.join(',');
+                        String combinedKeywords =
+                            HobbyKeywords + ',' + MindKeywords;
+                        print(HobbyKeywords);
+                        print(MindKeywords);
+                        print(combinedKeywords);
+                        signupController.addToSignupArray(combinedKeywords);
+                        print(signupController.signupArray);
 
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const FriendMbtiPage(),
-                        ),
-                      );
-                    }
-                  : null, // 버튼이 비활성 상태일 때는 null로 설정
-              child: const Text(
-                '다음으로',
-                style: TextStyle(
-                  color: Colors.white,
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const FriendMbtiPage(),
+                          ),
+                        );
+                      }
+                    : null, // 버튼이 비활성 상태일 때는 null로 설정
+                child: const Text(
+                  '다음으로',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
