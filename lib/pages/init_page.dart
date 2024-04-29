@@ -1,8 +1,7 @@
 // ignore_for_file: prefer_const_constructors, use_super_parameters
 
 import 'package:flutter/material.dart';
-import 'package:frontend_matching/pages/matching/matchingPage.dart';
-import 'package:frontend_matching/pages/matching/testMatching.dart';
+import 'package:frontend_matching/pages/matching/matchingView.dart';
 import 'package:frontend_matching/pages/profile/myPage.dart';
 import 'package:get/get.dart';
 import '../components/my_bottom_navigationbar.dart';
@@ -16,8 +15,7 @@ class InitPage extends StatelessWidget {
 
   //탭별 페이지 정의
   static List<Widget> tabPages = <Widget>[
-    MainPage(),
-    //TestMatching(),
+    MatchingView(),
     FriendPage(),
     ChattingListPage(),
     MyPage(),
