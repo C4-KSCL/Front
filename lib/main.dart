@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/controllers/bottomNavigationBar.dart';
 import 'package:frontend_matching/controllers/chatting_controller.dart';
@@ -27,8 +26,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'controllers/friend_controller.dart';
 import 'firebase_options.dart';
 
-
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -36,6 +34,7 @@ void main() async{
   await initializeDateFormatting('ko_KR', null);
   runApp(
     GetMaterialApp(
+      debugShowCheckedModeBanner: false,
       home: LoginPage(),
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -59,13 +58,4 @@ void main() async{
       }),
     ),
   );
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
 }

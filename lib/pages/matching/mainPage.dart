@@ -10,11 +10,7 @@ import 'package:frontend_matching/controllers/findFriendController.dart';
 import 'package:frontend_matching/controllers/friend_controller.dart';
 import 'package:frontend_matching/controllers/settingModifyController.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
-import 'package:frontend_matching/models/user.dart';
 import 'package:frontend_matching/models/userImage.dart';
-import 'package:frontend_matching/pages/matching/imageSlide.dart';
-import 'package:frontend_matching/pages/matching/matchingView.dart';
-import 'package:frontend_matching/pages/profile/myPage.dart';
 import 'package:frontend_matching/services/friend_setting.dart';
 import 'package:get/get.dart';
 import 'package:page_indicator/page_indicator.dart';
@@ -144,12 +140,12 @@ class _MainPageState extends State<MainPage> {
                                   children: [
                                     NumberInputField(
                                       controller: minAgeController,
-                                      hintText: '최소나이',
+                                      hintText: UserDataController.to.user.value!.friendMinAge!,
                                     ),
                                     Icon(Icons.remove),
                                     NumberInputField(
                                       controller: maxAgeController,
-                                      hintText: '최대나이',
+                                      hintText: UserDataController.to.user.value!.friendMaxAge!,
                                     ),
                                   ],
                                 ),
@@ -166,6 +162,9 @@ class _MainPageState extends State<MainPage> {
                                           color: Colors.white,
                                         )),
                                     onPressed: () async {
+                                      maxAgeController.text=UserDataController.to.user.value!.friendMaxAge!;
+                                      minAgeController.text=UserDataController.to.user.value!.friendMinAge!;
+
                                       settingModifyController
                                           .addToSettingArray(selectedMBTI);
                                       settingModifyController
@@ -186,6 +185,7 @@ class _MainPageState extends State<MainPage> {
                                         minAgeController.text,
                                         genderString,
                                       );
+                                      Get.back();
                                     },
                                   ),
                                 )
