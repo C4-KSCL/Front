@@ -46,13 +46,17 @@ dependencies:
   firebase_messaging:
   flutter_local_notifications:
   flutter_svg:
+  sqflite:
   path:
   path_provider:
-  sqflite:
+  hive:
+  hive_flutter:
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  hive_generator:
+  build_runner:
     
 
   # The "flutter_lints" package below contains a set of recommended lints to

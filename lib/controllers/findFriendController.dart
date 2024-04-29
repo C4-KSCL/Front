@@ -19,7 +19,7 @@ class FindFriendController {
     // 헤더
     Map<String, String> headers = {
       "Content-type": "application/json",
-      "accesstoken": accessToken
+      "accessToken": accessToken
     };
 
     final response = await http.get(url, headers: headers);
