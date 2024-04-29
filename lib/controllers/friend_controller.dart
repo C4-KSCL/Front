@@ -77,16 +77,18 @@ class FriendController extends GetxController {
   }
 
   //받은 친구 요청 확인
-  static void getFriendReceivedRequest() async {
+  static Future<void> getFriendReceivedRequest() async {
     final url = Uri.parse('$baseUrl/$requests/get-received');
 
     final response = await http.get(url, headers: headers);
 
     print(response.statusCode);
     print(response.body);
+
+    List<Request> tempReceivedRequests=[];
+
     if (response.statusCode == 200) {
       var receivedRequests = jsonDecode(response.body);
-      FriendController.to.receivedRequests.clear();
 
       if (receivedRequests['requests'] != null) {
         for (var receivedRequest in receivedRequests['requests']) {
@@ -116,14 +118,15 @@ class FriendController extends GetxController {
             roomId: roomId,
           );
 
-          FriendController.to.receivedRequests.add(request);
+          tempReceivedRequests.add(request);
         }
       }
+      FriendController.to.receivedRequests.assignAll(tempReceivedRequests);
     }
   }
 
   //보낸 친구 요청 확인
-  static void getFriendSentRequest() async {
+  static Future<void> getFriendSentRequest() async {
     final url = Uri.parse('$baseUrl/$requests/get-sended');
 
     final response = await http.get(url, headers: headers);
@@ -162,6 +165,9 @@ class FriendController extends GetxController {
 
     print(response.statusCode);
     print(response.body);
+
+    List<Request> tempSentRequests=[];
+
     if (response.statusCode == 200) {
       var sentRequests = jsonDecode(response.body);
       if (sentRequests['requests'] != null) {
@@ -192,9 +198,10 @@ class FriendController extends GetxController {
             roomId: roomId,
           );
 
-          FriendController.to.sentRequests.add(request);
+          tempSentRequests.add(request);
         }
       }
+      FriendController.to.sentRequests.assignAll(tempSentRequests);
     }
   }
 
@@ -268,7 +275,8 @@ class FriendController extends GetxController {
 
     print(response.statusCode);
     print(response.body);
-    FriendController.to.friends.clear(); //초기화
+
+    List<Friend> tempFriendList = [];
 
     if (response.statusCode == 200) {
       var friendsData = jsonDecode(response.body);
@@ -299,8 +307,9 @@ class FriendController extends GetxController {
           roomId: roomId,
         );
 
-        FriendController.to.friends.add(friend);
+        tempFriendList.add(friend);
       }
+      FriendController.to.friends.assignAll(tempFriendList);
     }
   }
 

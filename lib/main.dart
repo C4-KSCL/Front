@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/controllers/bottomNavigationBar.dart';
+import 'package:frontend_matching/controllers/chatting_controller.dart';
+import 'package:frontend_matching/controllers/chatting_list_controller.dart';
 import 'package:frontend_matching/controllers/findFriendController.dart';
 import 'package:frontend_matching/controllers/infoModifyController.dart';
 import 'package:frontend_matching/controllers/signupController.dart';
@@ -22,6 +24,7 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'controllers/friend_controller.dart';
 import 'firebase_options.dart';
 
 
@@ -51,6 +54,8 @@ void main() async{
         Get.put(UserProfileController());
         Get.put(InfoModifyController());
         Get.put(FindFriendController());
+        Get.put(FriendController());
+        Get.put(ChattingListController());
       }),
     ),
   );

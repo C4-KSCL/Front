@@ -24,11 +24,12 @@ Widget AcceptOrRejectButtonLayer(int? friendRequestId) {
                 borderRadius: BorderRadius.circular(10), // 둥근 모서리의 반지름
               ),
             ),
-            onPressed: () {
+            onPressed: () async{
               //친구 수락
-              FriendController.acceptFriendRequest(requestId: friendRequestId.toString());
+              await FriendController.acceptFriendRequest(requestId: friendRequestId.toString());
+              await FriendController.getFriendList();
+              await FriendController.getFriendReceivedRequest();
               ChattingController.to.isChatEnabled.value=true;
-
             },
             child: const Text(
               "수락",
@@ -45,8 +46,10 @@ Widget AcceptOrRejectButtonLayer(int? friendRequestId) {
                 borderRadius: BorderRadius.circular(10), // 둥근 모서리의 반지름
               ),
             ),
-            onPressed: () {
-              FriendController.rejectFriendRequest(requestId: friendRequestId.toString());
+            onPressed: () async {
+              // 친구 거절
+              await FriendController.rejectFriendRequest(requestId: friendRequestId.toString());
+              await FriendController.getFriendReceivedRequest();
               Get.back();
             },
             child: const Text(
@@ -76,8 +79,9 @@ Widget CancelButtonLayer(int? friendRequestId) {
             borderRadius: BorderRadius.circular(10), // 둥근 모서리의 반지름
           ),
         ),
-        onPressed: () {
-          FriendController.deleteFriendRequest(requestId: friendRequestId.toString());
+        onPressed: () async {
+          await FriendController.deleteFriendRequest(requestId: friendRequestId.toString());
+          await FriendController.getFriendSentRequest();
           Get.back();
         },
         child: const Text(
