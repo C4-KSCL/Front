@@ -9,6 +9,7 @@ import 'package:frontend_matching/pages/profile/imageModifyPage.dart';
 import 'package:frontend_matching/pages/profile/infoModifyPage.dart';
 import 'package:frontend_matching/pages/profile/topLayer.dart';
 import 'package:frontend_matching/pages/profile/userAvatar.dart';
+import 'package:frontend_matching/pages/signup/imageUpload/selectImagePage.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 
@@ -222,6 +223,12 @@ class MyPage extends StatelessWidget {
                               child: Divider(
                                   color: Colors.blueGrey, thickness: 0.5)),
                         ),
+                        ColumnButton(
+                            pressed: () {
+                              userDataController.logout();
+                            },
+                            img: 'assets/icons/setting_button.png',
+                            str: '로그아웃'),
                         ColumnButton(
                             pressed: () {},
                             img: 'assets/icons/setting_button.png',

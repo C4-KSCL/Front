@@ -89,8 +89,9 @@ class SelectImagePageState extends State<SelectImagePage> {
                 ),
               ],
             ),
+            SizedBox(height: 50),
             Container(
-              margin: EdgeInsets.all(10),
+              margin: EdgeInsets.all(20),
               child: GridView.builder(
                 padding: EdgeInsets.all(0),
                 shrinkWrap: true,
@@ -142,17 +143,48 @@ class SelectImagePageState extends State<SelectImagePage> {
               ),
             ),
             const SizedBox(
-              height: 100,
+              height: 250,
             ),
-            ElevatedButton(
-              onPressed: () {
-                if (images.isNotEmpty) {
-                  uploadImages(images);
-                } else {
-                  print('Please select an image.');
-                }
-              },
-              child: const Text('다음으로'),
+            SizedBox(
+              width: 350,
+              height: 50,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF7EA5F3),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15)),
+                ),
+                onPressed: () {
+                  if (images.isNotEmpty) {
+                    uploadImages(images);
+                  } else {
+                    print('추가 이미지를 넣어주세요.');
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('이미지 추가'),
+                          content: const Text('추가 이미지를 넣어주세요.'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text('확인'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                },
+                child: const Text(
+                  '다음으로',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
             ),
           ],
         ),

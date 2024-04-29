@@ -40,7 +40,6 @@ class _MbtiKeyWordState extends State<MbtiKeyWord> {
   final List<bool> _selectedPJ = <bool>[false, false];
   bool vertical = false;
 
-  // Variables to store the selected MBTI
   String selectedIE = '';
   String selectedNS = '';
   String selectedFT = '';

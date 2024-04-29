@@ -8,6 +8,8 @@ import 'package:frontend_matching/components/textformField.dart';
 import 'package:frontend_matching/controllers/signupController.dart';
 import 'package:frontend_matching/pages/login/loginPage.dart';
 import 'package:frontend_matching/pages/signup/myInfo.dart';
+import 'package:frontend_matching/theme/colors.dart';
+import 'package:frontend_matching/theme/textStyle.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
@@ -99,6 +101,7 @@ class _SchoolAuthPageState extends State<SchoolAuthPage> {
             IconButton(icon: const Icon(Icons.search), onPressed: () => {})
           ],
         ),
+        backgroundColor: blueColor5,
         body: SingleChildScrollView(
             child: Column(children: [
           SizedBox(
@@ -135,48 +138,53 @@ class _SchoolAuthPageState extends State<SchoolAuthPage> {
           SizedBox(height: 260),
           Column(
             children: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF7EA5F3),
-                  minimumSize: Size(300, 50),
-                ),
-                onPressed: isElevationButtonEnabled
-                    ? () {
-                        if (authController.text == verify) {
-                          String schoolEmail = schoolEmailController.text;
-                          signupController.addToSignupArray(schoolEmail);
-                          print(signupController.signupArray);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => InfoAuthPage(),
-                            ),
-                          );
-                        } else {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text('인증 실패'),
-                                content: Text('인증번호가 올바르지 않습니다.'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: const Text('확인'),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
+              SizedBox(
+                width: 350,
+                height: 50,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF7EA5F3),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                  ),
+                  onPressed: isElevationButtonEnabled
+                      ? () {
+                          if (authController.text == verify) {
+                            String schoolEmail = schoolEmailController.text;
+                            signupController.addToSignupArray(schoolEmail);
+                            print(signupController.signupArray);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => InfoAuthPage(),
+                              ),
+                            );
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('인증 실패'),
+                                  content: Text('인증번호가 올바르지 않습니다.'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text('확인'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
                         }
-                      }
-                    : null,
-                child: const Text(
-                  '다음으로',
-                  style: TextStyle(
-                    color: Colors.white,
+                      : null,
+                  child: const Text(
+                    '다음으로',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),

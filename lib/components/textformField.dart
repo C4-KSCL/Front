@@ -6,14 +6,16 @@ import 'package:frontend_matching/theme/textStyle.dart';
 
 class GetTextContainer extends StatefulWidget {
   //logo는 이미지, type은 아이디인지 패스워드인지
+  final TextEditingController typeController;
   final String textLogo;
   final String textType;
-  final TextEditingController typeController;
+  final Function(String)? onChanged;
 
   GetTextContainer({
     required this.typeController,
     required this.textLogo,
     required this.textType,
+    this.onChanged,
   });
 
   @override
@@ -39,7 +41,6 @@ class _GetTextContainerState extends State<GetTextContainer> {
             ),
           ],
         ),
-        padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -47,15 +48,18 @@ class _GetTextContainerState extends State<GetTextContainer> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(
-                  width: 5,
+                Expanded(
+                  child: Container(
+                    color: blueColor5,
+                    child: Text(
+                      widget.textType,
+                      style: TextStyle(fontSize: 15),
+                    ),
+                  ),
                 ),
-                Text(
-                  widget.textType,
-                  style: const TextStyle(fontSize: 15),
-                )
               ],
             ),
+
             // 아이디 입력 창
             Container(
               padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
@@ -74,6 +78,7 @@ class _GetTextContainerState extends State<GetTextContainer> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
+                onChanged: widget.onChanged,
               ),
             ),
           ],

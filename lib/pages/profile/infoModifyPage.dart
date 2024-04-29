@@ -8,6 +8,7 @@ import 'package:frontend_matching/controllers/userDataController.dart';
 import 'package:frontend_matching/pages/profile/myPage.dart';
 import 'package:frontend_matching/pages/profile/topLayer.dart';
 import 'package:frontend_matching/pages/profile/userAvatar.dart';
+import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get.dart';
 
 class InfoModifyPage extends StatefulWidget {
@@ -83,7 +84,7 @@ class _InfoModifyPageState extends State<InfoModifyPage> {
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: Colors.white,
+        backgroundColor: blueColor5,
         body: SingleChildScrollView(
             child: Stack(children: [
           Positioned(
@@ -108,151 +109,163 @@ class _InfoModifyPageState extends State<InfoModifyPage> {
             ),
           ),
           Container(
+              color: blueColor5,
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                TopLayer(
-                  onpressed: () {},
-                  medHeight: medHeight,
-                  medWidth: medWidth,
-                  statusBarHeight: statusBarHeight,
-                ),
-                SizedBox(
-                  height: medHeight / 10,
-                ),
-                UserAvatar(
-                  img: my_profileImagePath,
-                  medWidth: medWidth,
-                  accessToken: accessToken,
-                  deletePath: my_profileImagePath,
-                  email: my_email,
-                  password: my_password,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      my_nickname,
-                      style:
-                          TextStyle(fontSize: 29, fontWeight: FontWeight.w600),
+                    TopLayer(
+                      onpressed: () {},
+                      medHeight: medHeight,
+                      medWidth: medWidth,
+                      statusBarHeight: statusBarHeight,
+                    ),
+                    SizedBox(
+                      height: medHeight / 10,
+                    ),
+                    UserAvatar(
+                      img: my_profileImagePath,
+                      medWidth: medWidth,
+                      accessToken: accessToken,
+                      deletePath: my_profileImagePath,
+                      email: my_email,
+                      password: my_password,
                     ),
                     const SizedBox(
-                      width: 10,
+                      height: 10,
                     ),
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.all(medWidth / 60),
-                  child: GetTextContainer(
-                    textLogo: '',
-                    textType: '비밀번호',
-                    typeController: passwordController,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(medWidth / 60),
-                  child: GetTextContainer(
-                    textLogo: '',
-                    textType: '닉네임',
-                    typeController: nicknameController,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(medWidth / 60),
-                  child: GetTextContainer(
-                    textLogo: '',
-                    textType: '전화번호',
-                    typeController: phoneNumberController,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(medWidth / 60),
-                  child: GetTextContainer(
-                    textLogo: '',
-                    textType: '나이',
-                    typeController: ageController,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(medWidth / 60),
-                  child: GetTextContainer(
-                    textLogo: '',
-                    textType: '성별',
-                    typeController: genderController,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(medWidth / 60),
-                  child: GetTextContainer(
-                    textLogo: '',
-                    textType: '내 MBTI',
-                    typeController: myMBTIController,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(medWidth / 60),
-                  child: GetTextContainer(
-                    textLogo: '',
-                    textType: '내 키워드',
-                    typeController: myKeywordController,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(medWidth / 60),
-                  child: GetTextContainer(
-                    textLogo: '',
-                    textType: '친구 키워드',
-                    typeController: friendKeywordController,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(medWidth / 60),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF7EA5F3),
-                      minimumSize: Size(300, 50),
-                    ),
-                    onPressed: () async {
-                      String password = passwordController.text;
-                      String nickname = nicknameController.text;
-                      String phoneNumber = phoneNumberController.text;
-                      String age = ageController.text;
-                      String gender = genderController.text;
-                      String mbti = myMBTIController.text;
-                      String keyword = myKeywordController.text;
-                      String f_keyword = friendKeywordController.text;
-
-                      await infoModifyController.InfoModify(
-                        accessToken,
-                        refreshToken,
-                        password,
-                        nickname,
-                        phoneNumber,
-                        age,
-                        gender,
-                        mbti,
-                        keyword,
-                        f_keyword,
-                      );
-
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MyPage(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          my_nickname,
+                          style: TextStyle(
+                              fontSize: 29, fontWeight: FontWeight.w600),
                         ),
-                      );
-                    },
-                    child: const Text('다음으로',
-                        style: TextStyle(
-                          color: Colors.white,
-                        )),
-                  ),
-                )
-              ]))
+                        const SizedBox(
+                          width: 10,
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(medWidth / 60),
+                      child: GetTextContainer(
+                        textLogo: '',
+                        textType: '비밀번호',
+                        typeController: passwordController,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(medWidth / 60),
+                      child: GetTextContainer(
+                        textLogo: '',
+                        textType: '닉네임',
+                        typeController: nicknameController,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(medWidth / 60),
+                      child: GetTextContainer(
+                        textLogo: '',
+                        textType: '전화번호',
+                        typeController: phoneNumberController,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(medWidth / 60),
+                      child: GetTextContainer(
+                        textLogo: '',
+                        textType: '나이',
+                        typeController: ageController,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(medWidth / 60),
+                      child: GetTextContainer(
+                        textLogo: '',
+                        textType: '성별',
+                        typeController: genderController,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(medWidth / 60),
+                      child: GetTextContainer(
+                        textLogo: '',
+                        textType: '내 MBTI',
+                        typeController: myMBTIController,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(medWidth / 60),
+                      child: GetTextContainer(
+                        textLogo: '',
+                        textType: '내 키워드',
+                        typeController: myKeywordController,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(medWidth / 60),
+                      child: GetTextContainer(
+                        textLogo: '',
+                        textType: '친구 키워드',
+                        typeController: friendKeywordController,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(medWidth / 60),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF7EA5F3),
+                          minimumSize: Size(300, 50),
+                        ),
+                        onPressed: () async {
+                          String password = passwordController.text;
+                          String nickname = nicknameController.text;
+                          String phoneNumber = phoneNumberController.text;
+                          String age = ageController.text;
+                          String gender = genderController.text;
+                          String mbti = myMBTIController.text;
+                          String keyword = myKeywordController.text;
+                          String f_keyword = friendKeywordController.text;
+
+                          await infoModifyController.InfoModify(
+                            accessToken,
+                            refreshToken,
+                            password,
+                            nickname,
+                            phoneNumber,
+                            age,
+                            gender,
+                            mbti,
+                            keyword,
+                            f_keyword,
+                          );
+
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('정보 수정'),
+                                content: Text('정보가 수정되었습니다.'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text('확인'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        child: const Text('다음으로',
+                            style: TextStyle(
+                              color: Colors.white,
+                            )),
+                      ),
+                    )
+                  ]))
         ])));
   }
 }

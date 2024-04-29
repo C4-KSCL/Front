@@ -9,10 +9,10 @@ import 'package:frontend_matching/pages/init_page.dart';
 import 'package:frontend_matching/pages/signup/imageUpload/profileImagePage.dart';
 import 'package:frontend_matching/pages/signup/imageUpload/selectImagePage.dart';
 import 'package:frontend_matching/pages/signup/schoolAuth.dart';
+import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get.dart';
 // ignore_for_file: unused_import
 import 'package:http/http.dart' as http;
-
 import '../login/loginPage.dart';
 
 Future<void> registerUser(
@@ -86,12 +86,13 @@ class FriendInfoPage extends StatelessWidget {
         elevation: 0.0,
         titleTextStyle:
             const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
-        backgroundColor: Colors.white,
+        backgroundColor: blueColor5,
         actions: [
           IconButton(icon: Icon(Icons.home), onPressed: () => {}),
           IconButton(icon: Icon(Icons.search), onPressed: () => {})
         ],
       ),
+      backgroundColor: blueColor5,
       body: Container(
         child: Center(
           child: Column(
@@ -118,6 +119,7 @@ class FriendInfoPage extends StatelessWidget {
                   typeController: maxageController,
                   textLogo: '',
                   textType: '최대나이',
+                  onChanged: (value) => signupController.maxage.value = value,
                 ),
               ),
               Gap(),
@@ -127,6 +129,7 @@ class FriendInfoPage extends StatelessWidget {
                   typeController: minageController,
                   textLogo: '',
                   textType: '최소나이',
+                  onChanged: (value) => signupController.minage.value = value,
                 ),
               ),
               Gap(),
@@ -142,54 +145,89 @@ class FriendInfoPage extends StatelessWidget {
                       genderString = "여";
                     }
                     print(genderString);
+                    signupController.friendGender(genderString);
+                    print(signupController.friendButtonEnabled.value);
                   },
                 ),
               ),
               Gap(),
               Gap(),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF7EA5F3),
-                  minimumSize: Size(300, 50),
-                ),
-                onPressed: () async {
-                  // signupController에(배열) 친구정보 입력값 대입
-                  String minage = minageController.text;
-                  String maxage = maxageController.text;
-
-                  signupController.addToSignupArray(minage);
-                  signupController.addToSignupArray(maxage);
-                  signupController.addToSignupArray(genderString);
-
-                  print(signupController.signupArray);
-
-                  await registerUser(
-                    signupController.signupArray[0],
-                    signupController.signupArray[1],
-                    signupController.signupArray[2],
-                    signupController.signupArray[3],
-                    signupController.signupArray[4],
-                    signupController.signupArray[5],
-                    signupController.signupArray[6],
-                    signupController.signupArray[7],
-                    signupController.signupArray[8],
-                    signupController.signupArray[9],
-                    signupController.signupArray[10],
-                    signupController.signupArray[11],
-                    signupController.signupArray[12],
-                  );
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProfileImagePage(),
+              SizedBox(
+                width: 350,
+                height: 50,
+                child: Obx(
+                  () => ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF7EA5F3),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
                     ),
-                  );
-                },
-                child: const Text('다음으로',
-                    style: TextStyle(
-                      color: Colors.white,
-                    )),
+                    onPressed: signupController.friendButtonEnabled.value
+                        ? () async {
+                            // signupController에(배열) 친구정보 입력값 대입
+                            String minage = minageController.text;
+                            String maxage = maxageController.text;
+                            int minage_int = int.parse(minage);
+                            int maxage_int = int.parse(maxage);
+                            if (minage_int < maxage_int) {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text('나이 오류'),
+                                    content: Text('최소나이가 최대나이보다 많습니다!'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text('확인'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
+
+                            signupController.addToSignupArray(minage);
+                            signupController.addToSignupArray(maxage);
+                            signupController.addToSignupArray(genderString);
+
+                            print(signupController.signupArray);
+                            print(signupController.friendButtonEnabled.value);
+
+                            await registerUser(
+                              signupController.signupArray[0],
+                              signupController.signupArray[1],
+                              signupController.signupArray[2],
+                              signupController.signupArray[3],
+                              signupController.signupArray[4],
+                              signupController.signupArray[5],
+                              signupController.signupArray[6],
+                              signupController.signupArray[7],
+                              signupController.signupArray[8],
+                              signupController.signupArray[9],
+                              signupController.signupArray[10],
+                              signupController.signupArray[11],
+                              signupController.signupArray[12],
+                            );
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ProfileImagePage(),
+                              ),
+                            );
+                          }
+                        : null,
+                    child: const Text(
+                      '다음으로',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
               )
             ],
           ),

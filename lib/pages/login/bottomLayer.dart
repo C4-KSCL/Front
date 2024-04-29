@@ -96,6 +96,7 @@ class _BottomLayerLoginScreenState extends State<BottomLayerLoginScreen> {
                     print("login check");
 
                     UserServices.loginUser(email, password);
+                    //로컬에 저장된 매칭데이터가 없으면, 자동으로 매칭 한번 시키는 로직
                   },
                   child: const Text(
                     '로그인하기',

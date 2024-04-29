@@ -1,3 +1,4 @@
+import 'package:frontend_matching/controllers/signupController.dart';
 import 'package:frontend_matching/pages/login/loginPage.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -8,6 +9,7 @@ import '../models/userImage.dart';
 
 class UserDataController extends GetxController {
   static UserDataController get to => Get.find<UserDataController>();
+  SignupController signupController = Get.find<SignupController>();
   Rxn<User?> user = Rxn<User?>(null);
   RxList<XFile?> userImages = <XFile?>[].obs;
 
@@ -42,5 +44,6 @@ class UserDataController extends GetxController {
   //로그아웃
   void logout() {
     user.value = null;
+    signupController.resetAllInputs();
   }
 }

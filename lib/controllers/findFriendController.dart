@@ -35,7 +35,6 @@ class FindFriendController {
 
       for (User user in users) {
         userDataController.matchingFriendInfoList.add(user);
-//이까지 문제없음
         List<UserImage> images = [];
         if (friendsData['images'] != null) {
           List<UserImage> userImages = List.from(

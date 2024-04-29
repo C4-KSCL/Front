@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend_matching/components/mbtiKeyword.dart';
 import 'package:frontend_matching/controllers/signupController.dart';
 import 'package:frontend_matching/pages/signup/friendKeywordPage.dart';
-import 'package:frontend_matching/pages/signup/schoolAuth.dart';
+import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get.dart';
 
 class FriendMbtiPage extends StatefulWidget {
@@ -17,6 +17,7 @@ class FriendMbtiPage extends StatefulWidget {
 class _FriendMbtiPageState extends State<FriendMbtiPage> {
   SignupController signupController = Get.find<SignupController>();
   String selectedMBTI = "";
+  bool isMbtiComplete = false; // 버튼 활성화 관련
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +37,7 @@ class _FriendMbtiPageState extends State<FriendMbtiPage> {
           IconButton(icon: Icon(Icons.search), onPressed: () => {})
         ],
       ),
+      backgroundColor: blueColor5,
       body: Container(
         child: Column(
           children: [
@@ -62,30 +64,38 @@ class _FriendMbtiPageState extends State<FriendMbtiPage> {
               onMbtiSelected: (String mbti) {
                 setState(() {
                   selectedMBTI = mbti;
+                  isMbtiComplete = selectedMBTI.length == 4;
                 });
               },
             ),
             SizedBox(height: 30),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF7EA5F3),
-                minimumSize: Size(300, 50),
-              ),
-              child: const Text('다음으로',
-                  style: TextStyle(
-                    color: Colors.white,
-                  )),
-              onPressed: () {
-                signupController.addToSignupArray(selectedMBTI);
-                print(signupController.signupArray);
+            SizedBox(
+              width: 350,
+              height: 50,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF7EA5F3),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15)),
+                ),
+                onPressed: isMbtiComplete
+                    ? () {
+                        signupController.addToSignupArray(selectedMBTI);
+                        print(signupController.signupArray);
 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FriendKeywordPage(),
-                  ),
-                );
-              },
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FriendKeywordPage(),
+                          ),
+                        );
+                      }
+                    : null,
+                child: const Text('다음으로',
+                    style: TextStyle(
+                      color: Colors.white,
+                    )),
+              ),
             )
           ],
         ),
