@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:frontend_matching/controllers/chatting_controller.dart';
 import 'package:frontend_matching/controllers/chatting_list_controller.dart';
+import 'package:frontend_matching/controllers/findFriendController.dart';
 import 'package:frontend_matching/controllers/friend_controller.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
 import 'package:frontend_matching/models/userImage.dart';
@@ -44,6 +45,8 @@ class UserServices {
       print('login success');
       print(loginUserData['accessToken']);
       print(loginUserData['refreshToken']);
+
+      FindFriendController.findFriends();
       FriendController.getFriendList();
       FriendController.getFriendReceivedRequest();
       FriendController.getFriendSentRequest();

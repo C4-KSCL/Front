@@ -21,13 +21,11 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/bindings_interface.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'controllers/friend_controller.dart';
 import 'firebase_options.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 
 void main() async{
@@ -36,7 +34,6 @@ void main() async{
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await initializeDateFormatting('ko_KR', null);
-  await Hive.initFlutter();
   runApp(
     GetMaterialApp(
       home: LoginPage(),

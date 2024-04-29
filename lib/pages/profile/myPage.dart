@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
-import 'package:frontend_matching/pages/matching/matchingView.dart';
 import 'package:frontend_matching/pages/profile/buttons/InfoModifyButton.dart';
 import 'package:frontend_matching/pages/profile/buttons/columnButton.dart';
 import 'package:frontend_matching/pages/profile/imageModifyPage.dart';
