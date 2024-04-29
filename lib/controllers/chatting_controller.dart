@@ -53,6 +53,7 @@ class ChattingController extends GetxController {
     "accessToken": accessToken
   };
 
+  // 챗 가능 여부 리셋
   void resetIsChatEnabled(){
     isChatEnabled.value=false;
   }
