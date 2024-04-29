@@ -20,6 +20,7 @@ Widget smallCategory() {
             onPressed: () {
               ChattingController.to.showSecondGridView.value = false;
               ChattingController.to.clickQuizButtonIndex.value = -1;
+
             },
             icon: const Icon(Icons.keyboard_arrow_left),
           ),
@@ -107,11 +108,12 @@ Widget smallCategory() {
                                         minimumSize: Size(Get.width * 0.3, 30),
                                       ),
                                       onPressed: () {
-                                        print("전송클릭");
+                                        print("전송 클릭");
                                         //event message 전송
                                         ChattingController.to.newEvent(
                                             smallCategoryName:
                                                 smallCategory.name);
+                                        ChattingController.to.clickQuizButtonIndex.value=-1;
                                       },
                                       child: const Column(
                                         mainAxisAlignment:

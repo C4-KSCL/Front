@@ -86,6 +86,8 @@ class ChatRoomPage extends GetView<ChattingController> {
             ///////////////////////////////////////////////////////////////
             controller.disconnect();
             ChattingController.to.resetIsChatEnabled();
+            ChattingController.to.clickAddButton.value=false;
+            ChattingController.to.showSecondGridView.value=false;
             Get.back();
           },
         ),
@@ -217,9 +219,11 @@ class ChatRoomPage extends GetView<ChattingController> {
                         ),
                         IconButton(
                             onPressed: () {
-                              ChattingController.to.sendMessage(
-                                  roomId: roomId, content: chatController.text);
-                              chatController.clear();
+                              if(chatController.text.isNotEmpty){
+                                ChattingController.to.sendMessage(
+                                    roomId: roomId, content: chatController.text);
+                                chatController.clear();
+                              }
                             },
                             icon: Image.asset(
                                 "assets/icons/send_message_button.png",
