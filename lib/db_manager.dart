@@ -19,7 +19,7 @@ class DBManager{
     // 앱의 문서 디렉토리를 받아옴
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     // chatting.db 의 경로를 설정
-    String path = join(documentsDirectory.path, 'chatting.db');
+    String path = join(documentsDirectory.path, 'matching.db');
     // db를 열고 없으면 생성
     return await openDatabase(
       path,
@@ -31,9 +31,8 @@ class DBManager{
   // 테이블 생성 함수
   Future _onCreate(Database db, int version) async {
     await db.execute('''
-    CREATE TABLE chattings(
-      id INTEGER PRIMARY KEY,
-      name TEXT
+    CREATE TABLE matching(
+      oppIds text
     )
     ''');
   }

@@ -142,7 +142,7 @@ class _MainPageState extends State<MatchingPage> {
                   ElevatedButton(
                     child: Text('매칭하기'),
                     onPressed: () async {
-                      await FindFriendController.findFriends(accessToken);
+                      await FindFriendController.findFriends();
                     },
                   ),
                 ],

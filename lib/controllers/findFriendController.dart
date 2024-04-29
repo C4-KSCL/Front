@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class FindFriendController {
-  static Future<void> findFriends(String accessToken) async {
+  static Future<void> findFriends() async {
     final url =
         Uri.parse('http://15.164.245.62:8000/findfriend/friend-matching');
     Get.put(UserDataController());
@@ -19,12 +19,13 @@ class FindFriendController {
     // 헤더
     Map<String, String> headers = {
       "Content-type": "application/json",
-      "accesstoken": accessToken
+      "accessToken": UserDataController.to.accessToken
     };
 
     final response = await http.get(url, headers: headers);
 
     if (response.statusCode == 200) {
+
       final friendsData = jsonDecode(response.body);
       print(friendsData['users']);
       print(friendsData['images']);
@@ -47,8 +48,7 @@ class FindFriendController {
         }
         userDataController.matchingFriendImageList.add(images);
       }
-      print(userDataController.matchingFriendImageList);
-      print(userDataController.matchingFriendInfoList);
+
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }

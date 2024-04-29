@@ -1,30 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/controllers/bottomNavigationBar.dart';
+import 'package:frontend_matching/controllers/chatting_controller.dart';
 import 'package:frontend_matching/controllers/chatting_list_controller.dart';
 import 'package:frontend_matching/controllers/findFriendController.dart';
 import 'package:frontend_matching/controllers/infoModifyController.dart';
 import 'package:frontend_matching/controllers/signupController.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
 import 'package:frontend_matching/controllers/userProfileController.dart';
+import 'package:frontend_matching/pages/init_page.dart';
 import 'package:frontend_matching/pages/login/loginPage.dart';
+import 'package:frontend_matching/pages/matching/mainPage.dart';
+import 'package:frontend_matching/pages/profile/myPage.dart';
+import 'package:frontend_matching/pages/signup/friendInfo.dart';
+import 'package:frontend_matching/pages/signup/imageUpload/profileImagePage.dart';
+import 'package:frontend_matching/pages/signup/imageUpload/selectImagePage.dart';
+import 'package:frontend_matching/pages/signup/schoolAuth.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/bindings_interface.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'controllers/friend_controller.dart';
-//import 'firebase_options.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-      //options: DefaultFirebaseOptions.currentPlatform,
-      );
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   await initializeDateFormatting('ko_KR', null);
   runApp(
     GetMaterialApp(
+      debugShowCheckedModeBanner: false,
       home: LoginPage(),
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -48,13 +58,4 @@ void main() async {
       }),
     ),
   );
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
 }

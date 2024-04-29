@@ -15,7 +15,7 @@ class InitPage extends StatelessWidget {
 
   //탭별 페이지 정의
   static List<Widget> tabPages = <Widget>[
-    MatchingView(),
+    MainPage(),
     FriendPage(),
     ChattingListPage(),
     MyPage(),

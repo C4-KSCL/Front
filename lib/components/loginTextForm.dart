@@ -46,6 +46,7 @@ class _LoginTextFormState extends State<LoginTextForm> {
             Container(
               padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
               child: TextFormField(
+                obscureText: true,
                 controller: widget.typeController,
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
