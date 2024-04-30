@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:frontend_matching/controllers/userDataController.dart';
 import 'package:frontend_matching/models/user.dart';
 import 'package:frontend_matching/models/userImage.dart';
@@ -25,7 +26,6 @@ class FindFriendController {
     final response = await http.get(url, headers: headers);
 
     if (response.statusCode == 200) {
-
       final friendsData = jsonDecode(response.body);
       print(friendsData['users']);
       print(friendsData['images']);
@@ -48,7 +48,8 @@ class FindFriendController {
         }
         userDataController.matchingFriendImageList.add(images);
       }
-
+    } else if (response.statusCode == 400) {
+      print(response.statusCode);
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }

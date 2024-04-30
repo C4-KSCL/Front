@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/controllers/bottomNavigationBar.dart';
+import 'package:frontend_matching/controllers/chatting_controller.dart';
 import 'package:frontend_matching/controllers/chatting_list_controller.dart';
 import 'package:frontend_matching/controllers/findFriendController.dart';
 import 'package:frontend_matching/controllers/infoModifyController.dart';
