@@ -157,6 +157,7 @@ class SelectImagePageState extends State<SelectImagePage> {
                 onPressed: () {
                   if (images.isNotEmpty) {
                     uploadImages(images);
+                    userDataController.logout();
                   } else {
                     print('추가 이미지를 넣어주세요.');
                     showDialog(
