@@ -1,3 +1,4 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/models/user.dart';
 import 'package:frontend_matching/models/userImage.dart';
@@ -5,8 +6,16 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class FindFriendController {
+class FindFriendController extends GetxController{
   static FindFriendController get to => Get.find();
+
+  static late final String? baseUrl;
+
+  @override
+  void onInit() async {
+    super.onInit();
+    baseUrl=dotenv.env['SERVER_URL'];
+  }
 
   RxList<User> matchingFriendInfoList = RxList<User>();
   RxList<List<UserImage>> matchingFriendImageList = RxList<List<UserImage>>();
@@ -14,7 +23,7 @@ class FindFriendController {
 
   static Future<void> findFriends() async {
     final url =
-        Uri.parse('http://15.164.245.62:8000/findfriend/friend-matching');
+        Uri.parse('$baseUrl/findfriend/friend-matching');
     Get.put(UserDataController());
     UserDataController userDataController = Get.find();
 

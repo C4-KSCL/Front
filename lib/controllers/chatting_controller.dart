@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend_matching/controllers/chatting_list_controller.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/models/big_category.dart';
@@ -18,8 +19,15 @@ import '../models/small_category.dart';
 class ChattingController extends GetxController {
   static ChattingController get to => Get.find<ChattingController>();
 
+  static late final String? baseUrl;
+
+  @override
+  void onInit() async {
+    super.onInit();
+    baseUrl=dotenv.env['SERVER_URL'];
+  }
+
   IO.Socket? _socket; //소켓IO 객체
-  static const baseUrl = 'http://15.164.245.62:8000'; //서버 url
   RxList chats = [].obs; //채팅 객체를 담는 배열
   Rx<Event?> eventData = Rx<Event?>(null); // event 객체 하나를 담는 변수
 
@@ -33,16 +41,14 @@ class ChattingController extends GetxController {
   RxString userChoice="".obs;
   RxString oppUserChoice="".obs;
 
-  // 객체 dynamic 말고 Bigcategory 등으로 바꿔보기
-  List<dynamic> bigCategories = [];
-  List<dynamic> smallCategories = [];
+  List<dynamic> bigCategories = []; //퀴즈 상위 카테고리
+  List<dynamic> smallCategories = [];// 퀴즈 하위 카테고리
 
   String? bigCategoryName;
   String? chatDate;
 
   static const rooms = 'rooms';
   static const send = 'send';
-  // static const chats = 'chats';
   static const delete = 'delete';
   static const events = 'events';
 

@@ -1,3 +1,4 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/models/user.dart';
 import 'package:get/get.dart';
@@ -8,6 +9,15 @@ import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
 
 class UserProfileController extends GetxController {
+
+  static late final String? baseUrl;
+
+  @override
+  void onInit() async {
+    super.onInit();
+    baseUrl=dotenv.env['SERVER_URL'];
+  }
+
   Rx<User> userInfo = User(
     email: '',
     password: '',
@@ -28,7 +38,7 @@ class UserProfileController extends GetxController {
   }
 
   Future<void> deleteProfileImage(String accessToken, String deletePath) async {
-    final url = Uri.parse('http://15.164.245.62:8000/edit/deleteprofile');
+    final url = Uri.parse('$baseUrl/edit/deleteprofile');
     final response = await http.post(
       url,
       headers: {

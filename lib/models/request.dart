@@ -8,7 +8,6 @@ class Request {
   final String age;
   final String gender;
   final String createdAt;
-  final String chatContent;
   final String roomId;
 
   Request({
@@ -21,7 +20,6 @@ class Request {
     required this.age,
     required this.gender,
     required this.createdAt,
-    required this.chatContent,
     required this.roomId,
   });
 
@@ -36,7 +34,6 @@ class Request {
       age: json['age'],
       gender: json['gender'],
       createdAt: json['createdAt'],
-      chatContent: json['chatContent'],
       roomId: json['roomId'],
     );
   }
@@ -52,7 +49,6 @@ class Request {
       'age': age,
       'gender':gender,
       'createdAt': createdAt,
-      'chatContent': chatContent,
       'roomId': roomId,
     };
   }

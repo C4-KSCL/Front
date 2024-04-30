@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/models/chat_list.dart';
@@ -8,7 +9,13 @@ import 'package:get/get.dart';
 class ChattingListController extends GetxController{
   static ChattingListController get to=>Get.find<ChattingListController>();
 
-  static const baseUrl = 'http://15.164.245.62:8000'; //서버 url
+  static late final String? baseUrl;
+
+  @override
+  void onInit() async {
+    super.onInit();
+    baseUrl=dotenv.env['SERVER_URL'];
+  }
 
   RxList<ChatList> chattingList=<ChatList>[].obs; //채팅 리스트
 
