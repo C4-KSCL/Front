@@ -7,7 +7,7 @@ import 'package:frontend_matching/components/loginTextForm.dart';
 import 'package:frontend_matching/components/loginVerifyTextForm.dart';
 import 'package:frontend_matching/components/textformField.dart';
 import 'package:frontend_matching/components/textformVerify.dart';
-import 'package:frontend_matching/controllers/userDataController.dart';
+import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/pages/matching/mainPage.dart';
 import 'package:frontend_matching/services/user_service.dart';
 import 'package:frontend_matching/pages/signup/schoolAuth.dart';
@@ -95,7 +95,7 @@ class _BottomLayerLoginScreenState extends State<BottomLayerLoginScreen> {
                     String password = pwController.text;
                     print("login check");
 
-                    UserServices.loginUser(email, password);
+                    UserDataController.loginUser(email, password);
                   },
                   child: const Text(
                     '로그인하기',

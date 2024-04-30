@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:frontend_matching/controllers/userDataController.dart';
+import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/models/friend.dart';
 import 'package:frontend_matching/models/request.dart';
 import 'package:frontend_matching/models/user.dart';

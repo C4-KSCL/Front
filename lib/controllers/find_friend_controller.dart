@@ -1,4 +1,4 @@
-import 'package:frontend_matching/controllers/userDataController.dart';
+import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/models/user.dart';
 import 'package:frontend_matching/models/userImage.dart';
 import 'package:get/get.dart';
@@ -6,6 +6,12 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class FindFriendController {
+  static FindFriendController get to => Get.find();
+
+  RxList<User> matchingFriendInfoList = RxList<User>();
+  RxList<List<UserImage>> matchingFriendImageList = RxList<List<UserImage>>();
+
+
   static Future<void> findFriends() async {
     final url =
         Uri.parse('http://15.164.245.62:8000/findfriend/friend-matching');
@@ -13,8 +19,8 @@ class FindFriendController {
     UserDataController userDataController = Get.find();
 
     // matchingFriendList 비우기
-    userDataController.matchingFriendImageList.clear();
-    userDataController.matchingFriendInfoList.clear();
+    FindFriendController.to.matchingFriendImageList.clear();
+    FindFriendController.to.matchingFriendInfoList.clear();
 
     // 헤더
     Map<String, String> headers = {
@@ -35,7 +41,7 @@ class FindFriendController {
           List.from(friendsData['users'].map((data) => User.fromJson(data)));
 
       for (User user in users) {
-        userDataController.matchingFriendInfoList.add(user);
+        FindFriendController.to.matchingFriendInfoList.add(user);
         List<UserImage> images = [];
         if (friendsData['images'] != null) {
           List<UserImage> userImages = List.from(
@@ -46,11 +52,11 @@ class FindFriendController {
             }
           }
         }
-        userDataController.matchingFriendImageList.add(images);
+        FindFriendController.to.matchingFriendImageList.add(images);
       }
 
     } else {
-      print('Request failed with status: ${response.statusCode}.');
+      print('${response.statusCode} ${response.body}');
     }
   }
 }

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend_matching/components/customTextForm.dart';
 import 'package:frontend_matching/components/textformField.dart';
 import 'package:frontend_matching/controllers/infoModifyController.dart';
-import 'package:frontend_matching/controllers/userDataController.dart';
+import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/pages/profile/myPage.dart';
 import 'package:frontend_matching/pages/profile/topLayer.dart';
 import 'package:frontend_matching/pages/profile/userAvatar.dart';
