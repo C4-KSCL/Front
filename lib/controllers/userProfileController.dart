@@ -64,7 +64,7 @@ class UserProfileController extends GetxController {
 
     if (pickedFile != null) {
       var request = http.MultipartRequest(
-          'POST', Uri.parse('http://15.164.245.62:8000/edit/addprofile'))
+          'POST', Uri.parse('$baseUrl/edit/addprofile'))
         ..headers['accesstoken'] = accessToken
         ..files.add(await http.MultipartFile.fromPath(
           'files',

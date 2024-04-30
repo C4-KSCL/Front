@@ -1,7 +1,6 @@
 // ignore_for_file: use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
-import 'package:frontend_matching/services/user_service.dart';
 import 'package:get/get.dart';
 import 'package:frontend_matching/controllers/userProfileController.dart';
 

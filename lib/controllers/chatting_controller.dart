@@ -22,7 +22,7 @@ class ChattingController extends GetxController {
   static late final String? baseUrl;
 
   @override
-  void onInit() async {
+  void onInit() {
     super.onInit();
     baseUrl=dotenv.env['SERVER_URL'];
   }
