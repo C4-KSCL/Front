@@ -9,7 +9,6 @@ import 'package:frontend_matching/components/textformField.dart';
 import 'package:frontend_matching/components/textformVerify.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/pages/matching/mainPage.dart';
-import 'package:frontend_matching/services/user_service.dart';
 import 'package:frontend_matching/pages/signup/schoolAuth.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;

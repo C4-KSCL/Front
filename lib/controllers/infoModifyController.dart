@@ -1,3 +1,4 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/models/user.dart';
 import 'package:get/get.dart';
@@ -5,6 +6,15 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class InfoModifyController extends GetxController {
+
+  static late final String? baseUrl;
+
+  @override
+  void onInit() async {
+    super.onInit();
+    baseUrl=dotenv.env['SERVER_URL'];
+  }
+
   Rx<User> userInfo = User(
     email: '',
     password: '',
@@ -30,13 +40,13 @@ class InfoModifyController extends GetxController {
     String myKeyword,
     String friendKeyword,
   ) async {
-    final url = Uri.parse('http://15.164.245.62:8000/edit/info');
+    final url = Uri.parse('$baseUrl/edit/info');
     final response = await http.post(
       url,
       headers: {
         'Content-Type': 'application/json',
-        'accesstoken': accessToken,
-        'refreshtoken': refreshToken
+        'accessToken': accessToken,
+        'refreshToken': refreshToken
       },
       body: jsonEncode({
         'password': password,

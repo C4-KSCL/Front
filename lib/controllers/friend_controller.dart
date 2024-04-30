@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/models/friend.dart';
 import 'package:frontend_matching/models/request.dart';
@@ -11,6 +12,14 @@ import 'package:http/http.dart' as http;
 class FriendController extends GetxController {
   static FriendController get to => Get.find();
 
+  static late final String? baseUrl;
+
+  @override
+  void onInit() async {
+    super.onInit();
+    baseUrl=dotenv.env['SERVER_URL'];
+  }
+
   Rx<int> pageNumber = 0.obs;
   RxList<Friend> friends = RxList<Friend>(); // 친구 리스트
   RxList<Request> sentRequests = RxList<Request>(); // 보낸 요청 리스트
@@ -20,7 +29,9 @@ class FriendController extends GetxController {
   Rxn<User> friendData = Rxn<User>(null); // 친구 정보
   RxList<UserImage> friendImageData = RxList<UserImage>(); // 친구 이미지 담는 파일
 
-  static const baseUrl = 'http://15.164.245.62:8000';
+
+
+
   static const requests = 'requests';
   static const send = 'send';
   static const accept = 'accept';
@@ -101,7 +112,6 @@ class FriendController extends GetxController {
           String age = receivedRequest['request']['age'];
           String gender = receivedRequest['request']['gender'];
           String createdAt = receivedRequest['room']['createdAt'];
-          String chatContent = receivedRequest['room']['chatting'][0]['content'];
           String roomId = receivedRequest['roomId'];
 
           var request = Request(
@@ -114,7 +124,6 @@ class FriendController extends GetxController {
             age: age,
             gender: gender,
             createdAt: createdAt,
-            chatContent: chatContent,
             roomId: roomId,
           );
 
@@ -181,7 +190,6 @@ class FriendController extends GetxController {
           String age = sentRequest['receive']['age'];
           String gender = sentRequest['receive']['gender'];
           String createdAt = sentRequest['room']['createdAt'];
-          String chatContent = sentRequest['room']['chatting'][0]['content'];
           String roomId = sentRequest['roomId'];
 
           var request = Request(
@@ -194,7 +202,6 @@ class FriendController extends GetxController {
             age: age,
             gender: gender,
             createdAt: createdAt,
-            chatContent: chatContent,
             roomId: roomId,
           );
 

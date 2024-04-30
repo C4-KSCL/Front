@@ -51,6 +51,7 @@ dependencies:
   path_provider:
   hive:
   hive_flutter:
+  flutter_dotenv:
 
 dev_dependencies:
   flutter_test:
@@ -82,6 +83,7 @@ flutter:
     - assets/images/
     - assets/icons/
     - assets/icons/profile_modify.svg
+    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

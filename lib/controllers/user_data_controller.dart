@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend_matching/controllers/chatting_list_controller.dart';
 import 'package:frontend_matching/controllers/find_friend_controller.dart';
 import 'package:frontend_matching/controllers/friend_controller.dart';
@@ -24,11 +25,18 @@ class UserDataController extends GetxController {
   var accessToken = '';
   var refreshToken = '';
 
-  static const baseUrl = 'http://15.164.245.62:8000';
   static const signup = 'signup';
   static const register = 'register';
   static const auth = 'auth';
   static const login = 'login';
+
+  static late final String? baseUrl;
+
+  @override
+  void onInit() async {
+    super.onInit();
+    baseUrl=dotenv.env['SERVER_URL'];
+  }
 
   //컨트롤러가 준비되었을 때 실행 -> 초기화 작업이나 데이터 로딩과 같은 초기 설정
   @override
