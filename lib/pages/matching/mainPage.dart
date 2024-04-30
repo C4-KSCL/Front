@@ -238,164 +238,169 @@ class _MainPageState extends State<MainPage> {
                     else {
                       return Padding(
                         padding: const EdgeInsets.all(10),
-                        child: CarouselSlider(
+                        child:Obx(()=>CarouselSlider(
                           items: List.generate(
-                            UserDataController.to.matchingFriendInfoList.length+1,
-                            (infoIndex) {
-                              if (infoIndex < UserDataController.to.matchingFriendInfoList.length){
-                                return Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  margin:
-                                  const EdgeInsets.symmetric(horizontal: 5.0),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        height: 480,
-                                        child: PageIndicatorContainer(
-                                          align: IndicatorAlign.bottom,
-                                          length: UserDataController
-                                              .to
-                                              .matchingFriendImageList[infoIndex]
-                                              .length,
-                                          indicatorSpace: 10.0,
-                                          // 인디케이터 간의 공간
-                                          padding: const EdgeInsets.all(10),
-                                          indicatorColor: Colors.white,
-                                          indicatorSelectorColor: Colors.blue,
-                                          shape: IndicatorShape.circle(size: 8),
-                                          child: PageView.builder(
-                                            controller: pageController,
-                                            itemCount: UserDataController
+                              UserDataController.to.matchingFriendInfoList.length+1,
+                                  (infoIndex) {
+                                if (infoIndex < UserDataController.to.matchingFriendInfoList.length){
+                                  return Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    margin:
+                                    const EdgeInsets.symmetric(horizontal: 5.0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          height: 480,
+                                          child: PageIndicatorContainer(
+                                            align: IndicatorAlign.bottom,
+                                            length: UserDataController
                                                 .to
                                                 .matchingFriendImageList[infoIndex]
                                                 .length,
-                                            itemBuilder: (context, imageIndex) {
-                                              UserImage friendImage =
-                                              UserDataController.to
-                                                  .matchingFriendImageList[
-                                              infoIndex][imageIndex];
-                                              return Image.network(
-                                                  friendImage.imagePath);
-                                            },
+                                            indicatorSpace: 10.0,
+                                            // 인디케이터 간의 공간
+                                            padding: const EdgeInsets.all(10),
+                                            indicatorColor: Colors.white,
+                                            indicatorSelectorColor: Colors.blue,
+                                            shape: IndicatorShape.circle(size: 8),
+                                            child: PageView.builder(
+                                              controller: pageController,
+                                              itemCount: UserDataController
+                                                  .to
+                                                  .matchingFriendImageList[infoIndex]
+                                                  .length,
+                                              itemBuilder: (context, imageIndex) {
+                                                UserImage friendImage =
+                                                UserDataController.to
+                                                    .matchingFriendImageList[
+                                                infoIndex][imageIndex];
+                                                return Image.network(
+                                                    friendImage.imagePath);
+                                              },
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            UserDataController
-                                                .to
-                                                .matchingFriendInfoList[infoIndex]
-                                                .nickname,
-                                            style: blackTextStyle1,
-                                          ),
-                                          Container(
-                                            width: 40,
-                                            height: 20,
-                                            decoration: BoxDecoration(
-                                              color: blueColor1,
-                                              borderRadius:
-                                              BorderRadius.circular(6),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              UserDataController
+                                                  .to
+                                                  .matchingFriendInfoList[infoIndex]
+                                                  .nickname,
+                                              style: blackTextStyle1,
                                             ),
-                                            child: Center(
-                                                child: Text(
-                                                  '${UserDataController.to.matchingFriendInfoList[infoIndex].age}세',
-                                                  style: whiteTextStyle2,
-                                                )),
-                                          ),
-                                          Text(
-                                            UserDataController
-                                                .to
-                                                .matchingFriendInfoList[infoIndex]
-                                                .myMBTI!,
-                                            style: blackTextStyle1,
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      SingleChildScrollView(
-                                        scrollDirection: Axis.horizontal,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                          children: UserDataController
-                                              .to
-                                              .matchingFriendInfoList[infoIndex]
-                                              .myKeyword!
-                                              .split(',')
-                                              .map((item) => item.trim()) // 공백 제거
-                                              .map((item) => Padding(
-                                            padding:
-                                            const EdgeInsets.all(8),
-                                            child: Container(
+                                            Container(
+                                              width: 40,
+                                              height: 20,
                                               decoration: BoxDecoration(
-                                                borderRadius:
-                                                BorderRadius.circular(
-                                                    5),
-                                                color: blueColor1,
-                                              ),
-                                              padding: EdgeInsets.all(5),
-                                              child: Text(item,
-                                                  style: TextStyle(
-                                                      color: Colors.white)),
-                                            ),
-                                          ))
-                                              .toList(),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      IconTextFieldBox(
-                                          hintText: '간단하게 인사를 해봐요',
-                                          onPressed: () {
-                                            if (sendingController.text.isNotEmpty) {
-                                              FriendController.sendFriendRequest(
-                                                oppEmail: UserDataController
+                                                color: UserDataController
                                                     .to
-                                                    .matchingFriendInfoList[
-                                                infoIndex]
-                                                    .email,
-                                                content: sendingController.text,
-                                              );
-                                              sendingController.clear();
-                                            }
+                                                    .matchingFriendInfoList[infoIndex].gender == "남" ? blueColor1 : pinkColor1,
+                                                borderRadius:
+                                                BorderRadius.circular(6),
+                                              ),
+                                              child: Center(
+                                                  child: Text(
+                                                    '${UserDataController.to.matchingFriendInfoList[infoIndex].age}세',
+                                                    style: whiteTextStyle2,
+                                                  )),
+                                            ),
+                                            Text(
+                                              UserDataController
+                                                  .to
+                                                  .matchingFriendInfoList[infoIndex]
+                                                  .myMBTI!,
+                                              style: blackTextStyle1,
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                            children: UserDataController
+                                                .to
+                                                .matchingFriendInfoList[infoIndex]
+                                                .myKeyword!
+                                                .split(',')
+                                                .map((item) => item.trim()) // 공백 제거
+                                                .map((item) => Padding(
+                                              padding:
+                                              const EdgeInsets.all(8),
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                  BorderRadius.circular(
+                                                      5),
+                                                  color: blueColor1,
+                                                ),
+                                                padding: EdgeInsets.all(5),
+                                                child: Text(item,
+                                                    style: TextStyle(
+                                                        color: Colors.white)),
+                                              ),
+                                            ))
+                                                .toList(),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        IconTextFieldBox(
+                                            hintText: '간단하게 인사를 해봐요',
+                                            onPressed: () {
+                                              if (sendingController.text.isNotEmpty) {
+
+                                                FriendController.sendFriendRequest(
+                                                  oppEmail: UserDataController
+                                                      .to
+                                                      .matchingFriendInfoList[
+                                                  infoIndex]
+                                                      .email,
+                                                  content: sendingController.text,
+                                                );
+                                                sendingController.clear();
+                                                FriendController.getFriendSentRequest();
+                                              }
+                                            },
+                                            textEditingController: sendingController),
+                                      ],
+                                    ),
+                                  );
+                                }
+                                else{
+                                  return Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "더 많은 친구를 만나고 싶나요?",
+                                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                        ),
+                                        SizedBox(height: 20),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            FindFriendController.findFriends();
+                                            _carouselController.jumpToPage(0);
+                                            FocusScope.of(context).unfocus();
                                           },
-                                          textEditingController: sendingController),
-                                    ],
-                                  ),
-                                );
+                                          child: Text("친구 찾기 시작하기"),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
                               }
-                              else{
-                                return Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        "더 많은 친구를 만나고 싶나요?",
-                                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                                      ),
-                                      SizedBox(height: 20),
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          FindFriendController.findFriends();
-                                          _carouselController.jumpToPage(0);
-                                        },
-                                        child: Text("친구 찾기 시작하기"),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }
-                            }
                           ),
                           options: CarouselOptions(
                             height: 650.0,
@@ -404,7 +409,8 @@ class _MainPageState extends State<MainPage> {
                             enableInfiniteScroll: false,
                           ),
                           carouselController: _carouselController,
-                        ),
+                        ),)
+
                       );
                     }
                   })),

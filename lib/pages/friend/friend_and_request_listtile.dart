@@ -18,7 +18,16 @@ ListTile friendListTile({
 }) {
   return ListTile(
     key: ValueKey(friendData.id),
-    leading: Image.network(friendData.userImage, fit: BoxFit.fill),
+    leading: ClipRRect(
+      borderRadius: BorderRadius.circular(8.0), // 모서리를 둥글게 처리
+      child: Image.network(
+        friendData.userImage, // 예시 이미지 URL
+        width: 50,
+        height: 100,
+        fit: BoxFit.cover,
+        alignment: Alignment.center,// 이미지가 넘치면 잘라냄
+      ),
+    ),
     title: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -71,7 +80,16 @@ ListTile receivedRequestListTile({
 }) {
   return ListTile(
     key: ValueKey(receivedRequestData.requestId),
-    leading: Image.network(receivedRequestData.userImage, fit: BoxFit.fill),
+    leading: ClipRRect(
+      borderRadius: BorderRadius.circular(8.0), // 모서리를 둥글게 처리
+      child: Image.network(
+        receivedRequestData.userImage, // 예시 이미지 URL
+        width: 50,
+        height: 100,
+        fit: BoxFit.cover,
+        alignment: Alignment.center,// 이미지가 넘치면 잘라냄
+      ),
+    ),
     title: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -188,7 +206,16 @@ ListTile sentRequestListTile({
 }) {
   return ListTile(
     key: ValueKey(sentRequestData.requestId),
-    leading: Image.network(sentRequestData.userImage, fit: BoxFit.fill),
+    leading: ClipRRect(
+      borderRadius: BorderRadius.circular(8.0), // 모서리를 둥글게 처리
+      child: Image.network(
+        sentRequestData.userImage, // 예시 이미지 URL
+        width: 50,
+        height: 100,
+        fit: BoxFit.cover,
+        alignment: Alignment.center,// 이미지가 넘치면 잘라냄
+      ),
+    ),
     title: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -250,7 +277,16 @@ ListTile friendSettingListTile({
 }) {
   return ListTile(
     key: ValueKey(friendData.id),
-    leading: Image.network(friendData.userImage, fit: BoxFit.fill),
+    leading: ClipRRect(
+      borderRadius: BorderRadius.circular(8.0), // 모서리를 둥글게 처리
+      child: Image.network(
+        friendData.userImage, // 예시 이미지 URL
+        width: 50,
+        height: 100,
+        fit: BoxFit.cover,
+        alignment: Alignment.center,// 이미지가 넘치면 잘라냄
+      ),
+    ),
     title: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -308,7 +344,16 @@ ListTile blockedFriendSettingListTile({
 }) {
   return ListTile(
     key: ValueKey(friendData.id),
-    leading: Image.network(friendData.userImage, fit: BoxFit.fill),
+    leading: ClipRRect(
+      borderRadius: BorderRadius.circular(8.0), // 모서리를 둥글게 처리
+      child: Image.network(
+        friendData.userImage, // 예시 이미지 URL
+        width: 50,
+        height: 100,
+        fit: BoxFit.cover,
+        alignment: Alignment.center,// 이미지가 넘치면 잘라냄
+      ),
+    ),
     title: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

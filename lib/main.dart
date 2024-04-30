@@ -46,6 +46,7 @@ void main() async {
         Get.put(FindFriendController());
         Get.put(FriendController());
         Get.put(ChattingListController());
+        Get.put(ChattingController());
       }),
     ),
   );
