@@ -6,10 +6,10 @@ import 'package:frontend_matching/components/gap.dart';
 import 'package:frontend_matching/components/genderButton.dart';
 import 'package:frontend_matching/components/mbtiKeyword.dart';
 import 'package:frontend_matching/components/textField.dart';
-import 'package:frontend_matching/controllers/findFriendController.dart';
+import 'package:frontend_matching/controllers/find_friend_controller.dart';
 import 'package:frontend_matching/controllers/friend_controller.dart';
 import 'package:frontend_matching/controllers/settingModifyController.dart';
-import 'package:frontend_matching/controllers/userDataController.dart';
+import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/models/userImage.dart';
 import 'package:frontend_matching/services/friend_setting.dart';
 import 'package:get/get.dart';
@@ -240,9 +240,9 @@ class _MainPageState extends State<MainPage> {
                         padding: const EdgeInsets.all(10),
                         child:Obx(()=>CarouselSlider(
                           items: List.generate(
-                              UserDataController.to.matchingFriendInfoList.length+1,
+                              FindFriendController.to.matchingFriendInfoList.length+1,
                                   (infoIndex) {
-                                if (infoIndex < UserDataController.to.matchingFriendInfoList.length){
+                                if (infoIndex < FindFriendController.to.matchingFriendInfoList.length){
                                   return Container(
                                     width: MediaQuery.of(context).size.width,
                                     margin:
@@ -254,7 +254,7 @@ class _MainPageState extends State<MainPage> {
                                           height: 480,
                                           child: PageIndicatorContainer(
                                             align: IndicatorAlign.bottom,
-                                            length: UserDataController
+                                            length: FindFriendController
                                                 .to
                                                 .matchingFriendImageList[infoIndex]
                                                 .length,
@@ -266,13 +266,13 @@ class _MainPageState extends State<MainPage> {
                                             shape: IndicatorShape.circle(size: 8),
                                             child: PageView.builder(
                                               controller: pageController,
-                                              itemCount: UserDataController
+                                              itemCount: FindFriendController
                                                   .to
                                                   .matchingFriendImageList[infoIndex]
                                                   .length,
                                               itemBuilder: (context, imageIndex) {
                                                 UserImage friendImage =
-                                                UserDataController.to
+                                                FindFriendController.to
                                                     .matchingFriendImageList[
                                                 infoIndex][imageIndex];
                                                 return Image.network(
@@ -287,7 +287,7 @@ class _MainPageState extends State<MainPage> {
                                         Row(
                                           children: [
                                             Text(
-                                              UserDataController
+                                              FindFriendController
                                                   .to
                                                   .matchingFriendInfoList[infoIndex]
                                                   .nickname,
@@ -297,7 +297,7 @@ class _MainPageState extends State<MainPage> {
                                               width: 40,
                                               height: 20,
                                               decoration: BoxDecoration(
-                                                color: UserDataController
+                                                color: FindFriendController
                                                     .to
                                                     .matchingFriendInfoList[infoIndex].gender == "남" ? blueColor1 : pinkColor1,
                                                 borderRadius:
@@ -305,12 +305,12 @@ class _MainPageState extends State<MainPage> {
                                               ),
                                               child: Center(
                                                   child: Text(
-                                                    '${UserDataController.to.matchingFriendInfoList[infoIndex].age}세',
+                                                    '${FindFriendController.to.matchingFriendInfoList[infoIndex].age}세',
                                                     style: whiteTextStyle2,
                                                   )),
                                             ),
                                             Text(
-                                              UserDataController
+                                              FindFriendController
                                                   .to
                                                   .matchingFriendInfoList[infoIndex]
                                                   .myMBTI!,
@@ -326,7 +326,7 @@ class _MainPageState extends State<MainPage> {
                                           child: Row(
                                             mainAxisAlignment:
                                             MainAxisAlignment.start,
-                                            children: UserDataController
+                                            children: FindFriendController
                                                 .to
                                                 .matchingFriendInfoList[infoIndex]
                                                 .myKeyword!
@@ -360,7 +360,7 @@ class _MainPageState extends State<MainPage> {
                                               if (sendingController.text.isNotEmpty) {
 
                                                 FriendController.sendFriendRequest(
-                                                  oppEmail: UserDataController
+                                                  oppEmail: FindFriendController
                                                       .to
                                                       .matchingFriendInfoList[
                                                   infoIndex]
