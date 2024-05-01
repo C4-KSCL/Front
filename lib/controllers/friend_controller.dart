@@ -17,7 +17,7 @@ class FriendController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    baseUrl=dotenv.env['SERVER_URL'];
+    baseUrl = dotenv.env['SERVER_URL'];
   }
 
   Rx<int> pageNumber = 0.obs;
@@ -28,9 +28,6 @@ class FriendController extends GetxController {
 
   Rxn<User> friendData = Rxn<User>(null); // 친구 정보
   RxList<UserImage> friendImageData = RxList<UserImage>(); // 친구 이미지 담는 파일
-
-
-
 
   static const requests = 'requests';
   static const send = 'send';
@@ -57,29 +54,27 @@ class FriendController extends GetxController {
     final response = await http.post(url, headers: headers, body: data);
 
     // 이미 친구인 경우, 받은 요청이 있을 경우, 보낸 요청이 있을 경우
-    if(response.statusCode==400){
-      var errMsg=jsonDecode(response.body);
+    if (response.statusCode == 400) {
+      var errMsg = jsonDecode(response.body);
       // 이미 친구인 경우
-      if(errMsg['msg']=="already friend : request"){
-
+      if (errMsg['msg'] == "already friend : request") {
       }
       // 받은 요청이거나 보낸 요청이 있을 경우
-      else if(errMsg['msg']['error_msg']=="already exist : request"){
+      else if (errMsg['msg']['error_msg'] == "already exist : request") {
         // 보낸 요청이 있을 경우
-        String requestId=errMsg['msg']['requestId'];
-        if(errMsg['msg']['reqUser']==UserDataController.to.user.value!.email){
+        String requestId = errMsg['msg']['requestId'];
+        if (errMsg['msg']['reqUser'] ==
+            UserDataController.to.user.value!.email) {
           // 보낸 요청이 있다고 알려주기
           print("보낸 요청 있음");
         }
         // 받은 요청이 있을 경우 요청을 수락
-        else{
+        else {
           await acceptFriendRequest(requestId: requestId);
         }
-
       }
-
     } // 삭제된 유저일 경우
-    else if(response.statusCode==404){
+    else if (response.statusCode == 404) {
       // 삭제된 유저라고 알려주기
     }
 
@@ -96,7 +91,7 @@ class FriendController extends GetxController {
     print(response.statusCode);
     print(response.body);
 
-    List<Request> tempReceivedRequests=[];
+    List<Request> tempReceivedRequests = [];
 
     if (response.statusCode == 200) {
       var receivedRequests = jsonDecode(response.body);
@@ -116,7 +111,7 @@ class FriendController extends GetxController {
 
           var request = Request(
             requestId: requestId,
-            userEmail:userEmail,
+            userEmail: userEmail,
             myMBTI: myMBTI,
             myKeyword: myKeyword,
             nickname: nickname,
@@ -175,7 +170,7 @@ class FriendController extends GetxController {
     print(response.statusCode);
     print(response.body);
 
-    List<Request> tempSentRequests=[];
+    List<Request> tempSentRequests = [];
 
     if (response.statusCode == 200) {
       var sentRequests = jsonDecode(response.body);
@@ -194,7 +189,7 @@ class FriendController extends GetxController {
 
           var request = Request(
             requestId: requestId,
-            userEmail:userEmail,
+            userEmail: userEmail,
             myMBTI: myMBTI,
             myKeyword: myKeyword,
             nickname: nickname,
@@ -341,7 +336,7 @@ class FriendController extends GetxController {
     String data = '{"oppEmail" :"$oppEmail"}';
     print(data);
 
-    final response = await http.patch(url, headers: headers,body: data);
+    final response = await http.patch(url, headers: headers, body: data);
 
     print(response.statusCode);
     print(response.body);
@@ -355,7 +350,7 @@ class FriendController extends GetxController {
 
     String data = '{"oppEmail" :"$oppEmail"}';
 
-    final response = await http.patch(url, headers: headers,body: data);
+    final response = await http.patch(url, headers: headers, body: data);
 
     print(response.statusCode);
     print(response.body);
@@ -380,7 +375,7 @@ class FriendController extends GetxController {
         String userEmail = friendData['userEmail'];
         String oppEmail = friendData['oppEmail'];
         String? roomId =
-        friendData['room'] == null ? null : friendData['room']['roomId'];
+            friendData['room'] == null ? null : friendData['room']['roomId'];
         String myMBTI = friendData['friend']['myMBTI'];
         String nickname = friendData['friend']['nickname'];
         String myKeyword = friendData['friend']['myKeyword'];
@@ -414,66 +409,65 @@ class FriendController extends GetxController {
 
     String data = '{"friendEmail" :"$friendEmail"}';
 
-    final response = await http.post(url, headers: headers,body: data);
+    final response = await http.post(url, headers: headers, body: data);
 
     // 받는 데이터
-  //   {
-  //     "user": {
-  //       "userNumber": 7,
-  //       "email": "ch@naver.com",
-  //       "password": "ch",
-  //       "nickname": "chovy",
-  //       "phoneNumber": "1234",
-  //       "age": "12",
-  //       "gender": "여",
-  //       "myMBTI": "INFP",
-  //       "friendMBTI": "INFP",
-  //       "myKeyword": "먹보",
-  //       "friendKeyword": "우동추d",
-  //       "userCreated": "2024-04-08 14:54:06",
-  //       "suspend": 0,
-  //       "manager": 0,
-  //       "friendGender": "여",
-  //       "friendMaxAge": "100",
-  //       "friendMinAge": "1",
-  //       "requestTime": "2024-04-15 20:07:48",
-  //       "userImage": "https://matchingimage.s3.ap-northeast-2.amazonaws.com/profile/1712729048538-chovy3.jpg",
-  //       "userImageKey": "profile/1712729048538-chovy3.jpg",
-  //       "deleteTime": null
-  //     },
-  //   "images": [
-  //     {
-  //       "imageNumber": 7,
-  //       "userNumber": 7,
-  //       "imagePath": "https://matchingimage.s3.ap-northeast-2.amazonaws.com/image/1712555678093-chovy1.jpg",
-  //       "imageCreated": "2024-04-08 14:54:38",
-  //       "imageKey": "image/1712555678093-chovy1.jpg"
-  //     },
-  //     {
-  //       "imageNumber": 8,
-  //       "userNumber": 7,
-  //       "imagePath": "https://matchingimage.s3.ap-northeast-2.amazonaws.com/image/1712555678094-chovy2.jpg",
-  //       "imageCreated": "2024-04-08 14:54:38",
-  //       "imageKey": "image/1712555678094-chovy2.jpg"
-  //     },
-  //     {
-  //       "imageNumber": 9,
-  //       "userNumber": 7,
-  //       "imagePath": "https://matchingimage.s3.ap-northeast-2.amazonaws.com/image/1712555678125-chovy3.jpg",
-  //       "imageCreated": "2024-04-08 14:54:38",
-  //       "imageKey": "image/1712555678125-chovy3.jpg"
-  //     }
-  //   ]
-  // }
+    //   {
+    //     "user": {
+    //       "userNumber": 7,
+    //       "email": "ch@naver.com",
+    //       "password": "ch",
+    //       "nickname": "chovy",
+    //       "phoneNumber": "1234",
+    //       "age": "12",
+    //       "gender": "여",
+    //       "myMBTI": "INFP",
+    //       "friendMBTI": "INFP",
+    //       "myKeyword": "먹보",
+    //       "friendKeyword": "우동추d",
+    //       "userCreated": "2024-04-08 14:54:06",
+    //       "suspend": 0,
+    //       "manager": 0,
+    //       "friendGender": "여",
+    //       "friendMaxAge": "100",
+    //       "friendMinAge": "1",
+    //       "requestTime": "2024-04-15 20:07:48",
+    //       "userImage": "https://matchingimage.s3.ap-northeast-2.amazonaws.com/profile/1712729048538-chovy3.jpg",
+    //       "userImageKey": "profile/1712729048538-chovy3.jpg",
+    //       "deleteTime": null
+    //     },
+    //   "images": [
+    //     {
+    //       "imageNumber": 7,
+    //       "userNumber": 7,
+    //       "imagePath": "https://matchingimage.s3.ap-northeast-2.amazonaws.com/image/1712555678093-chovy1.jpg",
+    //       "imageCreated": "2024-04-08 14:54:38",
+    //       "imageKey": "image/1712555678093-chovy1.jpg"
+    //     },
+    //     {
+    //       "imageNumber": 8,
+    //       "userNumber": 7,
+    //       "imagePath": "https://matchingimage.s3.ap-northeast-2.amazonaws.com/image/1712555678094-chovy2.jpg",
+    //       "imageCreated": "2024-04-08 14:54:38",
+    //       "imageKey": "image/1712555678094-chovy2.jpg"
+    //     },
+    //     {
+    //       "imageNumber": 9,
+    //       "userNumber": 7,
+    //       "imagePath": "https://matchingimage.s3.ap-northeast-2.amazonaws.com/image/1712555678125-chovy3.jpg",
+    //       "imageCreated": "2024-04-08 14:54:38",
+    //       "imageKey": "image/1712555678125-chovy3.jpg"
+    //     }
+    //   ]
+    // }
 
     print(response.statusCode);
     print(response.body);
 
-    var jsonData=jsonDecode(response.body);
+    var jsonData = jsonDecode(response.body);
 
-    FriendController.to.friendData.value=User.fromJson(jsonData['user']);
-    FriendController.to.friendImageData = RxList<UserImage>.from(jsonData['images']
-        .map((data) => UserImage.fromJson(data))
-        .toList());
+    FriendController.to.friendData.value = User.fromJson(jsonData['user']);
+    FriendController.to.friendImageData = RxList<UserImage>.from(
+        jsonData['images'].map((data) => UserImage.fromJson(data)).toList());
   }
 }

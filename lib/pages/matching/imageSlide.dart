@@ -21,7 +21,7 @@ class ImageSlider extends StatelessWidget {
             fit: BoxFit.contain,
             errorBuilder:
                 (BuildContext context, Object error, StackTrace? stackTrace) {
-              return Center(child: Text('Image loading error'));
+              return const Center(child: Text('Image loading error'));
             },
           );
         },

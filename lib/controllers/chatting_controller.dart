@@ -2,17 +2,14 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:frontend_matching/controllers/chatting_list_controller.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/models/big_category.dart';
 import 'package:frontend_matching/models/chat.dart';
 import 'package:frontend_matching/services/time_convert_service.dart';
 import 'package:get/get.dart';
-import 'package:path/path.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:http/http.dart' as http;
 
-import '../models/chat_list.dart';
 import '../models/event.dart';
 import '../models/small_category.dart';
 
@@ -24,7 +21,7 @@ class ChattingController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    baseUrl=dotenv.env['SERVER_URL'];
+    baseUrl = dotenv.env['SERVER_URL'];
   }
 
   IO.Socket? _socket; //소켓IO 객체
@@ -38,11 +35,11 @@ class ChattingController extends GetxController {
   RxBool isChatEnabled = false.obs; //채팅 가능 여부(친구가 아니면 채팅X)
   RxBool isQuizAnswered = false.obs; //퀴즈 답변 여부
 
-  RxString userChoice="".obs;
-  RxString oppUserChoice="".obs;
+  RxString userChoice = "".obs;
+  RxString oppUserChoice = "".obs;
 
   List<dynamic> bigCategories = []; //퀴즈 상위 카테고리
-  List<dynamic> smallCategories = [];// 퀴즈 하위 카테고리
+  List<dynamic> smallCategories = []; // 퀴즈 하위 카테고리
 
   String? bigCategoryName;
   String? chatDate;
@@ -60,8 +57,8 @@ class ChattingController extends GetxController {
   };
 
   // 챗 가능 여부 리셋
-  void resetIsChatEnabled(){
-    isChatEnabled.value=false;
+  void resetIsChatEnabled() {
+    isChatEnabled.value = false;
   }
 
   //Socket.io 관련 함수
@@ -119,9 +116,9 @@ class ChattingController extends GetxController {
 
       // 안 읽은 채팅 1->0 으로 변환
       String joinUserEmail = data['userEmail'];
-      for(Chat chat in chats){
-        if(chat.userEmail != joinUserEmail){
-          chat.readCount.value=0;
+      for (Chat chat in chats) {
+        if (chat.userEmail != joinUserEmail) {
+          chat.readCount.value = 0;
         }
       }
     });
@@ -145,9 +142,9 @@ class ChattingController extends GetxController {
       print(data);
       print("밸런스 게임 답변 받음");
       // 받은 이벤트 id가 컨트롤러 안에 있는 이벤트 id와 같으면 변경 -> UI 실시간 변경 가능
-      if(eventData.value!.id==data['event']['id']){
-        eventData.value!.user1Choice.value=data['event']['user1Choice'];
-        eventData.value!.user2Choice.value=data['event']['user2Choice'];
+      if (eventData.value!.id == data['event']['id']) {
+        eventData.value!.user1Choice.value = data['event']['user1Choice'];
+        eventData.value!.user2Choice.value = data['event']['user2Choice'];
         ChattingController.to.isQuizAnswered.value = true;
       }
     });
@@ -225,11 +222,10 @@ class ChattingController extends GetxController {
     final socket = _socket!;
 
     final data = {
-      "eventId":eventId,
+      "eventId": eventId,
       "content": selectedContent,
     };
     socket.emit("answer to event", data);
-
   }
 
   @override
@@ -245,7 +241,6 @@ class ChattingController extends GetxController {
 
   // 채팅 관련 http 메소드
 
-
   // 그 방 채팅내용 가져오기
   // 채팅 내역 반환
   static Future<void> getRoomChats({required String roomId}) async {
@@ -257,8 +252,10 @@ class ChattingController extends GetxController {
     print(response.body);
 
     final jsonData = json.decode(response.body);
-    ChattingController.to.chats.value= jsonData['chats'].map((data)=>Chat.fromJson(data)).toList();
-    ChattingController.to.chatDate=extractDate(ChattingController.to.chats[0].createdAt);
+    ChattingController.to.chats.value =
+        jsonData['chats'].map((data) => Chat.fromJson(data)).toList();
+    ChattingController.to.chatDate =
+        extractDate(ChattingController.to.chats[0].createdAt);
   }
 
   //속한 채팅 방들 리스트 받아오기
@@ -313,8 +310,8 @@ class ChattingController extends GetxController {
     print(response.body);
 
     final jsonData = json.decode(response.body);
-    if(response.statusCode==200){
-      ChattingController.to.eventData.value=Event.fromJson(jsonData['event']);
+    if (response.statusCode == 200) {
+      ChattingController.to.eventData.value = Event.fromJson(jsonData['event']);
     }
   }
 

@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class FindFriendController extends GetxController{
+class FindFriendController extends GetxController {
   static FindFriendController get to => Get.find();
 
   static late final String? baseUrl;
@@ -14,16 +14,14 @@ class FindFriendController extends GetxController{
   @override
   void onInit() async {
     super.onInit();
-    baseUrl=dotenv.env['SERVER_URL'];
+    baseUrl = dotenv.env['SERVER_URL'];
   }
 
   RxList<User> matchingFriendInfoList = RxList<User>();
   RxList<List<UserImage>> matchingFriendImageList = RxList<List<UserImage>>();
 
-
   static Future<void> findFriends() async {
-    final url =
-        Uri.parse('$baseUrl/findfriend/friend-matching');
+    final url = Uri.parse('$baseUrl/findfriend/friend-matching');
     Get.put(UserDataController());
     UserDataController userDataController = Get.find();
 
@@ -40,7 +38,6 @@ class FindFriendController extends GetxController{
     final response = await http.get(url, headers: headers);
 
     if (response.statusCode == 200) {
-
       final friendsData = jsonDecode(response.body);
       print(friendsData['users']);
       print(friendsData['images']);
@@ -63,7 +60,8 @@ class FindFriendController extends GetxController{
         }
         FindFriendController.to.matchingFriendImageList.add(images);
       }
-
+    } else if (response.statusCode == 400) {
+      print(response.statusCode);
     } else {
       print('${response.statusCode} ${response.body}');
     }
