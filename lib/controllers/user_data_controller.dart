@@ -1,23 +1,64 @@
 import 'dart:convert';
-import 'package:frontend_matching/controllers/chatting_controller.dart';
-import 'package:frontend_matching/controllers/chatting_list_controller.dart';
-import 'package:frontend_matching/controllers/findFriendController.dart';
-import 'package:frontend_matching/controllers/friend_controller.dart';
-import 'package:frontend_matching/controllers/userDataController.dart';
-import 'package:frontend_matching/models/userImage.dart';
-import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
-import '../models/user.dart';
 
-class UserServices {
-  static const baseUrl = 'http://15.164.245.62:8000';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:frontend_matching/controllers/chatting_list_controller.dart';
+import 'package:frontend_matching/controllers/find_friend_controller.dart';
+import 'package:frontend_matching/controllers/friend_controller.dart';
+import 'package:frontend_matching/controllers/signupController.dart';
+import 'package:frontend_matching/pages/login/loginPage.dart';
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
+
+import '../pages/init_page.dart';
+import '../models/user.dart';
+import '../models/userImage.dart';
+
+class UserDataController extends GetxController {
+  static UserDataController get to => Get.find<UserDataController>();
+  SignupController signupController = Get.find<SignupController>();
+  Rxn<User?> user = Rxn<User?>(null);
+  RxList<XFile?> userImages = <XFile?>[].obs;
+  Rx<String> matchingUserNumbers="1,2,3".obs; // 매칭 친구 userNumbers
+
+  List<dynamic> images = [];
+  var accessToken = '';
+  var refreshToken = '';
+
   static const signup = 'signup';
   static const register = 'register';
   static const auth = 'auth';
   static const login = 'login';
 
-  static Map<String, String> jsonHeaders = {"Content-type": "application/json"};
-  UserDataController userDataController = Get.find<UserDataController>();
+  static late final String? baseUrl;
+
+  @override
+  void onInit() async {
+    super.onInit();
+    baseUrl=dotenv.env['SERVER_URL'];
+  }
+
+  //컨트롤러가 준비되었을 때 실행 -> 초기화 작업이나 데이터 로딩과 같은 초기 설정
+  @override
+  void onReady() {
+    super.onReady();
+    _moveToPage(user.value);
+    ever(user, _moveToPage); //user에 변화가 생기면 함수 실행
+  }
+
+  //유저를 새로 반환받음
+  void updateUserInfo(User newUser) {
+    user.value = newUser;
+  }
+
+  //User 정보에 따른 페이지 이동
+  void _moveToPage(User? user) {
+    if (user == null) {
+      Get.offAll(() => LoginPage());
+    } else {
+      Get.offAll(() => InitPage());
+    }
+  }
 
   static void loginUser(String email, String password) async {
     final url = Uri.parse('$baseUrl/$auth/$login');
@@ -54,5 +95,11 @@ class UserServices {
     } else {
       print('login fail');
     }
+  }
+
+  //로그아웃
+  void logout() {
+    user.value = null;
+    signupController.resetAllInputs();
   }
 }

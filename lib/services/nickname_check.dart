@@ -1,12 +1,19 @@
 // ignore_for_file: prefer_const_constructors, avoid_print, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 class NickNameCheck {
+
+
   static Future<bool?> checknickname(
       String nickname, BuildContext context) async {
-    final url = Uri.parse('http://15.164.245.62:8000/signup/checknickname');
+    late final String? baseUrl;
+
+    baseUrl=dotenv.env['SERVER_URL'];
+
+    final url = Uri.parse('$baseUrl/signup/checknickname');
     try {
       final response = await http.post(
         url,

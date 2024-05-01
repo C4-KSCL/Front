@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/controllers/signupController.dart';
-import 'package:frontend_matching/controllers/userDataController.dart';
+import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/pages/signup/schoolAuth.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';

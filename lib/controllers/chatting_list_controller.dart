@@ -1,16 +1,23 @@
 import 'dart:convert';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'package:frontend_matching/controllers/userDataController.dart';
+import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/models/chat_list.dart';
 import 'package:get/get.dart';
 
-class ChattingListController extends GetxController{
-  static ChattingListController get to=>Get.find<ChattingListController>();
+class ChattingListController extends GetxController {
+  static ChattingListController get to => Get.find<ChattingListController>();
 
-  static const baseUrl = 'http://15.164.245.62:8000'; //서버 url
+  static late final String? baseUrl;
 
-  RxList<ChatList> chattingList=<ChatList>[].obs; //채팅 리스트
+  @override
+  void onInit() async {
+    super.onInit();
+    baseUrl = dotenv.env['SERVER_URL'];
+  }
+
+  RxList<ChatList> chattingList = <ChatList>[].obs; //채팅 리스트
 
   static String accessToken = UserDataController.to.accessToken;
 
@@ -96,14 +103,17 @@ class ChattingListController extends GetxController{
           String createdAt = lastChat['createdAt'];
           String content = lastChat['content'];
           String type = lastChat['type'];
-          int friendRequestId = lastChat['room']['addRequest'].isNotEmpty ? lastChat['room']['addRequest'][0]['id'] : -1;
+          int friendRequestId = lastChat['room']['addRequest'].isNotEmpty
+              ? lastChat['room']['addRequest'][0]['id']
+              : -1;
           int notReadCounts = lastChat['notReadCounts'];
 
           bool isChatEnabled = lastChat['room']['publishing'] == "true";
           //
-          bool isReceivedRequest = lastChat['room']['addRequest'].isEmpty ? false : lastChat['room']['addRequest'][0]
-          ['reqUser'] !=
-              UserDataController.to.user.value!.email;
+          bool isReceivedRequest = lastChat['room']['addRequest'].isEmpty
+              ? false
+              : lastChat['room']['addRequest'][0]['reqUser'] !=
+                  UserDataController.to.user.value!.email;
 
           String nickname = "";
           String userImage = "";
@@ -114,7 +124,7 @@ class ChattingListController extends GetxController{
               lastChat['room']['addRequest'].isEmpty) {
             nickname = "삭제된 유저";
             userImage =
-            "https://matchingimage.s3.ap-northeast-2.amazonaws.com/defalut_user.png";
+                "https://matchingimage.s3.ap-northeast-2.amazonaws.com/defalut_user.png";
           }
 
           var chatList = ChatList(

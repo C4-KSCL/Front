@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:frontend_matching/controllers/chatting_list_controller.dart';
-import 'package:frontend_matching/controllers/userDataController.dart';
+import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/models/chat.dart';
 import 'package:frontend_matching/pages/chatting_room/big_category.dart';
 import 'package:frontend_matching/pages/chatting_room/button_layer.dart';
