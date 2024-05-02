@@ -1,10 +1,9 @@
 // ignore_for_file: avoid_unnecessary_containers, unnecessary_const
 
-import 'dart:io';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
-import 'package:frontend_matching/pages/signup/imageUpload/selectImagePage.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
@@ -18,7 +17,8 @@ class ImageModifyPage extends StatefulWidget {
 
 class _ImageModifyPageState extends State<ImageModifyPage> {
   final ImagePicker picker = ImagePicker();
-  List<XFile?> images = []; // 갤러리에서 선택된 이미지들을 저장할 리스트
+  List<String> imagePathURL = [];
+  List<XFile> xfilePathURL = [];
   String accessToken = '';
   int imageCount = 0;
 
@@ -34,50 +34,70 @@ class _ImageModifyPageState extends State<ImageModifyPage> {
       for (int i = 0; i < imageCount; i++) {
         if (controller.images[i].imagePath != null) {
           String imagePath = controller.images[i].imagePath;
-          XFile xFileImage = XFile(imagePath);
-          images.add(xFileImage);
+          imagePathURL.add(imagePath);
         }
       }
+      print(imagePathURL);
     } else {
-      print('null???');
+      print('사진이 없습니다.');
     }
   }
 
-  Future<void> pickImages() async {
-    multiImage = await picker.pickMultiImage();
-    setState(() {
-      images.addAll(multiImage);
-    });
-  }
+  Future<void> pickImages(int index) async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? pickedFile =
+        await _picker.pickImage(source: ImageSource.gallery);
 
-  // 사용자가 이미지를 수정할 수 있도록 허용하는 함수
-  Future<void> editImage(int index) async {
-    var newImage = await picker.pickImage(source: ImageSource.gallery);
-    if (newImage != null) {
+    if (pickedFile != null) {
       setState(() {
-        images[index] = newImage;
+        xfilePathURL.add(pickedFile);
+        ModifyImages(xfilePathURL);
       });
     }
   }
 
-  // 이미지 삭제 함수
-  void deleteImage(int index) {
-    setState(() {
-      images.removeAt(index);
-    });
+  void removeImage(int index) {
+    if (index < imagePathURL.length && imagePathURL[index].isNotEmpty) {
+      setState(() {
+        imagePathURL.removeAt(index);
+      });
+    }
+  }
+
+  // 이미지를 삭제하는 함수
+  Future<void> deleteImage(String deletePath, String accessToken) async {
+    final url = Uri.parse('http://15.164.245.62:8000/edit/deleteimage');
+    print(deletePath);
+    try {
+      print(accessToken);
+      final response = await http.post(url,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $accessToken'
+          },
+          body: jsonEncode({'deletePath': deletePath}));
+
+      if (response.statusCode == 200) {
+        print('삭제 성공: ${response.body}');
+      } else {
+        print('삭제 실패: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('오류 발생: $e');
+      // 예외 처리 로직
+    }
   }
 
   // 이미지를 수정하는 함수
   Future<void> ModifyImages(List<XFile?>? pickedFiles) async {
     final url = Uri.parse('http://15.164.245.62:8000/edit/addimage');
-
     try {
-      var request = http.MultipartRequest('POST', url)
-        ..fields['accessToken'] = accessToken;
+      var request = http.MultipartRequest('POST', url);
+      request.fields['accessToken'] = accessToken;
       print(accessToken);
       for (var pickedFile in pickedFiles!) {
         request.files.add(await http.MultipartFile.fromPath(
-          'file',
+          'files',
           pickedFile!.path,
         ));
       }
@@ -92,90 +112,64 @@ class _ImageModifyPageState extends State<ImageModifyPage> {
     }
   }
 
-  Widget buildImagesGrid() {
-    return GridView.builder(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        crossAxisSpacing: 4,
-        mainAxisSpacing: 4,
-      ),
-      itemCount: images.length,
-      itemBuilder: (context, index) {
-        return Stack(
-          fit: StackFit.expand,
-          children: [
-            Image.network(images[index]!.path),
-            // 수정 아이콘
-            Positioned(
-              right: 5,
-              top: 5,
-              child: GestureDetector(
-                onTap: () => editImage(index),
-                child: const Icon(
-                  Icons.edit,
-                  color: Colors.red,
-                ),
-              ),
-            ),
-            // 삭제 아이콘
-            Positioned(
-              right: 5,
-              bottom: 5,
-              child: GestureDetector(
-                onTap: () => deleteImage(index),
-                child: const Icon(
-                  Icons.delete,
-                  color: Colors.red,
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('사진 수정하기'),
       ),
-      body: Column(
-        children: [
-          Row(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.lightBlueAccent,
-                  borderRadius: BorderRadius.circular(5),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 0.5,
-                      blurRadius: 5,
-                    )
-                  ],
-                ),
-                child: IconButton(
-                  onPressed: pickImages,
-                  icon: const Icon(
-                    Icons.add_photo_alternate_outlined,
-                    size: 30,
-                    color: Colors.white,
+      body: GridView.builder(
+        padding: const EdgeInsets.all(8.0),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 1,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+          childAspectRatio: 2, // 가로 세로 비율 조정
+        ),
+        itemCount: 3, // 고정된 카드 수를 3으로 설정
+        itemBuilder: (context, index) {
+          return Card(
+            clipBehavior: Clip.antiAlias,
+            child: Stack(
+              children: [
+                index < imagePathURL.length && imagePathURL[index] != null
+                    ? Image.network(
+                        imagePathURL[index]!,
+                        fit: BoxFit.cover,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        },
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Center(child: Text('이미지를 불러올 수 없습니다.')),
+                      )
+                    : Container(
+                        alignment: Alignment.center,
+                        child: IconButton(
+                          icon: const Icon(Icons.add),
+                          onPressed: () {
+                            print(index);
+                            pickImages(index);
+                          },
+                        ),
+                      ),
+                Positioned(
+                  right: 4,
+                  top: 4,
+                  child: IconButton(
+                    icon: const Icon(Icons.remove_circle_outline,
+                        color: Colors.red),
+                    onPressed: () {
+                      deleteImage(imagePathURL[index], accessToken);
+                      removeImage(index); // 해당 이미지를 제거하는 함수 호출
+                    },
                   ),
                 ),
-              ),
-            ],
-          ),
-          Expanded(
-            child: buildImagesGrid(),
-          ),
-          ElevatedButton(
-            onPressed: () => ModifyImages(images),
-            child: const Text('수정 완료'),
-          ),
-        ],
+              ],
+            ),
+          );
+        },
       ),
     );
   }

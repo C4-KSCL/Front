@@ -76,7 +76,6 @@ class _MainPageState extends State<MainPage> {
               style: TextStyle(
                 fontSize: 32,
                 color: blackColor2,
-                fontFamily: 'NotoSansKR',
                 fontWeight: FontWeight.w400,
               ),
             ),
@@ -131,9 +130,7 @@ class _MainPageState extends State<MainPage> {
                                 MbtiKeyWord(
                                   title: 'mbti',
                                   onMbtiSelected: (String mbti) {
-                                    setState(() {
-                                      selectedMBTI = mbti;
-                                    });
+                                    selectedMBTI = mbti;
                                   },
                                 ),
                                 Row(
@@ -164,11 +161,6 @@ class _MainPageState extends State<MainPage> {
                                           color: Colors.white,
                                         )),
                                     onPressed: () async {
-                                      maxAgeController.text = UserDataController
-                                          .to.user.value!.friendMaxAge!;
-                                      minAgeController.text = UserDataController
-                                          .to.user.value!.friendMinAge!;
-
                                       settingModifyController
                                           .addToSettingArray(selectedMBTI);
                                       settingModifyController.addToSettingArray(
@@ -186,6 +178,7 @@ class _MainPageState extends State<MainPage> {
                                         minAgeController.text,
                                         genderString,
                                       );
+                                      print(selectedMBTI);
                                       Get.back();
                                     },
                                   ),

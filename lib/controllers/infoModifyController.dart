@@ -6,13 +6,12 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class InfoModifyController extends GetxController {
-
   static late final String? baseUrl;
 
   @override
   void onInit() async {
     super.onInit();
-    baseUrl=dotenv.env['SERVER_URL'];
+    baseUrl = dotenv.env['SERVER_URL'];
   }
 
   Rx<User> userInfo = User(

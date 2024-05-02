@@ -169,7 +169,7 @@ class FriendInfoPage extends StatelessWidget {
                             String maxage = maxageController.text;
                             int minage_int = int.parse(minage);
                             int maxage_int = int.parse(maxage);
-                            if (minage_int < maxage_int) {
+                            if (minage_int > maxage_int) {
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
