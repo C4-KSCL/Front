@@ -65,9 +65,9 @@ class _ImageModifyPageState extends State<ImageModifyPage> {
   }
 
   // 이미지를 삭제하는 함수
-  Future<void> deleteImage(String deletePath, String accessToken) async {
+  Future<void> deleteImage(String deletepath, String accessToken) async {
     final url = Uri.parse('http://15.164.245.62:8000/edit/deleteimage');
-    print(deletePath);
+    print(deletepath);
     try {
       print(accessToken);
       final response = await http.post(url,
@@ -75,7 +75,7 @@ class _ImageModifyPageState extends State<ImageModifyPage> {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $accessToken'
           },
-          body: jsonEncode({'deletePath': deletePath}));
+          body: jsonEncode({'deletepath': deletepath}));
 
       if (response.statusCode == 200) {
         print('삭제 성공: ${response.body}');
@@ -93,7 +93,7 @@ class _ImageModifyPageState extends State<ImageModifyPage> {
     final url = Uri.parse('http://15.164.245.62:8000/edit/addimage');
     try {
       var request = http.MultipartRequest('POST', url);
-      request.fields['accessToken'] = accessToken;
+      request.fields['accesstoken'] = accessToken;
       print(accessToken);
       for (var pickedFile in pickedFiles!) {
         request.files.add(await http.MultipartFile.fromPath(
