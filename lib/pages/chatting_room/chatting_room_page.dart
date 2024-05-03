@@ -85,10 +85,6 @@ class ChatRoomPage extends GetView<ChattingController> {
             ChattingListController.getLastChatList();
             ///////////////////////////////////////////////////////////////
             controller.disconnect();
-            ChattingController.to.resetIsChatEnabled();
-            ChattingController.to.clickAddButton.value=false;
-            ChattingController.to.showSecondGridView.value=false;
-            ChattingController.to.clickQuizButtonIndex.value=-1;
             Get.back();
           },
         ),

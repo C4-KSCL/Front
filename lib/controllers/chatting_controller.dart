@@ -57,8 +57,11 @@ class ChattingController extends GetxController {
   };
 
   // 챗 가능 여부 리셋
-  void resetIsChatEnabled() {
+  void resetChatRoomData() {
     isChatEnabled.value = false;
+    clickAddButton.value=false;
+    showSecondGridView.value=false;
+    clickQuizButtonIndex.value=-1;
   }
 
   //Socket.io 관련 함수
