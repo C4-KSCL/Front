@@ -14,7 +14,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 Future<String?> registerUser(String email) async {
-  final Uri url = Uri.parse('http://15.164.245.62:8000/signup/emailauth');
+  final Uri url = Uri.parse('https://soulmbti.shop:8000/signup/emailauth');
 
   try {
     final response = await http.post(

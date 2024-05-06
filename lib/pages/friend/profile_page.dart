@@ -126,7 +126,7 @@ Widget FriendProfilePage({
                       itemBuilder: (context, index) {
                         var friendImage =
                             FriendController.to.friendImageData[index];
-                        return Image.network(friendImage.imagePath);
+                        return Image.network(friendImage.imagePath as String);
                       },
                     ),
                   ),
@@ -246,9 +246,9 @@ Widget RequestProfilePage({
                                   ),
                                   child: Center(
                                       child: Text(
-                                        userData.age + "세",
-                                        style: whiteTextStyle2,
-                                      )),
+                                    userData.age + "세",
+                                    style: whiteTextStyle2,
+                                  )),
                                 ),
                               ],
                             ),
@@ -290,7 +290,7 @@ Widget RequestProfilePage({
                       itemCount: FriendController.to.friendImageData.length,
                       itemBuilder: (context, index) {
                         var friendImage =
-                        FriendController.to.friendImageData[index];
+                            FriendController.to.friendImageData[index];
                         return Image.network(friendImage.imagePath);
                       },
                     ),
@@ -307,17 +307,17 @@ Widget RequestProfilePage({
                       .split(',')
                       .map((item) => item.trim()) // 공백 제거
                       .map((item) => Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: blueColor1,
-                      ),
-                      padding: EdgeInsets.all(5),
-                      child: Text(item,
-                          style: TextStyle(color: Colors.white)),
-                    ),
-                  ))
+                            padding: const EdgeInsets.all(8),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: blueColor1,
+                              ),
+                              padding: EdgeInsets.all(5),
+                              child: Text(item,
+                                  style: TextStyle(color: Colors.white)),
+                            ),
+                          ))
                       .toList(),
                 ),
               ],

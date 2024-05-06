@@ -30,7 +30,7 @@ Future<void> registerUser(
   String friendMinAge,
   String friendGender,
 ) async {
-  final Uri url = Uri.parse('http://15.164.245.62:8000/signup/register');
+  final Uri url = Uri.parse('https://soulmbti.shop:8000/signup/register');
 
   try {
     final response = await http.post(
