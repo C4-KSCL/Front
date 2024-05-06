@@ -9,13 +9,12 @@ import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
 
 class UserProfileController extends GetxController {
-
   static late final String? baseUrl;
 
   @override
   void onInit() async {
     super.onInit();
-    baseUrl=dotenv.env['SERVER_URL'];
+    baseUrl = dotenv.env['SERVER_URL'];
   }
 
   Rx<User> userInfo = User(
@@ -63,13 +62,13 @@ class UserProfileController extends GetxController {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
-      var request = http.MultipartRequest(
-          'POST', Uri.parse('$baseUrl/edit/addprofile'))
-        ..headers['accesstoken'] = accessToken
-        ..files.add(await http.MultipartFile.fromPath(
-          'files',
-          pickedFile.path,
-        ));
+      var request =
+          http.MultipartRequest('POST', Uri.parse('$baseUrl/edit/addprofile'))
+            ..headers['accesstoken'] = accessToken
+            ..files.add(await http.MultipartFile.fromPath(
+              'files',
+              pickedFile.path,
+            ));
 
       var response = await request.send();
 

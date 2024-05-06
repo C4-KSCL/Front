@@ -60,6 +60,9 @@ class _MainPageState extends State<MainPage> {
     final controller = Get.find<UserDataController>();
     if (controller.user.value != null) {
       accessToken = controller.accessToken;
+      print(accessToken);
+    } else {
+      print('토큰없음');
     }
   }
 
@@ -222,20 +225,19 @@ class _MainPageState extends State<MainPage> {
                 return Container(
                   width: MediaQuery.of(context).size.width,
                   height: 650,
-                  margin:
-                  const EdgeInsets.symmetric(horizontal: 5.0),
+                  margin: const EdgeInsets.symmetric(horizontal: 5.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         "더 많은 친구를 만나고 싶나요?",
                         style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold),
+                            fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                       SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: () {
+                          print(accessToken);
                           FindFriendController.findFriends();
                           _carouselController.jumpToPage(0);
                           FocusScope.of(context).unfocus();
@@ -290,7 +292,7 @@ class _MainPageState extends State<MainPage> {
                                                       .matchingFriendImageList[
                                                   infoIndex][imageIndex];
                                           return Image.network(
-                                              friendImage.imagePath);
+                                              friendImage.imagePath as String);
                                         },
                                       ),
                                     ),

@@ -9,7 +9,7 @@ class FriendSettingService {
     String friendMinAge,
     String friendGender,
   ) async {
-    final url = Uri.parse('http://15.164.245.62:8000/findfriend/setting');
+    final url = Uri.parse('https://soulmbti.shop:8000/findfriend/setting');
     final response = await http.post(
       url,
       headers: {

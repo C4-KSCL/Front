@@ -32,7 +32,7 @@ class _ProfileImagePageState extends State<ProfileImagePage> {
   }
 
   Future<void> uploadProfileImage(XFile pickedFile) async {
-    final url = Uri.parse('http://15.164.245.62:8000/signup/profile');
+    final url = Uri.parse('https://soulmbti.shop:8000/signup/profile');
     try {
       var request = http.MultipartRequest('POST', url)
         ..files.add(await http.MultipartFile.fromPath('files', pickedFile.path))

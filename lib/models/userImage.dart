@@ -20,7 +20,7 @@ class UserImage {
       'userNumber': userNumber,
       'imagePath': imagePath,
       'imageCreated': imageCreated.toIso8601String(),
-      'imageKey':imageKey,
+      'imageKey': imageKey,
     };
   }
 

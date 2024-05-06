@@ -26,7 +26,7 @@ class SelectImagePageState extends State<SelectImagePage> {
   }
 
   Future<void> uploadImages(List<XFile?>? pickedFiles) async {
-    final url = Uri.parse('http://15.164.245.62:8000/signup/image');
+    final url = Uri.parse('https://soulmbti.shop:8000/signup/image');
     SignupController signupController = Get.find<SignupController>();
     String userEmail = signupController.signupArray.isNotEmpty
         ? signupController.signupArray[0]
@@ -157,6 +157,7 @@ class SelectImagePageState extends State<SelectImagePage> {
                 onPressed: () {
                   if (images.isNotEmpty) {
                     uploadImages(images);
+                    print(images);
                     userDataController.logout();
                   } else {
                     print('추가 이미지를 넣어주세요.');
