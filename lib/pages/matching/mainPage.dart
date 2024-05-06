@@ -375,9 +375,9 @@ class _MainPageState extends State<MainPage> {
                                   ),
                                   IconTextFieldBox(
                                       hintText: '간단하게 인사를 해봐요',
-                                      onPressed: () {
+                                      onPressed: () async{
                                         if (sendingController.text.isNotEmpty) {
-                                          FriendController.sendFriendRequest(
+                                          await FriendController.sendFriendRequest(
                                             oppEmail: FindFriendController
                                                 .to
                                                 .matchingFriendInfoList[
