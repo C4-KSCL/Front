@@ -83,6 +83,7 @@ Widget ReceiveTextChatBox({
           const SizedBox(width: 4,),
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(chat.readCount.value == 1 ? "1" : "",style: const TextStyle(color:blueColor1),),
               Text(convertHourAndMinuteTime(
@@ -241,6 +242,7 @@ Widget ReceiveQuizChatBox({
           // readCount와 시간 표시
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(chat.readCount.value == 1 ? "1" : "",style: const TextStyle(color:blueColor1),),
               Text(convertHourAndMinuteTime(
