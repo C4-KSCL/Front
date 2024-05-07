@@ -5,13 +5,11 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 class NickNameCheck {
-
-
   static Future<bool?> checknickname(
       String nickname, BuildContext context) async {
     late final String? baseUrl;
 
-    baseUrl=dotenv.env['SERVER_URL'];
+    baseUrl = dotenv.env['SERVER_URL'];
 
     final url = Uri.parse('$baseUrl/signup/checknickname');
     try {

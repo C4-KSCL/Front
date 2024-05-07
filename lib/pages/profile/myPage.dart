@@ -9,6 +9,7 @@ import 'package:frontend_matching/pages/profile/infoModifyPage.dart';
 import 'package:frontend_matching/pages/profile/topLayer.dart';
 import 'package:frontend_matching/pages/profile/userAvatar.dart';
 import 'package:frontend_matching/pages/signup/imageUpload/selectImagePage.dart';
+import 'package:frontend_matching/services/deleteUser.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 
@@ -237,7 +238,9 @@ class MyPage extends StatelessWidget {
                             img: 'assets/icons/customer_center.png',
                             str: '고객센터'),
                         ColumnButton(
-                            pressed: () {},
+                            pressed: () {
+                              DeleteUser.deleteUser(accesstoken); //유저 탈퇴하기
+                            },
                             img: 'assets/icons/delete_member.png',
                             str: '탈퇴하기'),
                       ],

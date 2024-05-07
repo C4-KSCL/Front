@@ -46,9 +46,12 @@ class _InfoAuthPageState extends State<InfoAuthPage> {
         elevation: 1.0,
         titleTextStyle:
             const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
-        backgroundColor: Colors.white70,
+        backgroundColor: blueColor3,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
           onPressed: () {
             Navigator.push(
               context,
@@ -59,8 +62,18 @@ class _InfoAuthPageState extends State<InfoAuthPage> {
           },
         ),
         actions: [
-          IconButton(icon: const Icon(Icons.home), onPressed: () => {}),
-          IconButton(icon: const Icon(Icons.search), onPressed: () => {})
+          IconButton(
+              icon: const Icon(
+                Icons.home,
+                color: Colors.white,
+              ),
+              onPressed: () => {}),
+          IconButton(
+              icon: const Icon(
+                Icons.search,
+                color: Colors.white,
+              ),
+              onPressed: () => {})
         ],
       ),
       backgroundColor: blueColor5,

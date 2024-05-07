@@ -44,3 +44,8 @@ app.*.map.json
 
 # Server uri
 .env
+
+#Firebase Info
+firebase.json
+/lib/firebase_options.dart
+/android/app/google-services.json
