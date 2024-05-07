@@ -126,7 +126,7 @@ Widget FriendProfilePage({
                       itemBuilder: (context, index) {
                         var friendImage =
                             FriendController.to.friendImageData[index];
-                        return Image.network(friendImage.imagePath as String);
+                        return Image.network(friendImage.imagePath);
                       },
                     ),
                   ),

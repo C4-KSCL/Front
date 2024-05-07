@@ -8,6 +8,7 @@ import 'package:frontend_matching/components/mbtiKeyword.dart';
 import 'package:frontend_matching/components/textField.dart';
 import 'package:frontend_matching/controllers/find_friend_controller.dart';
 import 'package:frontend_matching/controllers/friend_controller.dart';
+import 'package:frontend_matching/controllers/keyword_controller.dart';
 import 'package:frontend_matching/controllers/settingModifyController.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/models/userImage.dart';
@@ -60,9 +61,6 @@ class _MainPageState extends State<MainPage> {
     final controller = Get.find<UserDataController>();
     if (controller.user.value != null) {
       accessToken = controller.accessToken;
-      print(accessToken);
-    } else {
-      print('토큰없음');
     }
   }
 
@@ -181,11 +179,12 @@ class _MainPageState extends State<MainPage> {
                                         minAgeController.text,
                                         genderString,
                                       );
+                                      KeywordController.to.resetMBTI();
                                       print(selectedMBTI);
                                       Get.back();
                                     },
                                   ),
-                                )
+                                ),
                               ]),
                         ),
                       ),
@@ -237,7 +236,6 @@ class _MainPageState extends State<MainPage> {
                       SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: () {
-                          print(accessToken);
                           FindFriendController.findFriends();
                           _carouselController.jumpToPage(0);
                           FocusScope.of(context).unfocus();
@@ -292,7 +290,7 @@ class _MainPageState extends State<MainPage> {
                                                       .matchingFriendImageList[
                                                   infoIndex][imageIndex];
                                           return Image.network(
-                                              friendImage.imagePath as String);
+                                              friendImage.imagePath);
                                         },
                                       ),
                                     ),

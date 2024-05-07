@@ -8,6 +8,7 @@ import 'package:frontend_matching/components/loginVerifyTextForm.dart';
 import 'package:frontend_matching/components/textformField.dart';
 import 'package:frontend_matching/components/textformVerify.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
+import 'package:frontend_matching/pages/login/findPasswordPage.dart';
 import 'package:frontend_matching/pages/matching/mainPage.dart';
 import 'package:frontend_matching/pages/signup/schoolAuth.dart';
 import 'package:get/get.dart';
@@ -66,7 +67,12 @@ class _BottomLayerLoginScreenState extends State<BottomLayerLoginScreen> {
                           decoration: TextDecoration.underline),
                     )),
                 TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => FindPasswordPage()));
+                    },
                     child: const Text(
                       '비밀번호 찾기',
                       style: TextStyle(

@@ -31,7 +31,6 @@ class _ImageModifyPageState extends State<ImageModifyPage> {
     final UserDataController controller = Get.find<UserDataController>();
     if (controller.user.value != null) {
       accessToken = controller.accessToken;
-      print(accessToken);
       print('컨트롤러 안의 $accessToken');
       imageCount = controller.images.length;
 
@@ -73,9 +72,12 @@ class _ImageModifyPageState extends State<ImageModifyPage> {
 
       if (response.statusCode == 200) {
         print('삭제 성공: ${response.body}');
-        List<dynamic> updatedImages = jsonDecode(response.body);
-        UserDataController.to.images.assignAll(
-            updatedImages.map((item) => UserImage.fromJson(item)).toList());
+        final loginUserData = jsonDecode(response.body);
+        print(loginUserData);
+        Get.put(UserDataController());
+        userDataController.images = loginUserData['images']
+            .map((data) => UserImage.fromJson(data))
+            .toList();
       } else {
         print('삭제 실패: ${response.statusCode}');
       }
@@ -92,22 +94,16 @@ class _ImageModifyPageState extends State<ImageModifyPage> {
       request.headers['accesstoken'] = accessToken;
 
       for (var pickedFile in pickedFiles!) {
-        if (pickedFile != null) {
-          request.files.add(await http.MultipartFile.fromPath(
-            'file',
-            pickedFile.path,
-          ));
-        }
+        request.files.add(await http.MultipartFile.fromPath(
+          'files',
+          pickedFile!.path,
+        ));
+        print(pickedFile!.path);
       }
-
-      var response = await request.send();
+      var response = await http.Client().send(request);
 
       if (response.statusCode == 200) {
-        var respBody = await http.Response.fromStream(response);
         print('이미지 수정 완료');
-        List<dynamic> updatedImages = jsonDecode(respBody.body);
-        UserDataController.to.images.assignAll(
-            updatedImages.map((item) => UserImage.fromJson(item)).toList());
       } else {
         print('이미지 수정 실패: ${response.statusCode}');
       }
@@ -120,29 +116,44 @@ class _ImageModifyPageState extends State<ImageModifyPage> {
   Widget build(BuildContext context) {
     final userDataController = Get.find<UserDataController>();
     return Scaffold(
-      appBar: AppBar(title: const Text('사진 수정하기')),
-      body: GridView.builder(
-        padding: const EdgeInsets.all(8.0),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-          childAspectRatio: 2,
-        ),
-        itemCount: userDataController.images.length,
-        itemBuilder: (context, index) {
-          var img = userDataController.images[index];
-          return Obx(() => Card(
+      appBar: AppBar(
+        title: const Text('사진 수정하기'),
+      ),
+      body: Obx(() => GridView.builder(
+            padding: const EdgeInsets.all(8.0),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 1,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              childAspectRatio: 2,
+            ),
+            itemCount: userDataController.images.length,
+            itemBuilder: (context, index) {
+              var img = userDataController.images[index];
+              return Card(
                 clipBehavior: Clip.antiAlias,
                 child: Stack(
                   children: [
-                    img.imagePath.value.isNotEmpty
-                        ? Image.network(img.imagePath.value)
+                    img.imagePath != null
+                        ? Image.network(
+                            img.imagePath,
+                            fit: BoxFit.cover,
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            },
+                            errorBuilder: (context, error, stackTrace) =>
+                                const Center(child: Text('이미지를 불러올 수 없습니다.')),
+                          )
                         : Container(
                             alignment: Alignment.center,
                             child: IconButton(
                               icon: const Icon(Icons.add),
-                              onPressed: () => pickImages(index),
+                              onPressed: () {
+                                print(index);
+                                pickImages(index);
+                              },
                             ),
                           ),
                     Positioned(
@@ -151,15 +162,49 @@ class _ImageModifyPageState extends State<ImageModifyPage> {
                       child: IconButton(
                         icon: const Icon(Icons.remove_circle_outline,
                             color: Colors.red),
-                        onPressed: () =>
-                            deleteImage(img.imagePath.value, accessToken),
+                        onPressed: () {
+                          userDataController.images
+                              .removeAt(index); // 직접 리스트에서 제거
+                        },
                       ),
                     ),
                   ],
                 ),
-              ));
-        },
-      ),
+              );
+            },
+          )),
     );
   }
 }
+
+
+  // Card(
+                  //   clipBehavior: Clip.antiAlias,
+                  //   child: Stack(
+                  //     children: [
+                  //       img.imagePath.isNotEmpty
+                  //           ? Image.network(img.imagePath)
+                  //           : Container(
+                  //               alignment: Alignment.center,
+                  //               child: IconButton(
+                  //                 icon: const Icon(Icons.add),
+                  //                 onPressed: () {
+                  //                   print(index);
+                  //                   pickImages(index);
+                  //                 },
+                  //               ),
+                  //             ),
+                  //       Positioned(
+                  //         right: 4,
+                  //         top: 4,
+                  //         child: IconButton(
+                  //           icon: const Icon(Icons.remove_circle_outline,
+                  //               color: Colors.red),
+                  //           onPressed: () {
+                  //             deleteImage(imagePathURL[index], accessToken);
+                  //           },
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // );
