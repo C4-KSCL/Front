@@ -109,7 +109,6 @@ class ChattingListController extends GetxController {
           int notReadCounts = lastChat['notReadCounts'];
 
           bool isChatEnabled = lastChat['room']['publishing'] == "true";
-          //
           bool isReceivedRequest = lastChat['room']['addRequest'].isEmpty
               ? false
               : lastChat['room']['addRequest'][0]['reqUser'] !=
@@ -117,10 +116,12 @@ class ChattingListController extends GetxController {
 
           String nickname = "";
           String userImage = "";
+
           if (lastChat['room']['joinRoom'].isNotEmpty) {
             nickname = lastChat['room']['joinRoom'][0]['user']['nickname'];
             userImage = lastChat['room']['joinRoom'][0]['user']['userImage'];
-          } else if (lastChat['room']['joinRoom'].isEmpty &&
+          }
+          else if (lastChat['room']['joinRoom'].isEmpty &&
               lastChat['room']['addRequest'].isEmpty) {
             nickname = "삭제된 유저";
             userImage =

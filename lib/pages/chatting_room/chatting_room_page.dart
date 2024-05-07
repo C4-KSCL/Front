@@ -39,11 +39,12 @@ enum ChatType {
 }
 
 class ChatRoomPage extends GetView<ChattingController> {
-  ChatRoomPage(
-      {super.key,
-      this.friendRequestId,
-      required this.roomId,
-      required this.oppUserName});
+  ChatRoomPage({
+    super.key,
+    this.friendRequestId,
+    required this.roomId,
+    required this.oppUserName,
+  });
 
   final String roomId;
   final String oppUserName;
@@ -51,7 +52,7 @@ class ChatRoomPage extends GetView<ChattingController> {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(ChattingController());
+    Get.put(ChattingController(roomId));
     Get.put(ChattingListController()); ////////////////없애야함///////////////
 
     final FocusNode focusNode = FocusNode();
@@ -108,6 +109,7 @@ class ChatRoomPage extends GetView<ChattingController> {
               () => Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: ListView.separated(
+                  controller: controller.scrollController,
                   reverse: true,
                   itemCount: controller.chats.length,
                   itemBuilder: (BuildContext context, int index) => Obx(
@@ -216,9 +218,10 @@ class ChatRoomPage extends GetView<ChattingController> {
                         ),
                         IconButton(
                             onPressed: () {
-                              if(chatController.text.isNotEmpty){
+                              if (chatController.text.isNotEmpty) {
                                 ChattingController.to.sendMessage(
-                                    roomId: roomId, content: chatController.text);
+                                    roomId: roomId,
+                                    content: chatController.text);
                                 chatController.clear();
                               }
                             },

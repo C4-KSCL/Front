@@ -12,7 +12,7 @@ import '../chatting_room/chatting_room_page.dart';
 Widget ChatListTile({
   required ChatList chatListData,
 }) {
-  Get.put(ChattingController());
+  Get.put(ChattingController(chatListData.roomId));
 
   return ListTile(
     key: ValueKey(chatListData.roomId),

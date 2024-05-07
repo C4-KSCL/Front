@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/models/big_category.dart';
@@ -16,13 +17,26 @@ import '../models/small_category.dart';
 class ChattingController extends GetxController {
   static ChattingController get to => Get.find<ChattingController>();
 
-  static late final String? baseUrl;
+  ChattingController(this.roomId);
 
   @override
   void onInit() {
     super.onInit();
     baseUrl = dotenv.env['SERVER_URL'];
+    scrollController.addListener(_onScroll);
   }
+
+  void _onScroll() {
+    if (scrollController.position.pixels >
+        scrollController.position.maxScrollExtent * 0.1) {
+      print("채팅 가져오기");
+      getRoomChats(roomId: roomId);
+    }
+  }
+
+  static late final String? baseUrl;
+  ScrollController scrollController = ScrollController();
+  String roomId;
 
   IO.Socket? _socket; //소켓IO 객체
   RxList chats = [].obs; //채팅 객체를 담는 배열
@@ -72,6 +86,10 @@ class ChattingController extends GetxController {
       'autoConnect': false, //수동으로 연결해야함
       'auth': {'token': UserDataController.to.accessToken},
     });
+
+    _socket!.onError((data) {
+      print("Connection failed: $data");
+    });
   }
 
   //초기 톡방 내용 가져오기
@@ -79,6 +97,7 @@ class ChattingController extends GetxController {
     chats.clear();
     // http.get을 통해 채팅방 내용 가져오기
     await getRoomChats(roomId: roomId);
+    print(ChattingController.to.chats.last.id.toString()); /////////////////////////////
   }
 
   void connect({required String roomId}) async {
@@ -255,8 +274,9 @@ class ChattingController extends GetxController {
     print(response.body);
 
     final jsonData = json.decode(response.body);
-    ChattingController.to.chats.value =
-        jsonData['chats'].map((data) => Chat.fromJson(data)).toList();
+    for (var data in jsonData['chats']) {
+      ChattingController.to.chats.add(Chat.fromJson(data)); // Chat.fromJson을 사용하여 객체 생성 및 추가
+    }
     ChattingController.to.chatDate =
         extractDate(ChattingController.to.chats[0].createdAt);
   }
