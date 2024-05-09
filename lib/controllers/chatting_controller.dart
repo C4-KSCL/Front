@@ -29,7 +29,7 @@ class ChattingController extends GetxController {
   void _onScroll() {
     if (scrollController.position.pixels >
         scrollController.position.maxScrollExtent * 0.1) {
-      print("채팅 가져오기");
+      print("채팅 가져오기 ");
       getRoomChats(roomId: roomId);
     }
   }
@@ -97,7 +97,6 @@ class ChattingController extends GetxController {
     chats.clear();
     // http.get을 통해 채팅방 내용 가져오기
     await getRoomChats(roomId: roomId);
-    print(ChattingController.to.chats.last.id.toString()); /////////////////////////////
   }
 
   void connect({required String roomId}) async {
@@ -173,6 +172,11 @@ class ChattingController extends GetxController {
 
     // 'delete message' 이벤트 listen
     socket.on("delete message", (data) {
+      for(Chat chat in chats){
+        if(chat.id==data['msg']['id']){
+          chat.content.value=data['msg']['content'];
+        }
+      }
       print(data);
       print("delete message 도착");
     });
@@ -266,7 +270,17 @@ class ChattingController extends GetxController {
   // 그 방 채팅내용 가져오기
   // 채팅 내역 반환
   static Future<void> getRoomChats({required String roomId}) async {
-    final url = Uri.parse('$baseUrl/chats/get-chats/$roomId?page=1&limit=20');
+    var url;
+
+    // 채팅방 첫입장
+    if(ChattingController.to.chats.isNotEmpty){
+      final firstChatId = ChattingController.to.chats.last.id.toString();
+      url = Uri.parse('$baseUrl/chats/get-chats/$roomId?chatId=$firstChatId');
+    }
+    // 채팅방 무한 스크롤
+    else{
+      url = Uri.parse('$baseUrl/chats/get-chats/$roomId');
+    }
 
     final response = await http.get(url, headers: headers);
 
@@ -277,8 +291,9 @@ class ChattingController extends GetxController {
     for (var data in jsonData['chats']) {
       ChattingController.to.chats.add(Chat.fromJson(data)); // Chat.fromJson을 사용하여 객체 생성 및 추가
     }
-    ChattingController.to.chatDate =
-        extractDate(ChattingController.to.chats[0].createdAt);
+
+    // ChattingController.to.chatDate =
+    //     extractDate(ChattingController.to.chats[0].createdAt);
   }
 
   //속한 채팅 방들 리스트 받아오기
