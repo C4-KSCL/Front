@@ -84,73 +84,78 @@ class FriendPage extends StatelessWidget {
                   () => Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(6.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: FriendController.to.pageNumber.value == 0
-                                  ? whiteColor1
-                                  : greyColor3,
-                              borderRadius: BorderRadius.circular(8)),
-                          width: 100,
-                          child: TextButton(
-                              onPressed: () {
-                                FriendController.to.pageNumber.value = 0;
-                                _carouselController.jumpToPage(
-                                    FriendController.to.pageNumber.value);
-                              },
-                              child: Text(
-                                '친구',
-                                style:
-                                    FriendController.to.pageNumber.value == 0
-                                        ? blueTextStyle2
-                                        : greyTextStyle5,
-                              )),
-                        ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                            color: FriendController.to.pageNumber.value == 1
-                                ? whiteColor1
-                                : greyColor3,
-                            borderRadius: BorderRadius.circular(8)),
-                        width: 120,
-                        child: TextButton(
-                          onPressed: () {
-                            FriendController.to.pageNumber.value = 1;
-                            _carouselController.jumpToPage(
-                                FriendController.to.pageNumber.value);
-                          },
-                          child: Text(
-                            '받은 요청',
-                            style: FriendController.to.pageNumber.value == 1
-                                ? blueTextStyle2
-                                : greyTextStyle5,
+                      Flexible(
+                        flex: 1, // 모든 Flexible 위젯의 flex 값을 동일하게 설정하면 공간을 균등하게 나눕니다.
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: FriendController.to.pageNumber.value == 0
+                                    ? whiteColor1
+                                    : greyColor3,
+                                borderRadius: BorderRadius.circular(8)),
+                            child: TextButton(
+                                onPressed: () {
+                                  FriendController.to.pageNumber.value = 0;
+                                  _carouselController.jumpToPage(
+                                      FriendController.to.pageNumber.value);
+                                },
+                                child: Text(
+                                  '친구',
+                                  style: FriendController.to.pageNumber.value == 0
+                                      ? blueTextStyle2
+                                      : greyTextStyle5,
+                                )),
                           ),
                         ),
                       ),
-                      Container(
-                        decoration: BoxDecoration(
-                            color: FriendController.to.pageNumber.value == 2
-                                ? whiteColor1
-                                : greyColor3,
-                            borderRadius: BorderRadius.circular(8)),
-                        width: 120,
-                        child: TextButton(
+                      Flexible(
+                        flex: 1,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: FriendController.to.pageNumber.value == 1
+                                  ? whiteColor1
+                                  : greyColor3,
+                              borderRadius: BorderRadius.circular(8)),
+                          child: TextButton(
                             onPressed: () {
-                              FriendController.to.pageNumber.value = 2;
+                              FriendController.to.pageNumber.value = 1;
                               _carouselController.jumpToPage(
                                   FriendController.to.pageNumber.value);
                             },
                             child: Text(
-                              '보낸 요청',
-                              style: FriendController.to.pageNumber.value == 2
+                              '받은 요청',
+                              style: FriendController.to.pageNumber.value == 1
                                   ? blueTextStyle2
                                   : greyTextStyle5,
-                            )),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Flexible(
+                        flex: 1,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: FriendController.to.pageNumber.value == 2
+                                  ? whiteColor1
+                                  : greyColor3,
+                              borderRadius: BorderRadius.circular(8)),
+                          child: TextButton(
+                              onPressed: () {
+                                FriendController.to.pageNumber.value = 2;
+                                _carouselController.jumpToPage(
+                                    FriendController.to.pageNumber.value);
+                              },
+                              child: Text(
+                                '보낸 요청',
+                                style: FriendController.to.pageNumber.value == 2
+                                    ? blueTextStyle2
+                                    : greyTextStyle5,
+                              )),
+                        ),
                       ),
                     ],
-                  ),
+                  )
                 )),
           ),
           const SizedBox(
