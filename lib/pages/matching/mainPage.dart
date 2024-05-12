@@ -67,18 +67,9 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 100,
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Find your',
-              style: TextStyle(
-                fontSize: 32,
-                color: blackColor2,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
             Image.asset("assets/images/logo.png"),
           ],
         ),
@@ -221,7 +212,6 @@ class _MainPageState extends State<MainPage> {
               if (FindFriendController.to.matchingFriendInfoList.isEmpty) {
                 return Container(
                   width: MediaQuery.of(context).size.width,
-                  height: 650,
                   margin:
                   const EdgeInsets.symmetric(horizontal: 5.0),
                   child: Column(
@@ -423,7 +413,6 @@ class _MainPageState extends State<MainPage> {
                           }
                         }),
                         options: CarouselOptions(
-                          height: 650.0,
                           scrollDirection: Axis.vertical,
                           viewportFraction: 1,
                           enableInfiniteScroll: false,

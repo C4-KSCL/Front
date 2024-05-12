@@ -12,7 +12,7 @@ import '../chatting_room/chatting_room_page.dart';
 Widget ChatListTile({
   required ChatList chatListData,
 }) {
-  Get.put(ChattingController(chatListData.roomId));
+
 
   return ListTile(
     key: ValueKey(chatListData.roomId),
@@ -65,6 +65,7 @@ Widget ChatListTile({
       ],
     ),
     onTap: () {
+      ChattingController.to.setRoomId(roomId: chatListData.roomId);
       print("챗 가능 : ${chatListData.isChatEnabled}");
       ChattingController.to.isChatEnabled.value = chatListData.isChatEnabled;
       print("받은 요청인가? : ${chatListData.isReceivedRequest}");

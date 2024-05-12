@@ -18,7 +18,7 @@ Widget FriendProfilePage({
   required VoidCallback voidCallback,
 }) {
   final pageController = PageController();
-  Get.put(ChattingController(userData.roomId!));
+  ChattingController.to.setRoomId(roomId: userData.roomId!);
 
   return Padding(
     padding: EdgeInsets.fromLTRB(0, Get.height * 0.1, 0, Get.height * 0.1),

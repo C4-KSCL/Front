@@ -9,8 +9,6 @@ import 'package:frontend_matching/controllers/chatting_list_controller.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get.dart';
 
-import '../friend/friend_and_request_listtile.dart';
-
 class ChattingListPage extends StatelessWidget {
   const ChattingListPage({super.key});
 
@@ -31,7 +29,10 @@ class ChattingListPage extends StatelessWidget {
             const Text("채팅"),
             Row(
               children: [
-                IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
+                IconButton(onPressed: () {
+                  final ChattingController chatRoomController = Get.find();
+                   print(chatRoomController.roomId);
+                }, icon: const Icon(Icons.search)),
                 IconButton(onPressed: () {}, icon: const Icon(Icons.settings)),
               ],
             )

@@ -16,11 +16,9 @@ import '../models/small_category.dart';
 class ChattingController extends GetxController {
   static ChattingController get to => Get.find<ChattingController>();
 
-  ChattingController(this.roomId);
-
-  static late final String? baseUrl;
+  static String? baseUrl;
   ScrollController scrollController = ScrollController();
-  String roomId;
+  String? roomId;
 
   IO.Socket? _socket; //소켓IO 객체
   RxList chats = [].obs; //채팅 객체를 담는 배열
@@ -60,13 +58,28 @@ class ChattingController extends GetxController {
     super.onInit();
     baseUrl = dotenv.env['SERVER_URL'];
     scrollController.addListener(_onScroll);
+    print("ChattingController 생성");
+  }
+
+  @override
+  void onClose() {
+    if(_socket!=null){
+      _socket!.disconnect();
+    }
+    chats.clear();
+    print("ChattingController 종료");
+    super.onClose();
   }
 
   void _onScroll() async {
     if (scrollController.position.pixels == scrollController.position.maxScrollExtent && !isChatLoading.value) { // 수정됨: 0.1에서 0.9로 변경
       print("채팅 가져오기");
-      await getRoomChats(roomId: roomId);
+      await getRoomChats(roomId: roomId!);
     }
+  }
+
+  void setRoomId({required String roomId}){
+    this.roomId=roomId;
   }
 
   // 챗 가능 여부 리셋
@@ -75,6 +88,7 @@ class ChattingController extends GetxController {
     clickAddButton.value=false;
     showSecondGridView.value=false;
     clickQuizButtonIndex.value=-1;
+    roomId=null;
   }
 
   //Socket.io 관련 함수
@@ -253,13 +267,6 @@ class ChattingController extends GetxController {
     socket.emit("answer to event", data);
   }
 
-  @override
-  void onClose() {
-    _socket!.disconnect();
-    chats.clear();
-    super.onClose();
-  }
-
   void clickQuizButton(int index) {
     clickQuizButtonIndex.value = index;
   }
@@ -359,26 +366,4 @@ class ChattingController extends GetxController {
     }
   }
 
-  // 퀴즈 답변 하기
-  // static Future<String> updateQuizInfo({
-  //   required int quizId,
-  //   required String quizAnswer,
-  //   required bool isSentQuiz,
-  // }) async {
-  //   final url = Uri.parse('$baseUrl/$events/update-event-answer/$quizId');
-  //
-  //   String data = '{"content":"$quizAnswer"}';
-  //
-  //   final response = await http.patch(url, headers: headers, body: data);
-  //
-  //   print(response.statusCode);
-  //   print(response.body);
-  //
-  //   final jsonData = json.decode(response.body);
-  //   if(isSentQuiz){
-  //     return jsonData['event']['user1Choice'];
-  //   } else{
-  //     return jsonData['event']['user2Choice'];
-  //   }
-  // }
 }
