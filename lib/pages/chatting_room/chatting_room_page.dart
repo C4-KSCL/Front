@@ -107,7 +107,7 @@ class ChatRoomPage extends GetView<ChattingController> {
           Expanded(
             child: Obx(
               () => Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: ListView.separated(
                   controller: controller.scrollController,
                   reverse: true,
@@ -209,8 +209,7 @@ class ChatRoomPage extends GetView<ChattingController> {
                                   ),
                           ),
                         ),
-                        SizedBox(
-                          width: Get.width - 100,
+                        Expanded(
                           child: TextField(
                             focusNode: focusNode,
                             controller: chatController,

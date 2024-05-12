@@ -65,13 +65,11 @@ Widget AcceptOrRejectButtonLayer(int? friendRequestId) {
 
 Widget CancelButtonLayer(int? friendRequestId) {
   return Container(
-    width: 320,
     decoration: BoxDecoration(
       color: Colors.white.withOpacity(0.3),
       borderRadius: BorderRadius.circular(8),
     ),
-    child: SizedBox(
-      width: 150,
+    child: Expanded(
       child: TextButton(
         style: TextButton.styleFrom(
           backgroundColor: Colors.grey,
