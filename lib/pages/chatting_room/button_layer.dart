@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/controllers/chatting_controller.dart';
+import 'package:frontend_matching/controllers/chatting_list_controller.dart';
 import 'package:frontend_matching/controllers/friend_controller.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:frontend_matching/theme/textStyle.dart';
@@ -80,6 +81,7 @@ Widget CancelButtonLayer(int? friendRequestId) {
         onPressed: () async {
           await FriendController.deleteFriendRequest(requestId: friendRequestId.toString());
           await FriendController.getFriendSentRequest();
+          await ChattingListController.getLastChatList();
           Get.back();
         },
         child: const Text(
