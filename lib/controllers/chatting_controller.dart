@@ -300,7 +300,9 @@ class ChattingController extends GetxController {
 
     final jsonData = json.decode(response.body);
     for (var data in jsonData['chats']) {
-      ChattingController.to.chats.add(Chat.fromJson(data)); // Chat.fromJson을 사용하여 객체 생성 및 추가
+      // 추가할 때 날짜 비교해서 날짜 정보를 넣지 않거나 하기
+      // 날짜가 바뀔 경우 날짜 박스를 넣기
+      ChattingController.to.chats.add(Chat.fromJson(data));
     }
 
 

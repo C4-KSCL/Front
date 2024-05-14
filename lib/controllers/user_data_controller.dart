@@ -6,6 +6,7 @@ import 'package:frontend_matching/controllers/chatting_list_controller.dart';
 import 'package:frontend_matching/controllers/find_friend_controller.dart';
 import 'package:frontend_matching/controllers/friend_controller.dart';
 import 'package:frontend_matching/controllers/signupController.dart';
+import 'package:frontend_matching/models/friend.dart';
 import 'package:frontend_matching/pages/login/loginPage.dart';
 import 'package:frontend_matching/services/fcm_token_service.dart';
 import 'package:get/get.dart';
@@ -92,12 +93,12 @@ class UserDataController extends GetxController {
       print(loginUserData['accessToken']);
       print(loginUserData['refreshToken']);
 
-      FindFriendController.findFriends();
-      FriendController.getFriendList();
-      FriendController.getFriendReceivedRequest();
-      FriendController.getFriendSentRequest();
-      ChattingListController.getLastChatList();
-    } else {
+      await FindFriendController.findFriends();
+      await FriendController.getFriendList();
+      await FriendController.getFriendReceivedRequest();
+      await FriendController.getFriendSentRequest();
+      await ChattingListController.getLastChatList();
+  } else {
       print('login fail');
     }
   }
@@ -106,5 +107,7 @@ class UserDataController extends GetxController {
   void logout() {
     user.value = null;
     signupController.resetAllInputs();
+    FriendController.to.resetData();
+    ChattingListController.to.resetData();
   }
 }

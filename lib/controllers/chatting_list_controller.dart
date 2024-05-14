@@ -26,6 +26,11 @@ class ChattingListController extends GetxController {
     "accessToken": accessToken
   };
 
+  // 채팅 리스트 비우기
+  void resetData(){
+    chattingList.clear();
+  }
+
   //유저의 마지막 채팅들 가져오기 - 채팅방 리스트 구현
   static Future<void> getLastChatList() async {
     final url = Uri.parse('$baseUrl/chats/get-last-chats');

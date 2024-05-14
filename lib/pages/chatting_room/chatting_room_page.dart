@@ -90,15 +90,6 @@ class ChatRoomPage extends GetView<ChattingController> {
         ),
         title: Text(oppUserName),
         centerTitle: true,
-        actions: [
-          Builder(
-            builder: (context) => IconButton(
-              icon: Icon(Icons.menu),
-              onPressed: () => Scaffold.of(context).openEndDrawer(),
-              // 이 버튼을 누르면 endDrawer가 열립니다.
-            ),
-          ),
-        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -260,33 +251,6 @@ class ChatRoomPage extends GetView<ChattingController> {
                 )
               : Container()),
         ],
-      ),
-      endDrawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              child: Text('오른쪽 드로어 헤더'),
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-            ),
-            ListTile(
-              title: Text('항목 1'),
-              onTap: () {
-                // 항목 1을 탭했을 때 수행할 작업
-                Navigator.pop(context); // Drawer를 닫습니다.
-              },
-            ),
-            ListTile(
-              title: Text('항목 2'),
-              onTap: () {
-                // 항목 2를 탭했을 때 수행할 작업
-                Navigator.pop(context); // Drawer를 닫습니다.
-              },
-            ),
-          ],
-        ),
       ),
     );
   }
