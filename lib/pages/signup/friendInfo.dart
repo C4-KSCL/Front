@@ -169,6 +169,7 @@ class FriendInfoPage extends StatelessWidget {
                             String maxage = maxageController.text;
                             int minage_int = int.parse(minage);
                             int maxage_int = int.parse(maxage);
+                            print(minage_int + maxage_int);
                             if (minage_int > maxage_int) {
                               showDialog(
                                 context: context,
@@ -187,37 +188,37 @@ class FriendInfoPage extends StatelessWidget {
                                   );
                                 },
                               );
+                            } else {
+                              signupController.addToSignupArray(minage);
+                              signupController.addToSignupArray(maxage);
+                              signupController.addToSignupArray(genderString);
+
+                              print(signupController.signupArray);
+                              print(signupController.friendButtonEnabled.value);
+
+                              await registerUser(
+                                signupController.signupArray[0],
+                                signupController.signupArray[1],
+                                signupController.signupArray[2],
+                                signupController.signupArray[3],
+                                signupController.signupArray[4],
+                                signupController.signupArray[5],
+                                signupController.signupArray[6],
+                                signupController.signupArray[7],
+                                signupController.signupArray[8],
+                                signupController.signupArray[9],
+                                signupController.signupArray[10],
+                                signupController.signupArray[11],
+                                signupController.signupArray[12],
+                              );
+
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ProfileImagePage(),
+                                ),
+                              );
                             }
-
-                            signupController.addToSignupArray(minage);
-                            signupController.addToSignupArray(maxage);
-                            signupController.addToSignupArray(genderString);
-
-                            print(signupController.signupArray);
-                            print(signupController.friendButtonEnabled.value);
-
-                            await registerUser(
-                              signupController.signupArray[0],
-                              signupController.signupArray[1],
-                              signupController.signupArray[2],
-                              signupController.signupArray[3],
-                              signupController.signupArray[4],
-                              signupController.signupArray[5],
-                              signupController.signupArray[6],
-                              signupController.signupArray[7],
-                              signupController.signupArray[8],
-                              signupController.signupArray[9],
-                              signupController.signupArray[10],
-                              signupController.signupArray[11],
-                              signupController.signupArray[12],
-                            );
-
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ProfileImagePage(),
-                              ),
-                            );
                           }
                         : null,
                     child: const Text(
