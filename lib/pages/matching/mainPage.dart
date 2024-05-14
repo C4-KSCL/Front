@@ -8,6 +8,7 @@ import 'package:frontend_matching/components/mbtiKeyword.dart';
 import 'package:frontend_matching/components/textField.dart';
 import 'package:frontend_matching/controllers/find_friend_controller.dart';
 import 'package:frontend_matching/controllers/friend_controller.dart';
+import 'package:frontend_matching/controllers/keyword_controller.dart';
 import 'package:frontend_matching/controllers/settingModifyController.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/models/userImage.dart';
@@ -169,11 +170,12 @@ class _MainPageState extends State<MainPage> {
                                         minAgeController.text,
                                         genderString,
                                       );
+                                      KeywordController.to.resetMBTI();
                                       print(selectedMBTI);
                                       Get.back();
                                     },
                                   ),
-                                )
+                                ),
                               ]),
                         ),
                       ),

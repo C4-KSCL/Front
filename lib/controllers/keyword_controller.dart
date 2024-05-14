@@ -48,4 +48,12 @@ class KeywordController extends GetxController {
         (selectedFT[0] ? 'F' : 'T') +
         (selectedPJ[0] ? 'P' : 'J');
   }
+
+  void resetMBTI() {
+    selectedIE.value = [false, false];
+    selectedNS.value = [false, false];
+    selectedFT.value = [false, false];
+    selectedPJ.value = [false, false];
+    update();
+  }
 }

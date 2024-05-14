@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/components/mbtiKeyword.dart';
+import 'package:frontend_matching/controllers/keyword_controller.dart';
 import 'package:frontend_matching/controllers/signupController.dart';
 import 'package:frontend_matching/pages/signup/friendKeywordPage.dart';
 import 'package:frontend_matching/theme/colors.dart';
@@ -82,6 +83,7 @@ class _FriendMbtiPageState extends State<FriendMbtiPage> {
                     ? () {
                         signupController.addToSignupArray(selectedMBTI);
                         print(signupController.signupArray);
+                        KeywordController.to.resetMBTI();
 
                         Navigator.push(
                           context,

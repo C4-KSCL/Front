@@ -14,7 +14,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 Future<String?> registerUser(String email) async {
-  final Uri url = Uri.parse('http://15.164.245.62:8000/signup/emailauth');
+  final Uri url = Uri.parse('https://soulmbti.shop:8000/signup/emailauth');
 
   try {
     final response = await http.post(
@@ -84,9 +84,12 @@ class _SchoolAuthPageState extends State<SchoolAuthPage> {
           elevation: 1.0,
           titleTextStyle:
               const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
-          backgroundColor: Colors.white70,
+          backgroundColor: blueColor3,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
             onPressed: () {
               Navigator.push(
                 context,
@@ -97,8 +100,18 @@ class _SchoolAuthPageState extends State<SchoolAuthPage> {
             },
           ),
           actions: [
-            IconButton(icon: const Icon(Icons.home), onPressed: () => {}),
-            IconButton(icon: const Icon(Icons.search), onPressed: () => {})
+            IconButton(
+                icon: const Icon(
+                  Icons.home,
+                  color: Colors.white,
+                ),
+                onPressed: () => {}),
+            IconButton(
+                icon: const Icon(
+                  Icons.search,
+                  color: Colors.white,
+                ),
+                onPressed: () => {})
           ],
         ),
         backgroundColor: blueColor5,

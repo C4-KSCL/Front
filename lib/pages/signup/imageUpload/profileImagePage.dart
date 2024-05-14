@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, avoid_print
 
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/controllers/signupController.dart';
@@ -9,6 +10,9 @@ import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:image/image.dart' as img;
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
 
 class ProfileImagePage extends StatefulWidget {
   const ProfileImagePage({Key? key}) : super(key: key);
@@ -32,7 +36,7 @@ class _ProfileImagePageState extends State<ProfileImagePage> {
   }
 
   Future<void> uploadProfileImage(XFile pickedFile) async {
-    final url = Uri.parse('http://15.164.245.62:8000/signup/profile');
+    final url = Uri.parse('https://soulmbti.shop:8000/signup/profile');
     try {
       var request = http.MultipartRequest('POST', url)
         ..files.add(await http.MultipartFile.fromPath('files', pickedFile.path))

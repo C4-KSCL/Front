@@ -37,16 +37,26 @@ class _MyKeywordPageState extends State<MyKeywordPage> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text(
-          '',
-          style: TextStyle(color: Colors.black),
+          '내 키워드',
+          style: TextStyle(color: Colors.white),
         ),
         elevation: 0.0,
         titleTextStyle:
             const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
-        backgroundColor: Colors.white,
+        backgroundColor: blueColor3,
         actions: [
-          IconButton(icon: Icon(Icons.home), onPressed: () => {}),
-          IconButton(icon: Icon(Icons.search), onPressed: () => {})
+          IconButton(
+              icon: Icon(
+                Icons.home,
+                color: Colors.white,
+              ),
+              onPressed: () => {}),
+          IconButton(
+              icon: Icon(
+                Icons.search,
+                color: Colors.white,
+              ),
+              onPressed: () => {})
         ],
       ),
       backgroundColor: blueColor5,

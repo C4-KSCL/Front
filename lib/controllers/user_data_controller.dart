@@ -22,7 +22,7 @@ class UserDataController extends GetxController {
   SignupController signupController = Get.find<SignupController>();
   Rxn<User?> user = Rxn<User?>(null);
   RxList<XFile?> userImages = <XFile?>[].obs;
-  Rx<String> matchingUserNumbers="1,2,3".obs; // 매칭 친구 userNumbers
+  Rx<String> matchingUserNumbers = "1,2,3".obs; // 매칭 친구 userNumbers
 
   List<dynamic> images = [];
   var accessToken = '';
@@ -38,7 +38,7 @@ class UserDataController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    baseUrl=dotenv.env['SERVER_URL'];
+    baseUrl = dotenv.env['SERVER_URL'];
   }
 
   //컨트롤러가 준비되었을 때 실행 -> 초기화 작업이나 데이터 로딩과 같은 초기 설정

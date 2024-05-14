@@ -1,11 +1,19 @@
+// ignore_for_file: prefer_const_constructors, avoid_print
+
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/controllers/signupController.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
-import 'package:frontend_matching/pages/signup/schoolAuth.dart';
-import 'dart:io';
+import 'package:frontend_matching/pages/signup/imageUpload/selectImagePage.dart';
+import 'package:frontend_matching/theme/colors.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
-import 'package:get/get.dart';
+import 'package:image/image.dart' as img;
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
 
 class SelectImagePage extends StatefulWidget {
   @override
@@ -18,15 +26,39 @@ List<XFile?> multiImage = []; // 갤러리에서 여러장의 사진을 선택�
 List<XFile?> images = []; // 가져온 사진들을 보여주기 위한 변수
 
 class SelectImagePageState extends State<SelectImagePage> {
+  final picker = ImagePicker();
+  List<XFile> images = [];
   Future<void> pickImages() async {
-    multiImage = await picker.pickMultiImage();
-    setState(() {
-      images.addAll(multiImage);
-    });
+    final List<XFile>? pickedFiles = await picker.pickMultiImage();
+    if (pickedFiles != null) {
+      List<XFile> tempImages = [];
+      for (XFile file in pickedFiles) {
+        Uint8List fileData = await file.readAsBytes();
+        img.Image? decodedImage = img.decodeImage(fileData);
+
+        if (decodedImage != null) {
+          // 이미지 리사이즈
+          img.Image resized =
+              img.copyResize(decodedImage, width: 400, height: 600);
+
+          // 임시 디렉토리에 이미지 저장
+          Directory tempDir = await getTemporaryDirectory();
+          String filename = path.basename(file.path);
+          String tempPath = path.join(tempDir.path, filename);
+          File(tempPath).writeAsBytesSync(img.encodeJpg(resized));
+
+          // 리스트에 저장
+          tempImages.add(XFile(tempPath));
+        }
+      }
+      setState(() {
+        images.addAll(tempImages);
+      });
+    }
   }
 
   Future<void> uploadImages(List<XFile?>? pickedFiles) async {
-    final url = Uri.parse('http://15.164.245.62:8000/signup/image');
+    final url = Uri.parse('https://soulmbti.shop:8000/signup/image');
     SignupController signupController = Get.find<SignupController>();
     String userEmail = signupController.signupArray.isNotEmpty
         ? signupController.signupArray[0]
@@ -157,6 +189,7 @@ class SelectImagePageState extends State<SelectImagePage> {
                 onPressed: () {
                   if (images.isNotEmpty) {
                     uploadImages(images);
+                    print(images);
                     userDataController.logout();
                   } else {
                     print('추가 이미지를 넣어주세요.');
