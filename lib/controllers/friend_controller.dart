@@ -42,6 +42,13 @@ class FriendController extends GetxController {
     "accessToken": accessToken
   };
 
+  void resetData(){
+    friends.clear();
+    sentRequests.clear();
+    receivedRequests.clear();
+    blockedFriends.clear();
+  }
+
   //친구 요청 보내기
   static Future<void> sendFriendRequest({
     required String oppEmail,

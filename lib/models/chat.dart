@@ -7,7 +7,7 @@ class Chat {
   final String? nickName;
   final String? userEmail;
   final String createdAt;
-  final String content;
+  final Rx<String> content;
   final Rx<int> readCount;
   final String type;
   final Event? event;
@@ -18,11 +18,11 @@ class Chat {
     this.nickName,
     this.userEmail,
     required this.createdAt,
-    required this.content,
+    required String content,
     required int readCount,
     required this.type,
     this.event,
-  }) : this.readCount = readCount.obs;
+  }) : readCount = readCount.obs, content= content.obs;
 
   factory Chat.fromJson(Map<String, dynamic> json) {
     return Chat(

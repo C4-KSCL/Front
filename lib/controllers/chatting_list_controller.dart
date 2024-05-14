@@ -26,6 +26,11 @@ class ChattingListController extends GetxController {
     "accessToken": accessToken
   };
 
+  // 채팅 리스트 비우기
+  void resetData(){
+    chattingList.clear();
+  }
+
   //유저의 마지막 채팅들 가져오기 - 채팅방 리스트 구현
   static Future<void> getLastChatList() async {
     final url = Uri.parse('$baseUrl/chats/get-last-chats');
@@ -109,7 +114,6 @@ class ChattingListController extends GetxController {
           int notReadCounts = lastChat['notReadCounts'];
 
           bool isChatEnabled = lastChat['room']['publishing'] == "true";
-          //
           bool isReceivedRequest = lastChat['room']['addRequest'].isEmpty
               ? false
               : lastChat['room']['addRequest'][0]['reqUser'] !=
@@ -117,10 +121,12 @@ class ChattingListController extends GetxController {
 
           String nickname = "";
           String userImage = "";
+
           if (lastChat['room']['joinRoom'].isNotEmpty) {
             nickname = lastChat['room']['joinRoom'][0]['user']['nickname'];
             userImage = lastChat['room']['joinRoom'][0]['user']['userImage'];
-          } else if (lastChat['room']['joinRoom'].isEmpty &&
+          }
+          else if (lastChat['room']['joinRoom'].isEmpty &&
               lastChat['room']['addRequest'].isEmpty) {
             nickname = "삭제된 유저";
             userImage =

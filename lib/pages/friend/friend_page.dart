@@ -60,18 +60,6 @@ class FriendPage extends StatelessWidget {
       ),
       body: Column(
         children: [
-          // /////////////////////////////////
-          // TextField(
-          //   controller: oppController,
-          // ),
-          // TextField(
-          //   controller: contentController,
-          // ),
-          // TextButton(onPressed: (){
-          //   FriendController.sendFriendRequest(oppEmail: oppController.text, content: contentController.text);
-          // }, child: Text("친구추가")),
-          // //////////////////////////////////
-
           // [ 친구 / 받은 요청 / 보낸 요청 ] 메뉴 바
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -81,76 +69,116 @@ class FriendPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Obx(
-                  () => Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(6.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: FriendController.to.pageNumber.value == 0
-                                  ? whiteColor1
-                                  : greyColor3,
-                              borderRadius: BorderRadius.circular(8)),
-                          width: 100,
-                          child: TextButton(
-                              onPressed: () {
+                  () => Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Flexible(
+                          flex: 1, // 모든 Flexible 위젯의 flex 값을 동일하게 설정하면 공간을 균등하게 나눕니다.
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: FriendController.to.pageNumber.value == 0
+                                    ? whiteColor1
+                                    : greyColor3,
+                                borderRadius: BorderRadius.circular(8)),
+                            child: TextButton(
+                              onPressed: (){
                                 FriendController.to.pageNumber.value = 0;
                                 _carouselController.jumpToPage(
                                     FriendController.to.pageNumber.value);
+                                FriendController.getFriendList();
                               },
+                              style: ButtonStyle(
+                                overlayColor: MaterialStateProperty.resolveWith<Color>(
+                                      (Set<MaterialState> states) {
+                                    if (states.contains(MaterialState.pressed)) {
+                                      return Colors.transparent; // 눌렀을 때 효과 없음
+                                    }
+                                    return Colors.transparent;
+                                  },
+                                ),
+                              ),
                               child: Text(
                                 '친구',
-                                style:
-                                    FriendController.to.pageNumber.value == 0
-                                        ? blueTextStyle2
-                                        : greyTextStyle5,
-                              )),
-                        ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                            color: FriendController.to.pageNumber.value == 1
-                                ? whiteColor1
-                                : greyColor3,
-                            borderRadius: BorderRadius.circular(8)),
-                        width: 120,
-                        child: TextButton(
-                          onPressed: () {
-                            FriendController.to.pageNumber.value = 1;
-                            _carouselController.jumpToPage(
-                                FriendController.to.pageNumber.value);
-                          },
-                          child: Text(
-                            '받은 요청',
-                            style: FriendController.to.pageNumber.value == 1
-                                ? blueTextStyle2
-                                : greyTextStyle5,
+                                style: FriendController.to.pageNumber.value == 0
+                                    ? blueTextStyle2
+                                    : greyTextStyle5,
+                              ),
+                            )
                           ),
                         ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                            color: FriendController.to.pageNumber.value == 2
-                                ? whiteColor1
-                                : greyColor3,
-                            borderRadius: BorderRadius.circular(8)),
-                        width: 120,
-                        child: TextButton(
-                            onPressed: () {
-                              FriendController.to.pageNumber.value = 2;
-                              _carouselController.jumpToPage(
-                                  FriendController.to.pageNumber.value);
-                            },
-                            child: Text(
-                              '보낸 요청',
-                              style: FriendController.to.pageNumber.value == 2
-                                  ? blueTextStyle2
-                                  : greyTextStyle5,
-                            )),
-                      ),
-                    ],
-                  ),
+                        Flexible(
+                          flex: 1,
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: FriendController.to.pageNumber.value == 1
+                                    ? whiteColor1
+                                    : greyColor3,
+                                borderRadius: BorderRadius.circular(8)),
+                            child: TextButton(
+                              onPressed: () {
+                                FriendController.to.pageNumber.value = 1;
+                                _carouselController.jumpToPage(
+                                    FriendController.to.pageNumber.value);
+                                FriendController.getFriendReceivedRequest();
+                              },
+                              style: ButtonStyle(
+                                overlayColor: MaterialStateProperty.resolveWith<Color>(
+                                      (Set<MaterialState> states) {
+                                    if (states.contains(MaterialState.pressed)) {
+                                      return Colors.transparent; // 눌렀을 때 효과 없음
+                                    }
+                                    return Colors.transparent;
+                                  },
+                                ),
+                              ),
+                              child: Text(
+                                '받은 요청',
+                                style: FriendController.to.pageNumber.value == 1
+                                    ? blueTextStyle2
+                                    : greyTextStyle5,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Flexible(
+                          flex: 1,
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: FriendController.to.pageNumber.value == 2
+                                    ? whiteColor1
+                                    : greyColor3,
+                                borderRadius: BorderRadius.circular(8)),
+                            child: TextButton(
+                              onPressed: () {
+                                FriendController.to.pageNumber.value = 2;
+                                _carouselController.jumpToPage(
+                                    FriendController.to.pageNumber.value);
+                                FriendController.getFriendSentRequest();
+                              },
+                              style: ButtonStyle(
+                                overlayColor: MaterialStateProperty.resolveWith<Color>(
+                                      (Set<MaterialState> states) {
+                                    if (states.contains(MaterialState.pressed)) {
+                                      return Colors.transparent; // 눌렀을 때 효과 없음
+                                    }
+                                    return Colors.transparent;
+                                  },
+                                ),
+                              ),
+                              child: Text(
+                                '보낸 요청',
+                                style: FriendController.to.pageNumber.value == 2
+                                    ? blueTextStyle2
+                                    : greyTextStyle5,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
                 )),
           ),
           const SizedBox(

@@ -69,18 +69,9 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 100,
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Find your',
-              style: TextStyle(
-                fontSize: 32,
-                color: blackColor2,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
             Image.asset("assets/images/logo.png"),
           ],
         ),
@@ -105,53 +96,27 @@ class _MainPageState extends State<MainPage> {
         backgroundColor: blueColor5,
       ),
       backgroundColor: blueColor5,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-          child: Container(
-            decoration: BoxDecoration(
-              color: whiteColor1,
-              borderRadius: BorderRadius.circular(32),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.1),
-                  blurRadius: 5.0,
-                  spreadRadius: 1.0,
-                  offset: const Offset(5, 5), // 그림자의 위치
-                ),
-              ],
-            ),
-            child: Obx(() {
-              if (FindFriendController.to.matchingFriendInfoList.isEmpty) {
-                return Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 650,
-                  margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "더 많은 친구를 만나고 싶나요?",
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: () {
-                          FindFriendController.findFriends();
-                          _carouselController.jumpToPage(0);
-                          FocusScope.of(context).unfocus();
-                        },
-                        child: Text("친구 찾기 시작하기"),
-                      ),
-                    ],
-                  ),
-                );
-              } else {
-                return Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Obx(
-                      () => CarouselSlider(
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+        child: Container(
+          height: Get.height,
+          decoration: BoxDecoration(
+            color: whiteColor1,
+            borderRadius: BorderRadius.circular(32),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.1),
+                blurRadius: 5.0,
+                spreadRadius: 1.0,
+                offset: const Offset(5, 5), // 그림자의 위치
+              ),
+            ],
+          ),
+          child: Obx(() {
+              return Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: SizedBox(
+                    child: CarouselSlider(
                         items: List.generate(
                             FindFriendController
                                     .to.matchingFriendInfoList.length +
@@ -160,14 +125,14 @@ class _MainPageState extends State<MainPage> {
                               FindFriendController
                                   .to.matchingFriendInfoList.length) {
                             return Container(
-                              width: MediaQuery.of(context).size.width,
+                              width: Get.width,
                               margin:
                                   const EdgeInsets.symmetric(horizontal: 5.0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   SizedBox(
-                                    height: 480,
+                                    height: Get.height-360, // 고쳐야될듯 ///////////////////////////////////
                                     child: PageIndicatorContainer(
                                       align: IndicatorAlign.bottom,
                                       length: FindFriendController
@@ -277,9 +242,9 @@ class _MainPageState extends State<MainPage> {
                                   ),
                                   IconTextFieldBox(
                                       hintText: '간단하게 인사를 해봐요',
-                                      onPressed: () {
+                                      onPressed: () async{
                                         if (sendingController.text.isNotEmpty) {
-                                          FriendController.sendFriendRequest(
+                                          await FriendController.sendFriendRequest(
                                             oppEmail: FindFriendController
                                                 .to
                                                 .matchingFriendInfoList[
@@ -312,8 +277,8 @@ class _MainPageState extends State<MainPage> {
                                   ),
                                   SizedBox(height: 20),
                                   ElevatedButton(
-                                    onPressed: () {
-                                      FindFriendController.findFriends();
+                                    onPressed: () async {
+                                      await FindFriendController.findFriends();
                                       _carouselController.jumpToPage(0);
                                       FocusScope.of(context).unfocus();
                                     },
@@ -325,17 +290,16 @@ class _MainPageState extends State<MainPage> {
                           }
                         }),
                         options: CarouselOptions(
-                          height: 650.0,
                           scrollDirection: Axis.vertical,
                           viewportFraction: 1,
                           enableInfiniteScroll: false,
                         ),
                         carouselController: _carouselController,
                       ),
-                    ));
-              }
-            }),
-          ),
+                  ),
+                  );
+            // }
+          }),
         ),
       ),
     );
