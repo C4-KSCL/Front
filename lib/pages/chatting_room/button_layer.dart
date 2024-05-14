@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/controllers/chatting_controller.dart';
+import 'package:frontend_matching/controllers/chatting_list_controller.dart';
 import 'package:frontend_matching/controllers/friend_controller.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:frontend_matching/theme/textStyle.dart';
@@ -65,13 +66,11 @@ Widget AcceptOrRejectButtonLayer(int? friendRequestId) {
 
 Widget CancelButtonLayer(int? friendRequestId) {
   return Container(
-    width: 320,
     decoration: BoxDecoration(
       color: Colors.white.withOpacity(0.3),
       borderRadius: BorderRadius.circular(8),
     ),
-    child: SizedBox(
-      width: 150,
+    child: Expanded(
       child: TextButton(
         style: TextButton.styleFrom(
           backgroundColor: Colors.grey,
@@ -82,6 +81,7 @@ Widget CancelButtonLayer(int? friendRequestId) {
         onPressed: () async {
           await FriendController.deleteFriendRequest(requestId: friendRequestId.toString());
           await FriendController.getFriendSentRequest();
+          await ChattingListController.getLastChatList();
           Get.back();
         },
         child: const Text(

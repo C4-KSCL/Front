@@ -1,11 +1,14 @@
 import 'dart:convert';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend_matching/controllers/chatting_list_controller.dart';
 import 'package:frontend_matching/controllers/find_friend_controller.dart';
 import 'package:frontend_matching/controllers/friend_controller.dart';
 import 'package:frontend_matching/controllers/signupController.dart';
+import 'package:frontend_matching/models/friend.dart';
 import 'package:frontend_matching/pages/login/loginPage.dart';
+import 'package:frontend_matching/services/fcm_token_service.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
@@ -64,11 +67,14 @@ class UserDataController extends GetxController {
     final url = Uri.parse('$baseUrl/$auth/$login');
 
     Map<String, String> headers = {"Content-type": "application/json"};
-    String data = '{"email": "$email", "password": "$password"}';
+    final body = jsonEncode({"email": email, "password": password});
 
-    final response = await http.post(url, headers: headers, body: data);
+    final response = await http.post(url, headers: headers, body: body);
 
     if (response.statusCode == 200) {
+      // FCM 알림 권한 요청
+      FcmService.requestPermission();
+
       final loginUserData = jsonDecode(response.body);
       print(loginUserData);
 
@@ -87,12 +93,12 @@ class UserDataController extends GetxController {
       print(loginUserData['accessToken']);
       print(loginUserData['refreshToken']);
 
-      FindFriendController.findFriends();
-      FriendController.getFriendList();
-      FriendController.getFriendReceivedRequest();
-      FriendController.getFriendSentRequest();
-      ChattingListController.getLastChatList();
-    } else {
+      await FindFriendController.findFriends();
+      await FriendController.getFriendList();
+      await FriendController.getFriendReceivedRequest();
+      await FriendController.getFriendSentRequest();
+      await ChattingListController.getLastChatList();
+  } else {
       print('login fail');
     }
   }
@@ -101,5 +107,7 @@ class UserDataController extends GetxController {
   void logout() {
     user.value = null;
     signupController.resetAllInputs();
+    FriendController.to.resetData();
+    ChattingListController.to.resetData();
   }
 }

@@ -39,11 +39,12 @@ enum ChatType {
 }
 
 class ChatRoomPage extends GetView<ChattingController> {
-  ChatRoomPage(
-      {super.key,
-      this.friendRequestId,
-      required this.roomId,
-      required this.oppUserName});
+  ChatRoomPage({
+    super.key,
+    this.friendRequestId,
+    required this.roomId,
+    required this.oppUserName,
+  });
 
   final String roomId;
   final String oppUserName;
@@ -51,8 +52,7 @@ class ChatRoomPage extends GetView<ChattingController> {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(ChattingController());
-    Get.put(ChattingListController()); ////////////////없애야함///////////////
+    ChattingController.to.setRoomId(roomId: roomId);
 
     final FocusNode focusNode = FocusNode();
     var chatController = TextEditingController();
@@ -85,24 +85,11 @@ class ChatRoomPage extends GetView<ChattingController> {
             ChattingListController.getLastChatList();
             ///////////////////////////////////////////////////////////////
             controller.disconnect();
-            ChattingController.to.resetIsChatEnabled();
-            ChattingController.to.clickAddButton.value=false;
-            ChattingController.to.showSecondGridView.value=false;
-            ChattingController.to.clickQuizButtonIndex.value=-1;
             Get.back();
           },
         ),
         title: Text(oppUserName),
         centerTitle: true,
-        actions: [
-          Builder(
-            builder: (context) => IconButton(
-              icon: Icon(Icons.menu),
-              onPressed: () => Scaffold.of(context).openEndDrawer(),
-              // 이 버튼을 누르면 endDrawer가 열립니다.
-            ),
-          ),
-        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -110,8 +97,9 @@ class ChatRoomPage extends GetView<ChattingController> {
           Expanded(
             child: Obx(
               () => Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: ListView.separated(
+                  controller: controller.scrollController,
                   reverse: true,
                   itemCount: controller.chats.length,
                   itemBuilder: (BuildContext context, int index) => Obx(
@@ -211,8 +199,7 @@ class ChatRoomPage extends GetView<ChattingController> {
                                   ),
                           ),
                         ),
-                        SizedBox(
-                          width: Get.width - 100,
+                        Expanded(
                           child: TextField(
                             focusNode: focusNode,
                             controller: chatController,
@@ -220,9 +207,10 @@ class ChatRoomPage extends GetView<ChattingController> {
                         ),
                         IconButton(
                             onPressed: () {
-                              if(chatController.text.isNotEmpty){
+                              if (chatController.text.isNotEmpty) {
                                 ChattingController.to.sendMessage(
-                                    roomId: roomId, content: chatController.text);
+                                    roomId: roomId,
+                                    content: chatController.text);
                                 chatController.clear();
                               }
                             },
@@ -263,33 +251,6 @@ class ChatRoomPage extends GetView<ChattingController> {
                 )
               : Container()),
         ],
-      ),
-      endDrawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              child: Text('오른쪽 드로어 헤더'),
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-            ),
-            ListTile(
-              title: Text('항목 1'),
-              onTap: () {
-                // 항목 1을 탭했을 때 수행할 작업
-                Navigator.pop(context); // Drawer를 닫습니다.
-              },
-            ),
-            ListTile(
-              title: Text('항목 2'),
-              onTap: () {
-                // 항목 2를 탭했을 때 수행할 작업
-                Navigator.pop(context); // Drawer를 닫습니다.
-              },
-            ),
-          ],
-        ),
       ),
     );
   }

@@ -12,8 +12,6 @@ import '../chatting_room/chatting_room_page.dart';
 Widget ChatListTile({
   required ChatList chatListData,
 }) {
-  Get.put(ChattingController());
-
   return ListTile(
     key: ValueKey(chatListData.roomId),
     leading: CircleAvatar(
@@ -65,9 +63,13 @@ Widget ChatListTile({
       ],
     ),
     onTap: () {
-      print("챗 가능 : ${chatListData.isChatEnabled}");
-      ChattingController.to.isChatEnabled.value = chatListData.isChatEnabled;
       print("받은 요청인가? : ${chatListData.isReceivedRequest}");
+      print("챗 가능 : ${chatListData.isChatEnabled}");
+      // 채팅방 roomId 설정
+      ChattingController.to.setRoomId(roomId: chatListData.roomId);
+      // 친구 확인을 통해 채팅가능한지 설정
+      ChattingController.to.isChatEnabled.value = chatListData.isChatEnabled;
+      // 친구가 아니라면 받은 요청인지 보낸 요청인지 설정
       ChattingController.to.isReceivedRequest.value =
           chatListData.isReceivedRequest;
       Get.to(ChatRoomPage(

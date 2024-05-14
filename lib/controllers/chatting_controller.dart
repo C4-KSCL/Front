@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/models/big_category.dart';
 import 'package:frontend_matching/models/chat.dart';
-import 'package:frontend_matching/services/time_convert_service.dart';
 import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:http/http.dart' as http;
@@ -16,13 +16,9 @@ import '../models/small_category.dart';
 class ChattingController extends GetxController {
   static ChattingController get to => Get.find<ChattingController>();
 
-  static late final String? baseUrl;
-
-  @override
-  void onInit() {
-    super.onInit();
-    baseUrl = dotenv.env['SERVER_URL'];
-  }
+  static String? baseUrl;
+  ScrollController scrollController = ScrollController();
+  String? roomId;
 
   IO.Socket? _socket; //소켓IO 객체
   RxList chats = [].obs; //채팅 객체를 담는 배열
@@ -34,6 +30,7 @@ class ChattingController extends GetxController {
   RxBool isReceivedRequest = true.obs; //받은 요청이면 true, 보낸 요청이면 false
   RxBool isChatEnabled = false.obs; //채팅 가능 여부(친구가 아니면 채팅X)
   RxBool isQuizAnswered = false.obs; //퀴즈 답변 여부
+  RxBool isChatLoading = false.obs; //채팅 로딩중인지 여부
 
   RxString userChoice = "".obs;
   RxString oppUserChoice = "".obs;
@@ -56,9 +53,42 @@ class ChattingController extends GetxController {
     "accessToken": accessToken
   };
 
+  @override
+  void onInit() {
+    super.onInit();
+    baseUrl = dotenv.env['SERVER_URL'];
+    scrollController.addListener(_onScroll);
+    print("ChattingController 생성");
+  }
+
+  @override
+  void onClose() {
+    if(_socket!=null){
+      _socket!.disconnect();
+    }
+    chats.clear();
+    print("ChattingController 종료");
+    super.onClose();
+  }
+
+  void _onScroll() async {
+    if (scrollController.position.pixels == scrollController.position.maxScrollExtent && !isChatLoading.value) { // 수정됨: 0.1에서 0.9로 변경
+      print("채팅 가져오기");
+      await getRoomChats(roomId: roomId!);
+    }
+  }
+
+  void setRoomId({required String roomId}){
+    this.roomId=roomId;
+  }
+
   // 챗 가능 여부 리셋
-  void resetIsChatEnabled() {
+  void resetChatRoomData() {
     isChatEnabled.value = false;
+    clickAddButton.value=false;
+    showSecondGridView.value=false;
+    clickQuizButtonIndex.value=-1;
+    roomId=null;
   }
 
   //Socket.io 관련 함수
@@ -68,6 +98,10 @@ class ChattingController extends GetxController {
       'transports': ['websocket'], //전송 방식을 웹소켓으로 설정
       'autoConnect': false, //수동으로 연결해야함
       'auth': {'token': UserDataController.to.accessToken},
+    });
+
+    _socket!.onError((data) {
+      print("Connection failed: $data");
     });
   }
 
@@ -151,6 +185,11 @@ class ChattingController extends GetxController {
 
     // 'delete message' 이벤트 listen
     socket.on("delete message", (data) {
+      for(Chat chat in chats){
+        if(chat.id==data['msg']['id']){
+          chat.content.value=data['msg']['content'];
+        }
+      }
       print(data);
       print("delete message 도착");
     });
@@ -228,13 +267,6 @@ class ChattingController extends GetxController {
     socket.emit("answer to event", data);
   }
 
-  @override
-  void onClose() {
-    _socket!.disconnect();
-    chats.clear();
-    super.onClose();
-  }
-
   void clickQuizButton(int index) {
     clickQuizButtonIndex.value = index;
   }
@@ -244,7 +276,22 @@ class ChattingController extends GetxController {
   // 그 방 채팅내용 가져오기
   // 채팅 내역 반환
   static Future<void> getRoomChats({required String roomId}) async {
-    final url = Uri.parse('$baseUrl/chats/get-chats/$roomId?page=1&limit=20');
+    var url;
+    ChattingController.to.isChatLoading.value=true;
+
+    // 채팅방 무한 스크롤
+    if(ChattingController.to.chats.isNotEmpty){
+      print("===채팅방 무한 스크롤===");
+      final firstChatId = ChattingController.to.chats.last.id.toString();
+      print(firstChatId);
+      url = Uri.parse('$baseUrl/chats/get-chats/$roomId?chatId=$firstChatId');
+    }
+    // 채팅방 첫입장
+    else{
+      print("===채팅방 첫 입장===");
+      url = Uri.parse('$baseUrl/chats/get-chats/$roomId');
+    }
+    print(url.toString());
 
     final response = await http.get(url, headers: headers);
 
@@ -252,10 +299,16 @@ class ChattingController extends GetxController {
     print(response.body);
 
     final jsonData = json.decode(response.body);
-    ChattingController.to.chats.value =
-        jsonData['chats'].map((data) => Chat.fromJson(data)).toList();
-    ChattingController.to.chatDate =
-        extractDate(ChattingController.to.chats[0].createdAt);
+    for (var data in jsonData['chats']) {
+      // 추가할 때 날짜 비교해서 날짜 정보를 넣지 않거나 하기
+      // 날짜가 바뀔 경우 날짜 박스를 넣기
+      ChattingController.to.chats.add(Chat.fromJson(data));
+    }
+
+
+    // ChattingController.to.chatDate =
+    //     extractDate(ChattingController.to.chats[0].createdAt);
+    ChattingController.to.isChatLoading.value=false;
   }
 
   //속한 채팅 방들 리스트 받아오기
@@ -315,26 +368,4 @@ class ChattingController extends GetxController {
     }
   }
 
-  // 퀴즈 답변 하기
-  // static Future<String> updateQuizInfo({
-  //   required int quizId,
-  //   required String quizAnswer,
-  //   required bool isSentQuiz,
-  // }) async {
-  //   final url = Uri.parse('$baseUrl/$events/update-event-answer/$quizId');
-  //
-  //   String data = '{"content":"$quizAnswer"}';
-  //
-  //   final response = await http.patch(url, headers: headers, body: data);
-  //
-  //   print(response.statusCode);
-  //   print(response.body);
-  //
-  //   final jsonData = json.decode(response.body);
-  //   if(isSentQuiz){
-  //     return jsonData['event']['user1Choice'];
-  //   } else{
-  //     return jsonData['event']['user2Choice'];
-  //   }
-  // }
 }
