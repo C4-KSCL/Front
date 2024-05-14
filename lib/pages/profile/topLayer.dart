@@ -22,7 +22,7 @@ class TopLayer extends StatelessWidget {
         children: [
           Padding(
             padding: EdgeInsets.fromLTRB(medWidth / 20, 0, 0, 0),
-            child: Text(
+            child: const Text(
               'MyPage',
               style: TextStyle(
                 fontSize: 28,

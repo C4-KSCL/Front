@@ -12,6 +12,7 @@ import 'package:frontend_matching/controllers/keyword_controller.dart';
 import 'package:frontend_matching/controllers/settingModifyController.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/models/userImage.dart';
+import 'package:frontend_matching/pages/matching/mbtiSettingPage.dart';
 import 'package:frontend_matching/services/friend_setting.dart';
 import 'package:get/get.dart';
 import 'package:page_indicator/page_indicator.dart';
@@ -85,111 +86,12 @@ class _MainPageState extends State<MainPage> {
         ),
         actions: [
           IconButton(
-              onPressed: () async {
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  builder: (BuildContext context) {
-                    return FractionallySizedBox(
-                      heightFactor: 0.85,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.8),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(30),
-                            topRight: Radius.circular(30),
-                          ),
-                        ),
-                        child: Center(
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Gap(),
-                                Text(
-                                  '    이상형 설정하기',
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(fontSize: 27),
-                                ),
-                                Gap(),
-                                Row(
-                                  children: [
-                                    SizedBox(width: 50),
-                                    GenderButton(
-                                      onGenderSelected: (selectedValue) {
-                                        genderInt = selectedValue;
-                                        if (genderInt == 1) {
-                                          genderString = "남";
-                                        } else {
-                                          genderString = "여";
-                                        }
-                                        print(genderString);
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                Gap(),
-                                MbtiKeyWord(
-                                  title: 'mbti',
-                                  onMbtiSelected: (String mbti) {
-                                    selectedMBTI = mbti;
-                                  },
-                                ),
-                                Row(
-                                  children: [
-                                    NumberInputField(
-                                      controller: minAgeController,
-                                      hintText: UserDataController
-                                          .to.user.value!.friendMinAge!,
-                                    ),
-                                    Icon(Icons.remove),
-                                    NumberInputField(
-                                      controller: maxAgeController,
-                                      hintText: UserDataController
-                                          .to.user.value!.friendMaxAge!,
-                                    ),
-                                  ],
-                                ),
-                                Gap(),
-                                Gap(),
-                                Center(
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Color(0xFF7EA5F3),
-                                      minimumSize: Size(300, 50),
-                                    ),
-                                    child: const Text('변경',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                        )),
-                                    onPressed: () async {
-                                      settingModifyController
-                                          .addToSettingArray(selectedMBTI);
-                                      settingModifyController.addToSettingArray(
-                                          maxAgeController.text);
-                                      settingModifyController.addToSettingArray(
-                                          minAgeController.text);
-                                      settingModifyController
-                                          .addToSettingArray(genderString);
-                                      print(settingModifyController);
-
-                                      await settingService.updateFriendSetting(
-                                        accessToken,
-                                        selectedMBTI,
-                                        maxAgeController.text,
-                                        minAgeController.text,
-                                        genderString,
-                                      );
-                                      KeywordController.to.resetMBTI();
-                                      print(selectedMBTI);
-                                      Get.back();
-                                    },
-                                  ),
-                                ),
-                              ]),
-                        ),
-                      ),
-                    );
-                  },
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MbtiSettingPage(),
+                  ),
                 );
               },
               icon: Icon(Icons.settings_rounded)),

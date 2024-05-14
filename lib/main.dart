@@ -6,6 +6,7 @@ import 'package:frontend_matching/controllers/find_friend_controller.dart';
 import 'package:frontend_matching/controllers/infoModifyController.dart';
 import 'package:frontend_matching/controllers/keyword_controller.dart';
 import 'package:frontend_matching/controllers/signupController.dart';
+import 'package:frontend_matching/controllers/userImageController.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/controllers/userProfileController.dart';
 import 'package:frontend_matching/pages/login/loginPage.dart';
@@ -52,6 +53,7 @@ void main() async {
         Get.put(ChattingListController());
         Get.put(ChattingController());
         Get.put(KeywordController());
+        Get.put(UserImageController());
       }),
     ),
   );

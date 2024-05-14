@@ -9,7 +9,7 @@ import 'package:frontend_matching/pages/profile/infoModifyPage.dart';
 import 'package:frontend_matching/pages/profile/topLayer.dart';
 import 'package:frontend_matching/pages/profile/userAvatar.dart';
 import 'package:frontend_matching/pages/signup/imageUpload/selectImagePage.dart';
-import 'package:frontend_matching/services/deleteUser.dart';
+import 'package:frontend_matching/services/delete_user_service.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 
@@ -231,15 +231,12 @@ class MyPage extends StatelessWidget {
                             str: '로그아웃'),
                         ColumnButton(
                             pressed: () {},
-                            img: 'assets/icons/setting_button.png',
-                            str: '환경설정'),
-                        ColumnButton(
-                            pressed: () {},
                             img: 'assets/icons/customer_center.png',
                             str: '고객센터'),
                         ColumnButton(
                             pressed: () {
-                              DeleteUser.deleteUser(accesstoken); //유저 탈퇴하기
+                              DeleteUserService.deleteUser(
+                                  accesstoken); //유저 탈퇴하기
                             },
                             img: 'assets/icons/delete_member.png',
                             str: '탈퇴하기'),
