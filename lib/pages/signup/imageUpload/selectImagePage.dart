@@ -3,11 +3,10 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:crop_image/crop_image.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/controllers/signupController.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
-import 'package:frontend_matching/pages/signup/imageUpload/selectImagePage.dart';
-import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
@@ -26,8 +25,6 @@ List<XFile?> multiImage = []; // 갤러리에서 여러장의 사진을 선택�
 List<XFile?> images = []; // 가져온 사진들을 보여주기 위한 변수
 
 class SelectImagePageState extends State<SelectImagePage> {
-  final picker = ImagePicker();
-  List<XFile> images = [];
   Future<void> pickImages() async {
     final List<XFile>? pickedFiles = await picker.pickMultiImage();
     if (pickedFiles != null) {

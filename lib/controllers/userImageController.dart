@@ -2,10 +2,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/models/userImage.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 import 'package:image_picker/image_picker.dart';
 
 class UserImageController extends GetxController {
@@ -15,19 +13,11 @@ class UserImageController extends GetxController {
   void onInit() async {
     super.onInit();
     baseUrl = dotenv.env['SERVER_URL'];
-  } // 이미지를 삭제하는 함수
-
-  Rx<UserImage> newImage = UserImage(
-          imageNumber: 0,
-          userNumber: 0,
-          imagePath: '',
-          imageCreated: DateTime.now(),
-          imageKey: '')
-      .obs;
+  }
 
   UserDataController userDataController = Get.find<UserDataController>();
 
-  //이미지 삭제
+  // 이미지 삭제
   Future<void> deleteImage(int index, String accessToken) async {
     final img = userDataController.images[index];
     final url = Uri.parse('$baseUrl/edit/deleteimage');
@@ -41,7 +31,11 @@ class UserImageController extends GetxController {
 
       if (response.statusCode == 200) {
         print('삭제 성공: ${response.body}');
-        userDataController.images.removeAt(index);
+        List<UserImage> newImages =
+            (jsonDecode(response.body)['images'] as List)
+                .map((data) => UserImage.fromJson(data))
+                .toList();
+        userDataController.images.value = newImages; // assignAll 사용 안함
         Get.snackbar('삭제 성공', '이미지가 성공적으로 삭제되었습니다.');
       } else {
         print('삭제 실패: ${response.statusCode}');
@@ -53,7 +47,7 @@ class UserImageController extends GetxController {
     }
   }
 
-  // 이미지 수정
+  // 이미지 추가
   Future<void> addImage(XFile pickedFile, String accessToken) async {
     final url = Uri.parse('$baseUrl/edit/addimage');
     var request = http.MultipartRequest('POST', url);
@@ -67,10 +61,10 @@ class UserImageController extends GetxController {
 
       if (response.statusCode == 200) {
         print('이미지 추가 완료');
-        final newUserData = jsonDecode(responseBody);
-        userDataController.images = newUserData['images']
+        List<UserImage> newImages = (jsonDecode(responseBody)['images'] as List)
             .map((data) => UserImage.fromJson(data))
             .toList();
+        userDataController.images.value = newImages; // assignAll 사용 안함
         Get.snackbar('성공', '이미지가 성공적으로 추가되었습니다.');
       } else {
         print('이미지 추가 실패: ${response.statusCode}');

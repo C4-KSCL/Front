@@ -21,41 +21,25 @@ class InfoModifyController extends GetxController {
     phoneNumber: '',
     age: '',
     gender: '',
-    myMBTI: '',
-    myKeyword: '',
-    friendKeyword: '',
     userNumber: 0,
   ).obs;
 
   Future<void> InfoModify(
     String accessToken,
-    String refreshToken,
     String password,
     String nickname,
     String phoneNumber,
     String age,
-    String gender,
-    String myMBTI,
-    String myKeyword,
-    String friendKeyword,
   ) async {
     final url = Uri.parse('$baseUrl/edit/info');
     final response = await http.post(
       url,
-      headers: {
-        'Content-Type': 'application/json',
-        'accessToken': accessToken,
-        'refreshToken': refreshToken
-      },
+      headers: {'Content-Type': 'application/json', 'accessToken': accessToken},
       body: jsonEncode({
         'password': password,
         'nickname': nickname,
         'phoneNumber': phoneNumber,
         'age': age,
-        'gender': gender,
-        'myMBTI': myMBTI,
-        'myKeyword': myKeyword,
-        'friendKeyword': friendKeyword,
       }),
     );
 
@@ -71,6 +55,56 @@ class InfoModifyController extends GetxController {
       print('개인정보 수정 성공');
     } else {
       print('개인정보 수정 오류 발생: ${response.statusCode}');
+    }
+  }
+
+  Future<void> MbtiModify(String accessToken, String myMBTI) async {
+    final url = Uri.parse('$baseUrl/edit/infoMBTI');
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json', 'accessToken': accessToken},
+      body: jsonEncode({
+        'myMBTI': myMBTI,
+      }),
+    );
+
+    print(response.statusCode);
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      print(data);
+
+      userInfo.value = User.fromJson(data['user']);
+      Get.find<UserDataController>().updateUserInfo(userInfo.value);
+      print('MBTI 수정 성공');
+    } else {
+      print('MBTI 수정 오류 발생: ${response.statusCode}');
+    }
+  }
+
+  Future<void> KeywordModify(String accessToken, String myKeyword) async {
+    final url = Uri.parse('$baseUrl/edit/infoKeyword');
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json', 'accessToken': accessToken},
+      body: jsonEncode({
+        'myKeyword': myKeyword,
+      }),
+    );
+
+    print(response.statusCode);
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      print(data);
+
+      userInfo.value = User.fromJson(data['user']);
+      Get.find<UserDataController>().updateUserInfo(userInfo.value);
+      print('Keyword 수정 성공');
+    } else {
+      print('Keyword 수정 오류 발생: ${response.statusCode}');
     }
   }
 }

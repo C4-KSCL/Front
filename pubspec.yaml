@@ -55,6 +55,9 @@ dependencies:
   hive_flutter:
   flutter_dotenv:
   flutter_secure_storage:
+  crop_image: ^1.0.12
+  mime:
+  collection:
 
 dev_dependencies:
   flutter_test:

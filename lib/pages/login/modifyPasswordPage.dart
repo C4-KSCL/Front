@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/components/textField.dart';
 import 'package:frontend_matching/components/textformField.dart';
+import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/pages/login/loginPage.dart';
-import 'package:frontend_matching/pages/signup/imageUpload/selectImagePage.dart';
 import 'package:frontend_matching/services/find_password.dart';
 import 'package:frontend_matching/theme/colors.dart';
+import 'package:get/get.dart';
 
 class ModifyPasswordPage extends StatefulWidget {
   const ModifyPasswordPage({Key? key}) : super(key: key);
@@ -19,6 +20,7 @@ class _ModifyPasswordPageState extends State<ModifyPasswordPage> {
   String email = '';
   String pw = '';
   String verificationCode = ''; // 인증 코드를 저장할 변수 추가
+  UserDataController userDataController = Get.find<UserDataController>();
 
   @override
   Widget build(BuildContext context) {

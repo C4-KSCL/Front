@@ -1,5 +1,7 @@
 // ignore_for_file: non_constant_identifier_names, prefer_const_constructors, use_build_context_synchronously, annotate_overrides
 
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/components/textField.dart';
 import 'package:frontend_matching/components/textformField.dart';
@@ -25,22 +27,15 @@ class _InfoModifyPageState extends State<InfoModifyPage> {
   final TextEditingController nicknameController = TextEditingController();
   final TextEditingController phoneNumberController = TextEditingController();
   final TextEditingController ageController = TextEditingController();
-  final TextEditingController genderController = TextEditingController();
-  final TextEditingController myMBTIController = TextEditingController();
-  final TextEditingController myKeywordController = TextEditingController();
-  final TextEditingController friendKeywordController = TextEditingController();
   String my_email = '';
   String my_password = '';
   String my_nickname = '';
   String my_phoneNumber = '';
   String my_age = '';
-  String my_gender = '';
-  String my_mbti = '';
-  String my_keyword = '';
-  String friend_keyword = '';
-  String my_profileImagePath = '';
   String accessToken = '';
   String refreshToken = '';
+  String my_profileImagePath = '';
+  bool isElevationButtonEnabled = false;
 
   @override
   void initState() {
@@ -56,25 +51,11 @@ class _InfoModifyPageState extends State<InfoModifyPage> {
       my_nickname = controller.user.value!.nickname;
       my_phoneNumber = controller.user.value!.phoneNumber;
       my_age = controller.user.value!.age;
-      my_gender = controller.user.value!.gender;
-      my_mbti = controller.user.value!.myMBTI!;
-      my_keyword = controller.user.value!.myKeyword!;
-      friend_keyword = controller.user.value!.friendKeyword!;
-      if (my_gender == '0') {
-        my_gender = '남';
-      } else {
-        my_gender = '여';
-      }
-      my_profileImagePath = controller.user.value!.userImage!;
 
       passwordController.text = my_password;
       nicknameController.text = my_nickname;
       phoneNumberController.text = my_phoneNumber;
       ageController.text = my_age;
-      genderController.text = my_gender;
-      myMBTIController.text = my_mbti;
-      myKeywordController.text = my_keyword;
-      friendKeywordController.text = friend_keyword;
     }
   }
 
@@ -219,46 +200,59 @@ class _InfoModifyPageState extends State<InfoModifyPage> {
                     minimumSize: Size(300, 50),
                   ),
                   onPressed: () async {
-                    // 여기 api 수정해야함
                     String password = passwordController.text;
                     String nickname = nicknameController.text;
                     String phoneNumber = phoneNumberController.text;
                     String age = ageController.text;
-                    String gender = genderController.text;
-                    String mbti = myMBTIController.text;
-                    String keyword = myKeywordController.text;
-                    String f_keyword = friendKeywordController.text;
-
-                    await infoModifyController.InfoModify(
-                      accessToken,
-                      refreshToken,
-                      password,
-                      nickname,
-                      phoneNumber,
-                      age,
-                      gender,
-                      mbti,
-                      keyword,
-                      f_keyword,
-                    );
-
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('정보 수정'),
-                          content: Text('정보가 수정되었습니다.'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: const Text('확인'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
+                    print('check');
+                    print(phoneNumber);
+                    if (password.isNotEmpty &&
+                        nickname.isNotEmpty &&
+                        phoneNumber.isNotEmpty &&
+                        age.isNotEmpty) {
+                      await infoModifyController.InfoModify(
+                        accessToken,
+                        password,
+                        nickname,
+                        phoneNumber,
+                        age,
+                      );
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('정보 수정'),
+                            content: Text('정보가 수정되었습니다.'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('확인'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    } else {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('정보 수정'),
+                            content: Text('모든 값을 입력해주세요!'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('확인'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
                   },
                   child: const Text('다음으로',
                       style: TextStyle(

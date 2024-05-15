@@ -162,7 +162,7 @@ packages:
     source: hosted
     version: "4.10.0"
   collection:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: collection
       sha256: ee67cb0715911d28db6bf4af1026078bd6f0128b07a5f66fb2ed94ec6783c09a
@@ -177,6 +177,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.1"
+  crop_image:
+    dependency: "direct main"
+    description:
+      name: crop_image
+      sha256: "67d379ea927f4a9e48bf3d314a74bff7d86cdefd4a58af4554b37daa3c10bb9c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.12"
   cross_file:
     dependency: transitive
     description:
@@ -628,10 +636,10 @@ packages:
     dependency: transitive
     description:
       name: js
-      sha256: c1b2e9b5ea78c45e1a0788d29606ba27dc5f71f019f32ca5140f61ef071838cf
+      sha256: f2c445dce49627136094980615a031419f7f3eb393237e4ecd97ac15dea343f3
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.1"
+    version: "0.6.7"
   json_annotation:
     dependency: transitive
     description:
@@ -705,7 +713,7 @@ packages:
     source: hosted
     version: "1.11.0"
   mime:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: mime
       sha256: "2e123074287cc9fd6c09de8336dae606d1ddb88d9ac47358826db698c176a1f2"

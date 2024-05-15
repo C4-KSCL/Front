@@ -68,34 +68,33 @@ class User {
       'requestTime': requestTime,
       'suspend': suspend,
       'manager': manager,
-      'deleteTime' : deleteTime
+      'deleteTime': deleteTime
     };
   }
 
   //JSON -> Dart 객체
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      userNumber: json['userNumber'],
-      email: json['email'],
-      password: json['password'],
-      nickname: json['nickname'],
-      phoneNumber: json['phoneNumber'],
-      age: json['age'],
-      gender: json['gender'],
-      myMBTI: json['myMBTI'],
-      friendMBTI: json['friendMBTI'],
-      myKeyword: json['myKeyword'],
-      friendKeyword: json['friendKeyword'],
-      userCreated: DateTime.tryParse(json['userCreated']),
-      friendGender: json['friendGender'],
-      friendMaxAge: json['friendMaxAge'],
-      friendMinAge: json['friendMinAge'],
-      userImage: json['userImage'],
-      userImageKey: json['userImageKey'],
-      requestTime: DateTime.tryParse(json['requestTime']),
-      suspend: json['suspend'],
-      manager: json['manager'],
-      deleteTime: json['deleteTime']
-    );
+        userNumber: json['userNumber'],
+        email: json['email'],
+        password: json['password'],
+        nickname: json['nickname'],
+        phoneNumber: json['phoneNumber'],
+        age: json['age'],
+        gender: json['gender'],
+        myMBTI: json['myMBTI'],
+        friendMBTI: json['friendMBTI'],
+        myKeyword: json['myKeyword'],
+        friendKeyword: json['friendKeyword'],
+        userCreated: DateTime.tryParse(json['userCreated']),
+        friendGender: json['friendGender'],
+        friendMaxAge: json['friendMaxAge'],
+        friendMinAge: json['friendMinAge'],
+        userImage: json['userImage'],
+        userImageKey: json['userImageKey'],
+        requestTime: DateTime.tryParse(json['requestTime']),
+        suspend: json['suspend'],
+        manager: json['manager'],
+        deleteTime: json['deleteTime']);
   }
 }

@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/components/hobbyKeyword.dart';
 import 'package:frontend_matching/components/mindKeyword.dart';
-import 'package:frontend_matching/pages/signup/imageUpload/selectImagePage.dart';
+import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/services/friend_setting.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:frontend_matching/theme/textStyle.dart';
@@ -20,6 +20,7 @@ class _KeywordSettingPageState extends State<KeywordSettingPage> {
   List<String> selectedHobbyKeywords = [];
   List<String> selectedMindKeywords = [];
   bool isElevationButtonEnabled = false; // ElevationButton 활성/비활성 상태
+  UserDataController userDataController = UserDataController();
 
   // ElevationButton 활성/비활성 여부를 체크하는 함수
   void checkElevationButtonStatus() {

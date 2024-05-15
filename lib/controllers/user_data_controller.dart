@@ -1,16 +1,12 @@
 import 'dart:convert';
-
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend_matching/controllers/chatting_list_controller.dart';
 import 'package:frontend_matching/controllers/find_friend_controller.dart';
 import 'package:frontend_matching/controllers/friend_controller.dart';
 import 'package:frontend_matching/controllers/signupController.dart';
-import 'package:frontend_matching/models/friend.dart';
 import 'package:frontend_matching/pages/login/loginPage.dart';
 import 'package:frontend_matching/services/fcm_token_service.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 
 import '../pages/init_page.dart';
@@ -21,8 +17,8 @@ class UserDataController extends GetxController {
   static UserDataController get to => Get.find<UserDataController>();
   SignupController signupController = Get.find<SignupController>();
   Rxn<User?> user = Rxn<User?>(null);
-  List<dynamic> images = <UserImage>[];
-  Rx<String> matchingUserNumbers = "1,2,3".obs; // 매칭 친구 userNumbers
+  RxList<UserImage> images = <UserImage>[].obs;
+  Rx<String> matchingUserNumbers = "1,2,3".obs;
 
   var accessToken = '';
   var refreshToken = '';
@@ -40,26 +36,21 @@ class UserDataController extends GetxController {
     baseUrl = dotenv.env['SERVER_URL'];
   }
 
-  // 컨트롤러가 준비되었을 때 실행 -> 초기화 작업이나 데이터 로딩과 같은 초기 설정
   @override
   void onReady() {
     super.onReady();
     _moveToPage(user.value);
-    ever(user, _moveToPage); // user에 변화가 생기면 함수 실행
+    ever(user, _moveToPage);
   }
 
-  // 유저를 새로 반환받음
   void updateUserInfo(User newUser) {
     user.value = newUser;
   }
 
-  // 이미지를 새로 반환받음 (올바르게 처리)
   void updateImageInfo(List<UserImage> newImages) {
-    images = newImages;
-    update(); // GetX를 통해 UI 업데이트
+    images.assignAll(newImages);
   }
 
-  // User 정보에 따른 페이지 이동
   void _moveToPage(User? user) {
     if (user == null) {
       Get.offAll(() => LoginPage());
@@ -68,7 +59,6 @@ class UserDataController extends GetxController {
     }
   }
 
-  // 로그인 로직
   static void loginUser(String email, String password) async {
     final url = Uri.parse('$baseUrl/$auth/$login');
 
@@ -78,7 +68,6 @@ class UserDataController extends GetxController {
     final response = await http.post(url, headers: headers, body: body);
 
     if (response.statusCode == 200) {
-      // FCM 알림 권한 요청
       FcmService.requestPermission();
 
       final loginUserData = jsonDecode(response.body);
@@ -106,12 +95,11 @@ class UserDataController extends GetxController {
       await FriendController.getFriendReceivedRequest();
       await FriendController.getFriendSentRequest();
       await ChattingListController.getLastChatList();
-  } else {
+    } else {
       print('login fail');
     }
   }
 
-  // 로그아웃
   void logout() {
     user.value = null;
     signupController.resetAllInputs();

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:frontend_matching/components/gap.dart';
 import 'package:frontend_matching/components/hobbyKeyword.dart';
 import 'package:frontend_matching/components/mindKeyword.dart';
-import 'package:frontend_matching/pages/signup/imageUpload/selectImagePage.dart';
-import 'package:frontend_matching/services/friend_setting.dart';
+import 'package:frontend_matching/controllers/infoModifyController.dart';
+import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:frontend_matching/theme/textStyle.dart';
 import 'package:get/get.dart';
@@ -21,13 +21,22 @@ class _MyKeywordModifyPageState extends State<MyKeywordModifyPage> {
   List<String> selectedHobbyKeywords = [];
   List<String> selectedMindKeywords = [];
   bool isElevationButtonEnabled = false; // ElevationButton 활성/비활성 상태
-
+  String accessToken = '';
   // ElevationButton 활성/비활성 여부를 체크하는 함수
   void checkElevationButtonStatus() {
     setState(() {
       isElevationButtonEnabled =
           selectedHobbyKeywords.isNotEmpty && selectedMindKeywords.isNotEmpty;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final controller = Get.find<UserDataController>();
+    if (controller.user.value != null) {
+      accessToken = controller.accessToken;
+    }
   }
 
   @override
@@ -93,7 +102,8 @@ class _MyKeywordModifyPageState extends State<MyKeywordModifyPage> {
                       print(HobbyKeywords);
                       print(MindKeywords);
 
-                      //여기에 myKeyword API 사용하기 (combinedKeywords)
+                      await InfoModifyController()
+                          .KeywordModify(accessToken, combinedKeywords);
 
                       Get.back();
                     }
