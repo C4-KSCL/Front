@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/components/gap.dart';
-import 'package:frontend_matching/components/genderButton.dart';
 import 'package:frontend_matching/components/mbtiKeyword.dart';
-import 'package:frontend_matching/components/textField.dart';
+import 'package:frontend_matching/controllers/infoModifyController.dart';
 import 'package:frontend_matching/controllers/keyword_controller.dart';
 import 'package:frontend_matching/controllers/settingModifyController.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
-import 'package:frontend_matching/pages/matching/keywordSettingPage.dart';
 import 'package:frontend_matching/services/friend_setting.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get.dart';
@@ -30,6 +28,7 @@ class _MyMbtiModifyPageState extends State<MyMbtiModifyPage> {
   //String genderString = '';
 
   late SettingModifyController settingModifyController;
+  final infocontroller = Get.find<InfoModifyController>();
   FriendSettingService settingService = FriendSettingService();
 
   @override
@@ -98,7 +97,7 @@ class _MyMbtiModifyPageState extends State<MyMbtiModifyPage> {
                         color: Colors.white,
                       )),
                   onPressed: () async {
-                    //myMbti api 변경
+                    await infocontroller.MbtiModify(accessToken, selectedMBTI);
                     KeywordController.to.resetMBTI();
                     print(selectedMBTI);
                     Get.back();

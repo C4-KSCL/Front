@@ -6,8 +6,10 @@ import 'package:frontend_matching/pages/profile/buttons/InfoModifyButton.dart';
 import 'package:frontend_matching/pages/profile/buttons/columnButton.dart';
 import 'package:frontend_matching/pages/profile/imageModifyPage.dart';
 import 'package:frontend_matching/pages/profile/infoModifyPage.dart';
+import 'package:frontend_matching/pages/profile/service_center/serviceCenterPage.dart';
 import 'package:frontend_matching/pages/profile/topLayer.dart';
 import 'package:frontend_matching/pages/profile/userAvatar.dart';
+import 'package:frontend_matching/pages/signup/imageUpload/imageTest.dart';
 import 'package:frontend_matching/pages/signup/imageUpload/selectImagePage.dart';
 import 'package:frontend_matching/services/delete_user_service.dart';
 import 'package:frontend_matching/theme/colors.dart';
@@ -230,7 +232,14 @@ class MyPage extends StatelessWidget {
                             img: 'assets/icons/setting_button.png',
                             str: '로그아웃'),
                         ColumnButton(
-                            pressed: () {},
+                            pressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ServiceCenterPage(),
+                                ),
+                              );
+                            },
                             img: 'assets/icons/customer_center.png',
                             str: '고객센터'),
                         ColumnButton(
@@ -240,6 +249,17 @@ class MyPage extends StatelessWidget {
                             },
                             img: 'assets/icons/delete_member.png',
                             str: '탈퇴하기'),
+                        ColumnButton(
+                            pressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => TestPage(),
+                                ),
+                              );
+                            },
+                            img: 'assets/icons/delete_member.png',
+                            str: '이미지 크롭 테스트'),
                       ],
                     ),
                   )
