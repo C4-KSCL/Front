@@ -40,16 +40,6 @@ String convertHourAndMinuteTime({required String utcTimeString}) {
   return formattedTime;
 }
 
-String extractDate(String utcTimeString) {
-  // UTC 시간 문자열을 DateTime 객체로 파싱
-  DateTime utcTime = DateTime.parse(utcTimeString).toUtc();
-
-  // 날짜 부분만 추출하여 'yyyy-MM-dd' 포맷으로 변환
-  String dateOnly = DateFormat('yyyy-MM-dd').format(utcTime);
-
-  return dateOnly;
-}
-
 String convertKoreaTime({required String utcTimeString}) {
   // UTC 시간대를 명확히 하여 DateTime 객체를 생성
   DateTime utcTime = DateTime.parse(utcTimeString).toUtc();
@@ -72,6 +62,8 @@ DateTime extractDateTime(String isoString) {
 }
 
 /// 년, 월, 일에 대해 문자열로 반환하는 함수
-String dateTimeToString(DateTime dateTime) {
+String formatIsoDateString(String isoString) {
+  DateTime dateTime = DateTime.parse(isoString);
+  // '2024년 4월 29일' 형식으로 포맷
   return '${dateTime.year}년 ${dateTime.month}월 ${dateTime.day}일';
 }

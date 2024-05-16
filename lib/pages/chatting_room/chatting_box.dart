@@ -44,20 +44,20 @@ Widget SentTextChatBox({
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Column(
-              mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Visibility(
                   visible: chat.readCount.value == 1,
                   child: const Text(
                     "1",
-                    style: TextStyle(color: blueColor1),
+                    style: blueTextStyle4,
                   ),
                 ),
                 Visibility(
                   visible: chat.isVisibleDate.value,
                   child: Text(convertHourAndMinuteTime(
-                      utcTimeString: chat.createdAt.toString())),
+                      utcTimeString: chat.createdAt.toString()),style: blackTextStyle7,),
                 ),
               ],
             ),
@@ -83,8 +83,10 @@ Widget SentTextChatBox({
             ),
           ],
         ),
-        // if(chatDate!=null)
-        //   timeBox(chatDate: extractDate(chatDate)),
+        Visibility(
+          visible: chat.isVisibleDate.value,
+          child: const SizedBox(height: 5,),
+        ),
       ],
     ),
   );
@@ -134,14 +136,16 @@ Widget ReceiveTextChatBox({
               Visibility(
                 visible: chat.isVisibleDate.value,
                 child: Text(convertHourAndMinuteTime(
-                    utcTimeString: chat.createdAt.toString())),
+                    utcTimeString: chat.createdAt.toString()),style: blackTextStyle7,),
               ),
             ],
           ),
         ],
       ),
-      // if(chatDate!=null)
-      //   timeBox(chatDate: extractDate(chatDate)),
+      Visibility(
+        visible: chat.isVisibleDate.value,
+        child: const SizedBox(height: 5,),
+      ),
     ],
   );
 }
@@ -187,13 +191,13 @@ Widget SentQuizChatBox({
                   visible: chat.readCount.value == 1,
                   child: const Text(
                     "1",
-                    style: TextStyle(color: blueColor1),
+                    style: blueTextStyle4,
                   ),
                 ),
                 Visibility(
                   visible: chat.isVisibleDate.value,
                   child: Text(convertHourAndMinuteTime(
-                      utcTimeString: chat.createdAt.toString())),
+                      utcTimeString: chat.createdAt.toString()),style: blackTextStyle7,),
                 ),
               ],
             ),
@@ -253,8 +257,10 @@ Widget SentQuizChatBox({
             ),
           ],
         ),
-        // if(chatDate!=null)
-        //   timeBox(chatDate: extractDate(chatDate)),
+    Visibility(
+      visible: chat.isVisibleDate.value,
+      child: const SizedBox(height: 5,),
+    ),
       ],
     ),
   );
@@ -332,20 +338,22 @@ Widget ReceiveQuizChatBox({
                 visible: chat.readCount.value == 1,
                 child: const Text(
                   "1",
-                  style: TextStyle(color: blueColor1),
+                  style: blueTextStyle4,
                 ),
               ),
               Visibility(
                 visible: chat.isVisibleDate.value,
                 child: Text(convertHourAndMinuteTime(
-                    utcTimeString: chat.createdAt.toString())),
+                    utcTimeString: chat.createdAt.toString()),style: blackTextStyle7,),
               ),
             ],
           ),
         ],
       ),
-      // if(chatDate!=null)
-      //   timeBox(chatDate: extractDate(chatDate)),
+      Visibility(
+        visible: chat.isVisibleDate.value,
+        child: const SizedBox(height: 5,),
+      ),
     ],
   );
 }
@@ -361,7 +369,7 @@ Widget timeBox({required String chatDate}) {
             color: greyColor1,
           ),
           child: Padding(
-            padding: const EdgeInsets.all(4),
+            padding: const EdgeInsets.all(7),
             child: Text(
               chatDate,
               style: whiteTextStyle2,

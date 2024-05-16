@@ -23,7 +23,8 @@ enum ChatType {
   sentTextChat, // 보낸 텍스트 메세지
   receivedTextChat, // 받은 텍스트 메세지
   sentEventChat, // 보낸 이벤트 메세지
-  receivedEventChat; // 받은 이벤트 메세지
+  receivedEventChat,
+  timeBox; // 받은 이벤트 메세지
 
   static ChatType getChatType(bool isTextChatType, bool isUserEmail) {
     if (isTextChatType && isUserEmail) {
@@ -81,11 +82,9 @@ class ChatRoomPage extends GetView<ChattingController> {
             color: Colors.black,
           ),
           onPressed: () {
-            // 나중에 지워야될거 /////////////////////////////////////////////
             ChattingListController.getLastChatList();
-            ///////////////////////////////////////////////////////////////
-            controller.disconnect();
             Get.back();
+            ChattingController.to.resetChatRoomData();
           },
         ),
         title: Text(oppUserName),
@@ -95,159 +94,110 @@ class ChatRoomPage extends GetView<ChattingController> {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Expanded(
-            child: Obx(
-              () => Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: ListView.separated(
-                  controller: controller.scrollController,
-                  reverse: true,
-                  itemCount: controller.chats.length,
-                  itemBuilder: (BuildContext context, int index) => Obx(
-                    () {
-                      Chat chat = controller.chats[index];
+            child: Obx(() => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: ListView.separated(
+                controller: controller.scrollController,
+                reverse: true,
+                itemCount: controller.chats.length,
+                itemBuilder: (BuildContext context, int index) {
+                  Chat chat = controller.chats[index];
 
-                      // //날짜 비교 ///////////
-                      // String? DateText = controller.chatDate;
-                      // String currentChatDate = extractDate(chat.createdAt);
-                      // // print(DateText);
-                      // // print(currentChatDate);
-                      //
-                      // if (controller.chatDate != currentChatDate) {
-                      //   // print("다름");
-                      //   controller.chatDate = currentChatDate;
-                      // } else {
-                      //   DateText = null;
-                      // }
+                  if (chat.type == 'time') {
+                    return timeBox(chatDate: formatIsoDateString(chat.createdAt));
+                  }
 
-                      // 채팅 타입 비교
-                      bool isTextChatType = chat.type == "text" ? true : false;
-                      bool isUserEmail = chat.userEmail ==
-                              UserDataController.to.user.value!.email
-                          ? true
-                          : false;
-                      ChatType chatType =
-                          ChatType.getChatType(isTextChatType, isUserEmail);
+                  // 채팅 타입 비교
+                  bool isTextChatType = chat.type == "text";
+                  bool isUserEmail = chat.userEmail == UserDataController.to.user.value?.email;
+                  ChatType chatType = ChatType.getChatType(isTextChatType, isUserEmail);
 
-                      switch (chatType) {
-                        case ChatType.sentTextChat:
-                          return SentTextChatBox(
-                            chat: chat,
-                          );
-                        case ChatType.sentEventChat:
-                          return SentQuizChatBox(
-                            chat: chat,
-                          );
-                        case ChatType.receivedTextChat:
-                          return ReceiveTextChatBox(
-                            chat: chat,
-                          );
-                        case ChatType.receivedEventChat:
-                          return ReceiveQuizChatBox(
-                            chat: chat,
-                          );
-                        default:
-                          return const Text("알수 없는 채팅");
-                      }
-                    },
-                  ),
-                  separatorBuilder: (BuildContext context, int index) {
-                    return const SizedBox(height: 3);
-                  },
-                ),
+                  switch (chatType) {
+                    case ChatType.sentTextChat:
+                      return SentTextChatBox(chat: chat);
+                    case ChatType.sentEventChat:
+                      return SentQuizChatBox(chat: chat);
+                    case ChatType.receivedTextChat:
+                      return ReceiveTextChatBox(chat: chat);
+                    case ChatType.receivedEventChat:
+                      return ReceiveQuizChatBox(chat: chat);
+                    default:
+                      return const Text("알수 없는 채팅");
+                  }
+                },
+                separatorBuilder: (_, __) => const SizedBox(height: 3),
               ),
-            ),
+            )),
           ),
           const SizedBox(height: 5),
-          Obx(
-            () => ChattingController.to.isChatEnabled.value
-                ?
-                // 채팅 키보드
-                Container(
-                    color: whiteColor1,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            if (focusNode.hasFocus) {
-                              print("포커스 있음...........");
-                              focusNode.unfocus();
-                            }
-                            if (!focusNode.hasFocus) {
-                              print("포커스 없음...........");
-                            }
-                            ChattingController.getBigCategories();
-                            controller.clickAddButton.value
-                                ? controller.clickAddButton.value = false
-                                : controller.clickAddButton.value = true;
-                          },
-                          icon: Obx(
-                            () => controller.clickAddButton.value
-                                ? const Icon(
-                                    Icons.keyboard_arrow_down,
-                                    color: blueColor1,
-                                    size: 25,
-                                  )
-                                : const Icon(
-                                    Icons.add,
-                                    color: blueColor1,
-                                    size: 25,
-                                  ),
-                          ),
-                        ),
-                        Expanded(
-                          child: TextField(
-                            focusNode: focusNode,
-                            controller: chatController,
-                          ),
-                        ),
-                        IconButton(
-                            onPressed: () {
-                              if (chatController.text.isNotEmpty) {
-                                ChattingController.to.sendMessage(
-                                    roomId: roomId,
-                                    content: chatController.text);
-                                chatController.clear();
-                              }
-                            },
-                            icon: Image.asset(
-                                "assets/icons/send_message_button.png",
-                                color: blueColor1)),
-                      ],
+          Obx(() {
+            return ChattingController.to.isChatEnabled.value
+                ? Container(
+              color: whiteColor1,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      if (focusNode.hasFocus) {
+                        focusNode.unfocus();
+                      }
+                      if (!focusNode.hasFocus) {
+                        focusNode.requestFocus();
+                      }
+                      ChattingController.getBigCategories();
+                      controller.clickAddButton.value = !controller.clickAddButton.value;
+                    },
+                    icon: Icon(
+                      controller.clickAddButton.value ? Icons.keyboard_arrow_down : Icons.add,
+                      color: blueColor1,
+                      size: 25,
                     ),
-                  )
-                :
-                //버튼 칸 (수락,거절 / 취소)
-                Column(
-                    children: [
-                      const SizedBox(
-                        height: 50,
-                      ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: ChattingController.to.isReceivedRequest.value
-                            ? AcceptOrRejectButtonLayer(friendRequestId)
-                            : CancelButtonLayer(friendRequestId),
-                      ),
-                      const SizedBox(
-                        height: 50,
-                      )
-                    ],
                   ),
-          ),
+                  Expanded(
+                    child: TextField(
+                      focusNode: focusNode,
+                      controller: chatController,
+                    ),
+                  ),
+                  IconButton(
+                      onPressed: () {
+                        if (chatController.text.isNotEmpty) {
+                          ChattingController.to.sendMessage(
+                              roomId: roomId, content: chatController.text);
+                          chatController.clear();
+                        }
+                      },
+                      icon: Image.asset(
+                          "assets/icons/send_message_button.png",
+                          color: blueColor1)),
+                ],
+              ),
+            )
+                : Column(
+              children: [
+                const SizedBox(height: 50),
+                Align(
+                  alignment: Alignment.center,
+                  child: ChattingController.to.isReceivedRequest.value
+                      ? AcceptOrRejectButtonLayer(friendRequestId)
+                      : CancelButtonLayer(friendRequestId),
+                ),
+                const SizedBox(height: 50),
+              ],
+            );
+          }),
           Obx(() => ChattingController.to.clickAddButton.value
               ? SizedBox(
-                  height: 250,
-                  child: Center(
-                      child: Obx(
-                    () => ChattingController.to.showSecondGridView.value
-                        ? smallCategory()
-                        : bigCategory(),
-                  )),
-                )
+            height: 250,
+            child: Center(
+              child: ChattingController.to.showSecondGridView.value ? smallCategory() : bigCategory(),
+            ),
+          )
               : Container()),
         ],
-      ),
+      )
+      ,
     );
   }
 }
