@@ -241,6 +241,7 @@ class ChattingController extends GetxController {
       for (Chat chat in chats) {
         if (chat.id == data['msg']['id']) {
           chat.content.value = data['msg']['content'];
+          print("삭제 완료");
         }
       }
       print(data);

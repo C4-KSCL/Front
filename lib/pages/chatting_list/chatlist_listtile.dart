@@ -26,7 +26,7 @@ Widget ChatListTile({
           style: blackTextStyle1,
         ),
         Text(
-          chatListData.type == "text" ? chatListData.content : "퀴즈를 보냈습니다.",
+          chatListData.content,
           style: greyTextStyle3,
         ),
       ],
