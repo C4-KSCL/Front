@@ -11,6 +11,7 @@ class Chat {
   final Rx<int> readCount;
   final String type;
   final Event? event;
+  Rx<bool> isVisibleDate;
 
   Chat({
     required this.id,
@@ -22,7 +23,10 @@ class Chat {
     required int readCount,
     required this.type,
     this.event,
-  }) : readCount = readCount.obs, content= content.obs;
+    bool isVisibleDate = true,  // 기본값 설정
+  }) : readCount = readCount.obs,
+        content = content.obs,
+        isVisibleDate = isVisibleDate.obs;  // Rx 타입은 .obs로 감싸줘야 한다.
 
   factory Chat.fromJson(Map<String, dynamic> json) {
     return Chat(
@@ -35,6 +39,7 @@ class Chat {
       readCount: json['readCount'],
       type: json['type'],
       event: json['event'] != null ? Event.fromJson(json['event']) : null,
+      // isVisibleDate는 기본값을 사용하므로 특별히 지정하지 않음
     );
   }
 }

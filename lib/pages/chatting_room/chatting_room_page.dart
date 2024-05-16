@@ -106,18 +106,18 @@ class ChatRoomPage extends GetView<ChattingController> {
                     () {
                       Chat chat = controller.chats[index];
 
-                      //날짜 비교 ///////////
-                      String? DateText = controller.chatDate;
-                      String currentChatDate = extractDate(chat.createdAt);
-                      // print(DateText);
-                      // print(currentChatDate);
-
-                      if (controller.chatDate != currentChatDate) {
-                        // print("다름");
-                        controller.chatDate = currentChatDate;
-                      } else {
-                        DateText = null;
-                      }
+                      // //날짜 비교 ///////////
+                      // String? DateText = controller.chatDate;
+                      // String currentChatDate = extractDate(chat.createdAt);
+                      // // print(DateText);
+                      // // print(currentChatDate);
+                      //
+                      // if (controller.chatDate != currentChatDate) {
+                      //   // print("다름");
+                      //   controller.chatDate = currentChatDate;
+                      // } else {
+                      //   DateText = null;
+                      // }
 
                       // 채팅 타입 비교
                       bool isTextChatType = chat.type == "text" ? true : false;
@@ -132,22 +132,18 @@ class ChatRoomPage extends GetView<ChattingController> {
                         case ChatType.sentTextChat:
                           return SentTextChatBox(
                             chat: chat,
-                            chatDate: DateText,
                           );
                         case ChatType.sentEventChat:
                           return SentQuizChatBox(
                             chat: chat,
-                            chatDate: DateText,
                           );
                         case ChatType.receivedTextChat:
                           return ReceiveTextChatBox(
                             chat: chat,
-                            chatDate: DateText,
                           );
                         case ChatType.receivedEventChat:
                           return ReceiveQuizChatBox(
                             chat: chat,
-                            chatDate: DateText,
                           );
                         default:
                           return const Text("알수 없는 채팅");
@@ -155,7 +151,7 @@ class ChatRoomPage extends GetView<ChattingController> {
                     },
                   ),
                   separatorBuilder: (BuildContext context, int index) {
-                    return const SizedBox(height: 5);
+                    return const SizedBox(height: 3);
                   },
                 ),
               ),

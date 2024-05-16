@@ -11,23 +11,25 @@ import '../../theme/textStyle.dart';
 
 Widget SentTextChatBox({
   required Chat chat,
-  required String? chatDate,
 }) {
   return GestureDetector(
     onLongPress: () {
       Get.dialog(
         AlertDialog(
           title: const Text('채팅 삭제'),
-          content: const Text('채팅을 삭제하시겠습니까?',),
+          content: const Text(
+            '채팅을 삭제하시겠습니까?',
+          ),
           actions: [
             TextButton(
-              child: const Text('취소',style: TextStyle(color: Colors.black)),
+              child: const Text('취소', style: TextStyle(color: Colors.black)),
               onPressed: () => Get.back(),
             ),
             TextButton(
-              child: const Text('삭제',style: TextStyle(color: Colors.red)),
+              child: const Text('삭제', style: TextStyle(color: Colors.red)),
               onPressed: () {
-                ChattingController.to.deleteMessage(roomId: chat.roomId, chatId: chat.id);
+                ChattingController.to
+                    .deleteMessage(roomId: chat.roomId, chatId: chat.id);
                 Get.back();
               },
             ),
@@ -39,17 +41,29 @@ Widget SentTextChatBox({
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Column(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(chat.readCount.value == 1 ? "1" : "",style: const TextStyle(color:blueColor1),),
-                Text(convertHourAndMinuteTime(
-                    utcTimeString: chat.createdAt.toString())),
+                Visibility(
+                  visible: chat.readCount.value == 1,
+                  child: const Text(
+                    "1",
+                    style: TextStyle(color: blueColor1),
+                  ),
+                ),
+                Visibility(
+                  visible: chat.isVisibleDate.value,
+                  child: Text(convertHourAndMinuteTime(
+                      utcTimeString: chat.createdAt.toString())),
+                ),
               ],
             ),
-            const SizedBox(width: 4,),
+            const SizedBox(
+              width: 4,
+            ),
             Container(
               constraints: BoxConstraints(maxWidth: Get.width * 0.75),
               decoration: const BoxDecoration(
@@ -78,7 +92,6 @@ Widget SentTextChatBox({
 
 Widget ReceiveTextChatBox({
   required Chat chat,
-  required String? chatDate,
 }) {
   return Column(
     children: [
@@ -104,14 +117,25 @@ Widget ReceiveTextChatBox({
               ),
             ),
           ),
-          const SizedBox(width: 4,),
+          const SizedBox(
+            width: 4,
+          ),
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(chat.readCount.value == 1 ? "1" : "",style: const TextStyle(color:blueColor1),),
-              Text(convertHourAndMinuteTime(
-                  utcTimeString: chat.createdAt.toString())),
+              Visibility(
+                visible: chat.readCount.value == 1,
+                child: const Text(
+                  "1",
+                  style: TextStyle(color: blueColor1),
+                ),
+              ),
+              Visibility(
+                visible: chat.isVisibleDate.value,
+                child: Text(convertHourAndMinuteTime(
+                    utcTimeString: chat.createdAt.toString())),
+              ),
             ],
           ),
         ],
@@ -124,7 +148,6 @@ Widget ReceiveTextChatBox({
 
 Widget SentQuizChatBox({
   required Chat chat,
-  required String? chatDate,
 }) {
   return GestureDetector(
     onLongPress: () {
@@ -132,16 +155,17 @@ Widget SentQuizChatBox({
       Get.dialog(
         AlertDialog(
           title: const Text('채팅 삭제'),
-          content: const Text('채팅을 삭제하시겠습니까?',),
+          content: const Text(
+            '채팅을 삭제하시겠습니까?',
+          ),
           actions: [
             TextButton(
-              child: const Text('취소',style: TextStyle(color: Colors.black)),
+              child: const Text('취소', style: TextStyle(color: Colors.black)),
               onPressed: () => Get.back(),
             ),
             TextButton(
-              child: const Text('삭제',style: TextStyle(color: Colors.red)),
+              child: const Text('삭제', style: TextStyle(color: Colors.red)),
               onPressed: () {
-
                 Get.back();
               },
             ),
@@ -159,12 +183,23 @@ Widget SentQuizChatBox({
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(chat.readCount.value == 1 ? "1" : "",style: const TextStyle(color:blueColor1),),
-                Text(convertHourAndMinuteTime(
-                    utcTimeString: chat.createdAt.toString())),
+                Visibility(
+                  visible: chat.readCount.value == 1,
+                  child: const Text(
+                    "1",
+                    style: TextStyle(color: blueColor1),
+                  ),
+                ),
+                Visibility(
+                  visible: chat.isVisibleDate.value,
+                  child: Text(convertHourAndMinuteTime(
+                      utcTimeString: chat.createdAt.toString())),
+                ),
               ],
             ),
-            const SizedBox(width: 4,),
+            const SizedBox(
+              width: 4,
+            ),
             Container(
               decoration: const BoxDecoration(
                 color: blueColor1,
@@ -182,8 +217,8 @@ Widget SentQuizChatBox({
                   SizedBox(
                     width: Get.width * 0.4,
                     height: Get.width * 0.4,
-                    child:
-                        Image.network(chat.event!.smallCategory.eventImage!.filepath),
+                    child: Image.network(
+                        chat.event!.smallCategory.eventImage!.filepath),
                   ),
                   TextButton(
                     style: TextButton.styleFrom(
@@ -227,7 +262,6 @@ Widget SentQuizChatBox({
 
 Widget ReceiveQuizChatBox({
   required Chat chat,
-  required String? chatDate,
 }) {
   return Column(
     children: [
@@ -252,8 +286,8 @@ Widget ReceiveQuizChatBox({
                 SizedBox(
                   width: Get.width * 0.4,
                   height: Get.width * 0.4,
-                  child:
-                      Image.network(chat.event!.smallCategory.eventImage!.filepath),
+                  child: Image.network(
+                      chat.event!.smallCategory.eventImage!.filepath),
                 ),
                 TextButton(
                   style: TextButton.styleFrom(
@@ -286,15 +320,26 @@ Widget ReceiveQuizChatBox({
               ],
             ),
           ),
-          const SizedBox(width: 4,),
+          const SizedBox(
+            width: 4,
+          ),
           // readCount와 시간 표시
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(chat.readCount.value == 1 ? "1" : "",style: const TextStyle(color:blueColor1),),
-              Text(convertHourAndMinuteTime(
-                  utcTimeString: chat.createdAt.toString())),
+              Visibility(
+                visible: chat.readCount.value == 1,
+                child: const Text(
+                  "1",
+                  style: TextStyle(color: blueColor1),
+                ),
+              ),
+              Visibility(
+                visible: chat.isVisibleDate.value,
+                child: Text(convertHourAndMinuteTime(
+                    utcTimeString: chat.createdAt.toString())),
+              ),
             ],
           ),
         ],

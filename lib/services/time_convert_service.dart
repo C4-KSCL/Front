@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
+
 import 'package:intl/intl.dart';
-import 'package:intl/date_symbol_data_local.dart';
 
 // 시간을 "방금/1분전/2시간전/3일전/4주전/2024-12-12"로 바꿔줌
 String convertHowMuchTimeAge({required String utcTimeString}) {
@@ -58,4 +57,21 @@ String convertKoreaTime({required String utcTimeString}) {
   String formattedTime = DateFormat('yyyy년 MM월 dd일 EEEE', 'ko_KR').format(utcTime);
 
   return formattedTime;
+}
+
+/// 날짜(년, 월, 일)만 추출하는 함수
+DateTime extractDateOnly(String isoString) {
+  DateTime dateTime = DateTime.parse(isoString);
+  return DateTime(dateTime.year, dateTime.month, dateTime.day);
+}
+
+/// 년, 월, 일, 시, 분 추출하는 함수
+DateTime extractDateTime(String isoString) {
+  DateTime dateTime = DateTime.parse(isoString);
+  return DateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute);
+}
+
+/// 년, 월, 일에 대해 문자열로 반환하는 함수
+String dateTimeToString(DateTime dateTime) {
+  return '${dateTime.year}년 ${dateTime.month}월 ${dateTime.day}일';
 }
