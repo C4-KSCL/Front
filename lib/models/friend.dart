@@ -9,6 +9,7 @@ class Friend {
   final String age; // 친구 나이
   final String gender; // 친구 성별
   final String? roomId; // 친구와 연결된 채팅방 id
+  final bool isJoinRoom;
 
   Friend({
     required this.id,
@@ -21,35 +22,6 @@ class Friend {
     required this.age,
     required this.gender,
      this.roomId,
+    required this.isJoinRoom,
   });
-
-  factory Friend.fromJson(Map<String, dynamic> json) {
-    return Friend(
-      id: json['id'] as int,
-      userEmail:json['myMBTI'] as String,
-      oppEmail: json['oppEmail'] as String,
-      myMBTI: json['myMBTI'] as String,
-      myKeyword: json['myKeyword'] as String,
-      nickname: json['nickname'] as String,
-      userImage: json['userImage'] as String,
-      age: json['age'] as String,
-      gender: json['gender'] as String,
-      roomId: json['roomId'] as String,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id':id,
-      'userEmail':userEmail,
-      'oppEmail':oppEmail,
-      'myMBTI': myMBTI,
-      'myKeyword': myKeyword,
-      'nickname': nickname,
-      'userImage': userImage,
-      'age': age,
-      'gender':gender,
-      'roomId': roomId,
-    };
-  }
 }

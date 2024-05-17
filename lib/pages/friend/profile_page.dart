@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/components/button.dart';
 import 'package:frontend_matching/controllers/chatting_controller.dart';
+import 'package:frontend_matching/controllers/chatting_list_controller.dart';
 import 'package:frontend_matching/controllers/friend_controller.dart';
 import 'package:frontend_matching/models/friend.dart';
 import 'package:frontend_matching/models/request.dart';
@@ -159,15 +160,19 @@ Widget FriendProfilePage({
                 ColorBottomButton(
                   text: "채팅방 이동",
                   backgroundColor: blueColor1,
-                  onPressed: () {
+                  onPressed: () async {
                     Get.back();
-                    /////////////////////////삭제할거/////////////////////////
-                    ChattingController.to.isChatEnabled.value = true;
-                    ////////////////////////////////////////////////////////
-                    Get.to(ChatRoomPage(
-                      roomId: userData.roomId!,
-                      oppUserName: userData.nickname,
-                    ));
+                    ChattingController.to.isChatEnabled.value = true; // 채팅 가능
+                    if (userData.isJoinRoom == false) {
+                      //방을 나갔을 때는 재입장
+                      print("재입장 필요");
+                      await ChattingListController.rejoinRoom(
+                              oppEmail: userData.oppEmail)
+                          .then((value) => Get.to(ChatRoomPage(
+                                roomId: userData.roomId!,
+                                oppUserName: userData.nickname,
+                              )));
+                    }
                   },
                   textStyle: whiteTextStyle1,
                 )

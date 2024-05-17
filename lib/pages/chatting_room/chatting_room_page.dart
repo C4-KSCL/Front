@@ -82,6 +82,7 @@ class ChatRoomPage extends GetView<ChattingController> {
             color: Colors.black,
           ),
           onPressed: () {
+            ChattingController.to.disconnect();
             ChattingListController.getLastChatList();
             Get.back();
             ChattingController.to.resetChatRoomData();

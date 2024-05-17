@@ -42,7 +42,7 @@ class FriendController extends GetxController {
     "accessToken": accessToken
   };
 
-  void resetData(){
+  void resetData() {
     friends.clear();
     sentRequests.clear();
     receivedRequests.clear();
@@ -302,6 +302,8 @@ class FriendController extends GetxController {
         String age = friendData['friend']['age'];
         String gender = friendData['friend']['gender'];
         String userImage = friendData['friend']['userImage'];
+        bool isJoinRoom = friendData['room']['join'];
+        print(isJoinRoom);
 
         Friend friend = Friend(
           id: id,
@@ -314,6 +316,7 @@ class FriendController extends GetxController {
           age: age,
           gender: gender,
           roomId: roomId,
+          isJoinRoom: isJoinRoom,
         );
 
         tempFriendList.add(friend);
@@ -389,6 +392,7 @@ class FriendController extends GetxController {
         String age = friendData['friend']['age'];
         String gender = friendData['friend']['gender'];
         String userImage = friendData['friend']['userImage'];
+        bool isJoinRoom = friendData['room']['join'];
 
         Friend friend = Friend(
           id: id,
@@ -401,6 +405,7 @@ class FriendController extends GetxController {
           age: age,
           gender: gender,
           roomId: roomId,
+          isJoinRoom: isJoinRoom,
         );
 
         FriendController.to.blockedFriends.add(friend);
