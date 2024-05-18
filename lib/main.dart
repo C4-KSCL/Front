@@ -69,7 +69,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 void initializeNotifications() {
   // Notification plugin 초기화
   flutterLocalNotificationsPlugin.initialize(
-    InitializationSettings(
+    const InitializationSettings(
       android: AndroidInitializationSettings('@mipmap/ic_launcher'),
     ),
   );
@@ -173,8 +173,8 @@ void main() async {
       // 채팅방으로 이동
       case "chat":
         {
+          Get.offAll(const InitPage());
           ChattingController.to.roomId = message.data['roomId'];
-          Get.offAll(InitPage());
           BottomNavigationBarController.to.selectedIndex.value = 3;
           Get.to(ChatRoomPage(
               roomId: message.data['roomId'],
@@ -183,7 +183,7 @@ void main() async {
         }
       case "friend":
         {
-          Get.offAll(InitPage());
+          Get.offAll(const InitPage());
           BottomNavigationBarController.to.selectedIndex.value = 2;
           break;
         }
@@ -200,7 +200,7 @@ void main() async {
   runApp(
     GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginPage(),
+      home: const LoginPage(),
       theme: ThemeData(
         primarySwatch: Colors.blue,
         popupMenuTheme: PopupMenuThemeData(
@@ -226,9 +226,9 @@ void main() async {
         Get.put(ServiceCenterController());
       }),
       getPages: [
-        GetPage(name: '/main', page: () => MainPage()),
-        GetPage(name: '/friend', page: () => InitPage()),
-        GetPage(name: '/chat', page: () => ChattingListPage()),
+        GetPage(name: '/main', page: () => const MainPage()),
+        GetPage(name: '/friend', page: () => const InitPage()),
+        GetPage(name: '/chat', page: () => const ChattingListPage()),
       ],
     ),
   );

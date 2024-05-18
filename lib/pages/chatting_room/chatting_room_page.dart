@@ -39,7 +39,7 @@ enum ChatType {
   }
 }
 
-class ChatRoomPage extends GetView<ChattingController> {
+class ChatRoomPage extends StatelessWidget{
   ChatRoomPage({
     super.key,
     this.friendRequestId,
@@ -98,11 +98,11 @@ class ChatRoomPage extends GetView<ChattingController> {
             child: Obx(() => Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: ListView.separated(
-                controller: controller.scrollController,
+                controller: ChattingController.to.scrollController,
                 reverse: true,
-                itemCount: controller.chats.length,
+                itemCount: ChattingController.to.chats.length,
                 itemBuilder: (BuildContext context, int index) {
-                  Chat chat = controller.chats[index];
+                  Chat chat = ChattingController.to.chats[index];
 
                   if (chat.type == 'time') {
                     return timeBox(chatDate: formatIsoDateString(chat.createdAt));
@@ -147,10 +147,10 @@ class ChatRoomPage extends GetView<ChattingController> {
                         focusNode.requestFocus();
                       }
                       ChattingController.getBigCategories();
-                      controller.clickAddButton.value = !controller.clickAddButton.value;
+                      ChattingController.to.clickAddButton.value = !ChattingController.to.clickAddButton.value;
                     },
                     icon: Icon(
-                      controller.clickAddButton.value ? Icons.keyboard_arrow_down : Icons.add,
+                      ChattingController.to.clickAddButton.value ? Icons.keyboard_arrow_down : Icons.add,
                       color: blueColor1,
                       size: 25,
                     ),

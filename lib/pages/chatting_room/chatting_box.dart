@@ -47,13 +47,13 @@ Widget SentTextChatBox({
               crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Visibility(
+                Obx(()=>Visibility(
                   visible: chat.readCount.value == 1,
                   child: const Text(
                     "1",
                     style: blueTextStyle4,
                   ),
-                ),
+                ),),
                 Visibility(
                   visible: chat.isVisibleDate.value,
                   child: Text(
@@ -106,6 +106,7 @@ Widget ReceiveTextChatBox({
     children: [
       Row(
         mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Container(
             constraints: BoxConstraints(
@@ -135,13 +136,13 @@ Widget ReceiveTextChatBox({
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Visibility(
+              Obx(()=>Visibility(
                 visible: chat.readCount.value == 1,
                 child: const Text(
                   "1",
-                  style: TextStyle(color: blueColor1),
+                  style: blueTextStyle4,
                 ),
-              ),
+              ),),
               Visibility(
                 visible: chat.isVisibleDate.value,
                 child: Text(
@@ -203,13 +204,13 @@ Widget SentQuizChatBox({
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Visibility(
+                Obx(()=>Visibility(
                   visible: chat.readCount.value == 1,
                   child: const Text(
                     "1",
                     style: blueTextStyle4,
                   ),
-                ),
+                ),),
                 Visibility(
                   visible: chat.isVisibleDate.value,
                   child: Text(
@@ -399,13 +400,13 @@ Widget ReceiveQuizChatBox({
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Visibility(
+              Obx(()=>Visibility(
                 visible: chat.readCount.value == 1,
                 child: const Text(
                   "1",
                   style: blueTextStyle4,
                 ),
-              ),
+              ),),
               Visibility(
                 visible: chat.isVisibleDate.value,
                 child: Text(

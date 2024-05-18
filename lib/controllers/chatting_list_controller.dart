@@ -161,8 +161,12 @@ class ChattingListController extends GetxController {
 
     final response = await http.patch(url, headers: headers);
 
-    print(response.statusCode);
-    print(response.body);
+    if(response.statusCode==200){
+      print("${response.statusCode} 성공적으로 나가짐");
+    } else{
+      print("나가기 실패");
+      print(response.body);
+    }
   }
 
   /// 채팅방 참가하기
