@@ -14,7 +14,7 @@ import '../models/event.dart';
 import '../models/small_category.dart';
 import '../services/time_convert_service.dart';
 
-class ChattingController extends GetxController {
+class ChattingController extends GetxController with WidgetsBindingObserver{
   static ChattingController get to => Get.find<ChattingController>();
 
   static String? baseUrl;
@@ -62,18 +62,42 @@ class ChattingController extends GetxController {
   void onInit() {
     super.onInit();
     baseUrl = dotenv.env['SERVER_URL'];
+    WidgetsBinding.instance.addObserver(this);  // Observer 추가
     scrollController.addListener(_onScroll);
     print("ChattingController 생성");
   }
 
   @override
   void onClose() {
+    WidgetsBinding.instance.removeObserver(this);  // Observer 제거
     if (_socket != null) {
       _socket!.disconnect();
     }
     chats.clear();
     print("ChattingController 종료");
     super.onClose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    switch (state) {
+      case AppLifecycleState.resumed:
+      // 앱이 포어그라운드로 돌아왔을 때
+        print("백그라운드->포그라운드 넘어갔음");
+        ChattingController.to.init();
+        ChattingController.to.connect(roomId: roomId.toString()); //웹소켓 연결
+        break;
+      case AppLifecycleState.paused:
+      // 앱이 백그라운드로 갔을 때
+        print("포그라운드-> 백그라운드로 넘어갔음");
+        if (_socket != null) {
+          _socket!.disconnect();
+        }
+        break;
+      default:
+        break;
+    }
   }
 
   void _onScroll() async {
