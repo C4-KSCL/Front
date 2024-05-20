@@ -27,6 +27,7 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:intl/intl.dart';
+import 'config.dart';
 import 'controllers/friend_controller.dart';
 import 'firebase_options.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -93,6 +94,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   //.env 파일 불러오기
   await dotenv.load(fileName: ".env");
+  AppConfig.load();
 
   initializeNotifications(); //안드로이드 알림 설정 초기화
 

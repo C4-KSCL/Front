@@ -5,14 +5,10 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class InfoModifyController extends GetxController {
-  static late final String? baseUrl;
+import '../config.dart';
 
-  @override
-  void onInit() async {
-    super.onInit();
-    baseUrl = dotenv.env['SERVER_URL'];
-  }
+class InfoModifyController extends GetxController {
+  static String? baseUrl=AppConfig.baseUrl;
 
   Rx<User> userInfo = User(
     email: '',

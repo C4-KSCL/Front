@@ -9,16 +9,12 @@ import 'package:frontend_matching/models/userImage.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import '../config.dart';
+
 class FriendController extends GetxController {
   static FriendController get to => Get.find();
 
-  static late final String? baseUrl;
-
-  @override
-  void onInit() async {
-    super.onInit();
-    baseUrl = dotenv.env['SERVER_URL'];
-  }
+  static String? baseUrl=AppConfig.baseUrl;
 
   Rx<int> pageNumber = 0.obs;
   RxList<Friend> friends = RxList<Friend>(); // 친구 리스트

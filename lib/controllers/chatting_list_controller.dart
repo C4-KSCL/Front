@@ -6,16 +6,12 @@ import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/models/chat_list.dart';
 import 'package:get/get.dart';
 
+import '../config.dart';
+
 class ChattingListController extends GetxController {
   static ChattingListController get to => Get.find<ChattingListController>();
 
-  static late final String? baseUrl;
-
-  @override
-  void onInit() async {
-    super.onInit();
-    baseUrl = dotenv.env['SERVER_URL'];
-  }
+  static String? baseUrl=AppConfig.baseUrl;
 
   RxList<ChatList> chattingList = <ChatList>[].obs; //채팅 리스트
 

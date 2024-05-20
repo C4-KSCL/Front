@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:frontend_matching/config.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/models/big_category.dart';
 import 'package:frontend_matching/models/chat.dart';
@@ -23,7 +24,7 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
     required this.isReceivedRequest,
   });
 
-  static String? baseUrl;
+  static String? baseUrl=AppConfig.baseUrl;
   ScrollController scrollController = ScrollController();
   String? roomId;
 
@@ -67,7 +68,6 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
   @override
   void onInit() async {
     super.onInit();
-    baseUrl = dotenv.env['SERVER_URL'];
     WidgetsBinding.instance.addObserver(this); // Observer 추가
     scrollController.addListener(_onScroll);
     print("ChattingController 생성");

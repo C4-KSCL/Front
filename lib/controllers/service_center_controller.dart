@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'dart:math';
 
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/models/post.dart';
 import 'package:frontend_matching/models/postImage.dart';
@@ -9,14 +7,10 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 
-class ServiceCenterController extends GetxController {
-  static late final String? baseUrl;
+import '../config.dart';
 
-  @override
-  void onInit() async {
-    super.onInit();
-    baseUrl = dotenv.env['SERVER_URL'];
-  }
+class ServiceCenterController extends GetxController {
+  static String? baseUrl=AppConfig.baseUrl;
 
   UserDataController userDataController = Get.find<UserDataController>();
 
