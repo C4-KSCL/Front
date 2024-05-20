@@ -19,7 +19,6 @@ Widget FriendProfilePage({
   required VoidCallback voidCallback,
 }) {
   final pageController = PageController();
-  ChattingController.to.setRoomId(roomId: userData.roomId!);
 
   return Padding(
     padding: EdgeInsets.fromLTRB(0, Get.height * 0.1, 0, Get.height * 0.1),
@@ -172,6 +171,11 @@ Widget FriendProfilePage({
                                 oppUserName: userData.nickname,
                               )));
                     }
+                    Get.to(()=>ChatRoomPage(
+                      roomId: userData.roomId!,
+                      oppUserName: userData.nickname,
+                      isChatEnabled: true,
+                    ));
                   },
                   textStyle: whiteTextStyle1,
                 )
