@@ -206,64 +206,6 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
       print(data);
       print("new message 도착");
 
-      // if (ChattingController.to.firstChatDate != null) {
-      //   print("aa");
-      //   if (extractDateOnly(ChattingController.to.firstChatDate.toString()) ==
-      //       extractDateOnly(data['msg']['createdAt'])) {
-      //     if (ChattingController.to.firstChatUserEmail ==
-      //         data['msg']['userEmail']) {
-      //       if (extractDateTime(ChattingController.to.firstChatDate.toString()) ==
-      //           extractDateTime(data['msg']['createdAt'])) {
-      //         ChattingController.to.firstChatDate = data['msg']['createdAt'];
-      //         ChattingController.to.firstChatUserEmail = data['msg']['userEmail'];
-      //         chats.first.isVisibleDate.value = false;
-      //         chats.insert(0, Chat.fromJson(data['msg']));
-      //       } else {
-      //         ChattingController.to.firstChatDate = data['msg']['createdAt'];
-      //         ChattingController.to.firstChatUserEmail = data['msg']['userEmail'];
-      //         chats.insert(0, Chat.fromJson(data['msg']));
-      //       }
-      //     }
-      //     else {
-      //       ChattingController.to.firstChatDate = data['msg']['createdAt'];
-      //       ChattingController.to.firstChatUserEmail = data['msg']['userEmail'];
-      //       chats.insert(0, Chat.fromJson(data['msg']));
-      //     }
-      //   }
-      //   else {
-      //     chats.insert(
-      //         0,
-      //         Chat(
-      //           id: 0,
-      //           roomId: data['msg']['roomId'],
-      //           createdAt: data['msg']['createdAt'],
-      //           content: "timeBox",
-      //           readCount: 0,
-      //           type: 'time',
-      //         ));
-      //     print("타임 박스 추가 ${data['msg']['createdAt']}");
-      //     ChattingController.to.firstChatDate = data['msg']['createdAt'];
-      //     ChattingController.to.firstChatUserEmail = data['msg']['userEmail'];
-      //     chats.insert(0, Chat.fromJson(data['msg']));
-      //   }
-      // }
-      // else {
-      //   chats.insert(
-      //       0,
-      //       Chat(
-      //         id: 0,
-      //         roomId: data['msg']['roomId'],
-      //         createdAt: data['msg']['createdAt'],
-      //         content: "timeBox",
-      //         readCount: 0,
-      //         type: 'time',
-      //       ));
-      //   print("타임 박스 추가 ${data['msg']['createdAt']}");
-      //   ChattingController.to.firstChatDate = data['msg']['createdAt'];
-      //   ChattingController.to.firstChatUserEmail = data['msg']['userEmail'];
-      //   chats.insert(0, Chat.fromJson(data['msg']));
-      // }
-
       if (ChattingController.to.firstChatDate != null &&
           extractDateOnly(ChattingController.to.firstChatDate.toString()) ==
               extractDateOnly(data['msg']['createdAt'])) {
@@ -449,8 +391,6 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
     // 받은 정보로 데이터 추가하기
     final jsonData = json.decode(response.body);
     for (var data in jsonData['chats']) {
-      // print("이전 채팅 시간 : ${extractDateTime(ChattingController.to.lastChatDate!)}");
-      // print("새로 들어온 채팅 시간 : ${extractDateTime(data['createdAt'])}");
       if (ChattingController.to.lastChatDate == null) {
         ChattingController.to.chats.add(Chat.fromJson(data));
         ChattingController.to.lastChatDate =
