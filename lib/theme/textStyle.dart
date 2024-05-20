@@ -87,7 +87,7 @@ const blueTextStyle4 = TextStyle(
   fontWeight: FontWeight.w400, // Bold 처리 대신 w700 사용
 );
 
-
+///////////////////////검정 글씨체////////////////////////
 
 const blackTextStyle1 = TextStyle(
   fontSize: 16,
@@ -137,6 +137,15 @@ const blackTextStyle7 = TextStyle(
   fontFamily: 'NotoSansKR',
   fontWeight: FontWeight.w400,
 );
+
+const blackTextStyle8 = TextStyle(
+  fontSize: 20,
+  color: blackColor1,
+  fontFamily: 'NotoSansKR',
+  fontWeight: FontWeight.w700, // Medium 처리
+);
+
+
 
 const pinkTextStyle1 = TextStyle(
   fontSize: 16,

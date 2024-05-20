@@ -163,7 +163,7 @@ class _MainPageState extends State<MainPage> {
                                     ),
                                   ),
                                   const SizedBox(
-                                    height: 10,
+                                    height: 8,
                                   ),
                                   Row(
                                     children: [
@@ -172,7 +172,9 @@ class _MainPageState extends State<MainPage> {
                                             .to
                                             .matchingFriendInfoList[infoIndex]
                                             .nickname,
-                                        style: blackTextStyle1,
+                                        style: blackTextStyle8,
+                                      ),const SizedBox(
+                                        width: 5,
                                       ),
                                       Container(
                                         width: 40,
@@ -194,6 +196,9 @@ class _MainPageState extends State<MainPage> {
                                           '${FindFriendController.to.matchingFriendInfoList[infoIndex].age}세',
                                           style: whiteTextStyle2,
                                         )),
+                                      ),
+                                      const SizedBox(
+                                        width: 5,
                                       ),
                                       Text(
                                         FindFriendController

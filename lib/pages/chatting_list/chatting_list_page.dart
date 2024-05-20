@@ -15,7 +15,6 @@ class ChattingListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(ChattingListController());
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ChattingListController.getLastChatList(); // 마지막 채팅 내역 가져오기
