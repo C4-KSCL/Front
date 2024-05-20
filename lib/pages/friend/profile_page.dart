@@ -162,7 +162,6 @@ Widget FriendProfilePage({
                   backgroundColor: blueColor1,
                   onPressed: () async {
                     Get.back();
-                    ChattingController.to.isChatEnabled.value = true; // 채팅 가능
                     if (userData.isJoinRoom == false) {
                       //방을 나갔을 때는 재입장
                       print("재입장 필요");

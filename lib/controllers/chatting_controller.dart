@@ -14,8 +14,14 @@ import '../models/event.dart';
 import '../models/small_category.dart';
 import '../services/time_convert_service.dart';
 
-class ChattingController extends GetxController with WidgetsBindingObserver{
+class ChattingController extends GetxController with WidgetsBindingObserver {
   static ChattingController get to => Get.find<ChattingController>();
+
+  ChattingController({
+    required this.roomId,
+    required this.isChatEnabled,
+    required this.isReceivedRequest,
+  });
 
   static String? baseUrl;
   ScrollController scrollController = ScrollController();
@@ -29,7 +35,7 @@ class ChattingController extends GetxController with WidgetsBindingObserver{
   RxBool showSecondGridView = false.obs; // 두번째 카테고리 여부
   RxInt clickQuizButtonIndex = (-1).obs; // 퀴즈 페이지 button index
   RxBool isReceivedRequest = true.obs; //받은 요청이면 true, 보낸 요청이면 false
-  RxBool isChatEnabled = false.obs; //채팅 가능 여부(친구가 아니면 채팅X)
+  RxBool isChatEnabled = true.obs; //채팅 가능 여부(친구가 아니면 채팅X)
   RxBool isQuizAnswered = false.obs; //퀴즈 답변 여부
   RxBool isChatLoading = false.obs; //채팅 로딩 중인지 여부
 
@@ -59,17 +65,17 @@ class ChattingController extends GetxController with WidgetsBindingObserver{
   };
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
     baseUrl = dotenv.env['SERVER_URL'];
-    WidgetsBinding.instance.addObserver(this);  // Observer 추가
+    WidgetsBinding.instance.addObserver(this); // Observer 추가
     scrollController.addListener(_onScroll);
     print("ChattingController 생성");
   }
 
   @override
   void onClose() {
-    WidgetsBinding.instance.removeObserver(this);  // Observer 제거
+    WidgetsBinding.instance.removeObserver(this); // Observer 제거
     if (_socket != null) {
       _socket!.disconnect();
     }
@@ -83,13 +89,16 @@ class ChattingController extends GetxController with WidgetsBindingObserver{
     super.didChangeAppLifecycleState(state);
     switch (state) {
       case AppLifecycleState.resumed:
-      // 앱이 포어그라운드로 돌아왔을 때
+        // 앱이 포어그라운드로 돌아왔을 때
         print("백그라운드->포그라운드 넘어갔음");
         ChattingController.to.init();
-        ChattingController.to.connect(roomId: roomId.toString()); //웹소켓 연결
+        if (ChattingController.to.roomId != null) {
+          ChattingController.to.lastChatDate=null;
+          ChattingController.to.connect(roomId: roomId.toString()); //웹소켓 연결
+        }
         break;
       case AppLifecycleState.paused:
-      // 앱이 백그라운드로 갔을 때
+        // 앱이 백그라운드로 갔을 때
         print("포그라운드-> 백그라운드로 넘어갔음");
         if (_socket != null) {
           _socket!.disconnect();
@@ -102,9 +111,8 @@ class ChattingController extends GetxController with WidgetsBindingObserver{
 
   void _onScroll() async {
     if (scrollController.position.pixels ==
-        scrollController.position.maxScrollExtent &&
+            scrollController.position.maxScrollExtent &&
         !isChatLoading.value) {
-      // 수정됨: 0.1에서 0.9로 변경
       print("채팅 가져오기");
       await getRoomChats(roomId: roomId!);
     }
@@ -255,7 +263,6 @@ class ChattingController extends GetxController with WidgetsBindingObserver{
       //   ChattingController.to.firstChatUserEmail = data['msg']['userEmail'];
       //   chats.insert(0, Chat.fromJson(data['msg']));
       // }
-
 
       if (ChattingController.to.firstChatDate != null &&
           extractDateOnly(ChattingController.to.firstChatDate.toString()) ==
@@ -432,6 +439,8 @@ class ChattingController extends GetxController with WidgetsBindingObserver{
       url = Uri.parse('$baseUrl/chats/get-chats/$roomId');
     }
 
+    print("URL : $url");
+
     // http로 정보 받기
     final response = await http.get(url, headers: headers);
     print(response.statusCode);
@@ -445,9 +454,9 @@ class ChattingController extends GetxController with WidgetsBindingObserver{
       if (ChattingController.to.lastChatDate == null) {
         ChattingController.to.chats.add(Chat.fromJson(data));
         ChattingController.to.lastChatDate =
-        data['createdAt']; // null 일 경우 최근 채팅의 날짜 정보
+            data['createdAt']; // null 일 경우 최근 채팅의 날짜 정보
         ChattingController.to.lastChatUserEmail =
-        data['userEmail']; // null 일 경우 최근 채팅의 유저 이메일
+            data['userEmail']; // null 일 경우 최근 채팅의 유저 이메일
       } else {
         // 최근 채팅과 새로운 채팅의 날짜가 같으면
         if (extractDateOnly(ChattingController.to.lastChatDate!) ==
@@ -492,12 +501,15 @@ class ChattingController extends GetxController with WidgetsBindingObserver{
         }
       }
     }
+    // 채팅 데이터가 비어있지 않으면 첫번째 채팅에 대한 날짜정보와 유저정보 업데이트
     if (ChattingController.to.chats.isNotEmpty) {
       ChattingController.to.firstChatUserEmail =
           ChattingController.to.chats.first.userEmail;
       ChattingController.to.firstChatDate =
           ChattingController.to.chats.first.createdAt;
-    }else{
+    }
+    // 채팅 데이터가 비어있으면 타임 박스 추가
+    else {
       ChattingController.to.chats.add(Chat(
         id: 0,
         roomId: roomId,
@@ -506,7 +518,8 @@ class ChattingController extends GetxController with WidgetsBindingObserver{
         readCount: 0,
         type: 'time',
       ));
-      ChattingController.to.firstChatDate =DateTime.now().toString();   // 오늘 날짜
+      ChattingController.to.firstChatDate = DateTime.now().toString(); // 오늘 날짜
+      print("firstChatDate 설정 : ${ChattingController.to.firstChatDate}");
     }
     ChattingController.to.isChatLoading.value = false;
   }

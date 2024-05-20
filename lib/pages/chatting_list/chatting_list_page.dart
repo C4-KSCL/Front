@@ -19,7 +19,7 @@ class ChattingListPage extends StatelessWidget {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ChattingListController.getLastChatList(); // 마지막 채팅 내역 가져오기
-      ChattingController.to.resetChatRoomData();
+      // ChattingController.to.resetChatRoomData();
     });
 
     return Scaffold(

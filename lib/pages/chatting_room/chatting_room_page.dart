@@ -39,39 +39,84 @@ enum ChatType {
   }
 }
 
-class ChatRoomPage extends StatelessWidget{
-  ChatRoomPage({
+class ChatRoomPage extends StatefulWidget {
+  final String roomId;
+  final String oppUserName;
+  final int? friendRequestId;
+  final bool? isChatEnabled;
+  final bool? isReceivedRequest;
+
+  const ChatRoomPage({
     super.key,
     this.friendRequestId,
+    this.isChatEnabled,
+    this.isReceivedRequest,
     required this.roomId,
     required this.oppUserName,
   });
 
-  final String roomId;
-  final String oppUserName;
-  int? friendRequestId;
+  @override
+  _ChatRoomPageState createState() => _ChatRoomPageState();
+}
+
+class _ChatRoomPageState extends State<ChatRoomPage> {
+  late FocusNode focusNode;
+  late TextEditingController chatController;
 
   @override
-  Widget build(BuildContext context) {
-    ChattingController.to.setRoomId(roomId: roomId);
+  void initState() {
+    super.initState();
+    focusNode = FocusNode();
+    chatController = TextEditingController();
 
-    final FocusNode focusNode = FocusNode();
-    var chatController = TextEditingController();
-
-    MyTextFieldWidget() => focusNode.addListener(() {
-          if (focusNode.hasFocus) {
-            ChattingController.to.clickAddButton.value = false;
-          }
-        });
-
-    MyTextFieldWidget();
+    focusNode.addListener(() {
+      if (focusNode.hasFocus) {
+        ChattingController.to.clickAddButton.value = false;
+      }
+    });
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       print("채팅방 화면 리로딩");
       ChattingController.to.init();
-      ChattingController.to.connect(roomId: roomId); //웹소켓 연결
+      if (ChattingController.to.roomId != null) {
+        ChattingController.to.connect(roomId: widget.roomId); //웹소켓 연결
+      }
     });
 
+    if (widget.isChatEnabled == true) {
+      Get.lazyPut<ChattingController>(() => ChattingController(
+            roomId: widget.roomId,
+            isChatEnabled: true.obs,
+            isReceivedRequest: false.obs,
+          ));
+    } else {
+      if (widget.isReceivedRequest == true) {
+        Get.lazyPut<ChattingController>(() => ChattingController(
+              roomId: widget.roomId,
+              isChatEnabled: false.obs,
+              isReceivedRequest: true.obs,
+            ));
+      } else {
+        Get.lazyPut<ChattingController>(() => ChattingController(
+              roomId: widget.roomId,
+              isChatEnabled: false.obs,
+              isReceivedRequest: false.obs,
+            ));
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    print("dispose 실행");
+    focusNode.dispose();
+    chatController.dispose();
+    Get.delete<ChattingController>();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: blueColor5,
       appBar: AppBar(
@@ -88,7 +133,7 @@ class ChatRoomPage extends StatelessWidget{
             ChattingController.to.resetChatRoomData();
           },
         ),
-        title: Text(oppUserName),
+        title: Text(widget.oppUserName),
         centerTitle: true,
       ),
       body: Column(
@@ -96,109 +141,114 @@ class ChatRoomPage extends StatelessWidget{
         children: [
           Expanded(
             child: Obx(() => Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: ListView.separated(
-                controller: ChattingController.to.scrollController,
-                reverse: true,
-                itemCount: ChattingController.to.chats.length,
-                itemBuilder: (BuildContext context, int index) {
-                  Chat chat = ChattingController.to.chats[index];
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: ListView.separated(
+                    controller: ChattingController.to.scrollController,
+                    reverse: true,
+                    itemCount: ChattingController.to.chats.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      Chat chat = ChattingController.to.chats[index];
 
-                  if (chat.type == 'time') {
-                    return timeBox(chatDate: formatIsoDateString(chat.createdAt));
-                  }
+                      if (chat.type == 'time') {
+                        return timeBox(
+                            chatDate: formatIsoDateString(chat.createdAt));
+                      }
 
-                  // 채팅 타입 비교
-                  bool isTextChatType = chat.type == "text";
-                  bool isUserEmail = chat.userEmail == UserDataController.to.user.value?.email;
-                  ChatType chatType = ChatType.getChatType(isTextChatType, isUserEmail);
+                      // 채팅 타입 비교
+                      bool isTextChatType = chat.type == "text";
+                      bool isUserEmail = chat.userEmail ==
+                          UserDataController.to.user.value?.email;
+                      ChatType chatType =
+                          ChatType.getChatType(isTextChatType, isUserEmail);
 
-                  switch (chatType) {
-                    case ChatType.sentTextChat:
-                      return SentTextChatBox(chat: chat);
-                    case ChatType.sentEventChat:
-                      return SentQuizChatBox(chat: chat);
-                    case ChatType.receivedTextChat:
-                      return ReceiveTextChatBox(chat: chat);
-                    case ChatType.receivedEventChat:
-                      return ReceiveQuizChatBox(chat: chat);
-                    default:
-                      return const Text("알수 없는 채팅");
-                  }
-                },
-                separatorBuilder: (_, __) => const SizedBox(height: 3),
-              ),
-            )),
+                      switch (chatType) {
+                        case ChatType.sentTextChat:
+                          return SentTextChatBox(chat: chat);
+                        case ChatType.sentEventChat:
+                          return SentQuizChatBox(chat: chat);
+                        case ChatType.receivedTextChat:
+                          return ReceiveTextChatBox(chat: chat);
+                        case ChatType.receivedEventChat:
+                          return ReceiveQuizChatBox(chat: chat);
+                        default:
+                          return const Text("알수 없는 채팅");
+                      }
+                    },
+                    separatorBuilder: (_, __) => const SizedBox(height: 3),
+                  ),
+                )),
           ),
           const SizedBox(height: 5),
           Obx(() {
             return ChattingController.to.isChatEnabled.value
                 ? Container(
-              color: whiteColor1,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      if (focusNode.hasFocus) {
-                        focusNode.unfocus();
-                      }
-                      if (!focusNode.hasFocus) {
-                        focusNode.requestFocus();
-                      }
-                      ChattingController.getBigCategories();
-                      ChattingController.to.clickAddButton.value = !ChattingController.to.clickAddButton.value;
-                    },
-                    icon: Icon(
-                      ChattingController.to.clickAddButton.value ? Icons.keyboard_arrow_down : Icons.add,
-                      color: blueColor1,
-                      size: 25,
+                    color: whiteColor1,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            if (focusNode.hasFocus) {
+                              focusNode.unfocus();
+                            }
+                            ChattingController.getBigCategories();
+                            ChattingController.to.clickAddButton.value =
+                                !ChattingController.to.clickAddButton.value;
+                          },
+                          icon: Icon(
+                            ChattingController.to.clickAddButton.value
+                                ? Icons.keyboard_arrow_down
+                                : Icons.add,
+                            color: blueColor1,
+                            size: 25,
+                          ),
+                        ),
+                        Expanded(
+                          child: TextField(
+                            focusNode: focusNode,
+                            controller: chatController,
+                          ),
+                        ),
+                        IconButton(
+                            onPressed: () {
+                              if (chatController.text.isNotEmpty) {
+                                ChattingController.to.sendMessage(
+                                    roomId: widget.roomId,
+                                    content: chatController.text);
+                                chatController.clear();
+                              }
+                            },
+                            icon: Image.asset(
+                                "assets/icons/send_message_button.png",
+                                color: blueColor1)),
+                      ],
                     ),
-                  ),
-                  Expanded(
-                    child: TextField(
-                      focusNode: focusNode,
-                      controller: chatController,
-                    ),
-                  ),
-                  IconButton(
-                      onPressed: () {
-                        if (chatController.text.isNotEmpty) {
-                          ChattingController.to.sendMessage(
-                              roomId: roomId, content: chatController.text);
-                          chatController.clear();
-                        }
-                      },
-                      icon: Image.asset(
-                          "assets/icons/send_message_button.png",
-                          color: blueColor1)),
-                ],
-              ),
-            )
+                  )
                 : Column(
-              children: [
-                const SizedBox(height: 50),
-                Align(
-                  alignment: Alignment.center,
-                  child: ChattingController.to.isReceivedRequest.value
-                      ? AcceptOrRejectButtonLayer(friendRequestId)
-                      : CancelButtonLayer(friendRequestId),
-                ),
-                const SizedBox(height: 50),
-              ],
-            );
+                    children: [
+                      const SizedBox(height: 50),
+                      Align(
+                        alignment: Alignment.center,
+                        child: ChattingController.to.isReceivedRequest.value
+                            ? AcceptOrRejectButtonLayer(widget.friendRequestId)
+                            : CancelButtonLayer(widget.friendRequestId),
+                      ),
+                      const SizedBox(height: 50),
+                    ],
+                  );
           }),
           Obx(() => ChattingController.to.clickAddButton.value
               ? SizedBox(
-            height: 250,
-            child: Center(
-              child: ChattingController.to.showSecondGridView.value ? smallCategory() : bigCategory(),
-            ),
-          )
+                  height: 250,
+                  child: Center(
+                    child: ChattingController.to.showSecondGridView.value
+                        ? smallCategory()
+                        : bigCategory(),
+                  ),
+                )
               : Container()),
         ],
-      )
-      ,
+      ),
     );
   }
 }

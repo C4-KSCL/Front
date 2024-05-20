@@ -169,16 +169,22 @@ void main() async {
   //FCM 알림 클릭시 실행
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
     /////////////////////////////////////////수정 필요 //////////////////////////////////////////
+    ChattingController.to.roomId = message.data['roomId'];
     switch (message.data['route']) {
       // 채팅방으로 이동
       case "chat":
         {
-          Get.offAll(const InitPage());
           ChattingController.to.roomId = message.data['roomId'];
-          BottomNavigationBarController.to.selectedIndex.value = 3;
-          Get.to(ChatRoomPage(
-              roomId: message.data['roomId'],
-              oppUserName: message.notification!.title!));
+          Get.offAllNamed('/chatList');
+          // Get.offAll(const InitPage());
+          // print("홈 화면 이동");
+          // ChattingController.to.roomId = message.data['roomId'];
+          // BottomNavigationBarController.to.selectedIndex.value = 3;
+          // print("채팅 리스트 화면 이동");
+          // Get.to(ChatRoomPage(
+          //     roomId: message.data['roomId'],
+          //     oppUserName: message.notification!.title!));
+          // print("채팅 방 화면 이동");
           break;
         }
       case "friend":
@@ -222,13 +228,12 @@ void main() async {
         Get.put(ChattingListController());
         Get.put(KeywordController());
         Get.put(UserImageController());
-        Get.put(ChattingController());
         Get.put(ServiceCenterController());
       }),
       getPages: [
         GetPage(name: '/main', page: () => const MainPage()),
         GetPage(name: '/friend', page: () => const InitPage()),
-        GetPage(name: '/chat', page: () => const ChattingListPage()),
+        GetPage(name: '/chatList', page: () => const ChattingListPage()),
       ],
     ),
   );

@@ -39,43 +39,48 @@ Widget ChatListTile({
           convertHowMuchTimeAge(utcTimeString: chatListData.createdAt),
           style: greyTextStyle4,
         ),
-        const SizedBox(height: 10,),
-        if(chatListData.notReadCounts!=0)
-        Container(
-          decoration: BoxDecoration(
-            color: chatListData.userEmail ==
-                    UserDataController.to.user.value!.email
-                ? Colors.transparent
-                : Colors.red,
-            borderRadius: BorderRadius.circular(7),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
-            child: Text(
-              chatListData.userEmail ==
+        const SizedBox(
+          height: 10,
+        ),
+        if (chatListData.notReadCounts != 0)
+          Container(
+            decoration: BoxDecoration(
+              color: chatListData.userEmail ==
                       UserDataController.to.user.value!.email
-                  ? "" : chatListData.notReadCounts.toString()
-                  ,
-              style: whiteTextStyle2,
+                  ? Colors.transparent
+                  : Colors.red,
+              borderRadius: BorderRadius.circular(7),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
+              child: Text(
+                chatListData.userEmail ==
+                        UserDataController.to.user.value!.email
+                    ? ""
+                    : chatListData.notReadCounts.toString(),
+                style: whiteTextStyle2,
+              ),
             ),
           ),
-        ),
       ],
     ),
     onTap: () {
       print("받은 요청인가? : ${chatListData.isReceivedRequest}");
       print("챗 가능 : ${chatListData.isChatEnabled}");
       // 채팅방 roomId 설정
-      ChattingController.to.setRoomId(roomId: chatListData.roomId);
+      // ChattingController.to.setRoomId(roomId: chatListData.roomId);
       // 친구 확인을 통해 채팅가능한지 설정
-      ChattingController.to.isChatEnabled.value = chatListData.isChatEnabled;
+      // ChattingController.to.isChatEnabled.value = chatListData.isChatEnabled;
       // 친구가 아니라면 받은 요청인지 보낸 요청인지 설정
-      ChattingController.to.isReceivedRequest.value =
-          chatListData.isReceivedRequest;
-      Get.to(ChatRoomPage(
+      // ChattingController.to.isReceivedRequest.value =
+      // chatListData.isReceivedRequest;
+
+      Get.to(()=>ChatRoomPage(
         friendRequestId: chatListData.friendRequestId,
         roomId: chatListData.roomId,
         oppUserName: chatListData.nickname ??= "알 수 없음",
+        isChatEnabled: chatListData.isChatEnabled,
+        isReceivedRequest: chatListData.isReceivedRequest,
       ));
     },
   );
