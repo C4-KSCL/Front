@@ -38,8 +38,6 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 
 // 앱이 백그라운드 상태에서 메시지를 받았을 때 실행할 로직
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-
-
   print(
       "Handling a background message: ${message.messageId} ${message.data} ${message.sentTime}");
 
@@ -115,10 +113,39 @@ void main() async {
       ChattingListController.getLastChatList();
 
       String? incomingRoomId = message.data['roomId'];
-      final ChattingController chatRoomController = Get.find();
 
-      // 해당 채팅방에 입장되어있으면 알림 안오게 세팅
-      if (chatRoomController.roomId != incomingRoomId) {
+      // ChattingController의 인스턴스가 등록되어 있는지 확인
+      if (Get.isRegistered<ChattingController>()) {
+        // 등록된 컨트롤러 사용
+        final ChattingController chatRoomController = Get.find();
+
+        // 해당 채팅방에 입장되어있으면 알림 안오게 세팅
+        if (chatRoomController.roomId != incomingRoomId) {
+          const AndroidNotificationDetails androidPlatformChannelSpecifics =
+              AndroidNotificationDetails(
+            'SOUL MBTI_ID',
+            'SOUL MBTI_NAME',
+            channelDescription: 'SOUL MBTI_DESC',
+            importance: Importance.max,
+            priority: Priority.high,
+            showWhen: false,
+          );
+
+          const NotificationDetails platformChannelSpecifics =
+              NotificationDetails(android: androidPlatformChannelSpecifics);
+
+          await flutterLocalNotificationsPlugin.show(
+            0, // 알림 ID
+            message.notification!.title, // 알림 제목
+            message.notification!.body, // 알림 내용
+            platformChannelSpecifics,
+            payload: 'item x',
+          );
+        }
+      }
+      // ChattingController의 인스턴스가 등록이 안되어 있을때
+      else {
+        // 친구 관련이나 다른거 등등
         const AndroidNotificationDetails androidPlatformChannelSpecifics =
             AndroidNotificationDetails(
           'SOUL MBTI_ID',
@@ -139,32 +166,32 @@ void main() async {
           platformChannelSpecifics,
           payload: 'item x',
         );
-      } else {
-        print("같은 ChatRoom에 있어 알림 무시");
       }
     }
+    // 다른 알림 관련
+    else {
+      // 친구 관련이나 다른거 등등
+      const AndroidNotificationDetails androidPlatformChannelSpecifics =
+          AndroidNotificationDetails(
+        'SOUL MBTI_ID',
+        'SOUL MBTI_NAME',
+        channelDescription: 'SOUL MBTI_DESC',
+        importance: Importance.max,
+        priority: Priority.high,
+        showWhen: false,
+      );
 
-    // 친구 관련이나 다른거 등등
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails(
-      'SOUL MBTI_ID',
-      'SOUL MBTI_NAME',
-      channelDescription: 'SOUL MBTI_DESC',
-      importance: Importance.max,
-      priority: Priority.high,
-      showWhen: false,
-    );
+      const NotificationDetails platformChannelSpecifics =
+          NotificationDetails(android: androidPlatformChannelSpecifics);
 
-    const NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
-
-    await flutterLocalNotificationsPlugin.show(
-      0, // 알림 ID
-      message.notification!.title, // 알림 제목
-      message.notification!.body, // 알림 내용
-      platformChannelSpecifics,
-      payload: 'item x',
-    );
+      await flutterLocalNotificationsPlugin.show(
+        0, // 알림 ID
+        message.notification!.title, // 알림 제목
+        message.notification!.body, // 알림 내용
+        platformChannelSpecifics,
+        payload: 'item x',
+      );
+    }
   });
 
   //FCM 알림 클릭시 실행
