@@ -191,9 +191,16 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                             if (focusNode.hasFocus) {
                               focusNode.unfocus();
                             }
-                            ChattingController.getBigCategories();
-                            ChattingController.to.clickAddButton.value =
-                                !ChattingController.to.clickAddButton.value;
+                            if(ChattingController.to.clickAddButton.value){
+                              ChattingController.to.clickAddButton.value =
+                              !ChattingController.to.clickAddButton.value;
+                              ChattingController.to.clickQuizButtonIndex.value=-1;
+                              ChattingController.to.showSecondGridView.value=false;
+                            } else{
+                              ChattingController.getBigCategories();
+                              ChattingController.to.clickAddButton.value =
+                              !ChattingController.to.clickAddButton.value;
+                            }
                           },
                           icon: Icon(
                             ChattingController.to.clickAddButton.value

@@ -37,8 +37,7 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 
 // 앱이 백그라운드 상태에서 메시지를 받았을 때 실행할 로직
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // 채팅 리스트 받아오기
-  ChattingListController.getLastChatList();
+
 
   print(
       "Handling a background message: ${message.messageId} ${message.data} ${message.sentTime}");
@@ -108,11 +107,11 @@ void main() async {
   FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
     print("포그라운드 메세지 수신 : ${message.data}");
 
-    // 채팅 리스트 받아오기
-    ChattingListController.getLastChatList();
-
     // 채팅 관련 알림
     if (message.data['route'] == "chat") {
+      // 채팅 리스트 받아오기
+      ChattingListController.getLastChatList();
+
       String? incomingRoomId = message.data['roomId'];
       final ChattingController chatRoomController = Get.find();
 
@@ -170,10 +169,13 @@ void main() async {
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
     /////////////////////////////////////////수정 필요 //////////////////////////////////////////
     ChattingController.to.roomId = message.data['roomId'];
+    print("FCM 클릭");
+
     switch (message.data['route']) {
       // 채팅방으로 이동
       case "chat":
         {
+          print("FCM -> 채팅리스트 페이지 이동");
           ChattingController.to.roomId = message.data['roomId'];
           Get.offAllNamed('/chatList');
           // Get.offAll(const InitPage());
