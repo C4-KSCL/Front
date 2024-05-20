@@ -28,15 +28,6 @@ class ChattingListPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Text("채팅"),
-            Row(
-              children: [
-                IconButton(onPressed: () {
-                  final ChattingController chatRoomController = Get.find();
-                   print(chatRoomController.roomId);
-                }, icon: const Icon(Icons.search)),
-                IconButton(onPressed: () {}, icon: const Icon(Icons.settings)),
-              ],
-            )
           ],
         ),
       ),
