@@ -11,137 +11,25 @@ import '../../theme/textStyle.dart';
 
 Widget SentTextChatBox({
   required Chat chat,
-  required String? chatDate,
 }) {
   return GestureDetector(
     onLongPress: () {
       Get.dialog(
         AlertDialog(
           title: const Text('채팅 삭제'),
-          content: const Text('채팅을 삭제하시겠습니까?',),
+          content: const Text(
+            '채팅을 삭제하시겠습니까?',
+          ),
           actions: [
             TextButton(
-              child: const Text('취소',style: TextStyle(color: Colors.black)),
+              child: const Text('취소', style: TextStyle(color: Colors.black)),
               onPressed: () => Get.back(),
             ),
             TextButton(
-              child: const Text('삭제',style: TextStyle(color: Colors.red)),
+              child: const Text('삭제', style: TextStyle(color: Colors.red)),
               onPressed: () {
-                ChattingController.to.deleteMessage(roomId: chat.roomId, chatId: chat.id);
-                Get.back();
-              },
-            ),
-          ],
-        ),
-      );
-    },
-    child: Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(chat.readCount.value == 1 ? "1" : "",style: const TextStyle(color:blueColor1),),
-                Text(convertHourAndMinuteTime(
-                    utcTimeString: chat.createdAt.toString())),
-              ],
-            ),
-            const SizedBox(width: 4,),
-            Container(
-              constraints: BoxConstraints(maxWidth: Get.width * 0.75),
-              decoration: const BoxDecoration(
-                color: blueColor1,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(8),
-                    topRight: Radius.circular(8),
-                    bottomLeft: Radius.circular(8)),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  chat.content.value,
-                  style: whiteTextStyle2,
-                ),
-              ),
-            ),
-          ],
-        ),
-        // if(chatDate!=null)
-        //   timeBox(chatDate: extractDate(chatDate)),
-      ],
-    ),
-  );
-}
-
-Widget ReceiveTextChatBox({
-  required Chat chat,
-  required String? chatDate,
-}) {
-  return Column(
-    children: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Container(
-            constraints: BoxConstraints(
-              maxWidth: Get.width * 0.75,
-            ),
-            decoration: const BoxDecoration(
-              color: greyColor3,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(8),
-                  topRight: Radius.circular(8),
-                  bottomRight: Radius.circular(8)),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                chat.content.value,
-                style: blackTextStyle4,
-              ),
-            ),
-          ),
-          const SizedBox(width: 4,),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(chat.readCount.value == 1 ? "1" : "",style: const TextStyle(color:blueColor1),),
-              Text(convertHourAndMinuteTime(
-                  utcTimeString: chat.createdAt.toString())),
-            ],
-          ),
-        ],
-      ),
-      // if(chatDate!=null)
-      //   timeBox(chatDate: extractDate(chatDate)),
-    ],
-  );
-}
-
-Widget SentQuizChatBox({
-  required Chat chat,
-  required String? chatDate,
-}) {
-  return GestureDetector(
-    onLongPress: () {
-      // _showPopupMenu(context: context, chatId: chat.id);
-      Get.dialog(
-        AlertDialog(
-          title: const Text('채팅 삭제'),
-          content: const Text('채팅을 삭제하시겠습니까?',),
-          actions: [
-            TextButton(
-              child: const Text('취소',style: TextStyle(color: Colors.black)),
-              onPressed: () => Get.back(),
-            ),
-            TextButton(
-              child: const Text('삭제',style: TextStyle(color: Colors.red)),
-              onPressed: () {
-
+                ChattingController.to
+                    .deleteMessage(roomId: chat.roomId, chatId: chat.id);
                 Get.back();
               },
             ),
@@ -156,16 +44,207 @@ Widget SentQuizChatBox({
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Obx(()=>Visibility(
+                  visible: chat.readCount.value == 1,
+                  child: const Text(
+                    "1",
+                    style: blueTextStyle4,
+                  ),
+                ),),
+                Visibility(
+                  visible: chat.isVisibleDate.value,
+                  child: Text(
+                    convertHourAndMinuteTime(
+                        utcTimeString: chat.createdAt.toString()),
+                    style: blackTextStyle7,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              width: 4,
+            ),
+            Container(
+              constraints: BoxConstraints(maxWidth: Get.width * 0.75),
+              decoration: const BoxDecoration(
+                color: blueColor1,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(8),
+                    topRight: Radius.circular(8),
+                    bottomLeft: Radius.circular(8)),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Obx(
+                  () => Text(
+                    chat.content.value,
+                    style: whiteTextStyle2,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        Visibility(
+          visible: chat.isVisibleDate.value,
+          child: const SizedBox(
+            height: 5,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget ReceiveTextChatBox({
+  required Chat chat,
+}) {
+  return Column(
+    children: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Container(
+            constraints: BoxConstraints(
+              maxWidth: Get.width * 0.75,
+            ),
+            decoration: const BoxDecoration(
+              color: greyColor3,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(8),
+                  topRight: Radius.circular(8),
+                  bottomRight: Radius.circular(8)),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Obx(
+                () => Text(
+                  chat.content.value,
+                  style: blackTextStyle4,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(
+            width: 4,
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Obx(()=>Visibility(
+                visible: chat.readCount.value == 1,
+                child: const Text(
+                  "1",
+                  style: blueTextStyle4,
+                ),
+              ),),
+              Visibility(
+                visible: chat.isVisibleDate.value,
+                child: Text(
+                  convertHourAndMinuteTime(
+                      utcTimeString: chat.createdAt.toString()),
+                  style: blackTextStyle7,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+      Visibility(
+        visible: chat.isVisibleDate.value,
+        child: const SizedBox(
+          height: 5,
+        ),
+      ),
+    ],
+  );
+}
+
+Widget SentQuizChatBox({
+  required Chat chat,
+}) {
+  return GestureDetector(
+    onLongPress: () {
+      // _showPopupMenu(context: context, chatId: chat.id);
+      Get.dialog(
+        AlertDialog(
+          title: const Text('채팅 삭제'),
+          content: const Text(
+            '채팅을 삭제하시겠습니까?',
+          ),
+          actions: [
+            TextButton(
+              child: const Text('취소', style: TextStyle(color: Colors.black)),
+              onPressed: () => Get.back(),
+            ),
+            TextButton(
+              child: const Text('삭제', style: TextStyle(color: Colors.red)),
+              onPressed: () {
+                ChattingController.to
+                    .deleteMessage(roomId: chat.roomId, chatId: chat.id);
+                Get.back();
+              },
+            ),
+          ],
+        ),
+      );
+    },
+    child: Obx(()=>Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Column(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(chat.readCount.value == 1 ? "1" : "",style: const TextStyle(color:blueColor1),),
-                Text(convertHourAndMinuteTime(
-                    utcTimeString: chat.createdAt.toString())),
+                Obx(()=>Visibility(
+                  visible: chat.readCount.value == 1,
+                  child: const Text(
+                    "1",
+                    style: blueTextStyle4,
+                  ),
+                ),),
+                Visibility(
+                  visible: chat.isVisibleDate.value,
+                  child: Text(
+                    convertHourAndMinuteTime(
+                        utcTimeString: chat.createdAt.toString()),
+                    style: blackTextStyle7,
+                  ),
+                ),
               ],
             ),
-            const SizedBox(width: 4,),
-            Container(
+            const SizedBox(
+              width: 4,
+            ),
+            chat.content.value == "더 이상 읽을 수 없는 메시지입니다." && chat.type == "event"
+                ? Container(
+              constraints: BoxConstraints(maxWidth: Get.width * 0.75),
+              decoration: const BoxDecoration(
+                color: blueColor1,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(8),
+                    topRight: Radius.circular(8),
+                    bottomLeft: Radius.circular(8)),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Obx(
+                      () => Text(
+                    chat.content.value,
+                    style: whiteTextStyle2,
+                  ),
+                ),
+              ),
+            )
+                : Container(
               decoration: const BoxDecoration(
                 color: blueColor1,
                 borderRadius: BorderRadius.only(
@@ -182,15 +261,16 @@ Widget SentQuizChatBox({
                   SizedBox(
                     width: Get.width * 0.4,
                     height: Get.width * 0.4,
-                    child:
-                        Image.network(chat.event!.smallCategory.eventImage!.filepath),
+                    child: Image.network(
+                        chat.event!.smallCategory.eventImage!.filepath),
                   ),
                   TextButton(
                     style: TextButton.styleFrom(
                       backgroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         // 모양 설정
-                        borderRadius: BorderRadius.circular(10), // 둥근 모서리의 반지름
+                        borderRadius:
+                        BorderRadius.circular(10), // 둥근 모서리의 반지름
                       ),
                       minimumSize: Size(Get.width * 0.3, 30),
                     ),
@@ -218,16 +298,19 @@ Widget SentQuizChatBox({
             ),
           ],
         ),
-        // if(chatDate!=null)
-        //   timeBox(chatDate: extractDate(chatDate)),
+        Visibility(
+          visible: chat.isVisibleDate.value,
+          child: const SizedBox(
+            height: 5,
+          ),
+        ),
       ],
-    ),
+    ),)
   );
 }
 
 Widget ReceiveQuizChatBox({
   required Chat chat,
-  required String? chatDate,
 }) {
   return Column(
     children: [
@@ -243,17 +326,39 @@ Widget ReceiveQuizChatBox({
                   topRight: Radius.circular(8),
                   bottomRight: Radius.circular(8)),
             ),
-            child: Column(
+            child: Obx(()=>Column(
               children: [
-                Text(
+                chat.content.value == "더 이상 읽을 수 없는 메시지입니다." &&
+                    chat.type == "event"
+                    ? Container(
+                  constraints: BoxConstraints(
+                    maxWidth: Get.width * 0.75,
+                  ),
+                  decoration: const BoxDecoration(
+                    color: greyColor3,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(8),
+                        topRight: Radius.circular(8),
+                        bottomRight: Radius.circular(8)),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      chat.content.value,
+                      style: blackTextStyle4,
+                    ),
+
+                  ),
+                )
+                    : Text(
                   chat.event!.smallCategory.name,
                   style: blackTextStyle1,
                 ),
                 SizedBox(
                   width: Get.width * 0.4,
                   height: Get.width * 0.4,
-                  child:
-                      Image.network(chat.event!.smallCategory.eventImage!.filepath),
+                  child: Image.network(
+                      chat.event!.smallCategory.eventImage!.filepath),
                 ),
                 TextButton(
                   style: TextButton.styleFrom(
@@ -284,23 +389,42 @@ Widget ReceiveQuizChatBox({
                   ),
                 ),
               ],
-            ),
+            ),)
+
           ),
-          const SizedBox(width: 4,),
+          const SizedBox(
+            width: 4,
+          ),
           // readCount와 시간 표시
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(chat.readCount.value == 1 ? "1" : "",style: const TextStyle(color:blueColor1),),
-              Text(convertHourAndMinuteTime(
-                  utcTimeString: chat.createdAt.toString())),
+              Obx(()=>Visibility(
+                visible: chat.readCount.value == 1,
+                child: const Text(
+                  "1",
+                  style: blueTextStyle4,
+                ),
+              ),),
+              Visibility(
+                visible: chat.isVisibleDate.value,
+                child: Text(
+                  convertHourAndMinuteTime(
+                      utcTimeString: chat.createdAt.toString()),
+                  style: blackTextStyle7,
+                ),
+              ),
             ],
           ),
         ],
       ),
-      // if(chatDate!=null)
-      //   timeBox(chatDate: extractDate(chatDate)),
+      Visibility(
+        visible: chat.isVisibleDate.value,
+        child: const SizedBox(
+          height: 5,
+        ),
+      ),
     ],
   );
 }
@@ -316,7 +440,7 @@ Widget timeBox({required String chatDate}) {
             color: greyColor1,
           ),
           child: Padding(
-            padding: const EdgeInsets.all(4),
+            padding: const EdgeInsets.all(7),
             child: Text(
               chatDate,
               style: whiteTextStyle2,

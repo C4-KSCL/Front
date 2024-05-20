@@ -80,6 +80,15 @@ const blueTextStyle3 = TextStyle(
   fontWeight: FontWeight.w700, // Bold 처리 대신 w700 사용
 );
 
+const blueTextStyle4 = TextStyle(
+  fontSize: 12,
+  color: blueColor1,
+  fontFamily: 'NotoSansKR',
+  fontWeight: FontWeight.w400, // Bold 처리 대신 w700 사용
+);
+
+
+
 const blackTextStyle1 = TextStyle(
   fontSize: 16,
   color: blackColor1,
@@ -120,6 +129,13 @@ const blackTextStyle6 = TextStyle(
   color: blackColor2,
   fontFamily: 'NotoSansKR',
   fontWeight: FontWeight.w700, // Bold 처리 대신 w700 사용
+);
+
+const blackTextStyle7 = TextStyle(
+  fontSize: 10,
+  color: blackColor2,
+  fontFamily: 'NotoSansKR',
+  fontWeight: FontWeight.w400,
 );
 
 const pinkTextStyle1 = TextStyle(

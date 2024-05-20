@@ -12,9 +12,16 @@ import 'package:http/http.dart' as http;
 
 import '../models/event.dart';
 import '../models/small_category.dart';
+import '../services/time_convert_service.dart';
 
-class ChattingController extends GetxController {
+class ChattingController extends GetxController with WidgetsBindingObserver {
   static ChattingController get to => Get.find<ChattingController>();
+
+  ChattingController({
+    required this.roomId,
+    required this.isChatEnabled,
+    required this.isReceivedRequest,
+  });
 
   static String? baseUrl;
   ScrollController scrollController = ScrollController();
@@ -28,9 +35,9 @@ class ChattingController extends GetxController {
   RxBool showSecondGridView = false.obs; // 두번째 카테고리 여부
   RxInt clickQuizButtonIndex = (-1).obs; // 퀴즈 페이지 button index
   RxBool isReceivedRequest = true.obs; //받은 요청이면 true, 보낸 요청이면 false
-  RxBool isChatEnabled = false.obs; //채팅 가능 여부(친구가 아니면 채팅X)
+  RxBool isChatEnabled = true.obs; //채팅 가능 여부(친구가 아니면 채팅X)
   RxBool isQuizAnswered = false.obs; //퀴즈 답변 여부
-  RxBool isChatLoading = false.obs; //채팅 로딩중인지 여부
+  RxBool isChatLoading = false.obs; //채팅 로딩 중인지 여부
 
   RxString userChoice = "".obs;
   RxString oppUserChoice = "".obs;
@@ -39,7 +46,11 @@ class ChattingController extends GetxController {
   List<dynamic> smallCategories = []; // 퀴즈 하위 카테고리
 
   String? bigCategoryName;
-  String? chatDate;
+  String? chatDate; // 없앨거
+  String? lastChatDate; // 최근 채팅 날짜 정보
+  String? lastChatUserEmail;
+  String? firstChatDate; // 가장 최신 채팅 내용 정보
+  String? firstChatUserEmail;
 
   static const rooms = 'rooms';
   static const send = 'send';
@@ -54,16 +65,18 @@ class ChattingController extends GetxController {
   };
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
     baseUrl = dotenv.env['SERVER_URL'];
+    WidgetsBinding.instance.addObserver(this); // Observer 추가
     scrollController.addListener(_onScroll);
     print("ChattingController 생성");
   }
 
   @override
   void onClose() {
-    if(_socket!=null){
+    WidgetsBinding.instance.removeObserver(this); // Observer 제거
+    if (_socket != null) {
       _socket!.disconnect();
     }
     chats.clear();
@@ -71,24 +84,55 @@ class ChattingController extends GetxController {
     super.onClose();
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    switch (state) {
+      case AppLifecycleState.resumed:
+        // 앱이 포어그라운드로 돌아왔을 때
+        print("백그라운드->포그라운드 넘어갔음");
+        ChattingController.to.init();
+        if (ChattingController.to.roomId != null) {
+          ChattingController.to.lastChatDate=null;
+          ChattingController.to.connect(roomId: roomId.toString()); //웹소켓 연결
+        }
+        break;
+      case AppLifecycleState.paused:
+        // 앱이 백그라운드로 갔을 때
+        print("포그라운드-> 백그라운드로 넘어갔음");
+        if (_socket != null) {
+          _socket!.disconnect();
+        }
+        break;
+      default:
+        break;
+    }
+  }
+
   void _onScroll() async {
-    if (scrollController.position.pixels == scrollController.position.maxScrollExtent && !isChatLoading.value) { // 수정됨: 0.1에서 0.9로 변경
+    if (scrollController.position.pixels ==
+            scrollController.position.maxScrollExtent &&
+        !isChatLoading.value) {
       print("채팅 가져오기");
       await getRoomChats(roomId: roomId!);
     }
   }
 
-  void setRoomId({required String roomId}){
-    this.roomId=roomId;
+  void setRoomId({required String roomId}) {
+    this.roomId = roomId;
   }
 
   // 챗 가능 여부 리셋
   void resetChatRoomData() {
-    isChatEnabled.value = false;
-    clickAddButton.value=false;
-    showSecondGridView.value=false;
-    clickQuizButtonIndex.value=-1;
-    roomId=null;
+    clickAddButton.value = false;
+    showSecondGridView.value = false;
+    clickQuizButtonIndex.value = -1;
+    roomId = null;
+    lastChatDate = null;
+    lastChatUserEmail = null;
+    firstChatDate = null;
+    firstChatUserEmail = null;
+    print("방 정보 리셋");
   }
 
   //Socket.io 관련 함수
@@ -105,7 +149,7 @@ class ChattingController extends GetxController {
     });
   }
 
-  //초기 톡방 내용 가져오기
+  /// 초기 톡방 내용 가져오기
   void fetchInitialMessages({required String roomId}) async {
     chats.clear();
     // http.get을 통해 채팅방 내용 가져오기
@@ -161,7 +205,110 @@ class ChattingController extends GetxController {
     socket.on("new message", (data) {
       print(data);
       print("new message 도착");
-      chats.insert(0, Chat.fromJson(data['msg']));
+
+      // if (ChattingController.to.firstChatDate != null) {
+      //   print("aa");
+      //   if (extractDateOnly(ChattingController.to.firstChatDate.toString()) ==
+      //       extractDateOnly(data['msg']['createdAt'])) {
+      //     if (ChattingController.to.firstChatUserEmail ==
+      //         data['msg']['userEmail']) {
+      //       if (extractDateTime(ChattingController.to.firstChatDate.toString()) ==
+      //           extractDateTime(data['msg']['createdAt'])) {
+      //         ChattingController.to.firstChatDate = data['msg']['createdAt'];
+      //         ChattingController.to.firstChatUserEmail = data['msg']['userEmail'];
+      //         chats.first.isVisibleDate.value = false;
+      //         chats.insert(0, Chat.fromJson(data['msg']));
+      //       } else {
+      //         ChattingController.to.firstChatDate = data['msg']['createdAt'];
+      //         ChattingController.to.firstChatUserEmail = data['msg']['userEmail'];
+      //         chats.insert(0, Chat.fromJson(data['msg']));
+      //       }
+      //     }
+      //     else {
+      //       ChattingController.to.firstChatDate = data['msg']['createdAt'];
+      //       ChattingController.to.firstChatUserEmail = data['msg']['userEmail'];
+      //       chats.insert(0, Chat.fromJson(data['msg']));
+      //     }
+      //   }
+      //   else {
+      //     chats.insert(
+      //         0,
+      //         Chat(
+      //           id: 0,
+      //           roomId: data['msg']['roomId'],
+      //           createdAt: data['msg']['createdAt'],
+      //           content: "timeBox",
+      //           readCount: 0,
+      //           type: 'time',
+      //         ));
+      //     print("타임 박스 추가 ${data['msg']['createdAt']}");
+      //     ChattingController.to.firstChatDate = data['msg']['createdAt'];
+      //     ChattingController.to.firstChatUserEmail = data['msg']['userEmail'];
+      //     chats.insert(0, Chat.fromJson(data['msg']));
+      //   }
+      // }
+      // else {
+      //   chats.insert(
+      //       0,
+      //       Chat(
+      //         id: 0,
+      //         roomId: data['msg']['roomId'],
+      //         createdAt: data['msg']['createdAt'],
+      //         content: "timeBox",
+      //         readCount: 0,
+      //         type: 'time',
+      //       ));
+      //   print("타임 박스 추가 ${data['msg']['createdAt']}");
+      //   ChattingController.to.firstChatDate = data['msg']['createdAt'];
+      //   ChattingController.to.firstChatUserEmail = data['msg']['userEmail'];
+      //   chats.insert(0, Chat.fromJson(data['msg']));
+      // }
+
+      if (ChattingController.to.firstChatDate != null &&
+          extractDateOnly(ChattingController.to.firstChatDate.toString()) ==
+              extractDateOnly(data['msg']['createdAt'])) {
+        // 최근 채팅과 새로운 채팅을 입력한 사람이 같다면
+        if (ChattingController.to.firstChatDate != null &&
+            ChattingController.to.firstChatUserEmail ==
+                data['msg']['userEmail']) {
+          // 최근 채팅과 새로운 채팅을 입력한 시간이 같다면
+          if (ChattingController.to.firstChatDate != null &&
+              extractDateTime(ChattingController.to.firstChatDate.toString()) ==
+                  extractDateTime(data['msg']['createdAt'])) {
+            // 채팅 옆에 날짜 안보이게 하기
+            ChattingController.to.firstChatDate = data['msg']['createdAt'];
+            ChattingController.to.firstChatUserEmail = data['msg']['userEmail'];
+            chats.first.isVisibleDate.value = false;
+            chats.insert(0, Chat.fromJson(data['msg']));
+          } else {
+            ChattingController.to.firstChatDate = data['msg']['createdAt'];
+            ChattingController.to.firstChatUserEmail = data['msg']['userEmail'];
+            chats.insert(0, Chat.fromJson(data['msg']));
+          }
+        } else {
+          ChattingController.to.firstChatDate = data['msg']['createdAt'];
+          ChattingController.to.firstChatUserEmail = data['msg']['userEmail'];
+          chats.insert(0, Chat.fromJson(data['msg']));
+        }
+      }
+      // 최근 채팅과 새로운 채팅의 날짜가 다르면
+      else {
+        // TimeBox 추가
+        chats.insert(
+            0,
+            Chat(
+              id: 0,
+              roomId: data['msg']['roomId'],
+              createdAt: data['msg']['createdAt'],
+              content: "timeBox",
+              readCount: 0,
+              type: 'time',
+            ));
+        print("타임 박스 추가 ${data['msg']['createdAt']}");
+        ChattingController.to.firstChatDate = data['msg']['createdAt'];
+        ChattingController.to.firstChatUserEmail = data['msg']['userEmail'];
+        chats.insert(0, Chat.fromJson(data['msg']));
+      }
     });
 
     // 'new event' 이벤트 listen
@@ -185,9 +332,10 @@ class ChattingController extends GetxController {
 
     // 'delete message' 이벤트 listen
     socket.on("delete message", (data) {
-      for(Chat chat in chats){
-        if(chat.id==data['msg']['id']){
-          chat.content.value=data['msg']['content'];
+      for (Chat chat in chats) {
+        if (chat.id == data['msg']['id']) {
+          chat.content.value = data['msg']['content'];
+          print("삭제 완료");
         }
       }
       print(data);
@@ -273,42 +421,107 @@ class ChattingController extends GetxController {
 
   // 채팅 관련 http 메소드
 
-  // 그 방 채팅내용 가져오기
-  // 채팅 내역 반환
+  /// roomId를 통해 해당 방의 채팅 내역 받아오기
   static Future<void> getRoomChats({required String roomId}) async {
     var url;
-    ChattingController.to.isChatLoading.value=true;
+    ChattingController.to.isChatLoading.value = true;
 
     // 채팅방 무한 스크롤
-    if(ChattingController.to.chats.isNotEmpty){
+    if (ChattingController.to.chats.isNotEmpty) {
       print("===채팅방 무한 스크롤===");
       final firstChatId = ChattingController.to.chats.last.id.toString();
       print(firstChatId);
       url = Uri.parse('$baseUrl/chats/get-chats/$roomId?chatId=$firstChatId');
     }
     // 채팅방 첫입장
-    else{
+    else {
       print("===채팅방 첫 입장===");
       url = Uri.parse('$baseUrl/chats/get-chats/$roomId');
     }
-    print(url.toString());
 
+    print("URL : $url");
+
+    // http로 정보 받기
     final response = await http.get(url, headers: headers);
-
     print(response.statusCode);
     print(response.body);
 
+    // 받은 정보로 데이터 추가하기
     final jsonData = json.decode(response.body);
     for (var data in jsonData['chats']) {
-      // 추가할 때 날짜 비교해서 날짜 정보를 넣지 않거나 하기
-      // 날짜가 바뀔 경우 날짜 박스를 넣기
-      ChattingController.to.chats.add(Chat.fromJson(data));
+      // print("이전 채팅 시간 : ${extractDateTime(ChattingController.to.lastChatDate!)}");
+      // print("새로 들어온 채팅 시간 : ${extractDateTime(data['createdAt'])}");
+      if (ChattingController.to.lastChatDate == null) {
+        ChattingController.to.chats.add(Chat.fromJson(data));
+        ChattingController.to.lastChatDate =
+            data['createdAt']; // null 일 경우 최근 채팅의 날짜 정보
+        ChattingController.to.lastChatUserEmail =
+            data['userEmail']; // null 일 경우 최근 채팅의 유저 이메일
+      } else {
+        // 최근 채팅과 새로운 채팅의 날짜가 같으면
+        if (extractDateOnly(ChattingController.to.lastChatDate!) ==
+            extractDateOnly(data['createdAt'])) {
+          // 최근 채팅과 새로운 채팅을 입력한 사람이 같다면
+          if (ChattingController.to.lastChatUserEmail == data['userEmail']) {
+            // 최근 채팅과 새로운 채팅을 입력한 시간이 같다면
+            if (extractDateTime(ChattingController.to.lastChatDate!) ==
+                extractDateTime(data['createdAt'])) {
+              // 채팅 옆에 날짜 안보이게 하기
+              ChattingController.to.lastChatDate = data['createdAt'];
+              ChattingController.to.lastChatUserEmail = data['userEmail'];
+              var chat = Chat.fromJson(data);
+              chat.isVisibleDate.value = false;
+              ChattingController.to.chats.add(chat);
+            } else {
+              ChattingController.to.lastChatDate = data['createdAt'];
+              ChattingController.to.lastChatUserEmail = data['userEmail'];
+              ChattingController.to.chats.add(Chat.fromJson(data));
+            }
+          } else {
+            ChattingController.to.lastChatDate = data['createdAt'];
+            ChattingController.to.lastChatUserEmail = data['userEmail'];
+            ChattingController.to.chats.add(Chat.fromJson(data));
+          }
+        }
+        // 최근 채팅과 새로운 채팅의 날짜가 다르면
+        else {
+          // TimeBox 추가
+          ChattingController.to.chats.add(Chat(
+            id: 0,
+            roomId: data['roomId'],
+            createdAt: ChattingController.to.lastChatDate!,
+            content: "timeBox",
+            readCount: 0,
+            type: 'time',
+          ));
+          print("타임 박스 추가 ${ChattingController.to.lastChatDate!}");
+          ChattingController.to.chats.add(Chat.fromJson(data));
+          ChattingController.to.lastChatDate = data['createdAt'];
+          ChattingController.to.lastChatUserEmail = data['userEmail'];
+        }
+      }
     }
-
-
-    // ChattingController.to.chatDate =
-    //     extractDate(ChattingController.to.chats[0].createdAt);
-    ChattingController.to.isChatLoading.value=false;
+    // 채팅 데이터가 비어있지 않으면 첫번째 채팅에 대한 날짜정보와 유저정보 업데이트
+    if (ChattingController.to.chats.isNotEmpty) {
+      ChattingController.to.firstChatUserEmail =
+          ChattingController.to.chats.first.userEmail;
+      ChattingController.to.firstChatDate =
+          ChattingController.to.chats.first.createdAt;
+    }
+    // 채팅 데이터가 비어있으면 타임 박스 추가
+    else {
+      ChattingController.to.chats.add(Chat(
+        id: 0,
+        roomId: roomId,
+        createdAt: DateTime.now().toString(),
+        content: "timeBox",
+        readCount: 0,
+        type: 'time',
+      ));
+      ChattingController.to.firstChatDate = DateTime.now().toString(); // 오늘 날짜
+      print("firstChatDate 설정 : ${ChattingController.to.firstChatDate}");
+    }
+    ChattingController.to.isChatLoading.value = false;
   }
 
   //속한 채팅 방들 리스트 받아오기
@@ -367,5 +580,4 @@ class ChattingController extends GetxController {
       ChattingController.to.eventData.value = Event.fromJson(jsonData['event']);
     }
   }
-
 }

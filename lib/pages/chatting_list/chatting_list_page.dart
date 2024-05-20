@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:frontend_matching/controllers/chatting_controller.dart';
+import 'package:frontend_matching/controllers/friend_controller.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/pages/chatting_list/chatlist_listtile.dart';
 import 'package:frontend_matching/controllers/chatting_list_controller.dart';
@@ -18,7 +19,7 @@ class ChattingListPage extends StatelessWidget {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ChattingListController.getLastChatList(); // 마지막 채팅 내역 가져오기
-      ChattingController.to.resetChatRoomData();
+      // ChattingController.to.resetChatRoomData();
     });
 
     return Scaffold(
@@ -27,15 +28,6 @@ class ChattingListPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Text("채팅"),
-            Row(
-              children: [
-                IconButton(onPressed: () {
-                  final ChattingController chatRoomController = Get.find();
-                   print(chatRoomController.roomId);
-                }, icon: const Icon(Icons.search)),
-                IconButton(onPressed: () {}, icon: const Icon(Icons.settings)),
-              ],
-            )
           ],
         ),
       ),
@@ -58,6 +50,7 @@ class ChattingListPage extends StatelessWidget {
                     onPressed: (BuildContext context) async{
                       await ChattingListController.leaveRoom(roomId: chatListData.roomId);
                       await ChattingListController.getLastChatList();
+                      await FriendController.getFriendList();
                     },
                   ),
                 ],

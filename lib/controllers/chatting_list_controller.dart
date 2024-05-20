@@ -27,7 +27,7 @@ class ChattingListController extends GetxController {
   };
 
   // 채팅 리스트 비우기
-  void resetData(){
+  void resetData() {
     chattingList.clear();
   }
 
@@ -125,8 +125,7 @@ class ChattingListController extends GetxController {
           if (lastChat['room']['joinRoom'].isNotEmpty) {
             nickname = lastChat['room']['joinRoom'][0]['user']['nickname'];
             userImage = lastChat['room']['joinRoom'][0]['user']['userImage'];
-          }
-          else if (lastChat['room']['joinRoom'].isEmpty &&
+          } else if (lastChat['room']['joinRoom'].isEmpty &&
               lastChat['room']['addRequest'].isEmpty) {
             nickname = "삭제된 유저";
             userImage =
@@ -161,6 +160,24 @@ class ChattingListController extends GetxController {
     final url = Uri.parse('$baseUrl/rooms/leave/$roomId');
 
     final response = await http.patch(url, headers: headers);
+
+    if(response.statusCode==200){
+      print("${response.statusCode} 성공적으로 나가짐");
+    } else{
+      print("나가기 실패");
+      print(response.body);
+    }
+  }
+
+  /// 채팅방 참가하기
+  static Future<void> rejoinRoom({
+    required String oppEmail,
+  }) async {
+    final url = Uri.parse('$baseUrl/rooms/create');
+
+    final body = jsonEncode({"oppEmail": oppEmail}) ;
+
+    final response = await http.patch(url, headers: headers, body: body);
 
     print(response.statusCode);
     print(response.body);

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/components/button.dart';
 import 'package:frontend_matching/controllers/chatting_controller.dart';
+import 'package:frontend_matching/controllers/chatting_list_controller.dart';
 import 'package:frontend_matching/controllers/friend_controller.dart';
 import 'package:frontend_matching/models/friend.dart';
 import 'package:frontend_matching/models/request.dart';
@@ -18,17 +19,15 @@ Widget FriendProfilePage({
   required VoidCallback voidCallback,
 }) {
   final pageController = PageController();
-  ChattingController.to.setRoomId(roomId: userData.roomId!);
 
   return Padding(
     padding: EdgeInsets.fromLTRB(0, Get.height * 0.1, 0, Get.height * 0.1),
     child: FutureBuilder(
       future: FriendController.getFriendData(friendEmail: userData.oppEmail),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        // http를 통해 정보를 불러오지 못했을 때
+        // 데이터를 받는 중일 때
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
-          ;
         }
         // 에러 발생 시
         else if (snapshot.hasError) {
@@ -36,10 +35,9 @@ Widget FriendProfilePage({
         }
         // 성공적으로 친구의 정보를 불러왔을 경우
         else {
-          print(FriendController.to.friendImageData.length);
 
           return Container(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             width: Get.width * 0.6,
             height: Get.height * 0.6,
             decoration: BoxDecoration(
@@ -57,7 +55,7 @@ Widget FriendProfilePage({
                           backgroundImage: NetworkImage(
                               FriendController.to.friendData.value!.userImage!),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
                         Column(
@@ -76,12 +74,12 @@ Widget FriendProfilePage({
                                   width: 40,
                                   height: 20,
                                   decoration: BoxDecoration(
-                                    color: blueColor1,
+                                    color: userData.gender == "남" ? blueColor1 : pinkColor1,
                                     borderRadius: BorderRadius.circular(6),
                                   ),
                                   child: Center(
                                       child: Text(
-                                    userData.age + "세",
+                                    "${userData.age}세",
                                     style: whiteTextStyle2,
                                   )),
                                 ),
@@ -148,9 +146,9 @@ Widget FriendProfilePage({
                                 borderRadius: BorderRadius.circular(5),
                                 color: blueColor1,
                               ),
-                              padding: EdgeInsets.all(5),
+                              padding: const EdgeInsets.all(5),
                               child: Text(item,
-                                  style: TextStyle(color: Colors.white)),
+                                  style: const TextStyle(color: Colors.white)),
                             ),
                           ))
                       .toList(),
@@ -159,14 +157,22 @@ Widget FriendProfilePage({
                 ColorBottomButton(
                   text: "채팅방 이동",
                   backgroundColor: blueColor1,
-                  onPressed: () {
+                  onPressed: () async {
                     Get.back();
-                    /////////////////////////삭제할거/////////////////////////
-                    ChattingController.to.isChatEnabled.value = true;
-                    ////////////////////////////////////////////////////////
-                    Get.to(ChatRoomPage(
+                    if (userData.isJoinRoom == false) {
+                      //방을 나갔을 때는 재입장
+                      print("재입장 필요");
+                      await ChattingListController.rejoinRoom(
+                              oppEmail: userData.oppEmail)
+                          .then((value) => Get.to(ChatRoomPage(
+                                roomId: userData.roomId!,
+                                oppUserName: userData.nickname,
+                              )));
+                    }
+                    Get.to(()=>ChatRoomPage(
                       roomId: userData.roomId!,
                       oppUserName: userData.nickname,
+                      isChatEnabled: true,
                     ));
                   },
                   textStyle: whiteTextStyle1,
@@ -204,7 +210,7 @@ Widget RequestProfilePage({
           print(FriendController.to.friendImageData.length);
 
           return Container(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             width: Get.width * 0.6,
             height: Get.height * 0.6,
             decoration: BoxDecoration(
@@ -222,7 +228,7 @@ Widget RequestProfilePage({
                           backgroundImage: NetworkImage(
                               FriendController.to.friendData.value!.userImage!),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
                         Column(
@@ -241,7 +247,7 @@ Widget RequestProfilePage({
                                   width: 40,
                                   height: 20,
                                   decoration: BoxDecoration(
-                                    color: blueColor1,
+                                    color: userData.gender == "남" ? blueColor1 : pinkColor1,
                                     borderRadius: BorderRadius.circular(6),
                                   ),
                                   child: Center(
@@ -313,9 +319,9 @@ Widget RequestProfilePage({
                                 borderRadius: BorderRadius.circular(5),
                                 color: blueColor1,
                               ),
-                              padding: EdgeInsets.all(5),
+                              padding: const EdgeInsets.all(5),
                               child: Text(item,
-                                  style: TextStyle(color: Colors.white)),
+                                  style: const TextStyle(color: Colors.white)),
                             ),
                           ))
                       .toList(),
