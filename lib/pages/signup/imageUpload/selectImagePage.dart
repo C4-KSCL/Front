@@ -1,7 +1,5 @@
-// ignore_for_file: prefer_const_constructors, avoid_print
-
 import 'dart:io';
-import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:crop_image/crop_image.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +8,6 @@ import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
-import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 
@@ -21,37 +18,139 @@ class SelectImagePage extends StatefulWidget {
 
 UserDataController userDataController = Get.find<UserDataController>();
 final picker = ImagePicker();
-List<XFile?> multiImage = []; // 갤러리에서 여러장의 사진을 선택해서 저장할 변수
-List<XFile?> images = []; // 가져온 사진들을 보여주기 위한 변수
+List<XFile?> multiImage = [];
+List<XFile?> images = [];
 
 class SelectImagePageState extends State<SelectImagePage> {
+  File? imageFile;
+  CropController? cropController;
+
   Future<void> pickImages() async {
     final List<XFile>? pickedFiles = await picker.pickMultiImage();
     if (pickedFiles != null) {
-      List<XFile> tempImages = [];
       for (XFile file in pickedFiles) {
-        Uint8List fileData = await file.readAsBytes();
-        img.Image? decodedImage = img.decodeImage(fileData);
-
-        if (decodedImage != null) {
-          // 이미지 리사이즈
-          img.Image resized =
-              img.copyResize(decodedImage, width: 400, height: 600);
-
-          // 임시 디렉토리에 이미지 저장
-          Directory tempDir = await getTemporaryDirectory();
-          String filename = path.basename(file.path);
-          String tempPath = path.join(tempDir.path, filename);
-          File(tempPath).writeAsBytesSync(img.encodeJpg(resized));
-
-          // 리스트에 저장
-          tempImages.add(XFile(tempPath));
-        }
+        setState(() {
+          imageFile = File(file.path);
+          cropController = CropController(
+            aspectRatio: 9 / 16, // 16:9 비율로 설정
+            defaultCrop: Rect.fromCenter(
+              center: const Offset(0.5, 0.5), // 가운데를 기준으로 크롭
+              width: 0.98, // 크롭 영역의 너비 비율
+              height: 0.98, // 크롭 영역의 높이 비율
+            ),
+          );
+        });
+        //await resizeAndShowCropDialog();
+        await showCropDialog();
       }
-      setState(() {
-        images.addAll(tempImages);
-      });
     }
+  }
+
+  // Future<void> resizeAndShowCropDialog() async {
+  //   if (imageFile == null) return;
+
+  //   // 이미지 리사이즈
+  //   final originalImage = img.decodeImage(await imageFile!.readAsBytes());
+  //   if (originalImage == null) return;
+
+  //   // 원본 이미지를 고정된 비율로 잘라내기 (예: 16:9 비율로 잘라냄)
+  //   int targetWidth = 900;
+  //   int targetHeight = 1600;
+  //   img.Image croppedImage;
+  //   if (originalImage.width / originalImage.height > 9 / 16) {
+  //     // 가로가 더 긴 경우
+  //     int cropWidth = (originalImage.height * targetWidth) ~/ targetHeight;
+  //     int cropX = (originalImage.width - cropWidth) ~/ 2;
+  //     croppedImage = img.copyCrop(originalImage,
+  //         x: cropX, y: 0, width: cropWidth, height: originalImage.height);
+  //   } else {
+  //     // 세로가 더 긴 경우
+  //     int cropHeight = (originalImage.width * targetHeight) ~/ targetWidth;
+  //     int cropY = (originalImage.height - cropHeight) ~/ 2;
+  //     croppedImage = img.copyCrop(originalImage,
+  //         x: 0, y: cropY, width: originalImage.width, height: cropHeight);
+  //   }
+
+  //   // 고정된 크기로 리사이즈
+  //   final resizedImage =
+  //       img.copyResize(croppedImage, width: targetWidth, height: targetHeight);
+  //   final tempDir = await getTemporaryDirectory();
+  //   final resizedImagePath =
+  //       path.join(tempDir.path, 'resized_${path.basename(imageFile!.path)}');
+  //   File(resizedImagePath).writeAsBytesSync(img.encodeJpg(resizedImage));
+  //   setState(() {
+  //     imageFile = File(resizedImagePath);
+  //   });
+
+  //   // 크롭 다이얼로그 표시
+  //   await showCropDialog();
+  // }
+
+  Future<void> showCropDialog() async {
+    if (cropController == null || imageFile == null) return;
+
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('이미지 크롭'),
+        content: SizedBox(
+          width: double.maxFinite,
+          height: 400,
+          child: CropImage(
+            controller: cropController!,
+            image: Image.file(imageFile!, fit: BoxFit.contain),
+            gridColor: Colors.white70,
+            paddingSize: 20,
+            touchSize: 30,
+            gridCornerSize: 15,
+            gridThinWidth: 2,
+            gridThickWidth: 5,
+            scrimColor: Colors.black54,
+            alwaysShowThirdLines: true,
+            minimumImageSize: 300,
+            maximumImageSize: double.infinity,
+            alwaysMove: true,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('취소'),
+          ),
+          TextButton(
+            onPressed: () async {
+              await cropAndAddImage();
+              Navigator.of(context).pop();
+            },
+            child: const Text('확인'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> cropAndAddImage() async {
+    if (imageFile == null || cropController == null) return;
+
+    final croppedImage = await cropController!.croppedBitmap();
+
+    final byteData =
+        await croppedImage.toByteData(format: ui.ImageByteFormat.png);
+    if (byteData == null) return;
+
+    final buffer = byteData.buffer.asUint8List();
+
+    final directory = await getTemporaryDirectory();
+    final filePath = path.join(directory.path,
+        'cropped_image_${DateTime.now().millisecondsSinceEpoch}.png');
+    final file = File(filePath);
+    await file.writeAsBytes(buffer);
+
+    setState(() {
+      images.add(XFile(file.path));
+      imageFile = null;
+      cropController = null;
+    });
   }
 
   Future<void> uploadImages(List<XFile?>? pickedFiles) async {
@@ -68,7 +167,7 @@ class SelectImagePageState extends State<SelectImagePage> {
           'files',
           pickedFile!.path,
         ));
-        print(pickedFile!.path);
+        print(pickedFile.path);
       }
       var response = await request.send();
       if (response.statusCode == 200) {
@@ -119,8 +218,7 @@ class SelectImagePageState extends State<SelectImagePage> {
               ],
             ),
             SizedBox(height: 50),
-            Container(
-              margin: EdgeInsets.all(20),
+            Expanded(
               child: GridView.builder(
                 padding: EdgeInsets.all(0),
                 shrinkWrap: true,
@@ -172,7 +270,7 @@ class SelectImagePageState extends State<SelectImagePage> {
               ),
             ),
             const SizedBox(
-              height: 250,
+              height: 20,
             ),
             SizedBox(
               width: 350,
@@ -185,17 +283,38 @@ class SelectImagePageState extends State<SelectImagePage> {
                 ),
                 onPressed: () {
                   if (images.isNotEmpty) {
-                    uploadImages(images);
-                    print(images);
-                    userDataController.logout();
+                    if (images.length <= 3) {
+                      uploadImages(images);
+                      print(images);
+                      userDataController.logout();
+                    } else {
+                      print('이미지는 최대 3장입니다.');
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('이미지 초과'),
+                            content: const Text('이미지는 최대 3장입니다.'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('확인'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
                   } else {
-                    print('추가 이미지를 넣어주세요.');
+                    print('이미지는 최소 1개 이상이어야 합니다.');
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
                           title: const Text('이미지 추가'),
-                          content: const Text('추가 이미지를 넣어주세요.'),
+                          content: const Text('이미지를 1장 이상 넣어주세요.'),
                           actions: [
                             TextButton(
                               onPressed: () {

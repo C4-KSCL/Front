@@ -32,7 +32,7 @@ class UserImageController extends GetxController {
             (jsonDecode(response.body)['images'] as List)
                 .map((data) => UserImage.fromJson(data))
                 .toList();
-        userDataController.images.value = newImages; // assignAll 사용 안함
+        userDataController.images.value = newImages;
         Get.snackbar('삭제 성공', '이미지가 성공적으로 삭제되었습니다.');
       } else {
         print('삭제 실패: ${response.statusCode}');
@@ -61,7 +61,7 @@ class UserImageController extends GetxController {
         List<UserImage> newImages = (jsonDecode(responseBody)['images'] as List)
             .map((data) => UserImage.fromJson(data))
             .toList();
-        userDataController.images.value = newImages; // assignAll 사용 안함
+        userDataController.images.value = newImages;
         Get.snackbar('성공', '이미지가 성공적으로 추가되었습니다.');
       } else {
         print('이미지 추가 실패: ${response.statusCode}');

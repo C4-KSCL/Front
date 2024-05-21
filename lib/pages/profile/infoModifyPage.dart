@@ -11,6 +11,7 @@ import 'package:frontend_matching/pages/profile/buttons/InfoModifyButton.dart';
 import 'package:frontend_matching/pages/profile/myKeywordModifyPage.dart';
 import 'package:frontend_matching/pages/profile/myMbtiModifyPage.dart';
 import 'package:frontend_matching/pages/profile/userAvatar.dart';
+import 'package:frontend_matching/services/nickname_check.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get.dart';
 
@@ -36,6 +37,7 @@ class _InfoModifyPageState extends State<InfoModifyPage> {
   String refreshToken = '';
   String my_profileImagePath = '';
   bool isElevationButtonEnabled = false;
+  bool isNicknameVerified = true; // 닉네임 수정 전에는 항상 활성화
 
   @override
   void initState() {
@@ -57,8 +59,25 @@ class _InfoModifyPageState extends State<InfoModifyPage> {
       phoneNumberController.text = my_phoneNumber;
       ageController.text = my_age;
     }
+
+    nicknameController.addListener(() {
+      setState(() {
+        isNicknameVerified =
+            nicknameController.text == my_nickname; // 닉네임이 변경되었을 때 인증 상태 초기화
+      });
+    });
   }
 
+  @override
+  void dispose() {
+    nicknameController.dispose();
+    passwordController.dispose();
+    phoneNumberController.dispose();
+    ageController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final double medWidth = MediaQuery.of(context).size.width;
     final double medHeight = MediaQuery.of(context).size.height;
@@ -67,7 +86,7 @@ class _InfoModifyPageState extends State<InfoModifyPage> {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          title: const Text('사진 수정하기'),
+          title: const Text('내 정보 수정하기'),
         ),
         backgroundColor: blueColor5,
         body: SingleChildScrollView(
@@ -136,7 +155,15 @@ class _InfoModifyPageState extends State<InfoModifyPage> {
                 padding: EdgeInsets.all(medWidth / 60),
                 child: ButtonTextFieldBox(
                   hintText: '입력하세요',
-                  onPressed: () {}, //닉네임 인증 로직 필요
+                  onPressed: () async {
+                    bool? check = await NickNameCheck.checknickname(
+                        nicknameController.text, context);
+                    setState(() {
+                      if (check == true) {
+                        isNicknameVerified = true; // 닉네임 인증 상태를 true로 설정
+                      }
+                    });
+                  },
                   textEditingController: nicknameController,
                   buttonText: '인증하기',
                   TEXT: '닉네임',
@@ -199,61 +226,63 @@ class _InfoModifyPageState extends State<InfoModifyPage> {
                     backgroundColor: Color(0xFF7EA5F3),
                     minimumSize: Size(300, 50),
                   ),
-                  onPressed: () async {
-                    String password = passwordController.text;
-                    String nickname = nicknameController.text;
-                    String phoneNumber = phoneNumberController.text;
-                    String age = ageController.text;
-                    print('check');
-                    print(phoneNumber);
-                    if (password.isNotEmpty &&
-                        nickname.isNotEmpty &&
-                        phoneNumber.isNotEmpty &&
-                        age.isNotEmpty) {
-                      await infoModifyController.InfoModify(
-                        accessToken,
-                        password,
-                        nickname,
-                        phoneNumber,
-                        age,
-                      );
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text('정보 수정'),
-                            content: Text('정보가 수정되었습니다.'),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: const Text('확인'),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    } else {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text('정보 수정'),
-                            content: Text('모든 값을 입력해주세요!'),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: const Text('확인'),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    }
-                  },
+                  onPressed: isNicknameVerified
+                      ? () async {
+                          String password = passwordController.text;
+                          String nickname = nicknameController.text;
+                          String phoneNumber = phoneNumberController.text;
+                          String age = ageController.text;
+                          print('check');
+                          print(phoneNumber);
+                          if (password.isNotEmpty &&
+                              nickname.isNotEmpty &&
+                              phoneNumber.isNotEmpty &&
+                              age.isNotEmpty) {
+                            await infoModifyController.InfoModify(
+                              accessToken,
+                              password,
+                              nickname,
+                              phoneNumber,
+                              age,
+                            );
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('정보 수정'),
+                                  content: Text('정보가 수정되었습니다.'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text('확인'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('정보 수정'),
+                                  content: Text('모든 값을 입력해주세요!'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text('확인'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
+                        }
+                      : null, // 닉네임 인증 상태에 따라 비활성화
                   child: const Text('다음으로',
                       style: TextStyle(
                         color: Colors.white,

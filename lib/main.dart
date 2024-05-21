@@ -63,13 +63,30 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   );
 }
 
-// 안드로이드 알림 설정
-void initializeNotifications() {
+// 알림 설정
+void initializeNotifications() async {
   // Notification plugin 초기화
-  flutterLocalNotificationsPlugin.initialize(
+  await flutterLocalNotificationsPlugin.initialize(
     const InitializationSettings(
-      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+      android: AndroidInitializationSettings('@drawable/ic_cashfi_noti'),
+      iOS: DarwinInitializationSettings(),
     ),
+    // 안드로이드에서 FCM 클릭시 핸들링 코드
+    onDidReceiveNotificationResponse: (NotificationResponse details) async {
+
+      // payload 스플릿
+      
+      BottomNavigationBarController.to.selectedIndex.value = 2;
+      // 채팅 관련 알림
+      // if(details.payload){
+      //
+      // }
+      // // 친구 관련 알림
+      // else{
+      //
+      // }
+
+    },
   );
 
   // Android용 알림 채널 생성
@@ -139,7 +156,7 @@ void main() async {
             message.notification!.title, // 알림 제목
             message.notification!.body, // 알림 내용
             platformChannelSpecifics,
-            payload: 'item x',
+            payload: "a" // 알림 눌렀을 때 사용할 데이터
           );
         }
       }
@@ -194,40 +211,41 @@ void main() async {
     }
   });
 
+  void navigateToChat(RemoteMessage message) {
+    // String roomId = message.data['roomId'] ?? 'default_room_id';
+    // ChattingController.to.roomId = roomId;
+    print("룸 아이디: ${message.data['roomId']}");
+    Get.offAllNamed('/chatList');
+  }
+
+  void navigateToFriendPage() {
+    Get.offAll(const InitPage());
+    BottomNavigationBarController.to.selectedIndex.value = 2;
+    print("친구 페이지로 기기");
+  }
+
+  void handleRouteNavigation(String route, RemoteMessage message) {
+    switch (route) {
+      case "chat":
+        navigateToChat(message);
+        break;
+      case "friend":
+        navigateToFriendPage();
+        break;
+      default:
+        print("라우팅 Route not recognized: $route");
+        break;
+    }
+  }
+
   //FCM 알림 클릭시 실행
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    /////////////////////////////////////////수정 필요 //////////////////////////////////////////
-    ChattingController.to.roomId = message.data['roomId'];
-    print("FCM 클릭");
+    print("FCM 클릭: ${message.data}");
 
-    switch (message.data['route']) {
-      // 채팅방으로 이동
-      case "chat":
-        {
-          print("FCM -> 채팅리스트 페이지 이동");
-          ChattingController.to.roomId = message.data['roomId'];
-          Get.offAllNamed('/chatList');
-          // Get.offAll(const InitPage());
-          // print("홈 화면 이동");
-          // ChattingController.to.roomId = message.data['roomId'];
-          // BottomNavigationBarController.to.selectedIndex.value = 3;
-          // print("채팅 리스트 화면 이동");
-          // Get.to(ChatRoomPage(
-          //     roomId: message.data['roomId'],
-          //     oppUserName: message.notification!.title!));
-          // print("채팅 방 화면 이동");
-          break;
-        }
-      case "friend":
-        {
-          Get.offAll(const InitPage());
-          BottomNavigationBarController.to.selectedIndex.value = 2;
-          break;
-        }
-      default:
-        {
-          break;
-        }
+    if (message.data.containsKey('route')) {
+      handleRouteNavigation(message.data['route'], message);
+    } else {
+      print("No route specified in the data");
     }
   });
 
@@ -262,9 +280,7 @@ void main() async {
         Get.put(ServiceCenterController());
       }),
       getPages: [
-        GetPage(name: '/main', page: () => const MainPage()),
-        GetPage(name: '/friend', page: () => const InitPage()),
-        GetPage(name: '/chatList', page: () => const ChattingListPage()),
+        GetPage(name: '/', page: () => const InitPage()),
       ],
     ),
   );
