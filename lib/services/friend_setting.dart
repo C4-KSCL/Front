@@ -2,6 +2,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../config.dart';
+
 class FriendSettingService {
   static Future<void> updateFriendMbtiSetting(
     String accessToken,
@@ -10,8 +12,7 @@ class FriendSettingService {
     String friendMinAge,
     String friendGender,
   ) async {
-    late final String? baseUrl;
-    baseUrl = dotenv.env['SERVER_URL'];
+    String? baseUrl=AppConfig.baseUrl;
 
     final url = Uri.parse('$baseUrl/findfriend/settingMBTI');
     final response = await http.post(

@@ -5,6 +5,10 @@ import 'package:frontend_matching/config.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/pages/login/bottomLayer.dart';
 import 'package:frontend_matching/services/fcm_token_service.dart';
+import 'package:get/get.dart';
+
+import '../../controllers/chatting_list_controller.dart';
+import '../../controllers/friend_controller.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -50,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.56, //하단 높이
+              height: MediaQuery.of(context).size.height * 0.6, //하단 높이
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.8),
                 borderRadius: const BorderRadius.only(

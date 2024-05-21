@@ -19,8 +19,8 @@ class UserDataController extends GetxController {
   SignupController signupController = Get.find<SignupController>();
   Rxn<User?> user = Rxn<User?>(null);
   RxList<UserImage> images = <UserImage>[].obs;
-  Rx<String> matchingUserNumbers = "1,2,3".obs; // 매칭 유저 정보
-  Rx<bool> isAutoLogin=false.obs; // 자동 로그인 여부
+  // Rx<String> matchingUserNumbers = "1,2,3".obs; // 매칭 유저 정보
+  Rx<bool> isAutoLogin=true.obs; // 자동 로그인 여부
 
   var accessToken = '';
   var refreshToken = '';
@@ -32,12 +32,19 @@ class UserDataController extends GetxController {
 
   static String? baseUrl=AppConfig.baseUrl;
 
-  @override
-  void onReady() {
-    super.onReady();
-    _moveToPage(user.value);
-    ever(user, _moveToPage);
-  }
+  // @override
+  // void onReady() {
+  //   super.onReady();
+  //   _moveToPage(user.value);
+  //   ever(user, _moveToPage);
+  // }
+  // void _moveToPage(User? user) {
+  //   if (user == null) {
+  //     Get.offAll(() => LoginPage());
+  //   } else {
+  //     Get.offAll(() => InitPage());
+  //   }
+  // }
 
   void updateUserInfo(User newUser) {
     user.value = newUser;
@@ -47,15 +54,8 @@ class UserDataController extends GetxController {
     images.assignAll(newImages);
   }
 
-  void _moveToPage(User? user) {
-    if (user == null) {
-      Get.offAll(() => LoginPage());
-    } else {
-      Get.offAll(() => InitPage());
-    }
-  }
-
   static Future<void> loginUser(String email, String password) async {
+    AppConfig.putGetxControllerDependency();
     final url = Uri.parse('$baseUrl/$auth/$login');
 
     Map<String, String> headers = {"Content-type": "application/json"};
@@ -82,19 +82,16 @@ class UserDataController extends GetxController {
       final loginUserData = jsonDecode(response.body);
       print(loginUserData);
 
-      Get.put(UserDataController());
-      UserDataController userDataController = Get.find();
-
-      userDataController.user.value = User.fromJson(loginUserData['user']);
+      UserDataController.to.user.value = User.fromJson(loginUserData['user']);
 
       List<UserImage> images = (loginUserData['images'] as List)
           .map((data) => UserImage.fromJson(data as Map<String, dynamic>))
           .toList();
 
-      userDataController.updateImageInfo(images);
+      UserDataController.to.updateImageInfo(images);
 
-      userDataController.accessToken = loginUserData['accessToken'];
-      userDataController.refreshToken = loginUserData['refreshToken'];
+      UserDataController.to.accessToken = loginUserData['accessToken'];
+      UserDataController.to.refreshToken = loginUserData['refreshToken'];
       print('login success');
       print(loginUserData['accessToken']);
       print(loginUserData['refreshToken']);
@@ -104,15 +101,24 @@ class UserDataController extends GetxController {
       await FriendController.getFriendReceivedRequest();
       await FriendController.getFriendSentRequest();
       await ChattingListController.getLastChatList();
+      Get.offAll(()=>const InitPage());
     } else {
       print('login fail');
     }
   }
 
-  void logout() {
-    user.value = null;
-    signupController.resetAllInputs();
-    FriendController.to.resetData();
-    ChattingListController.to.resetData();
+  void logout() async {
+    ////////////////수정 필요 //////////////////////////
+    await FcmService.deleteUserFcmToken();
+    Get.offNamed('/login');
+    // Get.delete<FriendController>();
+    // Get.delete<ChattingListController>();
+    // Get.put(FriendController());
+    // Get.put(ChattingListController());
+    user.value=null;
+    images.value=<UserImage>[].obs;
+    isAutoLogin.value=false;
+
+    print("로그아웃");
   }
 }
