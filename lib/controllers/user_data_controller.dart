@@ -9,6 +9,7 @@ import 'package:frontend_matching/services/fcm_token_service.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import '../config.dart';
 import '../pages/init_page.dart';
 import '../models/user.dart';
 import '../models/userImage.dart';
@@ -28,13 +29,7 @@ class UserDataController extends GetxController {
   static const auth = 'auth';
   static const login = 'login';
 
-  static late final String? baseUrl;
-
-  @override
-  void onInit() async {
-    super.onInit();
-    baseUrl = dotenv.env['SERVER_URL'];
-  }
+  static String? baseUrl=AppConfig.baseUrl;
 
   @override
   void onReady() {

@@ -135,37 +135,6 @@ ListTile receivedRequestListTile({
       },
       icon: Image.asset("assets/icons/question_message.png"),
     ),
-    // Row(
-    //   mainAxisSize: MainAxisSize.min,
-    //   mainAxisAlignment: MainAxisAlignment.end,
-    //   children: [
-    //     TextButton(
-    //       onPressed: () async {
-    //         await FriendController.acceptFriendRequest(
-    //             requestId: receivedRequestData.requestId.toString());
-    //         FriendController.getFriendReceivedRequest();
-    //         FriendController.getFriendList();
-    //       },
-    //       child: const Text(
-    //         '수락',
-    //         style: blueTextStyle1,
-    //       ),
-    //     ),
-    //     TextButton(
-    //       onPressed: () async {
-    //         await FriendController.rejectFriendRequest(
-    //             requestId: receivedRequestData.requestId.toString()); //친구 거절
-    //         await ChattingListController.leaveRoom(
-    //             roomId: receivedRequestData.roomId); //채팅방 나가기
-    //         FriendController.getFriendReceivedRequest(); //내역 리프레쉬
-    //       },
-    //       child: const Text(
-    //         '거절',
-    //         style: redTextStyle1,
-    //       ),
-    //     ),
-    //   ],
-    // ),
     onTap: () {
       //프로필 페이지 열기
       Get.bottomSheet(

@@ -6,6 +6,7 @@ import 'package:frontend_matching/services/time_convert_service.dart';
 import 'package:get/get.dart';
 
 import '../../models/chat_list.dart';
+import '../../services/text_service.dart';
 import '../../theme/textStyle.dart';
 import '../chatting_room/chatting_room_page.dart';
 
@@ -26,7 +27,7 @@ Widget ChatListTile({
           style: blackTextStyle1,
         ),
         Text(
-          chatListData.content,
+          summarizeText(chatListData.content),
           style: greyTextStyle3,
         ),
       ],
@@ -67,21 +68,14 @@ Widget ChatListTile({
     onTap: () {
       print("받은 요청인가? : ${chatListData.isReceivedRequest}");
       print("챗 가능 : ${chatListData.isChatEnabled}");
-      // 채팅방 roomId 설정
-      // ChattingController.to.setRoomId(roomId: chatListData.roomId);
-      // 친구 확인을 통해 채팅가능한지 설정
-      // ChattingController.to.isChatEnabled.value = chatListData.isChatEnabled;
-      // 친구가 아니라면 받은 요청인지 보낸 요청인지 설정
-      // ChattingController.to.isReceivedRequest.value =
-      // chatListData.isReceivedRequest;
 
-      Get.to(()=>ChatRoomPage(
-        friendRequestId: chatListData.friendRequestId,
-        roomId: chatListData.roomId,
-        oppUserName: chatListData.nickname ??= "알 수 없음",
-        isChatEnabled: chatListData.isChatEnabled,
-        isReceivedRequest: chatListData.isReceivedRequest,
-      ));
+      Get.to(() => ChatRoomPage(
+            friendRequestId: chatListData.friendRequestId,
+            roomId: chatListData.roomId,
+            oppUserName: chatListData.nickname ??= "알 수 없음",
+            isChatEnabled: chatListData.isChatEnabled,
+            isReceivedRequest: chatListData.isReceivedRequest,
+          ));
     },
   );
 }

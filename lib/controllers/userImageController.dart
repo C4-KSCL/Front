@@ -6,14 +6,11 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
 
-class UserImageController extends GetxController {
-  static late final String? baseUrl;
+import '../config.dart';
 
-  @override
-  void onInit() async {
-    super.onInit();
-    baseUrl = dotenv.env['SERVER_URL'];
-  }
+class UserImageController extends GetxController {
+
+  static String? baseUrl=AppConfig.baseUrl;
 
   UserDataController userDataController = Get.find<UserDataController>();
 

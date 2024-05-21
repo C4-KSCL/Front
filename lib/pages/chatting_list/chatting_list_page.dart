@@ -15,19 +15,17 @@ class ChattingListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(ChattingListController());
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ChattingListController.getLastChatList(); // 마지막 채팅 내역 가져오기
-      // ChattingController.to.resetChatRoomData();
     });
 
     return Scaffold(
       appBar: AppBar(
-        title: Row(
+        title: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text("채팅"),
+            Text("채팅"),
           ],
         ),
       ),
@@ -37,7 +35,7 @@ class ChattingListPage extends StatelessWidget {
           itemBuilder: (context, index) {
             var chatListData = ChattingListController.to.chattingList[index];
             return Slidable(
-              key: ValueKey(chatListData.roomId) ,
+              key: ValueKey(chatListData.roomId),
               endActionPane: ActionPane(
                 extentRatio: 0.25,
                 motion: const DrawerMotion(),
@@ -47,10 +45,101 @@ class ChattingListPage extends StatelessWidget {
                     foregroundColor: Colors.white,
                     icon: Icons.output,
                     label: '나가기',
-                    onPressed: (BuildContext context) async{
-                      await ChattingListController.leaveRoom(roomId: chatListData.roomId);
-                      await ChattingListController.getLastChatList();
-                      await FriendController.getFriendList();
+                    onPressed: (BuildContext context) async {
+                      // 친구가 아닌 채팅창 => 요청을 받은 친구 or 요청을 보낸 친구 채팅방
+                      if (chatListData.isChatEnabled == false) {
+                        // 받은 요청일 경우
+                        if (chatListData.isReceivedRequest == true) {
+                          Get.dialog(
+                            AlertDialog(
+                              title: const Text('채팅방 나가기'),
+                              content: const Text(
+                                '채팅방을 나갈 경우 받은 친구 요청을 거절하게 됩니다. 채팅방을 나가시겠어요?',
+                              ),
+                              actions: [
+                                TextButton(
+                                  child: const Text('취소',
+                                      style: TextStyle(color: Colors.black)),
+                                  onPressed: () => Get.back(),
+                                ),
+                                TextButton(
+                                  child: const Text('나가기',
+                                      style: TextStyle(color: Colors.red)),
+                                  onPressed: () async {
+                                    await FriendController.rejectFriendRequest(
+                                        requestId: chatListData.friendRequestId
+                                            .toString());
+                                    await ChattingListController
+                                        .getLastChatList();
+                                    await FriendController.getFriendReceivedRequest();
+                                    Get.back();
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                        // 보낸 요청일 경우
+                        else {
+                          Get.dialog(
+                            AlertDialog(
+                              title: const Text('채팅방 나가기'),
+                              content: const Text(
+                                '채팅방을 나갈 경우 보낸 친구 요청을 취소하게 됩니다. 채팅방을 나가시겠어요?',
+                              ),
+                              actions: [
+                                TextButton(
+                                  child: const Text('취소',
+                                      style: TextStyle(color: Colors.black)),
+                                  onPressed: () => Get.back(),
+                                ),
+                                TextButton(
+                                  child: const Text('나가기',
+                                      style: TextStyle(color: Colors.red)),
+                                  onPressed: () async {
+                                    await FriendController.deleteFriendRequest(
+                                        requestId: chatListData.friendRequestId
+                                            .toString());
+                                    await ChattingListController
+                                        .getLastChatList();
+                                    await FriendController.getFriendSentRequest();
+                                    Get.back();
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                      }
+                      // 친구와 채팅일 경우
+                      else {
+                        Get.dialog(
+                          AlertDialog(
+                            title: const Text('채팅방 나가기'),
+                            content: const Text(
+                              '채팅방을 나가시겠어요?',
+                            ),
+                            actions: [
+                              TextButton(
+                                child: const Text('취소',
+                                    style: TextStyle(color: Colors.black)),
+                                onPressed: () => Get.back(),
+                              ),
+                              TextButton(
+                                child: const Text('나가기',
+                                    style: TextStyle(color: Colors.red)),
+                                onPressed: () async {
+                                  await ChattingListController.leaveRoom(
+                                      roomId: chatListData.roomId);
+                                  await ChattingListController
+                                      .getLastChatList();
+                                  Get.back();
+                                },
+                              ),
+                            ],
+                          ),
+                        );
+                      }
                     },
                   ),
                 ],
@@ -61,7 +150,9 @@ class ChattingListPage extends StatelessWidget {
             );
           },
           separatorBuilder: (BuildContext context, int index) {
-            return const SizedBox(height: 5,);
+            return const SizedBox(
+              height: 5,
+            );
           },
         ),
       ),

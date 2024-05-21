@@ -6,16 +6,12 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../config.dart';
+
 class FindFriendController extends GetxController {
   static FindFriendController get to => Get.find();
 
-  static late final String? baseUrl;
-
-  @override
-  void onInit() async {
-    super.onInit();
-    baseUrl = dotenv.env['SERVER_URL'];
-  }
+  static String? baseUrl=AppConfig.baseUrl;
 
   RxList<User> matchingFriendInfoList = RxList<User>();
   RxList<List<UserImage>> matchingFriendImageList = RxList<List<UserImage>>();

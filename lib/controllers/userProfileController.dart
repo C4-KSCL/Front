@@ -7,14 +7,11 @@ import 'dart:convert';
 
 import 'package:image_picker/image_picker.dart';
 
-class UserProfileController extends GetxController {
-  static late final String? baseUrl;
+import '../config.dart';
 
-  @override
-  void onInit() async {
-    super.onInit();
-    baseUrl = dotenv.env['SERVER_URL'];
-  }
+class UserProfileController extends GetxController {
+
+  static String? baseUrl=AppConfig.baseUrl;
 
   Rx<User> userInfo = User(
     email: '',
