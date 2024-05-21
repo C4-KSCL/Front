@@ -54,13 +54,28 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   const NotificationDetails platformChannelSpecifics =
       NotificationDetails(android: androidPlatformChannelSpecifics);
 
-  await flutterLocalNotificationsPlugin.show(
-    0, // 알림 ID
-    message.notification!.title, // 알림 제목
-    message.notification!.body, // 알림 내용
-    platformChannelSpecifics,
-    payload: 'item x',
-  );
+  if(message.data['route']=='chat'){
+    String payload =
+        message.notification!.title! + ',' + message.data['roomId'];
+
+    await flutterLocalNotificationsPlugin.show(
+      0, // 알림 ID
+      message.notification!.title, // 알림 제목
+      message.notification!.body, // 알림 내용
+      platformChannelSpecifics,
+      payload: payload,
+    );
+  } else if(message.data['route']=='friend'){
+    await flutterLocalNotificationsPlugin.show(
+      0, // 알림 ID
+      message.notification!.title, // 알림 제목
+      message.notification!.body, // 알림 내용
+      platformChannelSpecifics,
+      payload: 'friendPage',
+    );
+  }
+
+
 }
 
 // 알림 설정
@@ -74,6 +89,7 @@ void initializeNotifications() async {
 
     // 안드로이드에서 FCM 클릭시 핸들링 코드
     onDidReceiveNotificationResponse: (NotificationResponse details) async {
+      print("페이로드 값 : ${details.payload}");
       // 채팅 관련 알림
       if (details.payload == "friendPage") {
         BottomNavigationBarController.to.selectedIndex.value = 1;
@@ -155,6 +171,7 @@ void main() async {
 
           String payload =
               message.notification!.title! + ',' + message.data['roomId'];
+          print("페이로드 값 : $payload");
 
           await flutterLocalNotificationsPlugin.show(
               0, // 알림 ID
@@ -181,12 +198,16 @@ void main() async {
         const NotificationDetails platformChannelSpecifics =
             NotificationDetails(android: androidPlatformChannelSpecifics);
 
+        String payload =
+            message.notification!.title! + ',' + message.data['roomId'];
+        print("페이로드 값 : $payload");
+
         await flutterLocalNotificationsPlugin.show(
           0, // 알림 ID
           message.notification!.title, // 알림 제목
           message.notification!.body, // 알림 내용
           platformChannelSpecifics,
-          payload: 'friendPage',
+          payload: payload,
         );
       }
     }
