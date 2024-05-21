@@ -60,13 +60,14 @@ class _MyMbtiPageState extends State<MyMbtiPage> {
             SizedBox(
               height: 50,
             ),
-            // MbtiKeyWord 위젯을 호출할 때 onMbtiSelected 함수를 정의합니다.
             MbtiKeyWord(
               title: 'mbti',
               onMbtiSelected: (String mbti) {
                 setState(() {
                   selectedMBTI = mbti;
-                  isMbtiComplete = selectedMBTI.length == 4;
+                  if (selectedMBTI.length == 4) {
+                    isMbtiComplete = true;
+                  }
                 });
               },
             ),
@@ -82,7 +83,6 @@ class _MyMbtiPageState extends State<MyMbtiPage> {
                 ),
                 onPressed: isMbtiComplete
                     ? () {
-                        // 사용할 때 selectedMBTI를 사용합니다.
                         signupController.addToSignupArray(selectedMBTI);
                         print(signupController.signupArray);
                         KeywordController.to.resetMBTI();
