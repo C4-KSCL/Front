@@ -68,7 +68,7 @@ void initializeNotifications() async {
   // Notification plugin 초기화
   await flutterLocalNotificationsPlugin.initialize(
     const InitializationSettings(
-      android: AndroidInitializationSettings('@drawable/ic_cashfi_noti'),
+      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
       iOS: DarwinInitializationSettings(),
     ),
     // 안드로이드에서 FCM 클릭시 핸들링 코드
@@ -85,7 +85,6 @@ void initializeNotifications() async {
       // else{
       //
       // }
-
     },
   );
 

@@ -1,6 +1,7 @@
 // ignore: file_names
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend_matching/config.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/pages/login/bottomLayer.dart';
 import 'package:frontend_matching/services/fcm_token_service.dart';
@@ -14,8 +15,28 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+    _checkAutoLogin();
+  }
 
+  void _checkAutoLogin() async {
+    // 자동 로그인 여부 확인
+    String? isAutoLogin = await AppConfig.storage.read(key: "isAutoLogin");
+    // 자동 로그인이 설정된 경우
+    if (isAutoLogin == "true") {
+      print("자동 로그인 한적 있음");
+      String? email = await AppConfig.storage.read(key: "autoLoginEmail");
+      String? password = await AppConfig.storage.read(key: "autoLoginPw");
+      if (email != null && password != null) {
+        await UserDataController.loginUser(email, password);
+        // 로그인 후의 UI 업데이트나 다른 처리
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
