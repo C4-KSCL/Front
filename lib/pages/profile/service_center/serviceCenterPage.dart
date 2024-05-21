@@ -3,6 +3,7 @@ import 'package:frontend_matching/controllers/service_center_controller.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/models/post.dart';
 import 'package:frontend_matching/models/postImage.dart';
+import 'package:frontend_matching/pages/profile/service_center/detailPage.dart';
 import 'package:frontend_matching/pages/profile/service_center/postPage.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get.dart';
@@ -97,7 +98,26 @@ class _ServiceCenterPageState extends State<ServiceCenterPage> {
                             ? Image.network(image.imagePath)
                             : null,
                         title: Text(post.title),
-                        subtitle: Text(post.content),
+                        subtitle: Text(post.content), //
+                        trailing: Text(
+                          post.isAnswered == 0 ? '답변대기중' : '답변완료',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color:
+                                post.isAnswered == 0 ? Colors.red : Colors.blue,
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailPage(
+                                post: post,
+                                postImage: image,
+                              ),
+                            ),
+                          );
+                        },
                       );
                     },
                   ),
