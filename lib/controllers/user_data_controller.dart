@@ -16,7 +16,6 @@ import '../models/userImage.dart';
 
 class UserDataController extends GetxController {
   static UserDataController get to => Get.find<UserDataController>();
-  SignupController signupController = Get.find<SignupController>();
   Rxn<User?> user = Rxn<User?>(null);
   RxList<UserImage> images = <UserImage>[].obs;
   // Rx<String> matchingUserNumbers = "1,2,3".obs; // 매칭 유저 정보
@@ -31,20 +30,6 @@ class UserDataController extends GetxController {
   static const login = 'login';
 
   static String? baseUrl=AppConfig.baseUrl;
-
-  // @override
-  // void onReady() {
-  //   super.onReady();
-  //   _moveToPage(user.value);
-  //   ever(user, _moveToPage);
-  // }
-  // void _moveToPage(User? user) {
-  //   if (user == null) {
-  //     Get.offAll(() => LoginPage());
-  //   } else {
-  //     Get.offAll(() => InitPage());
-  //   }
-  // }
 
   void updateUserInfo(User newUser) {
     user.value = newUser;
@@ -110,6 +95,8 @@ class UserDataController extends GetxController {
   void logout() async {
     ////////////////수정 필요 //////////////////////////
     await FcmService.deleteUserFcmToken();
+    await AppConfig.storage.write(key: "isAutoLogin", value: "false");
+
     Get.offNamed('/login');
     // Get.delete<FriendController>();
     // Get.delete<ChattingListController>();

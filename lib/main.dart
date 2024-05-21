@@ -243,7 +243,7 @@ void main() async {
     }
   }
 
-  //FCM 알림 클릭시 실행
+  /// IOS : 포그라운드 상태일때 푸시알림 클릭시 실행,
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
     print("FCM 클릭: ${message.data}");
 

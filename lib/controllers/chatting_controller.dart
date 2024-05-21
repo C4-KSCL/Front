@@ -410,76 +410,78 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
 
     // 받은 정보로 데이터 추가하기
     final jsonData = json.decode(response.body);
-    for (var data in jsonData['chats']) {
-      if (ChattingController.to.lastChatDate == null) {
-        ChattingController.to.chats.add(Chat.fromJson(data));
-        ChattingController.to.lastChatDate =
-            data['createdAt']; // null 일 경우 최근 채팅의 날짜 정보
-        ChattingController.to.lastChatUserEmail =
-            data['userEmail']; // null 일 경우 최근 채팅의 유저 이메일
-      } else {
-        // 최근 채팅과 새로운 채팅의 날짜가 같으면
-        if (extractDateOnly(ChattingController.to.lastChatDate!) ==
-            extractDateOnly(data['createdAt'])) {
-          // 최근 채팅과 새로운 채팅을 입력한 사람이 같다면
-          if (ChattingController.to.lastChatUserEmail == data['userEmail']) {
-            // 최근 채팅과 새로운 채팅을 입력한 시간이 같다면
-            if (extractDateTime(ChattingController.to.lastChatDate!) ==
-                extractDateTime(data['createdAt'])) {
-              // 채팅 옆에 날짜 안보이게 하기
-              ChattingController.to.lastChatDate = data['createdAt'];
-              ChattingController.to.lastChatUserEmail = data['userEmail'];
-              var chat = Chat.fromJson(data);
-              chat.isVisibleDate.value = false;
-              ChattingController.to.chats.add(chat);
+    if(jsonData['chats']!= null){
+      for (var data in jsonData['chats']) {
+        if (ChattingController.to.lastChatDate == null) {
+          ChattingController.to.chats.add(Chat.fromJson(data));
+          ChattingController.to.lastChatDate =
+          data['createdAt']; // null 일 경우 최근 채팅의 날짜 정보
+          ChattingController.to.lastChatUserEmail =
+          data['userEmail']; // null 일 경우 최근 채팅의 유저 이메일
+        } else {
+          // 최근 채팅과 새로운 채팅의 날짜가 같으면
+          if (extractDateOnly(ChattingController.to.lastChatDate!) ==
+              extractDateOnly(data['createdAt'])) {
+            // 최근 채팅과 새로운 채팅을 입력한 사람이 같다면
+            if (ChattingController.to.lastChatUserEmail == data['userEmail']) {
+              // 최근 채팅과 새로운 채팅을 입력한 시간이 같다면
+              if (extractDateTime(ChattingController.to.lastChatDate!) ==
+                  extractDateTime(data['createdAt'])) {
+                // 채팅 옆에 날짜 안보이게 하기
+                ChattingController.to.lastChatDate = data['createdAt'];
+                ChattingController.to.lastChatUserEmail = data['userEmail'];
+                var chat = Chat.fromJson(data);
+                chat.isVisibleDate.value = false;
+                ChattingController.to.chats.add(chat);
+              } else {
+                ChattingController.to.lastChatDate = data['createdAt'];
+                ChattingController.to.lastChatUserEmail = data['userEmail'];
+                ChattingController.to.chats.add(Chat.fromJson(data));
+              }
             } else {
               ChattingController.to.lastChatDate = data['createdAt'];
               ChattingController.to.lastChatUserEmail = data['userEmail'];
               ChattingController.to.chats.add(Chat.fromJson(data));
             }
-          } else {
+          }
+          // 최근 채팅과 새로운 채팅의 날짜가 다르면
+          else {
+            // TimeBox 추가
+            ChattingController.to.chats.add(Chat(
+              id: 0,
+              roomId: data['roomId'],
+              createdAt: ChattingController.to.lastChatDate!,
+              content: "timeBox",
+              readCount: 0,
+              type: 'time',
+            ));
+            print("타임 박스 추가 ${ChattingController.to.lastChatDate!}");
+            ChattingController.to.chats.add(Chat.fromJson(data));
             ChattingController.to.lastChatDate = data['createdAt'];
             ChattingController.to.lastChatUserEmail = data['userEmail'];
-            ChattingController.to.chats.add(Chat.fromJson(data));
           }
         }
-        // 최근 채팅과 새로운 채팅의 날짜가 다르면
-        else {
-          // TimeBox 추가
-          ChattingController.to.chats.add(Chat(
-            id: 0,
-            roomId: data['roomId'],
-            createdAt: ChattingController.to.lastChatDate!,
-            content: "timeBox",
-            readCount: 0,
-            type: 'time',
-          ));
-          print("타임 박스 추가 ${ChattingController.to.lastChatDate!}");
-          ChattingController.to.chats.add(Chat.fromJson(data));
-          ChattingController.to.lastChatDate = data['createdAt'];
-          ChattingController.to.lastChatUserEmail = data['userEmail'];
-        }
       }
-    }
-    // 채팅 데이터가 비어있지 않으면 첫번째 채팅에 대한 날짜정보와 유저정보 업데이트
-    if (ChattingController.to.chats.isNotEmpty) {
-      ChattingController.to.firstChatUserEmail =
-          ChattingController.to.chats.first.userEmail;
-      ChattingController.to.firstChatDate =
-          ChattingController.to.chats.first.createdAt;
-    }
-    // 채팅 데이터가 비어있으면 타임 박스 추가
-    else {
-      ChattingController.to.chats.add(Chat(
-        id: 0,
-        roomId: roomId,
-        createdAt: DateTime.now().toString(),
-        content: "timeBox",
-        readCount: 0,
-        type: 'time',
-      ));
-      ChattingController.to.firstChatDate = DateTime.now().toString(); // 오늘 날짜
-      print("firstChatDate 설정 : ${ChattingController.to.firstChatDate}");
+      // 채팅 데이터가 비어있지 않으면 첫번째 채팅에 대한 날짜정보와 유저정보 업데이트
+      if (ChattingController.to.chats.isNotEmpty) {
+        ChattingController.to.firstChatUserEmail =
+            ChattingController.to.chats.first.userEmail;
+        ChattingController.to.firstChatDate =
+            ChattingController.to.chats.first.createdAt;
+      }
+      // 채팅 데이터가 비어있으면 타임 박스 추가
+      else {
+        ChattingController.to.chats.add(Chat(
+          id: 0,
+          roomId: roomId,
+          createdAt: DateTime.now().toString(),
+          content: "timeBox",
+          readCount: 0,
+          type: 'time',
+        ));
+        ChattingController.to.firstChatDate = DateTime.now().toString(); // 오늘 날짜
+        print("firstChatDate 설정 : ${ChattingController.to.firstChatDate}");
+      }
     }
     ChattingController.to.isChatLoading.value = false;
   }
