@@ -105,6 +105,25 @@ class _InfoAuthPageState extends State<InfoAuthPage> {
                 onPressed: () async {
                   // 닉네임 인증
                   String nickname = nicknameController.text;
+                  if (nickname.length >= 8) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('닉네임 길이 오류'),
+                          content: Text('최대 8자로 입력해주세요.'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text('확인'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
                   signupController.checkNickname(nickname, context);
                 },
               ),

@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, prefer_const_constructors
+
 import 'dart:io';
 import 'dart:ui' as ui;
 
@@ -26,65 +28,22 @@ class SelectImagePageState extends State<SelectImagePage> {
   CropController? cropController;
 
   Future<void> pickImages() async {
-    final List<XFile>? pickedFiles = await picker.pickMultiImage();
-    if (pickedFiles != null) {
-      for (XFile file in pickedFiles) {
-        setState(() {
-          imageFile = File(file.path);
-          cropController = CropController(
-            aspectRatio: 9 / 16, // 16:9 비율로 설정
-            defaultCrop: Rect.fromCenter(
-              center: const Offset(0.5, 0.5), // 가운데를 기준으로 크롭
-              width: 0.98, // 크롭 영역의 너비 비율
-              height: 0.98, // 크롭 영역의 높이 비율
-            ),
-          );
-        });
-        //await resizeAndShowCropDialog();
-        await showCropDialog();
-      }
+    final List<XFile> pickedFiles = await picker.pickMultiImage();
+    for (XFile file in pickedFiles) {
+      setState(() {
+        imageFile = File(file.path);
+        cropController = CropController(
+          aspectRatio: 0.5, // 16:9 비율로 설정
+          defaultCrop: Rect.fromCenter(
+            center: const Offset(0.5, 0.5), // 가운데를 기준으로 크롭
+            width: 0.98, // 크롭 영역의 너비 비율
+            height: 0.98, // 크롭 영역의 높이 비율
+          ),
+        );
+      });
+      await showCropDialog();
     }
   }
-
-  // Future<void> resizeAndShowCropDialog() async {
-  //   if (imageFile == null) return;
-
-  //   // 이미지 리사이즈
-  //   final originalImage = img.decodeImage(await imageFile!.readAsBytes());
-  //   if (originalImage == null) return;
-
-  //   // 원본 이미지를 고정된 비율로 잘라내기 (예: 16:9 비율로 잘라냄)
-  //   int targetWidth = 900;
-  //   int targetHeight = 1600;
-  //   img.Image croppedImage;
-  //   if (originalImage.width / originalImage.height > 9 / 16) {
-  //     // 가로가 더 긴 경우
-  //     int cropWidth = (originalImage.height * targetWidth) ~/ targetHeight;
-  //     int cropX = (originalImage.width - cropWidth) ~/ 2;
-  //     croppedImage = img.copyCrop(originalImage,
-  //         x: cropX, y: 0, width: cropWidth, height: originalImage.height);
-  //   } else {
-  //     // 세로가 더 긴 경우
-  //     int cropHeight = (originalImage.width * targetHeight) ~/ targetWidth;
-  //     int cropY = (originalImage.height - cropHeight) ~/ 2;
-  //     croppedImage = img.copyCrop(originalImage,
-  //         x: 0, y: cropY, width: originalImage.width, height: cropHeight);
-  //   }
-
-  //   // 고정된 크기로 리사이즈
-  //   final resizedImage =
-  //       img.copyResize(croppedImage, width: targetWidth, height: targetHeight);
-  //   final tempDir = await getTemporaryDirectory();
-  //   final resizedImagePath =
-  //       path.join(tempDir.path, 'resized_${path.basename(imageFile!.path)}');
-  //   File(resizedImagePath).writeAsBytesSync(img.encodeJpg(resizedImage));
-  //   setState(() {
-  //     imageFile = File(resizedImagePath);
-  //   });
-
-  //   // 크롭 다이얼로그 표시
-  //   await showCropDialog();
-  // }
 
   Future<void> showCropDialog() async {
     if (cropController == null || imageFile == null) return;
@@ -120,6 +79,7 @@ class SelectImagePageState extends State<SelectImagePage> {
           TextButton(
             onPressed: () async {
               await cropAndAddImage();
+              // ignore: use_build_context_synchronously
               Navigator.of(context).pop();
             },
             child: const Text('확인'),
@@ -288,13 +248,13 @@ class SelectImagePageState extends State<SelectImagePage> {
                       print(images);
                       userDataController.logout();
                     } else {
-                      print('이미지는 최대 3장입니다.');
+                      print('이미지는 최대 4개 이상이어야 합니다.');
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: const Text('이미지 초과'),
-                            content: const Text('이미지는 최대 3장입니다.'),
+                            title: const Text('이미지 추가'),
+                            content: const Text('이미지를 1장 이상 넣어주세요.'),
                             actions: [
                               TextButton(
                                 onPressed: () {

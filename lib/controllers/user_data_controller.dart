@@ -16,6 +16,7 @@ import '../models/userImage.dart';
 
 class UserDataController extends GetxController {
   static UserDataController get to => Get.find<UserDataController>();
+  SignupController signupController = Get.find<SignupController>();
   Rxn<User?> user = Rxn<User?>(null);
   RxList<UserImage> images = <UserImage>[].obs;
   // Rx<String> matchingUserNumbers = "1,2,3".obs; // 매칭 유저 정보
@@ -29,7 +30,13 @@ class UserDataController extends GetxController {
   static const auth = 'auth';
   static const login = 'login';
 
-  static String? baseUrl=AppConfig.baseUrl;
+  static String? baseUrl = AppConfig.baseUrl;
+
+  void updateTokens(String newAccessToken, String newRefreshToken) {
+    // 토큰 갱신 시 사용함
+    accessToken = newAccessToken;
+    refreshToken = newRefreshToken;
+  }
 
   void updateUserInfo(User newUser) {
     user.value = newUser;
@@ -93,6 +100,12 @@ class UserDataController extends GetxController {
   }
 
   void logout() async {
+    user.value = null;
+    accessToken = '';
+    refreshToken = '';
+    signupController.resetAllInputs();
+    FriendController.to.resetData();
+    ChattingListController.to.resetData();
     ////////////////수정 필요 //////////////////////////
     await FcmService.deleteUserFcmToken();
     await AppConfig.storage.write(key: "isAutoLogin", value: "false");

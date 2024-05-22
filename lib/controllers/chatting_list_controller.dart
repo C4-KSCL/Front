@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/models/chat_list.dart';
@@ -11,7 +10,7 @@ import '../config.dart';
 class ChattingListController extends GetxController {
   static ChattingListController get to => Get.find<ChattingListController>();
 
-  static String? baseUrl=AppConfig.baseUrl;
+  static String? baseUrl = AppConfig.baseUrl;
 
   RxList<ChatList> chattingList = <ChatList>[].obs; //채팅 리스트
 
@@ -156,9 +155,9 @@ class ChattingListController extends GetxController {
 
     final response = await http.patch(url, headers: headers);
 
-    if(response.statusCode==200){
+    if (response.statusCode == 200) {
       print("${response.statusCode} 성공적으로 나가짐");
-    } else{
+    } else {
       print("나가기 실패");
       print(response.body);
     }
@@ -170,7 +169,7 @@ class ChattingListController extends GetxController {
   }) async {
     final url = Uri.parse('$baseUrl/rooms/create');
 
-    final body = jsonEncode({"oppEmail": oppEmail}) ;
+    final body = jsonEncode({"oppEmail": oppEmail});
 
     final response = await http.patch(url, headers: headers, body: body);
 

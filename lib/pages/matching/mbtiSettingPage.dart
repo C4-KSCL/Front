@@ -26,6 +26,7 @@ class _MbtiSettingPageState extends State<MbtiSettingPage> {
   final pageController = PageController();
 
   String accessToken = '';
+  String refreshToken = '';
   String email = '';
   String nickname = '';
   String age = '';
@@ -53,6 +54,7 @@ class _MbtiSettingPageState extends State<MbtiSettingPage> {
     final controller = Get.find<UserDataController>();
     if (controller.user.value != null) {
       accessToken = controller.accessToken;
+      refreshToken = controller.refreshToken;
     }
   }
 
@@ -131,12 +133,12 @@ class _MbtiSettingPageState extends State<MbtiSettingPage> {
               children: [
                 NumberInputField(
                   controller: minAgeController,
-                  hintText: UserDataController.to.user.value!.friendMinAge!,
+                  hintText: '입력하기',
                 ),
                 const Icon(Icons.remove),
                 NumberInputField(
                   controller: maxAgeController,
-                  hintText: UserDataController.to.user.value!.friendMaxAge!,
+                  hintText: '입력하기',
                 ),
               ],
             ),
@@ -161,16 +163,91 @@ class _MbtiSettingPageState extends State<MbtiSettingPage> {
                   settingModifyController.addToSettingArray(genderString);
                   print(settingModifyController);
 
-                  await FriendSettingService.updateFriendMbtiSetting(
-                    accessToken,
-                    selectedMBTI,
-                    maxAgeController.text,
-                    minAgeController.text,
-                    genderString,
-                  );
-                  KeywordController.to.resetMBTI();
-                  print(selectedMBTI);
-                  Get.back();
+                  if (selectedMBTI.isEmpty) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('mbti'),
+                          content: const Text('mbti가 비어있습니다.'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text('확인'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  } else if (maxAgeController.text.isEmpty) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('최대나이'),
+                          content: const Text('최대나이가 비어있습니다.'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text('확인'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  } else if (minAgeController.text.isEmpty) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('최소나이'),
+                          content: const Text('최소나이가 비어있습니다.'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text('확인'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  } else if (genderString.isEmpty) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('성별'),
+                          content: const Text('성별이 비어있습니다.'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text('확인'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  } else {
+                    await FriendSettingService.updateFriendMbtiSetting(
+                      accessToken,
+                      refreshToken,
+                      selectedMBTI,
+                      maxAgeController.text,
+                      minAgeController.text,
+                      genderString,
+                    );
+                    KeywordController.to.resetMBTI();
+                    print(selectedMBTI);
+                    Get.back();
+                  }
                 },
               ),
             ),

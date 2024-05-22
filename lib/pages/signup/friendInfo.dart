@@ -169,7 +169,6 @@ class FriendInfoPage extends StatelessWidget {
                             String maxage = maxageController.text;
                             int minage_int = int.parse(minage);
                             int maxage_int = int.parse(maxage);
-                            print(minage_int + maxage_int);
                             if (minage_int > maxage_int) {
                               showDialog(
                                 context: context,
@@ -189,8 +188,8 @@ class FriendInfoPage extends StatelessWidget {
                                 },
                               );
                             } else {
-                              signupController.addToSignupArray(minage);
                               signupController.addToSignupArray(maxage);
+                              signupController.addToSignupArray(minage);
                               signupController.addToSignupArray(genderString);
 
                               print(signupController.signupArray);
