@@ -107,6 +107,7 @@ class _KeywordSettingPageState extends State<KeywordSettingPage> {
                         print(MindKeywords);
                         await FriendSettingService.updateFriendKeywordSetting(
                           userDataController.accessToken,
+                          userDataController.refreshToken,
                           combinedKeywords,
                         );
 

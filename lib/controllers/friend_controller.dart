@@ -14,7 +14,7 @@ import '../config.dart';
 class FriendController extends GetxController {
   static FriendController get to => Get.find();
 
-  static String? baseUrl=AppConfig.baseUrl;
+  static String? baseUrl = AppConfig.baseUrl;
 
   Rx<int> pageNumber = 0.obs;
   RxList<Friend> friends = RxList<Friend>(); // 친구 리스트

@@ -1,14 +1,14 @@
+import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/models/user.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 import '../config.dart';
 
 class InfoModifyController extends GetxController {
-  static String? baseUrl=AppConfig.baseUrl;
+  static String? baseUrl = AppConfig.baseUrl;
 
   Rx<User> userInfo = User(
     email: '',
@@ -21,86 +21,105 @@ class InfoModifyController extends GetxController {
   ).obs;
 
   Future<void> InfoModify(
-    String accessToken,
     String password,
     String nickname,
     String phoneNumber,
     String age,
   ) async {
-    final url = Uri.parse('$baseUrl/edit/info');
-    final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json', 'accessToken': accessToken},
-      body: jsonEncode({
+    await _modifyInfo(
+      'edit/info',
+      {
         'password': password,
         'nickname': nickname,
         'phoneNumber': phoneNumber,
-        'age': age,
-      }),
+        'age': age
+      },
     );
+  }
 
-    print(response.statusCode);
-    print(response.body);
+  Future<void> MbtiModify(String myMBTI) async {
+    await _modifyInfo('edit/infoMBTI', {'myMBTI': myMBTI});
+  }
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      print(data);
+  Future<void> KeywordModify(String myKeyword) async {
+    await _modifyInfo('edit/infoKeyword', {'myKeyword': myKeyword});
+  }
 
-      userInfo.value = User.fromJson(data['user']);
-      Get.find<UserDataController>().updateUserInfo(userInfo.value);
-      print('개인정보 수정 성공');
+  Future<void> _modifyInfo(String endpoint, Map<String, dynamic> body) async {
+    String url = '$baseUrl/$endpoint';
+    String accessToken = UserDataController.to.accessToken;
+    String refreshToken = UserDataController.to.refreshToken;
+
+    var response = await _postRequest(url, accessToken, body);
+
+    if (response.statusCode == 401) {
+      // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
+      response = await _postRequestWithRefreshToken(
+          url, accessToken, refreshToken, body);
+
+      if (response.statusCode == 300) {
+        // 새로운 토큰을 받아서 갱신
+        final newTokens = jsonDecode(response.body);
+        UserDataController.to
+            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
+
+        // 갱신된 토큰으로 다시 정보 수정 요청
+        response =
+            await _postRequest(url, UserDataController.to.accessToken, body);
+
+        if (response.statusCode == 200) {
+          _handleSuccessResponse(response);
+        } else {
+          _handleErrorResponse(response);
+        }
+      } else if (response.statusCode == 402) {
+        // RefreshToken도 만료된 경우
+        print('Refresh token expired, please log in again.');
+        Get.snackbar('실패', '재로그인이 필요합니다.');
+        UserDataController.to.logout();
+      } else {
+        _handleErrorResponse(response);
+      }
+    } else if (response.statusCode == 200) {
+      _handleSuccessResponse(response);
     } else {
-      print('개인정보 수정 오류 발생: ${response.statusCode}');
+      _handleErrorResponse(response);
     }
   }
 
-  Future<void> MbtiModify(String accessToken, String myMBTI) async {
-    final url = Uri.parse('$baseUrl/edit/infoMBTI');
-    final response = await http.post(
-      url,
+  Future<http.Response> _postRequest(
+      String url, String accessToken, Map<String, dynamic> body) async {
+    return await http.post(
+      Uri.parse(url),
       headers: {'Content-Type': 'application/json', 'accessToken': accessToken},
-      body: jsonEncode({
-        'myMBTI': myMBTI,
-      }),
+      body: jsonEncode(body),
     );
-
-    print(response.statusCode);
-    print(response.body);
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      print(data);
-
-      userInfo.value = User.fromJson(data['user']);
-      Get.find<UserDataController>().updateUserInfo(userInfo.value);
-      print('MBTI 수정 성공');
-    } else {
-      print('MBTI 수정 오류 발생: ${response.statusCode}');
-    }
   }
 
-  Future<void> KeywordModify(String accessToken, String myKeyword) async {
-    final url = Uri.parse('$baseUrl/edit/infoKeyword');
-    final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json', 'accessToken': accessToken},
-      body: jsonEncode({
-        'myKeyword': myKeyword,
-      }),
+  Future<http.Response> _postRequestWithRefreshToken(
+      String url,
+      String accessToken,
+      String refreshToken,
+      Map<String, dynamic> body) async {
+    return await http.post(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+        'accessToken': accessToken,
+        'refreshToken': refreshToken,
+      },
+      body: jsonEncode(body),
     );
+  }
 
-    print(response.statusCode);
-    print(response.body);
+  void _handleSuccessResponse(http.Response response) {
+    final data = jsonDecode(response.body);
+    userInfo.value = User.fromJson(data['user']);
+    Get.find<UserDataController>().updateUserInfo(userInfo.value);
+    print('정보 수정 성공');
+  }
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      print(data);
-
-      userInfo.value = User.fromJson(data['user']);
-      Get.find<UserDataController>().updateUserInfo(userInfo.value);
-      print('Keyword 수정 성공');
-    } else {
-      print('Keyword 수정 오류 발생: ${response.statusCode}');
-    }
+  void _handleErrorResponse(http.Response response) {
+    print('정보 수정 오류 발생: ${response.statusCode}');
   }
 }

@@ -29,13 +29,19 @@ class UserDataController extends GetxController {
   static const auth = 'auth';
   static const login = 'login';
 
-  static String? baseUrl=AppConfig.baseUrl;
+  static String? baseUrl = AppConfig.baseUrl;
 
   @override
   void onReady() {
     super.onReady();
     _moveToPage(user.value);
     ever(user, _moveToPage);
+  }
+
+  void updateTokens(String newAccessToken, String newRefreshToken) {
+    // 토큰 갱신 시 사용함
+    accessToken = newAccessToken;
+    refreshToken = newRefreshToken;
   }
 
   void updateUserInfo(User newUser) {
@@ -97,6 +103,8 @@ class UserDataController extends GetxController {
 
   void logout() {
     user.value = null;
+    accessToken = '';
+    refreshToken = '';
     signupController.resetAllInputs();
     FriendController.to.resetData();
     ChattingListController.to.resetData();

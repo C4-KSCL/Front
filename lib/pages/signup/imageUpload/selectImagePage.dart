@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, prefer_const_constructors
+
 import 'dart:io';
 import 'dart:ui' as ui;
 
@@ -26,22 +28,20 @@ class SelectImagePageState extends State<SelectImagePage> {
   CropController? cropController;
 
   Future<void> pickImages() async {
-    final List<XFile>? pickedFiles = await picker.pickMultiImage();
-    if (pickedFiles != null) {
-      for (XFile file in pickedFiles) {
-        setState(() {
-          imageFile = File(file.path);
-          cropController = CropController(
-            aspectRatio: 9 / 16, // 16:9 비율로 설정
-            defaultCrop: Rect.fromCenter(
-              center: const Offset(0.5, 0.5), // 가운데를 기준으로 크롭
-              width: 0.98, // 크롭 영역의 너비 비율
-              height: 0.98, // 크롭 영역의 높이 비율
-            ),
-          );
-        });
-        await showCropDialog();
-      }
+    final List<XFile> pickedFiles = await picker.pickMultiImage();
+    for (XFile file in pickedFiles) {
+      setState(() {
+        imageFile = File(file.path);
+        cropController = CropController(
+          aspectRatio: 0.5, // 16:9 비율로 설정
+          defaultCrop: Rect.fromCenter(
+            center: const Offset(0.5, 0.5), // 가운데를 기준으로 크롭
+            width: 0.98, // 크롭 영역의 너비 비율
+            height: 0.98, // 크롭 영역의 높이 비율
+          ),
+        );
+      });
+      await showCropDialog();
     }
   }
 
@@ -79,6 +79,7 @@ class SelectImagePageState extends State<SelectImagePage> {
           TextButton(
             onPressed: () async {
               await cropAndAddImage();
+              // ignore: use_build_context_synchronously
               Navigator.of(context).pop();
             },
             child: const Text('확인'),

@@ -138,8 +138,8 @@ class _ImageModifyPageState extends State<ImageModifyPage> {
           aspectRatio: 0.5, // 가로:세로 비율을 1:2로 설정
           defaultCrop: Rect.fromCenter(
             center: const Offset(0.5, 0.5),
-            width: 0.5,
-            height: 1.0,
+            width: 0.98,
+            height: 0.98,
           ),
         );
       });
@@ -215,7 +215,7 @@ class _ImageModifyPageState extends State<ImageModifyPage> {
         img.copyResize(image!, width: fixedWidth, height: fixedHeight);
     file.writeAsBytesSync(img.encodePng(resizedImage));
 
-    await UserImageController().addImage(XFile(file.path), accessToken);
+    await UserImageController().addImage(XFile(file.path));
     setState(() {
       imageFile = null;
       cropController = null;
@@ -223,7 +223,7 @@ class _ImageModifyPageState extends State<ImageModifyPage> {
   }
 
   void deleteImage(int idx) async {
-    await UserImageController().deleteImage(idx, accessToken);
+    await UserImageController().deleteImage(idx);
   }
 
   @override
