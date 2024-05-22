@@ -10,7 +10,6 @@ Widget AcceptOrRejectButtonLayer(int? friendRequestId) {
   return Container(
     width: 320,
     decoration: BoxDecoration(
-      color: Colors.white.withOpacity(0.3),
       borderRadius: BorderRadius.circular(8),
     ),
     child: Row(
@@ -67,27 +66,24 @@ Widget AcceptOrRejectButtonLayer(int? friendRequestId) {
 Widget CancelButtonLayer(int? friendRequestId) {
   return Container(
     decoration: BoxDecoration(
-      color: Colors.white.withOpacity(0.3),
       borderRadius: BorderRadius.circular(8),
     ),
-    child: Expanded(
-      child: TextButton(
-        style: TextButton.styleFrom(
-          backgroundColor: Colors.grey,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10), // 둥근 모서리의 반지름
-          ),
+    child: TextButton(
+      style: TextButton.styleFrom(
+        backgroundColor: Colors.grey,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10), // 둥근 모서리의 반지름
         ),
-        onPressed: () async {
-          await FriendController.deleteFriendRequest(requestId: friendRequestId.toString());
-          await FriendController.getFriendSentRequest();
-          await ChattingListController.getLastChatList();
-          Get.back();
-        },
-        child: const Text(
-          "취소",
-          style: blackTextStyle2,
-        ),
+      ),
+      onPressed: () async {
+        await FriendController.deleteFriendRequest(requestId: friendRequestId.toString());
+        await FriendController.getFriendSentRequest();
+        await ChattingListController.getLastChatList();
+        Get.back();
+      },
+      child: const Text(
+        "취소",
+        style: blackTextStyle2,
       ),
     ),
   );

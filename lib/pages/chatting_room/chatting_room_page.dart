@@ -130,7 +130,6 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
             ChattingController.to.disconnect();
             ChattingListController.getLastChatList();
             Get.back();
-            ChattingController.to.resetChatRoomData();
           },
         ),
         title: Text(widget.oppUserName),
@@ -237,8 +236,9 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                       Align(
                         alignment: Alignment.center,
                         child: ChattingController.to.isReceivedRequest.value
-                            ? AcceptOrRejectButtonLayer(widget.friendRequestId)
-                            : CancelButtonLayer(widget.friendRequestId),
+                            ? AcceptOrRejectButtonLayer(widget.friendRequestId) // 수락, 거절 버튼
+
+                            : CancelButtonLayer(widget.friendRequestId), // 취소 버튼
                       ),
                       const SizedBox(height: 50),
                     ],

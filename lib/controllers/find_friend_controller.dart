@@ -29,6 +29,7 @@ class FindFriendController extends GetxController {
     if (response.statusCode == 401) {
       // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
       print("AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도");
+      print(response.body);
       response = await _getRequestWithRefreshToken(
         url,
         userDataController.accessToken,
@@ -38,13 +39,18 @@ class FindFriendController extends GetxController {
       if (response.statusCode == 300) {
         // 새로운 토큰을 받아서 갱신 후 요청
         print("새로운 토큰을 받아서 갱신 및 요청");
+        print(response.body);
+
         final newTokens = jsonDecode(response.body);
         userDataController.updateTokens(
             newTokens['accessToken'], newTokens['refreshToken']);
+
         response = await _getRequest(url, newTokens['accessToken']);
+
       } else if (response.statusCode == 402) {
         // RefreshToken도 만료된 경우
         print('리프레시 토큰 만료, 재로그인');
+        print(response.body);
         Get.snackbar('실패', '로그인이 필요합니다.');
         userDataController.logout();
         return;

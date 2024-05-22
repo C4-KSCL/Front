@@ -24,7 +24,7 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
     required this.isReceivedRequest,
   });
 
-  static String? baseUrl=AppConfig.baseUrl;
+  static String? baseUrl = AppConfig.baseUrl;
   ScrollController scrollController = ScrollController();
   String? roomId;
 
@@ -57,13 +57,6 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
   static const send = 'send';
   static const delete = 'delete';
   static const events = 'events';
-
-  static String accessToken = UserDataController.to.accessToken;
-
-  static Map<String, String> headers = {
-    "Content-type": "application/json",
-    "accessToken": accessToken
-  };
 
   @override
   void onInit() async {
@@ -120,19 +113,6 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
 
   void setRoomId({required String roomId}) {
     this.roomId = roomId;
-  }
-
-  // 챗 가능 여부 리셋
-  void resetChatRoomData() {
-    clickAddButton.value = false;
-    showSecondGridView.value = false;
-    clickQuizButtonIndex.value = -1;
-    roomId = null;
-    lastChatDate = null;
-    lastChatUserEmail = null;
-    firstChatDate = null;
-    firstChatUserEmail = null;
-    print("방 정보 리셋");
   }
 
   //Socket.io 관련 함수
@@ -404,141 +384,279 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
     print("URL : $url");
 
     // http로 정보 받기
-    final response = await http.get(url, headers: headers);
+    var response = await UserDataController.getRequest(
+      url: url,
+      accessToken: UserDataController.to.accessToken,
+    );
     print(response.statusCode);
     print(response.body);
 
-    // 받은 정보로 데이터 추가하기
-    final jsonData = json.decode(response.body);
-    if(jsonData['chats']!= null){
-      for (var data in jsonData['chats']) {
-        if (ChattingController.to.lastChatDate == null) {
-          ChattingController.to.chats.add(Chat.fromJson(data));
-          ChattingController.to.lastChatDate =
-          data['createdAt']; // null 일 경우 최근 채팅의 날짜 정보
-          ChattingController.to.lastChatUserEmail =
-          data['userEmail']; // null 일 경우 최근 채팅의 유저 이메일
-        } else {
-          // 최근 채팅과 새로운 채팅의 날짜가 같으면
-          if (extractDateOnly(ChattingController.to.lastChatDate!) ==
-              extractDateOnly(data['createdAt'])) {
-            // 최근 채팅과 새로운 채팅을 입력한 사람이 같다면
-            if (ChattingController.to.lastChatUserEmail == data['userEmail']) {
-              // 최근 채팅과 새로운 채팅을 입력한 시간이 같다면
-              if (extractDateTime(ChattingController.to.lastChatDate!) ==
-                  extractDateTime(data['createdAt'])) {
-                // 채팅 옆에 날짜 안보이게 하기
-                ChattingController.to.lastChatDate = data['createdAt'];
-                ChattingController.to.lastChatUserEmail = data['userEmail'];
-                var chat = Chat.fromJson(data);
-                chat.isVisibleDate.value = false;
-                ChattingController.to.chats.add(chat);
+    if (response.statusCode == 401) {
+      // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
+      print("AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도");
+      print(response.body);
+      response = await UserDataController.getRequestWithRefreshToken(
+        url: url,
+        accessToken: UserDataController.to.accessToken,
+        refreshToken: UserDataController.to.refreshToken,
+      );
+
+      if (response.statusCode == 300) {
+        // 새로운 토큰을 받아서 갱신 후 요청
+        print("새로운 토큰을 받아서 갱신 및 요청");
+        print(response.body);
+
+        final newTokens = jsonDecode(response.body);
+        UserDataController.to
+            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
+
+        response = await UserDataController.getRequest(
+          url: url,
+          accessToken: newTokens['accessToken'],
+        );
+      } else if (response.statusCode == 402) {
+        // RefreshToken도 만료된 경우
+        print('리프레시 토큰 만료, 재로그인');
+        print(response.body);
+        Get.snackbar('실패', '로그인이 필요합니다.');
+        UserDataController.to.logout();
+        return;
+      }
+    }
+
+    if (response.statusCode == 200) {
+      // 받은 정보로 데이터 추가하기
+      final jsonData = json.decode(response.body);
+      if (jsonData['chats'] != null) {
+        for (var data in jsonData['chats']) {
+          if (ChattingController.to.lastChatDate == null) {
+            ChattingController.to.chats.add(Chat.fromJson(data));
+            ChattingController.to.lastChatDate =
+                data['createdAt']; // null 일 경우 최근 채팅의 날짜 정보
+            ChattingController.to.lastChatUserEmail =
+                data['userEmail']; // null 일 경우 최근 채팅의 유저 이메일
+          } else {
+            // 최근 채팅과 새로운 채팅의 날짜가 같으면
+            if (extractDateOnly(ChattingController.to.lastChatDate!) ==
+                extractDateOnly(data['createdAt'])) {
+              // 최근 채팅과 새로운 채팅을 입력한 사람이 같다면
+              if (ChattingController.to.lastChatUserEmail ==
+                  data['userEmail']) {
+                // 최근 채팅과 새로운 채팅을 입력한 시간이 같다면
+                if (extractDateTime(ChattingController.to.lastChatDate!) ==
+                    extractDateTime(data['createdAt'])) {
+                  // 채팅 옆에 날짜 안보이게 하기
+                  ChattingController.to.lastChatDate = data['createdAt'];
+                  ChattingController.to.lastChatUserEmail = data['userEmail'];
+                  var chat = Chat.fromJson(data);
+                  chat.isVisibleDate.value = false;
+                  ChattingController.to.chats.add(chat);
+                } else {
+                  ChattingController.to.lastChatDate = data['createdAt'];
+                  ChattingController.to.lastChatUserEmail = data['userEmail'];
+                  ChattingController.to.chats.add(Chat.fromJson(data));
+                }
               } else {
                 ChattingController.to.lastChatDate = data['createdAt'];
                 ChattingController.to.lastChatUserEmail = data['userEmail'];
                 ChattingController.to.chats.add(Chat.fromJson(data));
               }
-            } else {
+            }
+            // 최근 채팅과 새로운 채팅의 날짜가 다르면
+            else {
+              // TimeBox 추가
+              ChattingController.to.chats.add(Chat(
+                id: 0,
+                roomId: data['roomId'],
+                createdAt: ChattingController.to.lastChatDate!,
+                content: "timeBox",
+                readCount: 0,
+                type: 'time',
+              ));
+              print("타임 박스 추가 ${ChattingController.to.lastChatDate!}");
+              ChattingController.to.chats.add(Chat.fromJson(data));
               ChattingController.to.lastChatDate = data['createdAt'];
               ChattingController.to.lastChatUserEmail = data['userEmail'];
-              ChattingController.to.chats.add(Chat.fromJson(data));
             }
           }
-          // 최근 채팅과 새로운 채팅의 날짜가 다르면
-          else {
-            // TimeBox 추가
-            ChattingController.to.chats.add(Chat(
-              id: 0,
-              roomId: data['roomId'],
-              createdAt: ChattingController.to.lastChatDate!,
-              content: "timeBox",
-              readCount: 0,
-              type: 'time',
-            ));
-            print("타임 박스 추가 ${ChattingController.to.lastChatDate!}");
-            ChattingController.to.chats.add(Chat.fromJson(data));
-            ChattingController.to.lastChatDate = data['createdAt'];
-            ChattingController.to.lastChatUserEmail = data['userEmail'];
-          }
         }
-      }
-      // 채팅 데이터가 비어있지 않으면 첫번째 채팅에 대한 날짜정보와 유저정보 업데이트
-      if (ChattingController.to.chats.isNotEmpty) {
-        ChattingController.to.firstChatUserEmail =
-            ChattingController.to.chats.first.userEmail;
-        ChattingController.to.firstChatDate =
-            ChattingController.to.chats.first.createdAt;
-      }
-      // 채팅 데이터가 비어있으면 타임 박스 추가
-      else {
-        ChattingController.to.chats.add(Chat(
-          id: 0,
-          roomId: roomId,
-          createdAt: DateTime.now().toString(),
-          content: "timeBox",
-          readCount: 0,
-          type: 'time',
-        ));
-        ChattingController.to.firstChatDate = DateTime.now().toString(); // 오늘 날짜
-        print("firstChatDate 설정 : ${ChattingController.to.firstChatDate}");
+        // 채팅 데이터가 비어있지 않으면 첫번째 채팅에 대한 날짜정보와 유저정보 업데이트
+        if (ChattingController.to.chats.isNotEmpty) {
+          ChattingController.to.firstChatUserEmail =
+              ChattingController.to.chats.first.userEmail;
+          ChattingController.to.firstChatDate =
+              ChattingController.to.chats.first.createdAt;
+        }
+        // 채팅 데이터가 비어있으면 타임 박스 추가
+        else {
+          ChattingController.to.chats.add(Chat(
+            id: 0,
+            roomId: roomId,
+            createdAt: DateTime.now().toString(),
+            content: "timeBox",
+            readCount: 0,
+            type: 'time',
+          ));
+          ChattingController.to.firstChatDate =
+              DateTime.now().toString(); // 오늘 날짜
+          print("firstChatDate 설정 : ${ChattingController.to.firstChatDate}");
+        }
       }
     }
     ChattingController.to.isChatLoading.value = false;
   }
 
-  //속한 채팅 방들 리스트 받아오기
-  static Future<void> getRoomList() async {
-    final url = Uri.parse('$baseUrl/$rooms/get-list/');
-
-    final response = await http.delete(url, headers: headers);
-
-    print(response.statusCode);
-    print(response.body);
-  }
-
-  // bigCategory 가져오기
+  /// bigCategory 가져오기
   static Future<void> getBigCategories() async {
     final url = Uri.parse('$baseUrl/$events/get-big/');
 
-    final response = await http.get(url, headers: headers);
+    var response = await UserDataController.getRequest(
+      url: url,
+      accessToken: UserDataController.to.accessToken,
+    );
 
-    print(response.statusCode);
-    print(response.body);
+    if (response.statusCode == 401) {
+      // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
+      print("AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도");
+      print(response.body);
+      response = await UserDataController.getRequestWithRefreshToken(
+        url: url,
+        accessToken: UserDataController.to.accessToken,
+        refreshToken: UserDataController.to.refreshToken,
+      );
 
-    final jsonData = json.decode(response.body);
-    ChattingController.to.bigCategories = jsonData['categories']
-        .map((data) => BigCategory.fromJson(data))
-        .toList();
+      if (response.statusCode == 300) {
+        // 새로운 토큰을 받아서 갱신 후 요청
+        print("새로운 토큰을 받아서 갱신 및 요청");
+        print(response.body);
+
+        final newTokens = jsonDecode(response.body);
+        UserDataController.to
+            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
+
+        response = await UserDataController.getRequest(
+          url: url,
+          accessToken: newTokens['accessToken'],
+        );
+      } else if (response.statusCode == 402) {
+        // RefreshToken도 만료된 경우
+        print('리프레시 토큰 만료, 재로그인');
+        print(response.body);
+        Get.snackbar('실패', '로그인이 필요합니다.');
+        UserDataController.to.logout();
+        return;
+      }
+    }
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      final jsonData = json.decode(response.body);
+      ChattingController.to.bigCategories = jsonData['categories']
+          .map((data) => BigCategory.fromJson(data))
+          .toList();
+    }
   }
 
-  // smallCategory 가져오기
+  /// smallCategory 가져오기
   static Future<void> getSmallCategories({
     required String bigCategoryName,
   }) async {
     final url = Uri.parse('$baseUrl/$events/get-small/$bigCategoryName');
 
-    final response = await http.get(url, headers: headers);
+    var response = await UserDataController.getRequest(
+      url: url,
+      accessToken: UserDataController.to.accessToken,
+    );
 
-    print(response.body);
+    if (response.statusCode == 401) {
+      // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
+      print("AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도");
+      print(response.body);
+      response = await UserDataController.getRequestWithRefreshToken(
+        url: url,
+        accessToken: UserDataController.to.accessToken,
+        refreshToken: UserDataController.to.refreshToken,
+      );
 
-    final jsonData = json.decode(response.body);
-    ChattingController.to.smallCategories = jsonData['categories']
-        .map((data) => SmallCategory.fromJson(data))
-        .toList();
+      if (response.statusCode == 300) {
+        // 새로운 토큰을 받아서 갱신 후 요청
+        print("새로운 토큰을 받아서 갱신 및 요청");
+        print(response.body);
+
+        final newTokens = jsonDecode(response.body);
+        UserDataController.to
+            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
+
+        response = await UserDataController.getRequest(
+          url: url,
+          accessToken: newTokens['accessToken'],
+        );
+      } else if (response.statusCode == 402) {
+        // RefreshToken도 만료된 경우
+        print('리프레시 토큰 만료, 재로그인');
+        print(response.body);
+        Get.snackbar('실패', '로그인이 필요합니다.');
+        UserDataController.to.logout();
+        return;
+      }
+    }
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
+      ChattingController.to.smallCategories = jsonData['categories']
+          .map((data) => SmallCategory.fromJson(data))
+          .toList();
+    }
   }
 
-  // 퀴즈 정보 불러오기
+  /// 퀴즈 정보 불러오기
   static Future<void> getQuizInfo({
     required String quizId,
   }) async {
     final url = Uri.parse('$baseUrl/$events/get-event-page/$quizId');
 
-    final response = await http.get(url, headers: headers);
+    var response = await UserDataController.getRequest(
+      url: url,
+      accessToken: UserDataController.to.accessToken,
+    );
 
     print(response.body);
 
-    final jsonData = json.decode(response.body);
+    if (response.statusCode == 401) {
+      // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
+      print("AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도");
+      print(response.body);
+      response = await UserDataController.getRequestWithRefreshToken(
+        url: url,
+        accessToken: UserDataController.to.accessToken,
+        refreshToken: UserDataController.to.refreshToken,
+      );
+
+      if (response.statusCode == 300) {
+        // 새로운 토큰을 받아서 갱신 후 요청
+        print("새로운 토큰을 받아서 갱신 및 요청");
+        print(response.body);
+
+        final newTokens = jsonDecode(response.body);
+        UserDataController.to
+            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
+
+        response = await UserDataController.getRequest(
+          url: url,
+          accessToken: newTokens['accessToken'],
+        );
+      } else if (response.statusCode == 402) {
+        // RefreshToken도 만료된 경우
+        print('리프레시 토큰 만료, 재로그인');
+        print(response.body);
+        Get.snackbar('실패', '로그인이 필요합니다.');
+        UserDataController.to.logout();
+        return;
+      }
+    }
+
     if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
       ChattingController.to.eventData.value = Event.fromJson(jsonData['event']);
     }
   }

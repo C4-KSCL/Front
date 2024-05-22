@@ -19,8 +19,9 @@ class UserDataController extends GetxController {
   SignupController signupController = Get.find<SignupController>();
   Rxn<User?> user = Rxn<User?>(null);
   RxList<UserImage> images = <UserImage>[].obs;
+
   // Rx<String> matchingUserNumbers = "1,2,3".obs; // 매칭 유저 정보
-  Rx<bool> isAutoLogin=true.obs; // 자동 로그인 여부
+  Rx<bool> isAutoLogin = true.obs; // 자동 로그인 여부
 
   var accessToken = '';
   var refreshToken = '';
@@ -57,13 +58,12 @@ class UserDataController extends GetxController {
 
     if (response.statusCode == 200) {
       // 자동 로그인 관련 처리
-      if(UserDataController.to.isAutoLogin.value){
+      if (UserDataController.to.isAutoLogin.value) {
         // 아이디 비번 저장
         await AppConfig.storage.write(key: "autoLoginEmail", value: email);
         await AppConfig.storage.write(key: "autoLoginPw", value: password);
         await AppConfig.storage.write(key: "isAutoLogin", value: "true");
-      }
-      else{
+      } else {
         await AppConfig.storage.write(key: "autoLoginEmail", value: '');
         await AppConfig.storage.write(key: "autoLoginPw", value: '');
         await AppConfig.storage.write(key: "isAutoLogin", value: "false");
@@ -93,7 +93,7 @@ class UserDataController extends GetxController {
       await FriendController.getFriendReceivedRequest();
       await FriendController.getFriendSentRequest();
       await ChattingListController.getLastChatList();
-      Get.offAll(()=>const InitPage());
+      Get.offAll(() => const InitPage());
     } else {
       print('login fail');
     }
@@ -115,10 +115,148 @@ class UserDataController extends GetxController {
     // Get.delete<ChattingListController>();
     // Get.put(FriendController());
     // Get.put(ChattingListController());
-    user.value=null;
-    images.value=<UserImage>[].obs;
-    isAutoLogin.value=false;
+    user.value = null;
+    images.value = <UserImage>[].obs;
+    isAutoLogin.value = false;
 
     print("로그아웃");
+  }
+
+  static Future<http.Response> getRequest({
+    required Uri url,
+    required String accessToken,
+  }) async {
+    return await http.get(
+      url,
+      headers: {
+        "Content-type": "application/json",
+        "accessToken": accessToken,
+      },
+    );
+  }
+
+  static Future<http.Response> getRequestWithRefreshToken({
+    required Uri url,
+    required String accessToken,
+    required String refreshToken,
+  }) async {
+    return await http.get(
+      url,
+      headers: {
+        "Content-type": "application/json",
+        "accessToken": accessToken,
+        "refreshToken": refreshToken,
+      },
+    );
+  }
+
+  static Future<http.Response> deleteRequest({
+    required Uri url,
+    required String accessToken,
+  }) async {
+    return await http.delete(
+      url,
+      headers: {
+        "Content-type": "application/json",
+        "accessToken": accessToken,
+      },
+    );
+  }
+
+  static Future<http.Response> deleteRequestWithRefreshToken({
+    required Uri url,
+    required String accessToken,
+    required String refreshToken,
+  }) async {
+    return await http.delete(
+      url,
+      headers: {
+        "Content-type": "application/json",
+        "accessToken": accessToken,
+        "refreshToken": refreshToken,
+      },
+    );
+  }
+
+  static Future<http.Response> patchRequest({
+    required Uri url,
+    required String accessToken,
+    String? body,
+  }) async {
+    if (body == null) {
+      return await http.patch(
+        url,
+        headers: {
+          "Content-type": "application/json",
+          "accessToken": accessToken,
+        },
+      );
+    } else {
+      return await http.patch(
+        url,
+        headers: {
+          "Content-type": "application/json",
+          "accessToken": accessToken,
+        },
+        body: body,
+      );
+    }
+  }
+
+  static Future<http.Response> patchRequestWithRefreshToken({
+    required Uri url,
+    required String accessToken,
+    required String refreshToken,
+    String? body,
+  }) async {
+    if (body == null) {
+      return await http.patch(
+        url,
+        headers: {
+          "Content-type": "application/json",
+          "accessToken": accessToken,
+        },
+      );
+    } else {
+      return await http.patch(
+        url,
+        headers: {
+          "Content-type": "application/json",
+          "accessToken": accessToken,
+        },
+        body: body,
+      );
+    }
+  }
+
+  static Future<http.Response> postRequest({
+    required Uri url,
+    required String accessToken,
+    required String body,
+  }) async {
+    return await http.post(
+      url,
+      headers: {
+        "Content-type": "application/json",
+        "accessToken": accessToken,
+      },
+      body: body,
+    );
+  }
+
+  static Future<http.Response> postRequestWithRefreshToken({
+    required Uri url,
+    required String accessToken,
+    required String refreshToken,
+    required String body,
+  }) async {
+    return await http.post(
+      url,
+      headers: {
+        "Content-type": "application/json",
+        "accessToken": accessToken,
+      },
+      body: body,
+    );
   }
 }
