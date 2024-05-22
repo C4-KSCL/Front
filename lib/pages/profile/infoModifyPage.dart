@@ -156,13 +156,35 @@ class _InfoModifyPageState extends State<InfoModifyPage> {
                 child: ButtonTextFieldBox(
                   hintText: '입력하세요',
                   onPressed: () async {
-                    bool? check = await NickNameCheck.checknickname(
-                        nicknameController.text, context);
-                    setState(() {
-                      if (check == true) {
-                        isNicknameVerified = true; // 닉네임 인증 상태를 true로 설정
-                      }
-                    });
+                    String nickname = nicknameController.text;
+                    if (nickname.length >= 8) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('닉네임 길이 오류'),
+                            content: Text('최대 8자로 입력해주세요.'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  isNicknameVerified = false;
+                                },
+                                child: const Text('확인'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    } else {
+                      bool? check =
+                          await NickNameCheck.checknickname(nickname, context);
+                      setState(() {
+                        if (check == true) {
+                          isNicknameVerified = true; // 닉네임 인증 상태를 true로 설정
+                        }
+                      });
+                    }
                   },
                   textEditingController: nicknameController,
                   buttonText: '인증하기',
@@ -239,29 +261,28 @@ class _InfoModifyPageState extends State<InfoModifyPage> {
                               phoneNumber.isNotEmpty &&
                               age.isNotEmpty) {
                             await infoModifyController.InfoModify(
-                              accessToken,
                               password,
                               nickname,
                               phoneNumber,
                               age,
                             );
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text('정보 수정'),
-                                  content: Text('정보가 수정되었습니다.'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text('확인'),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
+                            // showDialog(
+                            //   context: context,
+                            //   builder: (BuildContext context) {
+                            //     return AlertDialog(
+                            //       title: Text('정보 수정'),
+                            //       content: Text('정보가 수정되었습니다.'),
+                            //       actions: [
+                            //         TextButton(
+                            //           onPressed: () {
+                            //             Navigator.pop(context);
+                            //           },
+                            //           child: const Text('확인'),
+                            //         ),
+                            //       ],
+                            //     );
+                            //   },
+                            // );
                           } else {
                             showDialog(
                               context: context,

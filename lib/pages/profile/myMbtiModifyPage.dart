@@ -97,7 +97,7 @@ class _MyMbtiModifyPageState extends State<MyMbtiModifyPage> {
                         color: Colors.white,
                       )),
                   onPressed: () async {
-                    await infocontroller.MbtiModify(accessToken, selectedMBTI);
+                    await infocontroller.MbtiModify(selectedMBTI);
                     KeywordController.to.resetMBTI();
                     print(selectedMBTI);
                     Get.back();

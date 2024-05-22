@@ -103,7 +103,7 @@ class _MyKeywordModifyPageState extends State<MyKeywordModifyPage> {
                       print(MindKeywords);
 
                       await InfoModifyController()
-                          .KeywordModify(accessToken, combinedKeywords);
+                          .KeywordModify(combinedKeywords);
 
                       Get.back();
                     }
