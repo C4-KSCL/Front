@@ -22,46 +22,9 @@ class ChattingListController extends GetxController {
   //유저의 마지막 채팅들 가져오기 - 채팅방 리스트 구현
   static Future<void> getLastChatList() async {
     final url = Uri.parse('$baseUrl/chats/get-last-chats');
-
-    var response = await UserDataController.getRequest(
-      url: url,
-      accessToken: UserDataController.to.accessToken,
-    );
-
     List<ChatList> tempChatList = [];
 
-    if (response.statusCode == 401) {
-      // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
-      print("401 RefreshToken을 사용하여 AccessToken 갱신 시도");
-      print(response.body);
-      response = await UserDataController.getRequestWithRefreshToken(
-        url: url,
-        accessToken: UserDataController.to.accessToken,
-        refreshToken: UserDataController.to.refreshToken,
-      );
-
-      if (response.statusCode == 300) {
-        // 새로운 토큰을 받아서 갱신 후 요청
-        print("새로운 토큰을 받아서 갱신 및 요청");
-        print(response.body);
-
-        final newTokens = jsonDecode(response.body);
-        UserDataController.to
-            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
-
-        response = await UserDataController.getRequest(
-          url: url,
-          accessToken: newTokens['accessToken'],
-        );
-      } else if (response.statusCode == 402) {
-        // RefreshToken도 만료된 경우
-        print('리프레시 토큰 만료, 재로그인');
-        print(response.body);
-        Get.snackbar('실패', '로그인이 필요합니다.');
-        UserDataController.to.logout();
-        return;
-      }
-    }
+    var response = await UserDataController.sendHttpRequestWithTokenManagement(method: 'get', url: url);
 
     print(response.statusCode);
 
@@ -126,41 +89,7 @@ class ChattingListController extends GetxController {
   }) async {
     final url = Uri.parse('$baseUrl/rooms/leave/$roomId');
 
-    var response = await UserDataController.patchRequest(
-      url: url,
-      accessToken: UserDataController.to.accessToken,
-    );
-
-    if (response.statusCode == 401) {
-      // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
-      print("401 RefreshToken을 사용하여 AccessToken 갱신 시도");
-      print(response.body);
-      response = await UserDataController.patchRequestWithRefreshToken(
-        url: url,
-        accessToken: UserDataController.to.accessToken,
-        refreshToken: UserDataController.to.refreshToken,
-      );
-
-      if (response.statusCode == 300) {
-        // 새로운 토큰을 받아서 갱신 후 요청
-        print("새로운 토큰을 받아서 갱신 및 요청");
-        print(response.body);
-
-        final newTokens = jsonDecode(response.body);
-        UserDataController.to
-            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
-
-        response = await UserDataController.patchRequest(
-            url: url, accessToken: newTokens['accessToken']);
-      } else if (response.statusCode == 402) {
-        // RefreshToken도 만료된 경우
-        print('리프레시 토큰 만료, 재로그인');
-        print(response.body);
-        Get.snackbar('실패', '로그인이 필요합니다.');
-        UserDataController.to.logout();
-        return;
-      }
-    }
+    var response = await UserDataController.sendHttpRequestWithTokenManagement(method: 'patch', url: url,);
 
     if (response.statusCode == 200) {
       print("${response.statusCode} 성공적으로 나가짐");
@@ -179,46 +108,7 @@ class ChattingListController extends GetxController {
 
     final body = jsonEncode({"oppEmail": oppEmail});
 
-    var response = await UserDataController.patchRequest(
-      url: url,
-      accessToken: UserDataController.to.accessToken,
-      body: body,
-    );
-
-    if (response.statusCode == 401) {
-      // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
-      print("401 RefreshToken을 사용하여 AccessToken 갱신 시도");
-      print(response.body);
-      response = await UserDataController.patchRequestWithRefreshToken(
-        url: url,
-        accessToken: UserDataController.to.accessToken,
-        refreshToken: UserDataController.to.refreshToken,
-        body: body,
-      );
-
-      if (response.statusCode == 300) {
-        // 새로운 토큰을 받아서 갱신 후 요청
-        print("새로운 토큰을 받아서 갱신 및 요청");
-        print(response.body);
-
-        final newTokens = jsonDecode(response.body);
-        UserDataController.to
-            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
-
-        response = await UserDataController.patchRequest(
-          url: url,
-          accessToken: newTokens['accessToken'],
-          body: body,
-        );
-      } else if (response.statusCode == 402) {
-        // RefreshToken도 만료된 경우
-        print('리프레시 토큰 만료, 재로그인');
-        print(response.body);
-        Get.snackbar('실패', '로그인이 필요합니다.');
-        UserDataController.to.logout();
-        return;
-      }
-    }
+    var response = await UserDataController.sendHttpRequestWithTokenManagement(method: 'patch', url: url, body: body);
 
     print(response.statusCode);
     print(response.body);

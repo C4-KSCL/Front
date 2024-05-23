@@ -100,8 +100,9 @@ class UserDataController extends GetxController {
   }
 
   void logout() async {
-    await FcmService.deleteUserFcmToken();
-    await AppConfig.storage.write(key: "isAutoLogin", value: "false");
+    await FcmService.deleteUserFcmToken(); //fcm 토큰 삭제
+    await AppConfig.storage
+        .write(key: "isAutoLogin", value: "false"); // 자동 로그인 해제
     user.value = null;
     accessToken = '';
     refreshToken = '';
@@ -115,168 +116,88 @@ class UserDataController extends GetxController {
     // Get.delete<ChattingListController>();
     // Get.put(FriendController());
     // Get.put(ChattingListController());
-    user.value = null;
     images.value = <UserImage>[].obs;
     isAutoLogin.value = false;
 
     print("로그아웃");
   }
 
-  static Future<http.Response> getRequest({
+  // http 종류에 맞는 메소드를 이용하여 요청
+  static Future<http.Response> sendHttpRequest({
+    required String method,
     required Uri url,
     required String accessToken,
-  }) async {
-    return await http.get(
-      url,
-      headers: {
-        "Content-type": "application/json",
-        "accessToken": accessToken,
-      },
-    );
-  }
-
-  static Future<http.Response> getRequestWithRefreshToken({
-    required Uri url,
-    required String accessToken,
-    required String refreshToken,
-  }) async {
-    return await http.get(
-      url,
-      headers: {
-        "Content-type": "application/json",
-        "accessToken": accessToken,
-        "refreshToken": refreshToken,
-      },
-    );
-  }
-
-  static Future<http.Response> deleteRequest({
-    required Uri url,
-    required String accessToken,
-  }) async {
-    return await http.delete(
-      url,
-      headers: {
-        "Content-type": "application/json",
-        "accessToken": accessToken,
-      },
-    );
-  }
-
-  static Future<http.Response> deleteRequestWithRefreshToken({
-    required Uri url,
-    required String accessToken,
-    required String refreshToken,
-  }) async {
-    return await http.delete(
-      url,
-      headers: {
-        "Content-type": "application/json",
-        "accessToken": accessToken,
-        "refreshToken": refreshToken,
-      },
-    );
-  }
-
-  static Future<http.Response> patchRequest({
-    required Uri url,
-    required String accessToken,
+    String? refreshToken,
     String? body,
   }) async {
-    if (body == null) {
-      return await http.patch(
-        url,
-        headers: {
-          "Content-type": "application/json",
-          "accessToken": accessToken,
-        },
-      );
-    } else {
-      return await http.patch(
-        url,
-        headers: {
-          "Content-type": "application/json",
-          "accessToken": accessToken,
-        },
-        body: body,
-      );
+    var headers = {
+      "Content-type": "application/json",
+      "accessToken": accessToken,
+    };
+    if (refreshToken != null) {
+      headers["refreshToken"] = refreshToken;
+    }
+
+    switch (method) {
+      case 'get':
+        return await http.get(url, headers: headers);
+      case 'post':
+        return await http.post(url, headers: headers, body: body);
+      case 'patch':
+        return await http.patch(url, headers: headers, body: body);
+      case 'delete':
+        return await http.delete(url, headers: headers);
+      default:
+        throw 'Unsupported HTTP method $method';
     }
   }
 
-  static Future<http.Response> patchRequestWithRefreshToken({
+  // http 요청 보낼때 JWT 토큰 관련 체크 과정
+  static Future<http.Response> sendHttpRequestWithTokenManagement({
+    required String method,
     required Uri url,
-    required String accessToken,
-    required String refreshToken,
     String? body,
   }) async {
-    if (body == null) {
-      return await http.patch(
-        url,
-        headers: {
-          "Content-type": "application/json",
-          "accessToken": accessToken,
-        },
-      );
-    } else {
-      return await http.patch(
-        url,
-        headers: {
-          "Content-type": "application/json",
-          "accessToken": accessToken,
-        },
-        body: body,
-      );
-    }
-  }
+    var response = await sendHttpRequest(
+      method: method,
+      url: url,
+      accessToken: UserDataController.to.accessToken,
+      body: body,
+    );
 
-  static Future<http.Response> postRequest({
-    required Uri url,
-    required String accessToken,
-    String? body,
-  }) async {
-    if (body == null) {
-      return await http.post(
-        url,
-        headers: {
-          "Content-type": "application/json",
-          "accessToken": accessToken,
-        },
-      );
-    } else {
-      return await http.post(
-        url,
-        headers: {
-          "Content-type": "application/json",
-          "accessToken": accessToken,
-        },
-        body: body,
-      );
-    }
-  }
+    if (response.statusCode == 401) {
+      print("401 RefreshToken을 사용하여 AccessToken 갱신 시도");
+      print(response.body);
 
-  static Future<http.Response> postRequestWithRefreshToken({
-    required Uri url,
-    required String accessToken,
-    required String refreshToken,
-    String? body,
-  }) async {
-    if (body == null) {
-      return await http.post(
-        url,
-        headers: {
-          "Content-type": "application/json",
-          "accessToken": accessToken,
-        },
-      );
-    } else {
-      return await http.post(
-        url,
-        headers: {
-          "Content-type": "application/json",
-          "accessToken": accessToken,
-        },
+      response = await sendHttpRequest(
+        method: method,
+        url: url,
+        accessToken: UserDataController.to.accessToken,
+        refreshToken: UserDataController.to.refreshToken,
         body: body,
       );
+
+      if (response.statusCode == 300) {
+        print("새로운 토큰을 받아서 갱신 및 요청");
+        print(response.body);
+
+        final newTokens = jsonDecode(response.body);
+        UserDataController.to.updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
+
+        response = await sendHttpRequest(
+          method: method,
+          url: url,
+          accessToken: newTokens['accessToken'],
+          body: body,
+        );
+      } else if (response.statusCode == 402) {
+        print('리프레시 토큰 만료, 재로그인');
+        print(response.body);
+        Get.snackbar('실패', '로그인이 필요합니다.');
+        UserDataController.to.logout();
+        return http.Response('Unauthorized - Session expired', 402);  // 로그아웃 상황이라 오류 응답 반환
+      }
     }
+    return response;  // 갱신 성공 또는 기존 토큰 유효시 response 반환
   }
 }
