@@ -100,6 +100,8 @@ class UserDataController extends GetxController {
   }
 
   void logout() async {
+    await FcmService.deleteUserFcmToken();
+    await AppConfig.storage.write(key: "isAutoLogin", value: "false");
     user.value = null;
     accessToken = '';
     refreshToken = '';
@@ -107,8 +109,6 @@ class UserDataController extends GetxController {
     FriendController.to.resetData();
     ChattingListController.to.resetData();
     ////////////////수정 필요 //////////////////////////
-    await FcmService.deleteUserFcmToken();
-    await AppConfig.storage.write(key: "isAutoLogin", value: "false");
 
     Get.offNamed('/login');
     // Get.delete<FriendController>();
@@ -232,31 +232,51 @@ class UserDataController extends GetxController {
   static Future<http.Response> postRequest({
     required Uri url,
     required String accessToken,
-    required String body,
+    String? body,
   }) async {
-    return await http.post(
-      url,
-      headers: {
-        "Content-type": "application/json",
-        "accessToken": accessToken,
-      },
-      body: body,
-    );
+    if (body == null) {
+      return await http.post(
+        url,
+        headers: {
+          "Content-type": "application/json",
+          "accessToken": accessToken,
+        },
+      );
+    } else {
+      return await http.post(
+        url,
+        headers: {
+          "Content-type": "application/json",
+          "accessToken": accessToken,
+        },
+        body: body,
+      );
+    }
   }
 
   static Future<http.Response> postRequestWithRefreshToken({
     required Uri url,
     required String accessToken,
     required String refreshToken,
-    required String body,
+    String? body,
   }) async {
-    return await http.post(
-      url,
-      headers: {
-        "Content-type": "application/json",
-        "accessToken": accessToken,
-      },
-      body: body,
-    );
+    if (body == null) {
+      return await http.post(
+        url,
+        headers: {
+          "Content-type": "application/json",
+          "accessToken": accessToken,
+        },
+      );
+    } else {
+      return await http.post(
+        url,
+        headers: {
+          "Content-type": "application/json",
+          "accessToken": accessToken,
+        },
+        body: body,
+      );
+    }
   }
 }
