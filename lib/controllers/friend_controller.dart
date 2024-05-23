@@ -60,7 +60,7 @@ class FriendController extends GetxController {
       // 받은 요청이거나 보낸 요청이 있을 경우
       else if (errMsg['msg']['error_msg'] == "already exist : request") {
         // 보낸 요청이 있을 경우
-        String requestId = errMsg['msg']['requestId'];
+        int requestId = errMsg['msg']['requestId'];
         if (errMsg['msg']['reqUser'] ==
             UserDataController.to.user.value!.email) {
           // 보낸 요청이 있다고 알려주기
@@ -171,7 +171,7 @@ class FriendController extends GetxController {
 
   /// 받은 친구 요청 수락
   static Future<void> acceptFriendRequest({
-    required String requestId,
+    required int requestId,
   }) async {
     final url = Uri.parse('$baseUrl/$requests/accept');
 
@@ -179,13 +179,14 @@ class FriendController extends GetxController {
 
     var response = await UserDataController.sendHttpRequestWithTokenManagement(method: 'post', url: url, body: body);
 
+    // response.statusCode == 201 이면 성공
     print(response.statusCode);
     print(response.body);
   }
 
-  //받은 친구 요청 거절
+  /// 받은 친구 요청 거절
   static Future<void> rejectFriendRequest({
-    required String requestId,
+    required int requestId,
   }) async {
     final url = Uri.parse('$baseUrl/$requests/reject');
 
@@ -235,7 +236,6 @@ class FriendController extends GetxController {
         String gender = friendData['friend']['gender'];
         String userImage = friendData['friend']['userImage'];
         bool isJoinRoom = friendData['room']['join'];
-        print(isJoinRoom);
 
         Friend friend = Friend(
           id: id,
@@ -304,6 +304,7 @@ class FriendController extends GetxController {
 
     var response= await UserDataController.sendHttpRequestWithTokenManagement(method: 'get', url: url);
 
+    print("차단한 친구 불러오기");
     print(response.statusCode);
     print(response.body);
 
@@ -311,36 +312,35 @@ class FriendController extends GetxController {
 
     if (response.statusCode == 200) {
       var blockedFriendsData = jsonDecode(response.body);
+      if(response.body.isNotEmpty){
+        for (var friendData in blockedFriendsData) {
+          int id = friendData['id'];
+          String userEmail = friendData['userEmail'];
+          String oppEmail = friendData['oppEmail'];
+          String? roomId =
+          friendData['room'] == null ? null : friendData['room']['roomId'];
+          String myMBTI = friendData['friend']['myMBTI'];
+          String nickname = friendData['friend']['nickname'];
+          String myKeyword = friendData['friend']['myKeyword'];
+          String age = friendData['friend']['age'];
+          String gender = friendData['friend']['gender'];
+          String userImage = friendData['friend']['userImage'];
 
-      for (var friendData in blockedFriendsData) {
-        int id = friendData['id'];
-        String userEmail = friendData['userEmail'];
-        String oppEmail = friendData['oppEmail'];
-        String? roomId =
-            friendData['room'] == null ? null : friendData['room']['roomId'];
-        String myMBTI = friendData['friend']['myMBTI'];
-        String nickname = friendData['friend']['nickname'];
-        String myKeyword = friendData['friend']['myKeyword'];
-        String age = friendData['friend']['age'];
-        String gender = friendData['friend']['gender'];
-        String userImage = friendData['friend']['userImage'];
-        bool isJoinRoom = friendData['room']['join'];
+          Friend friend = Friend(
+            id: id,
+            userEmail: userEmail,
+            oppEmail: oppEmail,
+            myMBTI: myMBTI,
+            myKeyword: myKeyword,
+            nickname: nickname,
+            userImage: userImage,
+            age: age,
+            gender: gender,
+            roomId: roomId,
+          );
 
-        Friend friend = Friend(
-          id: id,
-          userEmail: userEmail,
-          oppEmail: oppEmail,
-          myMBTI: myMBTI,
-          myKeyword: myKeyword,
-          nickname: nickname,
-          userImage: userImage,
-          age: age,
-          gender: gender,
-          roomId: roomId,
-          isJoinRoom: isJoinRoom,
-        );
-
-        tempBlockedFriendList.add(friend);
+          tempBlockedFriendList.add(friend);
+        }
       }
       FriendController.to.blockedFriends.assignAll(tempBlockedFriendList);
     }

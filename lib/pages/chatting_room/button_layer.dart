@@ -26,7 +26,7 @@ Widget AcceptOrRejectButtonLayer(int? friendRequestId) {
             ),
             onPressed: () async{
               //친구 수락
-              await FriendController.acceptFriendRequest(requestId: friendRequestId.toString());
+              await FriendController.acceptFriendRequest(requestId: friendRequestId!);
               await FriendController.getFriendList();
               await FriendController.getFriendReceivedRequest();
               ChattingController.to.isChatEnabled.value=true;
@@ -48,7 +48,7 @@ Widget AcceptOrRejectButtonLayer(int? friendRequestId) {
             ),
             onPressed: () async {
               // 친구 거절
-              await FriendController.rejectFriendRequest(requestId: friendRequestId.toString());
+              await FriendController.rejectFriendRequest(requestId: friendRequestId!);
               await FriendController.getFriendReceivedRequest();
               Get.back();
             },

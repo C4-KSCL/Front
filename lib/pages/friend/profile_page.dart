@@ -167,12 +167,15 @@ Widget FriendProfilePage({
                           .then((value) => Get.to(ChatRoomPage(
                                 roomId: userData.roomId!,
                                 oppUserName: userData.nickname,
+                        isChatEnabled: true,
+                        isReceivedRequest: false,
                               )));
                     }
                     Get.to(()=>ChatRoomPage(
                       roomId: userData.roomId!,
                       oppUserName: userData.nickname,
                       isChatEnabled: true,
+                      isReceivedRequest: false,
                     ));
                   },
                   textStyle: whiteTextStyle1,
