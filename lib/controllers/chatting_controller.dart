@@ -28,7 +28,7 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
   ScrollController scrollController = ScrollController();
   String? roomId;
 
-  IO.Socket? _socket; //소켓IO 객체
+  IO.Socket? _socket=null; //소켓IO 객체
   RxList chats = [].obs; //채팅 객체를 담는 배열
   Rx<Event?> eventData = Rx<Event?>(null); // event 객체 하나를 담는 변수
 
@@ -59,7 +59,7 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
   static const events = 'events';
 
   @override
-  void onInit() async {
+  void onInit() {
     super.onInit();
     WidgetsBinding.instance.addObserver(this); // Observer 추가
     scrollController.addListener(_onScroll);
@@ -69,6 +69,7 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
   @override
   void onClose() {
     WidgetsBinding.instance.removeObserver(this); // Observer 제거
+    _socket=null;
     if (_socket != null) {
       _socket!.disconnect();
     }
@@ -119,12 +120,16 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
 
   /// 소켓 객체 정의
   void init() {
+    String accessToken = UserDataController.to.accessToken;
     _socket = IO.io(baseUrl, <String, dynamic>{
       'transports': ['websocket'], //전송 방식을 웹소켓으로 설정
       'autoConnect': false, //수동으로 연결해야함
-      'auth': {'token': UserDataController.to.accessToken},
+      'auth': {'token': accessToken},
     });
-    print("소켓 정의시 사용하는 토큰 : ${UserDataController.to.accessToken}");
+    if(accessToken != _socket!.auth['token']) {
+      _socket!.auth['token'] = accessToken;
+      print("토큰 값 변경 : ${_socket!.auth['token']}");
+    }
   }
 
   /// 초기 톡방 내용 가져오기
@@ -133,7 +138,6 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
     await getRoomChats(roomId: roomId);
     init();
     await ChattingController.to.connect(roomId: roomId);
-
   }
 
   /// 웹 소켓 연결
@@ -145,9 +149,9 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
     } else {
       print("소켓 객체 생성 성공");
     }
+
     //소켓 연결
     _socket!.connect();
-
     //소켓 연결되면 소켓 이벤트 리스너 설정하기
     _socket!.onConnect((_) {
       print("연결 완료");
