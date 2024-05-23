@@ -54,13 +54,28 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   const NotificationDetails platformChannelSpecifics =
       NotificationDetails(android: androidPlatformChannelSpecifics);
 
-  await flutterLocalNotificationsPlugin.show(
-    0, // 알림 ID
-    message.notification!.title, // 알림 제목
-    message.notification!.body, // 알림 내용
-    platformChannelSpecifics,
-    payload: 'item x',
-  );
+  if(message.data['route']=='chat'){
+    String payload =
+        message.notification!.title! + ',' + message.data['roomId'];
+
+    await flutterLocalNotificationsPlugin.show(
+      0, // 알림 ID
+      message.notification!.title, // 알림 제목
+      message.notification!.body, // 알림 내용
+      platformChannelSpecifics,
+      payload: payload,
+    );
+  } else if(message.data['route']=='friend'){
+    await flutterLocalNotificationsPlugin.show(
+      0, // 알림 ID
+      message.notification!.title, // 알림 제목
+      message.notification!.body, // 알림 내용
+      platformChannelSpecifics,
+      payload: 'friendPage',
+    );
+  }
+
+
 }
 
 // 알림 설정
@@ -68,24 +83,27 @@ void initializeNotifications() async {
   // Notification plugin 초기화
   await flutterLocalNotificationsPlugin.initialize(
     const InitializationSettings(
-      android: AndroidInitializationSettings('@drawable/ic_cashfi_noti'),
+      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
       iOS: DarwinInitializationSettings(),
     ),
+
     // 안드로이드에서 FCM 클릭시 핸들링 코드
     onDidReceiveNotificationResponse: (NotificationResponse details) async {
-
-      // payload 스플릿
-      
-      BottomNavigationBarController.to.selectedIndex.value = 2;
+      print("페이로드 값 : ${details.payload}");
       // 채팅 관련 알림
-      // if(details.payload){
-      //
-      // }
-      // // 친구 관련 알림
-      // else{
-      //
-      // }
-
+      if (details.payload == "friendPage") {
+        BottomNavigationBarController.to.selectedIndex.value = 1;
+      }
+      // 친구 관련 알림
+      else {
+        List<String> chatData = details.payload!.split(',');
+        BottomNavigationBarController.to.selectedIndex.value = 2;
+        Get.to(() => ChatRoomPage(
+              roomId: chatData[1],
+              oppUserName: chatData[0],
+              isChatEnabled: true,
+            ));
+      }
     },
   );
 
@@ -151,13 +169,17 @@ void main() async {
           const NotificationDetails platformChannelSpecifics =
               NotificationDetails(android: androidPlatformChannelSpecifics);
 
+          String payload =
+              message.notification!.title! + ',' + message.data['roomId'];
+          print("페이로드 값 : $payload");
+
           await flutterLocalNotificationsPlugin.show(
-            0, // 알림 ID
-            message.notification!.title, // 알림 제목
-            message.notification!.body, // 알림 내용
-            platformChannelSpecifics,
-            payload: "a" // 알림 눌렀을 때 사용할 데이터
-          );
+              0, // 알림 ID
+              message.notification!.title, // 알림 제목
+              message.notification!.body, // 알림 내용
+              platformChannelSpecifics,
+              payload: payload // 알림 눌렀을 때 사용할 데이터
+              );
         }
       }
       // ChattingController의 인스턴스가 등록이 안되어 있을때
@@ -176,12 +198,16 @@ void main() async {
         const NotificationDetails platformChannelSpecifics =
             NotificationDetails(android: androidPlatformChannelSpecifics);
 
+        String payload =
+            message.notification!.title! + ',' + message.data['roomId'];
+        print("페이로드 값 : $payload");
+
         await flutterLocalNotificationsPlugin.show(
           0, // 알림 ID
           message.notification!.title, // 알림 제목
           message.notification!.body, // 알림 내용
           platformChannelSpecifics,
-          payload: 'item x',
+          payload: payload,
         );
       }
     }
@@ -206,7 +232,7 @@ void main() async {
         message.notification!.title, // 알림 제목
         message.notification!.body, // 알림 내용
         platformChannelSpecifics,
-        payload: 'item x',
+        payload: 'friendPage',
       );
     }
   });
@@ -238,7 +264,7 @@ void main() async {
     }
   }
 
-  //FCM 알림 클릭시 실행
+  /// IOS : 포그라운드 상태일때 푸시알림 클릭시 실행,
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
     print("FCM 클릭: ${message.data}");
 
@@ -267,20 +293,10 @@ void main() async {
         ),
       ),
       initialBinding: BindingsBuilder(() {
-        Get.put(SignupController());
-        Get.put(UserDataController());
-        Get.put(BottomNavigationBarController());
-        Get.put(UserProfileController());
-        Get.put(InfoModifyController());
-        Get.put(FindFriendController());
-        Get.put(FriendController());
-        Get.put(ChattingListController());
-        Get.put(KeywordController());
-        Get.put(UserImageController());
-        Get.put(ServiceCenterController());
+        AppConfig.putGetxControllerDependency();
       }),
       getPages: [
-        GetPage(name: '/', page: () => const InitPage()),
+        GetPage(name: '/login', page: () => const LoginPage()),
       ],
     ),
   );

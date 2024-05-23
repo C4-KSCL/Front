@@ -4,11 +4,11 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 
+import '../config.dart';
+
 class DeleteUserService {
   static Future<void> deleteUser(String accesstoken) async {
-    late final String? baseUrl;
-
-    baseUrl = dotenv.env['SERVER_URL'];
+    String? baseUrl=AppConfig.baseUrl;
     try {
       var response = await http.delete(
         Uri.parse('$baseUrl/delete/user'),

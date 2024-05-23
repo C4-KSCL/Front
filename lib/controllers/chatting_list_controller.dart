@@ -14,13 +14,6 @@ class ChattingListController extends GetxController {
 
   RxList<ChatList> chattingList = <ChatList>[].obs; //채팅 리스트
 
-  static String accessToken = UserDataController.to.accessToken;
-
-  static Map<String, String> headers = {
-    "Content-type": "application/json",
-    "accessToken": accessToken
-  };
-
   // 채팅 리스트 비우기
   void resetData() {
     chattingList.clear();
@@ -30,72 +23,52 @@ class ChattingListController extends GetxController {
   static Future<void> getLastChatList() async {
     final url = Uri.parse('$baseUrl/chats/get-last-chats');
 
-    final response = await http.get(url, headers: headers);
+    var response = await UserDataController.getRequest(
+      url: url,
+      accessToken: UserDataController.to.accessToken,
+    );
 
     List<ChatList> tempChatList = [];
 
-    print(response.statusCode);
-    print(response.body);
+    if (response.statusCode == 401) {
+      // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
+      print("401 RefreshToken을 사용하여 AccessToken 갱신 시도");
+      print(response.body);
+      response = await UserDataController.getRequestWithRefreshToken(
+        url: url,
+        accessToken: UserDataController.to.accessToken,
+        refreshToken: UserDataController.to.refreshToken,
+      );
 
-    // 받는 json 형식
-    //   {
-    //     "lastChats": [
-    //       {
-    //         "id": 57,
-    //         "roomId": "1712559680697",
-    //         "nickName": "b",
-    //         "userEmail": "b@naver.com",
-    //         "createdAt": "2024-04-08T20:07:18.000Z",
-    //         "content": "hohohoho",
-    //         "readCount": 1,
-    //         "type": "text",
-    //         "room": {
-    //         "id": "1712559680697",
-    //         "name": "1712559680697",
-    //         "createdAt": "2024-04-08T16:01:21.000Z",
-    //         "publishing": "true",
-    //         "joinRoom": [
-    //           {
-    //             "join": true,
-    //             "user": {
-    //               "email": "c@naver.com",
-    //               "nickname": "c",
-    //               "userImage": "https://matchingimage.s3.ap-northeast-2.amazonaws.com/defalut_user.png",
-    //               "gender": "여"
-    //             }
-    //           }
-    //         ],
-    //         "addRequest": [],
-    //         "joinCount": 2
-    //         },
-    //         "notReadCounts": 1
-    //       },
-    //     {
-    //       //삭제된 유저
-    //       "id": 14,
-    //       "roomId": "1712386390259",
-    //       "nickName": null,
-    //       "userEmail": null,
-    //       "createdAt": "2024-04-07T19:24:24.000Z",
-    //       "content": "a@naver.com님이 방을 떠났습니다.",
-    //       "readCount": 1,
-    //       "type": "text",
-    //       "room": {
-    //         "id": "1712386390259",
-    //         "name": "1712386390259",
-    //         "createdAt": "2024-04-06T15:53:10.000Z",
-    //         "publishing": "true",
-    //         "joinRoom": [],
-    //         "addRequest": [],
-    //         "joinCount": 1
-    //         },
-    //       "notReadCounts": 3
-    //     }
-    //   ]
-    // }
+      if (response.statusCode == 300) {
+        // 새로운 토큰을 받아서 갱신 후 요청
+        print("새로운 토큰을 받아서 갱신 및 요청");
+        print(response.body);
+
+        final newTokens = jsonDecode(response.body);
+        UserDataController.to
+            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
+
+        response = await UserDataController.getRequest(
+          url: url,
+          accessToken: newTokens['accessToken'],
+        );
+      } else if (response.statusCode == 402) {
+        // RefreshToken도 만료된 경우
+        print('리프레시 토큰 만료, 재로그인');
+        print(response.body);
+        Get.snackbar('실패', '로그인이 필요합니다.');
+        UserDataController.to.logout();
+        return;
+      }
+    }
+
+    print(response.statusCode);
 
     if (response.statusCode == 200) {
       var lastChats = jsonDecode(response.body);
+      print(response.body);
+      print(UserDataController.to.accessToken);
       if (lastChats['lastChats'] != null) {
         for (var lastChat in lastChats['lastChats']) {
           String roomId = lastChat['roomId'];
@@ -147,19 +120,54 @@ class ChattingListController extends GetxController {
     }
   }
 
-  //채팅 방 나가기
+  /// 채팅 방 나가기
   static Future<void> leaveRoom({
     required String roomId,
   }) async {
     final url = Uri.parse('$baseUrl/rooms/leave/$roomId');
 
-    final response = await http.patch(url, headers: headers);
+    var response = await UserDataController.patchRequest(
+      url: url,
+      accessToken: UserDataController.to.accessToken,
+    );
+
+    if (response.statusCode == 401) {
+      // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
+      print("401 RefreshToken을 사용하여 AccessToken 갱신 시도");
+      print(response.body);
+      response = await UserDataController.patchRequestWithRefreshToken(
+        url: url,
+        accessToken: UserDataController.to.accessToken,
+        refreshToken: UserDataController.to.refreshToken,
+      );
+
+      if (response.statusCode == 300) {
+        // 새로운 토큰을 받아서 갱신 후 요청
+        print("새로운 토큰을 받아서 갱신 및 요청");
+        print(response.body);
+
+        final newTokens = jsonDecode(response.body);
+        UserDataController.to
+            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
+
+        response = await UserDataController.patchRequest(
+            url: url, accessToken: newTokens['accessToken']);
+      } else if (response.statusCode == 402) {
+        // RefreshToken도 만료된 경우
+        print('리프레시 토큰 만료, 재로그인');
+        print(response.body);
+        Get.snackbar('실패', '로그인이 필요합니다.');
+        UserDataController.to.logout();
+        return;
+      }
+    }
 
     if (response.statusCode == 200) {
       print("${response.statusCode} 성공적으로 나가짐");
     } else {
       print("나가기 실패");
       print(response.body);
+
     }
   }
 
@@ -171,7 +179,46 @@ class ChattingListController extends GetxController {
 
     final body = jsonEncode({"oppEmail": oppEmail});
 
-    final response = await http.patch(url, headers: headers, body: body);
+    var response = await UserDataController.patchRequest(
+      url: url,
+      accessToken: UserDataController.to.accessToken,
+      body: body,
+    );
+
+    if (response.statusCode == 401) {
+      // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
+      print("401 RefreshToken을 사용하여 AccessToken 갱신 시도");
+      print(response.body);
+      response = await UserDataController.patchRequestWithRefreshToken(
+        url: url,
+        accessToken: UserDataController.to.accessToken,
+        refreshToken: UserDataController.to.refreshToken,
+        body: body,
+      );
+
+      if (response.statusCode == 300) {
+        // 새로운 토큰을 받아서 갱신 후 요청
+        print("새로운 토큰을 받아서 갱신 및 요청");
+        print(response.body);
+
+        final newTokens = jsonDecode(response.body);
+        UserDataController.to
+            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
+
+        response = await UserDataController.patchRequest(
+          url: url,
+          accessToken: newTokens['accessToken'],
+          body: body,
+        );
+      } else if (response.statusCode == 402) {
+        // RefreshToken도 만료된 경우
+        print('리프레시 토큰 만료, 재로그인');
+        print(response.body);
+        Get.snackbar('실패', '로그인이 필요합니다.');
+        UserDataController.to.logout();
+        return;
+      }
+    }
 
     print(response.statusCode);
     print(response.body);

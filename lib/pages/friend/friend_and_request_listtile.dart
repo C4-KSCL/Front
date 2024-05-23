@@ -36,7 +36,6 @@ ListTile friendListTile({
             Text(
               friendData.nickname,
               style: blackTextStyle1,
-              // style: friendData.gender == "남" ? blueTextStyle3 : pinkTextStyle1,
             ),
             const SizedBox(
               width: 10,
@@ -126,12 +125,13 @@ ListTile receivedRequestListTile({
     ),
     trailing: IconButton(
       onPressed: () {
-        Get.to(ChatRoomPage(
+        Get.to(()=>ChatRoomPage(
           roomId: receivedRequestData.roomId,
           oppUserName: receivedRequestData.nickname,
           friendRequestId: receivedRequestData.requestId,
+          isChatEnabled: false,
+          isReceivedRequest: true,
         ));
-        ChattingController.to.isReceivedRequest.value = true;
       },
       icon: Image.asset("assets/icons/question_message.png"),
     ),
@@ -198,11 +198,12 @@ ListTile sentRequestListTile({
     ),
     trailing: IconButton(
       onPressed: () {
-        ChattingController.to.isReceivedRequest.value = false;
-        Get.to(ChatRoomPage(
+        Get.to(()=>ChatRoomPage(
           roomId: sentRequestData.roomId,
           oppUserName: sentRequestData.nickname,
           friendRequestId: sentRequestData.requestId,
+          isChatEnabled: false,
+          isReceivedRequest: false,
         ));
       },
       icon: Image.asset("assets/icons/question_message.png"),

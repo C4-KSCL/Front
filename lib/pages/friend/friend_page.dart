@@ -6,6 +6,7 @@ import 'package:frontend_matching/controllers/friend_controller.dart';
 import 'package:frontend_matching/models/friend.dart';
 import 'package:frontend_matching/pages/friend/friend_setting_page.dart';
 import 'package:frontend_matching/pages/friend/friend_page_tab_view.dart';
+import 'package:frontend_matching/services/fcm_token_service.dart';
 import 'package:get/get.dart';
 
 import '../../theme/colors.dart';

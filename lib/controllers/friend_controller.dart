@@ -31,13 +31,6 @@ class FriendController extends GetxController {
   static const reject = 'reject';
   static const delete = 'delete';
 
-  static String accessToken = UserDataController.to.accessToken;
-
-  static Map<String, String> headers = {
-    "Content-type": "application/json",
-    "accessToken": accessToken
-  };
-
   void resetData() {
     friends.clear();
     sentRequests.clear();
@@ -52,15 +45,55 @@ class FriendController extends GetxController {
   }) async {
     final url = Uri.parse('$baseUrl/$requests/send');
 
-    String data = '{"oppEmail": "$oppEmail", "content":"$content"}';
+    final body = json.encode({"oppEmail": oppEmail, "content": content});
 
-    final response = await http.post(url, headers: headers, body: data);
+    var response = await UserDataController.postRequest(
+      url: url,
+      accessToken: UserDataController.to.accessToken,
+      body: body,
+    );
+
+    if (response.statusCode == 401) {
+      // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
+      print("AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도");
+      print(response.body);
+      response = await UserDataController.postRequestWithRefreshToken(
+        url: url,
+        accessToken: UserDataController.to.accessToken,
+        refreshToken: UserDataController.to.refreshToken,
+        body: body,
+      );
+
+      if (response.statusCode == 300) {
+        // 새로운 토큰을 받아서 갱신 후 요청
+        print("새로운 토큰을 받아서 갱신 및 요청");
+        print(response.body);
+
+        final newTokens = jsonDecode(response.body);
+        UserDataController.to
+            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
+
+        response = await UserDataController.postRequest(
+          url: url,
+          accessToken: UserDataController.to.accessToken,
+          body: body,
+        );
+      } else if (response.statusCode == 402) {
+        // RefreshToken도 만료된 경우
+        print('리프레시 토큰 만료, 재로그인');
+        print(response.body);
+        Get.snackbar('실패', '로그인이 필요합니다.');
+        UserDataController.to.logout();
+        return;
+      }
+    }
 
     // 이미 친구인 경우, 받은 요청이 있을 경우, 보낸 요청이 있을 경우
     if (response.statusCode == 400) {
       var errMsg = jsonDecode(response.body);
       // 이미 친구인 경우
       if (errMsg['msg'] == "already friend : request") {
+        Get.snackbar("알림", "등록된 친구입니다.");
       }
       // 받은 요청이거나 보낸 요청이 있을 경우
       else if (errMsg['msg']['error_msg'] == "already exist : request") {
@@ -69,32 +102,65 @@ class FriendController extends GetxController {
         if (errMsg['msg']['reqUser'] ==
             UserDataController.to.user.value!.email) {
           // 보낸 요청이 있다고 알려주기
-          print("보낸 요청 있음");
+          Get.snackbar("알림", "보낸 요청이 있습니다.");
         }
         // 받은 요청이 있을 경우 요청을 수락
         else {
           await acceptFriendRequest(requestId: requestId);
         }
       }
-    } // 삭제된 유저일 경우
-    else if (response.statusCode == 404) {
-      // 삭제된 유저라고 알려주기
     }
+    // 삭제된 유저일 경우
+    // else if (response.statusCode == 404) {
+    //   Get.snackbar("알림", "삭제된 사용자입니다.");
+    // }
 
     print(response.statusCode);
     print(response.body);
   }
 
-  //받은 친구 요청 확인
+  /// 받은 친구 요청 리스트 받아오기
   static Future<void> getFriendReceivedRequest() async {
     final url = Uri.parse('$baseUrl/$requests/get-received');
-
-    final response = await http.get(url, headers: headers);
-
-    print(response.statusCode);
-    print(response.body);
-
     List<Request> tempReceivedRequests = [];
+
+    var response = await UserDataController.getRequest(
+      url: url,
+      accessToken: UserDataController.to.accessToken,
+    );
+
+    if (response.statusCode == 401) {
+      // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
+      print("401 RefreshToken을 사용하여 AccessToken 갱신 시도");
+      print(response.body);
+      response = await UserDataController.getRequestWithRefreshToken(
+        url: url,
+        accessToken: UserDataController.to.accessToken,
+        refreshToken: UserDataController.to.refreshToken,
+      );
+
+      if (response.statusCode == 300) {
+        // 새로운 토큰을 받아서 갱신 후 요청
+        print("새로운 토큰을 받아서 갱신 및 요청");
+        print(response.body);
+
+        final newTokens = jsonDecode(response.body);
+        UserDataController.to
+            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
+
+        response = await UserDataController.getRequest(
+          url: url,
+          accessToken: newTokens['accessToken'],
+        );
+      } else if (response.statusCode == 402) {
+        // RefreshToken도 만료된 경우
+        print('리프레시 토큰 만료, 재로그인');
+        print(response.body);
+        Get.snackbar('실패', '로그인이 필요합니다.');
+        UserDataController.to.logout();
+        return;
+      }
+    }
 
     if (response.statusCode == 200) {
       var receivedRequests = jsonDecode(response.body);
@@ -132,48 +198,51 @@ class FriendController extends GetxController {
     }
   }
 
-  //보낸 친구 요청 확인
+  /// 보낸 친구 요청 리스트 받아오기
   static Future<void> getFriendSentRequest() async {
     final url = Uri.parse('$baseUrl/$requests/get-sended');
+    List<Request> tempSentRequests = [];
 
-    final response = await http.get(url, headers: headers);
+    var response = await UserDataController.getRequest(
+      url: url,
+      accessToken: UserDataController.to.accessToken,
+    );
 
-    // 받는 json 형식
-    // {
-    //   "requests": [
-    //     {
-    //       "id": 6,
-    //       "roomId": "1712388914296",
-    //       "reqUser": "a@naver.com",
-    //       "recUser": "c@naver.com",
-    //       "status": "rejected",
-    //       "createdAt": "2024-04-06T16:53:46.000Z",
-    //       "updatedAt":null
-    //       "room": {
-    //         "id": "1712388914296",
-    //         "name": "1712388914296",
-    //         "createdAt": "2024-04-06T16:53:46.000Z",
-    //         "publishing": "deleted",
-    //         "chatting": [
-    //           {"content": "hahaha"}
-    //          ]
-    //        },
-    //       "receive": {
-    //         "myMBTI": "ISTP",
-    //         "myKeyword": "집순이,헬린이",
-    //         "nickname": "c",
-    //         "userImage": "https://matchingimage.s3.ap-northeast-2.amazonaws.com/defalut_user.png",
-    //         "age": "21",
-    //         "gender": "남"
-    //        }
-    //      }
-    //    ]
-    // }
+    if (response.statusCode == 401) {
+      // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
+      print("401 RefreshToken을 사용하여 AccessToken 갱신 시도");
+      print(response.body);
+      response = await UserDataController.getRequestWithRefreshToken(
+        url: url,
+        accessToken: UserDataController.to.accessToken,
+        refreshToken: UserDataController.to.refreshToken,
+      );
+
+      if (response.statusCode == 300) {
+        // 새로운 토큰을 받아서 갱신 후 요청
+        print("새로운 토큰을 받아서 갱신 및 요청");
+        print(response.body);
+
+        final newTokens = jsonDecode(response.body);
+        UserDataController.to
+            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
+
+        response = await UserDataController.getRequest(
+          url: url,
+          accessToken: newTokens['accessToken'],
+        );
+      } else if (response.statusCode == 402) {
+        // RefreshToken도 만료된 경우
+        print('리프레시 토큰 만료, 재로그인');
+        print(response.body);
+        Get.snackbar('실패', '로그인이 필요합니다.');
+        UserDataController.to.logout();
+        return;
+      }
+    }
 
     print(response.statusCode);
     print(response.body);
-
-    List<Request> tempSentRequests = [];
 
     if (response.statusCode == 200) {
       var sentRequests = jsonDecode(response.body);
@@ -210,16 +279,54 @@ class FriendController extends GetxController {
     }
   }
 
-  //받은 친구 요청 수락
-  //받은 친구 요청 확인을 할때 requestId를 저장해놓고 가져와야함
+  /// 받은 친구 요청 수락
   static Future<void> acceptFriendRequest({
     required String requestId,
   }) async {
     final url = Uri.parse('$baseUrl/$requests/accept');
 
-    String data = '{"requestId" :$requestId}';
+    final body = jsonEncode({"requestId": requestId});
 
-    final response = await http.post(url, headers: headers, body: data);
+    var response = await UserDataController.postRequest(
+      url: url,
+      accessToken: UserDataController.to.accessToken,
+      body: body,
+    );
+
+    if (response.statusCode == 401) {
+      // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
+      print("AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도");
+      print(response.body);
+      response = await UserDataController.postRequestWithRefreshToken(
+        url: url,
+        accessToken: UserDataController.to.accessToken,
+        refreshToken: UserDataController.to.refreshToken,
+        body: body,
+      );
+
+      if (response.statusCode == 300) {
+        // 새로운 토큰을 받아서 갱신 후 요청
+        print("새로운 토큰을 받아서 갱신 및 요청");
+        print(response.body);
+
+        final newTokens = jsonDecode(response.body);
+        UserDataController.to
+            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
+
+        response = await UserDataController.postRequest(
+          url: url,
+          accessToken: UserDataController.to.accessToken,
+          body: body,
+        );
+      } else if (response.statusCode == 402) {
+        // RefreshToken도 만료된 경우
+        print('리프레시 토큰 만료, 재로그인');
+        print(response.body);
+        Get.snackbar('실패', '로그인이 필요합니다.');
+        UserDataController.to.logout();
+        return;
+      }
+    }
 
     print(response.statusCode);
     print(response.body);
@@ -231,57 +338,146 @@ class FriendController extends GetxController {
   }) async {
     final url = Uri.parse('$baseUrl/$requests/reject');
 
-    String data = '{"requestId" :$requestId}';
+    final body = jsonEncode({"requestId": requestId});
 
-    final response = await http.patch(url, headers: headers, body: data);
+    var response = await UserDataController.patchRequest(
+      url: url,
+      accessToken: UserDataController.to.accessToken,
+      body: body,
+    );
+
+    if (response.statusCode == 401) {
+      // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
+      print("401 RefreshToken을 사용하여 AccessToken 갱신 시도");
+      print(response.body);
+      response = await UserDataController.patchRequestWithRefreshToken(
+        url: url,
+        accessToken: UserDataController.to.accessToken,
+        refreshToken: UserDataController.to.refreshToken,
+        body: body,
+      );
+
+      if (response.statusCode == 300) {
+        // 새로운 토큰을 받아서 갱신 후 요청
+        print("새로운 토큰을 받아서 갱신 및 요청");
+        print(response.body);
+
+        final newTokens = jsonDecode(response.body);
+        UserDataController.to
+            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
+
+        response = await UserDataController.patchRequest(
+          url: url,
+          accessToken: newTokens['accessToken'],
+          body: body,
+        );
+      } else if (response.statusCode == 402) {
+        // RefreshToken도 만료된 경우
+        print('리프레시 토큰 만료, 재로그인');
+        print(response.body);
+        Get.snackbar('실패', '로그인이 필요합니다.');
+        UserDataController.to.logout();
+        return;
+      }
+    }
 
     print(response.statusCode);
     print(response.body);
   }
 
-  //보낸 친구 요청 삭제
+  /// 보낸 친구 요청 삭제
   static Future<void> deleteFriendRequest({
     required String requestId,
   }) async {
     final url = Uri.parse('$baseUrl/$requests/$delete/$requestId');
 
-    final response = await http.delete(url, headers: headers);
+    var response = await UserDataController.deleteRequest(
+      url: url,
+      accessToken: UserDataController.to.accessToken,
+    );
+
+    if (response.statusCode == 401) {
+      // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
+      print("401 RefreshToken을 사용하여 AccessToken 갱신 시도");
+      print(response.body);
+      response = await UserDataController.deleteRequestWithRefreshToken(
+        url: url,
+        accessToken: UserDataController.to.accessToken,
+        refreshToken: UserDataController.to.refreshToken,
+      );
+
+      if (response.statusCode == 300) {
+        // 새로운 토큰을 받아서 갱신 후 요청
+        print("새로운 토큰을 받아서 갱신 및 요청");
+        print(response.body);
+
+        final newTokens = jsonDecode(response.body);
+        UserDataController.to
+            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
+
+        response = await UserDataController.deleteRequest(
+          url: url,
+          accessToken: newTokens['accessToken'],
+        );
+      } else if (response.statusCode == 402) {
+        // RefreshToken도 만료된 경우
+        print('리프레시 토큰 만료, 재로그인');
+        print(response.body);
+        Get.snackbar('실패', '로그인이 필요합니다.');
+        UserDataController.to.logout();
+        return;
+      }
+    }
 
     print(response.statusCode);
     print(response.body);
   }
 
-  //친구 리스트 가져오기
+  /// 친구 리스트 받아오기
   static Future<void> getFriendList() async {
     final url = Uri.parse('$baseUrl/friends/get-list');
+    List<Friend> tempFriendList = [];
 
-    final response = await http.get(url, headers: headers);
+    var response = await UserDataController.getRequest(
+      url: url,
+      accessToken: UserDataController.to.accessToken,
+    );
 
-    // 받는 json 형식
-    // {
-    //     "friends": [
-    //       {
-    //         "id": 1,
-    //         "user1": "a@naver.com",
-    //         "user2": "b@naver.com",
-    //         "createdAt": "2024-04-06T15:53:49.000Z",
-    //         "friend": {
-    //           "myMBTI": "ISFJ",
-    //           "myKeyword": "집순이,헬린이",
-    //           "nickname": "b",
-    //           "userImage": "https://matchingimage.s3.ap-northeast-2.amazonaws.com/profile/1712379300363-%EA%B0%95%EC%95%84%EC%A7%80%20%EC%82%AC%EC%A7%84.jpg",
-    //           "age": "27",
-    //           "gender": "남"
-    //          },
-    //         "room": "1712735768037"
-    //        }
-    //     ]
-    // }
+    if (response.statusCode == 401) {
+      // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
+      print("401 RefreshToken을 사용하여 AccessToken 갱신 시도");
+      print(response.body);
+      response = await UserDataController.getRequestWithRefreshToken(
+        url: url,
+        accessToken: UserDataController.to.accessToken,
+        refreshToken: UserDataController.to.refreshToken,
+      );
+
+      if (response.statusCode == 300) {
+        // 새로운 토큰을 받아서 갱신 후 요청
+        print("새로운 토큰을 받아서 갱신 및 요청");
+        print(response.body);
+
+        final newTokens = jsonDecode(response.body);
+        UserDataController.to
+            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
+
+        response = await UserDataController.getRequest(
+          url: url,
+          accessToken: newTokens['accessToken'],
+        );
+      } else if (response.statusCode == 402) {
+        // RefreshToken도 만료된 경우
+        print('리프레시 토큰 만료, 재로그인');
+        print(response.body);
+        Get.snackbar('실패', '로그인이 필요합니다.');
+        UserDataController.to.logout();
+        return;
+      }
+    }
 
     print(response.statusCode);
     print(response.body);
-
-    List<Friend> tempFriendList = [];
 
     if (response.statusCode == 200) {
       var friendsData = jsonDecode(response.body);
@@ -321,52 +517,132 @@ class FriendController extends GetxController {
     }
   }
 
-  //친구 삭제
+  /// 친구 삭제
   static Future<void> deleteFriend({
     required String oppEmail,
   }) async {
     final url = Uri.parse('$baseUrl/friends/$delete/$oppEmail');
 
-    final response = await http.get(url, headers: headers);
+    var response = await UserDataController.getRequest(
+      url: url,
+      accessToken: UserDataController.to.accessToken,
+    );
+
+    if (response.statusCode == 401) {
+      // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
+      print("401 RefreshToken을 사용하여 AccessToken 갱신 시도");
+      print(response.body);
+      response = await UserDataController.getRequestWithRefreshToken(
+        url: url,
+        accessToken: UserDataController.to.accessToken,
+        refreshToken: UserDataController.to.refreshToken,
+      );
+
+      if (response.statusCode == 300) {
+        // 새로운 토큰을 받아서 갱신 후 요청
+        print("새로운 토큰을 받아서 갱신 및 요청");
+        print(response.body);
+
+        final newTokens = jsonDecode(response.body);
+        UserDataController.to
+            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
+
+        response = await UserDataController.getRequest(
+          url: url,
+          accessToken: newTokens['accessToken'],
+        );
+      } else if (response.statusCode == 402) {
+        // RefreshToken도 만료된 경우
+        print('리프레시 토큰 만료, 재로그인');
+        print(response.body);
+        Get.snackbar('실패', '로그인이 필요합니다.');
+        UserDataController.to.logout();
+        return;
+      }
+    }
 
     print(response.statusCode);
     print(response.body);
   }
 
-  // 친구 차단
+  /// 친구 차단
   static Future<void> blockFriend({
     required String oppEmail,
   }) async {
     final url = Uri.parse('$baseUrl/friends/blocking');
 
-    String data = '{"oppEmail" :"$oppEmail"}';
-    print(data);
+    final body = jsonEncode({"oppEmail": oppEmail});
 
-    final response = await http.patch(url, headers: headers, body: data);
+    final response = await UserDataController.patchRequest(
+      url: url,
+      accessToken: UserDataController.to.accessToken,
+      body: body,
+    );
 
     print(response.statusCode);
     print(response.body);
   }
 
-  // 친구 차단 해제
+  /// 친구 차단 해제
   static Future<void> unblockFriend({
     required String oppEmail,
   }) async {
     final url = Uri.parse('$baseUrl/friends/unblocking');
 
-    String data = '{"oppEmail" :"$oppEmail"}';
+    final body = jsonEncode({"oppEmail": oppEmail});
 
-    final response = await http.patch(url, headers: headers, body: data);
+    final response = await UserDataController.patchRequest(
+      url: url,
+      accessToken: UserDataController.to.accessToken,
+      body: body,
+    );
 
     print(response.statusCode);
     print(response.body);
   }
 
-  // 차단한 친구 리스트 불러오기
+  /// 차단한 친구 리스트 불러오기
   static Future<void> getBlockedFriendList() async {
     final url = Uri.parse('$baseUrl/friends/get-blocking-friend');
+    List<Friend> tempBlockedFriendList = [];
 
-    final response = await http.get(url, headers: headers);
+    var response = await UserDataController.getRequest(
+      url: url,
+      accessToken: UserDataController.to.accessToken,
+    );
+
+    if (response.statusCode == 401) {
+      // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
+      print("401 RefreshToken을 사용하여 AccessToken 갱신 시도");
+      print(response.body);
+      response = await UserDataController.getRequestWithRefreshToken(
+        url: url,
+        accessToken: UserDataController.to.accessToken,
+        refreshToken: UserDataController.to.refreshToken,
+      );
+
+      if (response.statusCode == 300) {
+        // 새로운 토큰을 받아서 갱신 후 요청
+        print("새로운 토큰을 받아서 갱신 및 요청");
+        print(response.body);
+
+        final newTokens = jsonDecode(response.body);
+        UserDataController.to
+            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
+
+        response = await UserDataController.getRequest(
+          url: url,
+          accessToken: newTokens['accessToken'],
+        );
+      } else if (response.statusCode == 402) {
+        // RefreshToken도 만료된 경우
+        print('리프레시 토큰 만료, 재로그인');
+        print(response.body);
+        Get.snackbar('실패', '로그인이 필요합니다.');
+        UserDataController.to.logout();
+        return;
+      }
+    }
 
     print(response.statusCode);
     print(response.body);
@@ -404,78 +680,70 @@ class FriendController extends GetxController {
           isJoinRoom: isJoinRoom,
         );
 
-        FriendController.to.blockedFriends.add(friend);
+        tempBlockedFriendList.add(friend);
       }
+      FriendController.to.blockedFriends.assignAll(tempBlockedFriendList);
     }
   }
 
-  // 친구 정보 받아오기 - 프로필 페이지
+  /// 친구 정보(유저객체 + 이미지) 받아오기 - 프로필 페이지
   static Future<void> getFriendData({
     required String friendEmail,
   }) async {
     final url = Uri.parse('$baseUrl/findfriend/getimage');
 
-    String data = '{"friendEmail" :"$friendEmail"}';
+    final body = jsonEncode({"friendEmail": friendEmail});
 
-    final response = await http.post(url, headers: headers, body: data);
+    var response = await UserDataController.postRequest(
+      url: url,
+      accessToken: UserDataController.to.accessToken,
+      body: body,
+    );
 
-    // 받는 데이터
-    //   {
-    //     "user": {
-    //       "userNumber": 7,
-    //       "email": "ch@naver.com",
-    //       "password": "ch",
-    //       "nickname": "chovy",
-    //       "phoneNumber": "1234",
-    //       "age": "12",
-    //       "gender": "여",
-    //       "myMBTI": "INFP",
-    //       "friendMBTI": "INFP",
-    //       "myKeyword": "먹보",
-    //       "friendKeyword": "우동추d",
-    //       "userCreated": "2024-04-08 14:54:06",
-    //       "suspend": 0,
-    //       "manager": 0,
-    //       "friendGender": "여",
-    //       "friendMaxAge": "100",
-    //       "friendMinAge": "1",
-    //       "requestTime": "2024-04-15 20:07:48",
-    //       "userImage": "https://matchingimage.s3.ap-northeast-2.amazonaws.com/profile/1712729048538-chovy3.jpg",
-    //       "userImageKey": "profile/1712729048538-chovy3.jpg",
-    //       "deleteTime": null
-    //     },
-    //   "images": [
-    //     {
-    //       "imageNumber": 7,
-    //       "userNumber": 7,
-    //       "imagePath": "https://matchingimage.s3.ap-northeast-2.amazonaws.com/image/1712555678093-chovy1.jpg",
-    //       "imageCreated": "2024-04-08 14:54:38",
-    //       "imageKey": "image/1712555678093-chovy1.jpg"
-    //     },
-    //     {
-    //       "imageNumber": 8,
-    //       "userNumber": 7,
-    //       "imagePath": "https://matchingimage.s3.ap-northeast-2.amazonaws.com/image/1712555678094-chovy2.jpg",
-    //       "imageCreated": "2024-04-08 14:54:38",
-    //       "imageKey": "image/1712555678094-chovy2.jpg"
-    //     },
-    //     {
-    //       "imageNumber": 9,
-    //       "userNumber": 7,
-    //       "imagePath": "https://matchingimage.s3.ap-northeast-2.amazonaws.com/image/1712555678125-chovy3.jpg",
-    //       "imageCreated": "2024-04-08 14:54:38",
-    //       "imageKey": "image/1712555678125-chovy3.jpg"
-    //     }
-    //   ]
-    // }
+    if (response.statusCode == 401) {
+      // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
+      print("AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도");
+      print(response.body);
+      response = await UserDataController.postRequestWithRefreshToken(
+        url: url,
+        accessToken: UserDataController.to.accessToken,
+        refreshToken: UserDataController.to.refreshToken,
+        body: body,
+      );
+
+      if (response.statusCode == 300) {
+        // 새로운 토큰을 받아서 갱신 후 요청
+        print("새로운 토큰을 받아서 갱신 및 요청");
+        print(response.body);
+
+        final newTokens = jsonDecode(response.body);
+        UserDataController.to
+            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
+
+        response = await UserDataController.postRequest(
+          url: url,
+          accessToken: UserDataController.to.accessToken,
+          body: body,
+        );
+      } else if (response.statusCode == 402) {
+        // RefreshToken도 만료된 경우
+        print('리프레시 토큰 만료, 재로그인');
+        print(response.body);
+        Get.snackbar('실패', '로그인이 필요합니다.');
+        UserDataController.to.logout();
+        return;
+      }
+    }
 
     print(response.statusCode);
     print(response.body);
 
-    var jsonData = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      var jsonData = jsonDecode(response.body);
 
-    FriendController.to.friendData.value = User.fromJson(jsonData['user']);
-    FriendController.to.friendImageData = RxList<UserImage>.from(
-        jsonData['images'].map((data) => UserImage.fromJson(data)).toList());
+      FriendController.to.friendData.value = User.fromJson(jsonData['user']);
+      FriendController.to.friendImageData = RxList<UserImage>.from(
+          jsonData['images'].map((data) => UserImage.fromJson(data)).toList());
+    }
   }
 }

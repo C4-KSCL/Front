@@ -3,10 +3,13 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend_matching/pages/signup/imageUpload/selectImagePage.dart';
 import 'package:http/http.dart' as http;
 
+import '../config.dart';
+
+String? baseUrl=AppConfig.baseUrl;
+
 class FindPassword {
   static Future<String?> findPassword(String email) async {
-    late final String? baseUrl;
-    baseUrl = dotenv.env['SERVER_URL'];
+
 
     final url = Uri.parse('$baseUrl/auth/findpw');
     try {
@@ -37,8 +40,6 @@ class FindPassword {
   }
 
   static Future<void> setPassword(String email, String password) async {
-    late final String? baseUrl;
-    baseUrl = dotenv.env['SERVER_URL'];
 
     final url = Uri.parse('$baseUrl/auth/setpw');
     try {

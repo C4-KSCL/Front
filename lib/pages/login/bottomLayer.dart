@@ -2,15 +2,18 @@
 
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/components/loginTextForm.dart';
 import 'package:frontend_matching/components/loginVerifyTextForm.dart';
 import 'package:frontend_matching/components/textformField.dart';
 import 'package:frontend_matching/components/textformVerify.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
+import 'package:frontend_matching/models/user.dart';
 import 'package:frontend_matching/pages/login/findPasswordPage.dart';
 import 'package:frontend_matching/pages/matching/mainPage.dart';
 import 'package:frontend_matching/pages/signup/schoolAuth.dart';
+import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
@@ -53,6 +56,20 @@ class _BottomLayerLoginScreenState extends State<BottomLayerLoginScreen> {
             ),
             LoginTextForm(
                 typeController: pwController, textLogo: '', textType: '비밀번호'),
+            Row(
+              children: [
+                CupertinoCheckbox(
+                  value: UserDataController.to.isAutoLogin.value,
+                  activeColor: blueColor1,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      UserDataController.to.isAutoLogin.value = !UserDataController.to.isAutoLogin.value;
+                    });
+                  },
+                ),
+                const Text("자동 로그인"),
+              ],
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [

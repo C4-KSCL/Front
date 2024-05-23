@@ -312,84 +312,89 @@ Widget SentQuizChatBox({
 Widget ReceiveQuizChatBox({
   required Chat chat,
 }) {
-  return Column(
+  return Obx(() => Column(
     children: [
       Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Container(
-            decoration: const BoxDecoration(
-              color: greyColor3,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(8),
-                  topRight: Radius.circular(8),
-                  bottomRight: Radius.circular(8)),
-            ),
-            child: Obx(()=>Column(
-              children: [
-                chat.content.value == "더 이상 읽을 수 없는 메시지입니다." &&
-                    chat.type == "event"
-                    ? Container(
-                  constraints: BoxConstraints(
-                    maxWidth: Get.width * 0.75,
-                  ),
-                  decoration: const BoxDecoration(
-                    color: greyColor3,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(8),
-                        topRight: Radius.circular(8),
-                        bottomRight: Radius.circular(8)),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      chat.content.value,
-                      style: blackTextStyle4,
+              decoration: const BoxDecoration(
+                color: greyColor3,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(8),
+                    topRight: Radius.circular(8),
+                    bottomRight: Radius.circular(8)),
+              ),
+              child: Column(
+                children: [
+                  chat.content.value == "더 이상 읽을 수 없는 메시지입니다." &&
+                      chat.type == "event"
+                      ? Container(
+                    constraints: BoxConstraints(
+                      maxWidth: Get.width * 0.75,
                     ),
+                    decoration: const BoxDecoration(
+                      color: greyColor3,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(8),
+                          topRight: Radius.circular(8),
+                          bottomRight: Radius.circular(8)),
+                    ),
+                    child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Obx(()=>Text(
+                          chat.content.value,
+                          style: blackTextStyle4,
+                        ),)
 
-                  ),
-                )
-                    : Text(
-                  chat.event!.smallCategory.name,
-                  style: blackTextStyle1,
-                ),
-                SizedBox(
-                  width: Get.width * 0.4,
-                  height: Get.width * 0.4,
-                  child: Image.network(
-                      chat.event!.smallCategory.eventImage!.filepath),
-                ),
-                TextButton(
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      // 모양 설정
-                      borderRadius: BorderRadius.circular(10), // 둥근 모서리의 반지름
                     ),
-                    minimumSize: Size(Get.width * 0.3, 30),
-                  ),
-                  onPressed: () {
-                    Get.bottomSheet(
-                      QuizPage(
-                        voidCallback: Get.back,
-                        quizId: chat.event!.id.toString(),
-                        isSentQuiz: false,
+                  )
+                      : Column(
+                    children: [
+                      Text(
+                        chat.event!.smallCategory.name,
+                        style: blackTextStyle1,
                       ),
-                      backgroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
+                      SizedBox(
+                        width: Get.width * 0.4,
+                        height: Get.width * 0.4,
+                        child: Image.network(
+                            chat.event!.smallCategory.eventImage!.filepath),
                       ),
-                      isScrollControlled: true,
-                    );
-                  },
-                  child: const Text(
-                    "확인하기",
-                    style: blackTextStyle1,
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            // 모양 설정
+                            borderRadius:
+                            BorderRadius.circular(10), // 둥근 모서리의 반지름
+                          ),
+                          minimumSize: Size(Get.width * 0.3, 30),
+                        ),
+                        onPressed: () {
+                          Get.bottomSheet(
+                            QuizPage(
+                              voidCallback: Get.back,
+                              quizId: chat.event!.id.toString(),
+                              isSentQuiz: true,
+                            ),
+                            backgroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            isScrollControlled: true,
+                          );
+                        },
+                        child: const Text(
+                          "확인하기",
+                          style: blackTextStyle1,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),)
+                ],
+              )
 
           ),
           const SizedBox(
@@ -426,7 +431,7 @@ Widget ReceiveQuizChatBox({
         ),
       ),
     ],
-  );
+  ))  ;
 }
 
 Widget timeBox({required String chatDate}) {

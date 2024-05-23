@@ -30,28 +30,18 @@ Widget QuizPage({
           //초기화
           ChattingController.to.isQuizAnswered.value = false;
 
-          String? oppUserChoice;
-
-          if (isSentQuiz) {
-            oppUserChoice =
-                ChattingController.to.eventData.value!.user2Choice.value;
-          } else {
-            oppUserChoice =
-                ChattingController.to.eventData.value!.user1Choice.value;
-          }
-
           if (isSentQuiz) {
             if (ChattingController.to.eventData.value!.user1Choice.value !=
-                null) {
+                "아직 선택하지 않았습니다") {
               ChattingController.to.isQuizAnswered.value = true;
             }
           } else {
             if (ChattingController.to.eventData.value!.user2Choice.value !=
-                null) {
+                "아직 선택하지 않았습니다") {
               ChattingController.to.isQuizAnswered.value = true;
             }
           }
-          print(ChattingController.to.eventData.value!.id);
+          print(ChattingController.to.isQuizAnswered.value );
 
           return SingleChildScrollView(
             child: Column(
