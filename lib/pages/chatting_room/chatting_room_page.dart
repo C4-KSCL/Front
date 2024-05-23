@@ -63,6 +63,8 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   late FocusNode focusNode;
   late TextEditingController chatController;
 
+
+
   @override
   void initState() {
     super.initState();
@@ -75,35 +77,23 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
       }
     });
 
+    Get.lazyPut<ChattingController>(() => ChattingController(
+      roomId: widget.roomId,
+      isChatEnabled: widget.isChatEnabled!.obs,
+      isReceivedRequest: widget.isReceivedRequest!.obs,
+    ));
+
+    // ChattingController.to.init();
+    ChattingController.to.fetchInitialMessages(roomId: widget.roomId);
+    // if (ChattingController.to.roomId != null) {
+    //   ChattingController.to.connect(roomId: widget.roomId); //웹소켓 연결
+    // }
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       print("채팅방 화면 리로딩");
-      ChattingController.to.init();
-      if (ChattingController.to.roomId != null) {
-        ChattingController.to.connect(roomId: widget.roomId); //웹소켓 연결
-      }
+
     });
 
-    if (widget.isChatEnabled == true) {
-      Get.lazyPut<ChattingController>(() => ChattingController(
-            roomId: widget.roomId,
-            isChatEnabled: true.obs,
-            isReceivedRequest: false.obs,
-          ));
-    } else {
-      if (widget.isReceivedRequest == true) {
-        Get.lazyPut<ChattingController>(() => ChattingController(
-              roomId: widget.roomId,
-              isChatEnabled: false.obs,
-              isReceivedRequest: true.obs,
-            ));
-      } else {
-        Get.lazyPut<ChattingController>(() => ChattingController(
-              roomId: widget.roomId,
-              isChatEnabled: false.obs,
-              isReceivedRequest: false.obs,
-            ));
-      }
-    }
   }
 
   @override

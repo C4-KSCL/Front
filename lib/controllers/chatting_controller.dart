@@ -116,37 +116,55 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
   }
 
   //Socket.io 관련 함수
-  //소켓 연결
+
+  /// 소켓 객체 정의
   void init() {
-    _socket ??= IO.io(baseUrl, <String, dynamic>{
+    _socket = IO.io(baseUrl, <String, dynamic>{
       'transports': ['websocket'], //전송 방식을 웹소켓으로 설정
       'autoConnect': false, //수동으로 연결해야함
       'auth': {'token': UserDataController.to.accessToken},
     });
-
-    _socket!.onError((data) {
-      print("Connection failed: $data");
-    });
+    print("소켓 정의시 사용하는 토큰 : ${UserDataController.to.accessToken}");
   }
 
   /// 초기 톡방 내용 가져오기
   void fetchInitialMessages({required String roomId}) async {
-    chats.clear();
-    // http.get을 통해 채팅방 내용 가져오기
+    // 채팅방 내용 가져오기
     await getRoomChats(roomId: roomId);
+    init();
+    await ChattingController.to.connect(roomId: roomId);
+
   }
 
-  void connect({required String roomId}) async {
+  /// 웹 소켓 연결
+  Future<void> connect({required String roomId}) async {
+    print("소켓 연결시도");
+
+    if (_socket == null) {
+      print("소켓 객체 생성 실패");
+    } else {
+      print("소켓 객체 생성 성공");
+    }
     //소켓 연결
     _socket!.connect();
+
     //소켓 연결되면 소켓 이벤트 리스너 설정하기
     _socket!.onConnect((_) {
+      print("연결 완료");
       _initSocketListeners();
     });
-    //채팅방 내용 가져오기
-    fetchInitialMessages(roomId: roomId);
+
     // 방 참여
     joinRoom(roomId: roomId);
+
+    _socket!.onConnectError((data) {
+      print("Failed to connect to the server: $data");
+    });
+
+    // 소켓 연결 중 에러 발생 시
+    _socket!.onError((data) {
+      print("An error occurred: $data");
+    });
   }
 
   // 소켓 리스너 초기 설정
@@ -388,8 +406,8 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
       url: url,
       accessToken: UserDataController.to.accessToken,
     );
-    print(response.statusCode);
-    print(response.body);
+
+    print("채팅 내용 가져오기");
 
     if (response.statusCode == 401) {
       // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
@@ -425,6 +443,7 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
     }
 
     if (response.statusCode == 200) {
+      print("채팅 가져올때 사용 토큰 : ${UserDataController.to.accessToken}");
       // 받은 정보로 데이터 추가하기
       final jsonData = json.decode(response.body);
       if (jsonData['chats'] != null) {
