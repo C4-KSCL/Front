@@ -57,20 +57,6 @@ class _BottomLayerLoginScreenState extends State<BottomLayerLoginScreen> {
             LoginTextForm(
                 typeController: pwController, textLogo: '', textType: '비밀번호'),
             Row(
-              children: [
-                CupertinoCheckbox(
-                  value: UserDataController.to.isAutoLogin.value,
-                  activeColor: blueColor1,
-                  onChanged: (bool? value) {
-                    setState(() {
-                      UserDataController.to.isAutoLogin.value = !UserDataController.to.isAutoLogin.value;
-                    });
-                  },
-                ),
-                const Text("자동 로그인"),
-              ],
-            ),
-            Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 TextButton(

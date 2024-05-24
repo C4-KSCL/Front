@@ -21,7 +21,6 @@ class UserDataController extends GetxController {
   RxList<UserImage> images = <UserImage>[].obs;
 
   // Rx<String> matchingUserNumbers = "1,2,3".obs; // 매칭 유저 정보
-  Rx<bool> isAutoLogin = true.obs; // 자동 로그인 여부
 
   var accessToken = '';
   var refreshToken = '';
@@ -57,17 +56,10 @@ class UserDataController extends GetxController {
     final response = await http.post(url, headers: headers, body: body);
 
     if (response.statusCode == 200) {
-      // 자동 로그인 관련 처리
-      if (UserDataController.to.isAutoLogin.value) {
-        // 아이디 비번 저장
+        // 자동 로그인 관련 아이디 비번 저장
         await AppConfig.storage.write(key: "autoLoginEmail", value: email);
         await AppConfig.storage.write(key: "autoLoginPw", value: password);
         await AppConfig.storage.write(key: "isAutoLogin", value: "true");
-      } else {
-        await AppConfig.storage.write(key: "autoLoginEmail", value: '');
-        await AppConfig.storage.write(key: "autoLoginPw", value: '');
-        await AppConfig.storage.write(key: "isAutoLogin", value: "false");
-      }
 
       FcmService.requestPermission();
 
@@ -101,6 +93,8 @@ class UserDataController extends GetxController {
 
   void logout() async {
     await FcmService.deleteUserFcmToken(); //fcm 토큰 삭제
+    await AppConfig.storage.write(key: "autoLoginEmail", value: '');
+    await AppConfig.storage.write(key: "autoLoginPw", value: '');
     await AppConfig.storage
         .write(key: "isAutoLogin", value: "false"); // 자동 로그인 해제
     user.value = null;
@@ -117,7 +111,6 @@ class UserDataController extends GetxController {
     // Get.put(FriendController());
     // Get.put(ChattingListController());
     images.value = <UserImage>[].obs;
-    isAutoLogin.value = false;
 
     print("로그아웃");
   }

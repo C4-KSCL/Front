@@ -36,7 +36,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
-// 앱이 백그라운드 상태에서 메시지를 받았을 때 실행할 로직
+/// 앱이 백그라운드 상태에서 FCM메세지를 받았을 때 실행할 로직
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print(
       "Handling a background message: ${message.messageId} ${message.data} ${message.sentTime}");
@@ -87,7 +87,7 @@ void initializeNotifications() async {
       iOS: DarwinInitializationSettings(),
     ),
 
-    // 안드로이드에서 FCM 클릭시 핸들링 코드
+    /// 안드로이드에서 FCM 클릭시 핸들링 코드
     onDidReceiveNotificationResponse: (NotificationResponse details) async {
       print("페이로드 값 : ${details.payload}");
       // 채팅 관련 알림
