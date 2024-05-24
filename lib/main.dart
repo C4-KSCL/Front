@@ -136,10 +136,18 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  /// FCM 백그라운드 알림 받기
+  /// FCM : 백그라운드 알림 받을 때 실행
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-  /// FCM 포그라운드 알림 받기
+  /// FCM : 종료 상태에서 알림 클릭시 실행
+  await FirebaseMessaging.instance.getInitialMessage().then((message) {
+    print("종료상태에서 앱 누름");
+    if (message != null) {
+      _firebaseMessagingBackgroundHandler(message);
+    }
+  });
+
+  /// FCM : 포그라운드 알림 받기
   FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
     print("포그라운드 메세지 수신 : ${message.data}");
 
@@ -301,4 +309,5 @@ void main() async {
       ],
     ),
   );
+
 }
