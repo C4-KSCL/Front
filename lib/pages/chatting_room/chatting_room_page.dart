@@ -83,11 +83,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
       isReceivedRequest: widget.isReceivedRequest!.obs,
     ));
 
-    // ChattingController.to.init();
     ChattingController.to.fetchInitialMessages(roomId: widget.roomId);
-    // if (ChattingController.to.roomId != null) {
-    //   ChattingController.to.connect(roomId: widget.roomId); //웹소켓 연결
-    // }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       print("채팅방 화면 리로딩");

@@ -87,7 +87,7 @@ void initializeNotifications() async {
       iOS: DarwinInitializationSettings(),
     ),
 
-    /// 안드로이드에서 FCM 클릭시 핸들링 코드
+    /// Android : FCM 클릭시 핸들링 코드
     onDidReceiveNotificationResponse: (NotificationResponse details) async {
       print("페이로드 값 : ${details.payload}");
       // 채팅 관련 알림
@@ -102,6 +102,7 @@ void initializeNotifications() async {
               roomId: chatData[1],
               oppUserName: chatData[0],
               isChatEnabled: true,
+          isReceivedRequest: false,
             ));
       }
     },
@@ -135,10 +136,10 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  //FCM 백그라운드 알림 받기
+  /// FCM 백그라운드 알림 받기
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-  //FCM 포그라운드
+  /// FCM 포그라운드 알림 받기
   FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
     print("포그라운드 메세지 수신 : ${message.data}");
 

@@ -85,11 +85,9 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
       case AppLifecycleState.resumed:
         // 앱이 포어그라운드로 돌아왔을 때
         print("백그라운드->포그라운드 넘어갔음");
-        ChattingController.to.init();
-        if (ChattingController.to.roomId != null) {
-          ChattingController.to.lastChatDate = null;
-          ChattingController.to.connect(roomId: roomId.toString()); //웹소켓 연결
-        }
+        chats.clear();
+        ChattingController.to.lastChatDate = null;
+        fetchInitialMessages(roomId: roomId.toString());
         break;
       case AppLifecycleState.paused:
         // 앱이 백그라운드로 갔을 때
@@ -119,15 +117,14 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
   //Socket.io 관련 함수
 
   /// 소켓 객체 정의
-  void init() {
-    String accessToken = UserDataController.to.accessToken;
+  void initSocket() {
     _socket = IO.io(baseUrl, <String, dynamic>{
       'transports': ['websocket'], //전송 방식을 웹소켓으로 설정
       'autoConnect': false, //수동으로 연결해야함
-      'auth': {'token': accessToken},
+      'auth': {'token': UserDataController.to.accessToken},
     });
-    if(accessToken != _socket!.auth['token']) {
-      _socket!.auth['token'] = accessToken;
+    if(UserDataController.to.accessToken != _socket!.auth['token']) {
+      _socket!.auth['token'] = UserDataController.to.accessToken;
       print("토큰 값 변경 : ${_socket!.auth['token']}");
     }
   }
@@ -136,7 +133,7 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
   void fetchInitialMessages({required String roomId}) async {
     // 채팅방 내용 가져오기
     await getRoomChats(roomId: roomId);
-    init();
+    initSocket();
     await ChattingController.to.connect(roomId: roomId);
   }
 
@@ -410,6 +407,7 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
 
     if (response.statusCode == 200) {
       print("채팅 가져올때 사용 토큰 : ${UserDataController.to.accessToken}");
+      print(response.body);
       // 받은 정보로 데이터 추가하기
       final jsonData = json.decode(response.body);
       if (jsonData['chats'] != null) {
@@ -486,6 +484,17 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
               DateTime.now().toString(); // 오늘 날짜
           print("firstChatDate 설정 : ${ChattingController.to.firstChatDate}");
         }
+      }
+      // 채팅 개수 적으면 위쪽에 최근 채팅 날짜 띄우기
+      if(ChattingController.to.chats.isNotEmpty && ChattingController.to.chats.length<20){
+        ChattingController.to.chats.add(Chat(
+          id: 0,
+          roomId: roomId,
+          createdAt: ChattingController.to.lastChatDate!,
+          content: "timeBox",
+          readCount: 0,
+          type: 'time',
+        ));
       }
     }
     ChattingController.to.isChatLoading.value = false;

@@ -35,7 +35,6 @@ Widget FriendProfilePage({
         }
         // 성공적으로 친구의 정보를 불러왔을 경우
         else {
-
           return Container(
             padding: const EdgeInsets.all(10),
             width: Get.width * 0.6,
@@ -74,7 +73,9 @@ Widget FriendProfilePage({
                                   width: 40,
                                   height: 20,
                                   decoration: BoxDecoration(
-                                    color: userData.gender == "남" ? blueColor1 : pinkColor1,
+                                    color: userData.gender == "남"
+                                        ? blueColor1
+                                        : pinkColor1,
                                     borderRadius: BorderRadius.circular(6),
                                   ),
                                   child: Center(
@@ -167,16 +168,16 @@ Widget FriendProfilePage({
                           .then((value) => Get.to(ChatRoomPage(
                                 roomId: userData.roomId!,
                                 oppUserName: userData.nickname,
-                        isChatEnabled: true,
-                        isReceivedRequest: false,
+                                isChatEnabled: true,
+                                isReceivedRequest: false,
                               )));
                     }
-                    Get.to(()=>ChatRoomPage(
-                      roomId: userData.roomId!,
-                      oppUserName: userData.nickname,
-                      isChatEnabled: true,
-                      isReceivedRequest: false,
-                    ));
+                    Get.to(() => ChatRoomPage(
+                          roomId: userData.roomId!,
+                          oppUserName: userData.nickname,
+                          isChatEnabled: true,
+                          isReceivedRequest: false,
+                        ));
                   },
                   textStyle: whiteTextStyle1,
                 )
@@ -250,7 +251,9 @@ Widget RequestProfilePage({
                                   width: 40,
                                   height: 20,
                                   decoration: BoxDecoration(
-                                    color: userData.gender == "남" ? blueColor1 : pinkColor1,
+                                    color: userData.gender == "남"
+                                        ? blueColor1
+                                        : pinkColor1,
                                     borderRadius: BorderRadius.circular(6),
                                   ),
                                   child: Center(
