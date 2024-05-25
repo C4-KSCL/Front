@@ -36,10 +36,10 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
-/// 앱이 백그라운드 상태에서 FCM메세지를 받았을 때 실행할 로직
+/// Andoroid : 백그라운드일때, FCM을 받았을 때 실행
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print(
-      "Handling a background message: ${message.messageId} ${message.data} ${message.sentTime}");
+      "백그라운드 때 받은 FCM 내용: ${message.notification} ${message.data} ${message.sentTime}");
 
   const AndroidNotificationDetails androidPlatformChannelSpecifics =
       AndroidNotificationDetails(
@@ -87,7 +87,7 @@ void initializeNotifications() async {
       iOS: DarwinInitializationSettings(),
     ),
 
-    /// Android : FCM 클릭시 핸들링 코드
+    /// Android : 포그라운드일때, FCM 클릭시 핸들링 코드
     onDidReceiveNotificationResponse: (NotificationResponse details) async {
       print("페이로드 값 : ${details.payload}");
       // 채팅 관련 알림
@@ -132,20 +132,22 @@ void main() async {
 
   initializeNotifications(); //안드로이드 알림 설정 초기화
 
-  //Firebase 초기화
+  /// Firebase 초기화
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  /// FCM : 백그라운드 알림 받을 때 실행
+
+  /// FCM : 종료 상태/백그라운드 알림 받을 때 실행
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   /// FCM : 종료 상태에서 알림 클릭시 실행
-  await FirebaseMessaging.instance.getInitialMessage().then((message) {
-    print("종료상태에서 앱 누름");
-    if (message != null) {
-      _firebaseMessagingBackgroundHandler(message);
-    }
-  });
+  RemoteMessage? initialMessage =
+  await FirebaseMessaging.instance.getInitialMessage();
+
+  if (initialMessage != null) {
+    print("종료상태에서 알림 누름");
+    Get.offNamed('/login');
+  }
 
   /// FCM : 포그라운드 알림 받기
   FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
