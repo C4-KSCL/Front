@@ -486,7 +486,7 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
         }
       }
       // 채팅 개수 적으면 위쪽에 최근 채팅 날짜 띄우기
-      if(ChattingController.to.chats.isNotEmpty && ChattingController.to.chats.length<20){
+      if(ChattingController.to.chats.length>1 && ChattingController.to.chats.length<20){
         ChattingController.to.chats.add(Chat(
           id: 0,
           roomId: roomId,
