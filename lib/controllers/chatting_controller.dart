@@ -88,6 +88,11 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
         // FCM
         if (_socket!.connected) {
           print("소켓 연결되어 있음 : $roomId");
+          chats.clear();
+          leaveRoom();
+          ChattingController.to.lastChatDate = null;
+          getRoomChats(roomId: roomId!);
+          joinRoom(roomId: roomId!);
         } else {
           chats.clear();
           ChattingController.to.lastChatDate = null;
@@ -196,6 +201,7 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
     socket.off("delete message");
     socket.off("new event");
     socket.off("answer to event");
+    socket.off("leave room");
 
     // 소켓 'connect' 이벤트 listen
     socket.on("connect", (_) {
@@ -321,6 +327,11 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
     });
 
     // 'disconnect' 이벤트 listen
+    socket.on("leave room", (data) {
+      print(data);
+    });
+
+    // 'disconnect' 이벤트 listen
     socket.on("disconnect", (_) {
       print("소켓 연결 끊김");
     });
@@ -391,6 +402,13 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
       "content": selectedContent,
     };
     socket.emit("answer to event", data);
+  }
+  
+  /// 채팅방 나가기(소켓상)
+  void leaveRoom(){
+    final socket = _socket!;
+    
+    socket.emit("leave room");
   }
 
   void clickQuizButton(int index) {

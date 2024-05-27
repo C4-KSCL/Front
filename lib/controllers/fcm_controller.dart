@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:frontend_matching/controllers/friend_controller.dart';
+import 'package:frontend_matching/pages/login/loginPage.dart';
 import 'package:get/get.dart';
 import '../firebase_options.dart';
 
@@ -46,6 +47,7 @@ class FcmController extends GetxController {
     if (initialMessage != null) {
       print("종료 상태에서 FCM 클릭 누름");
       print(initialMessage.data);
+      Get.to(()=>const LoginPage());
       BottomNavigationBarController.to.selectedIndex.value = 2;
       Get.to(() => ChatRoomPage(
             roomId: initialMessage.data['roomId'],
@@ -104,14 +106,16 @@ class FcmController extends GetxController {
           BottomNavigationBarController.to.selectedIndex.value = 2;
           // 채팅방 입장되어 있는 경우
           if (Get.isRegistered<ChattingController>()) {
-            print("채팅방 입장되어 있는거 확인");
-            Get.back();
-            Get.to(() => ChatRoomPage(
-              roomId: chatData[1],
-              oppUserName: chatData[0],
-              isChatEnabled: true,
-              isReceivedRequest: false,
-            ));
+            print("채팅방 입장되어 있는거 확인 roomId ${chatData[1]}로 변경");
+            ChattingController.to.roomId=chatData[1];
+            ChatRoomPage
+            // Get.back();
+            // Get.to(() => ChatRoomPage(
+            //   roomId: chatData[1],
+            //   oppUserName: chatData[0],
+            //   isChatEnabled: true,
+            //   isReceivedRequest: false,
+            // ));
           }
           else{
             Get.to(() => ChatRoomPage(

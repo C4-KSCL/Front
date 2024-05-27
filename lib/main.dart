@@ -38,12 +38,8 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 /// Andoroid : 백그라운드일때, FCM을 받았을 때 실행
+@pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-
-  /// Firebase 초기화
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
 
   print(
       "백그라운드 때 받은 FCM 내용: ${message.notification} ${message.data} ${message.sentTime}");

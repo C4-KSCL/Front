@@ -41,12 +41,12 @@ enum ChatType {
 
 class ChatRoomPage extends StatefulWidget {
   final String roomId;
-  final String oppUserName;
+  String oppUserName;
   final int? friendRequestId;
   final bool? isChatEnabled;
   final bool? isReceivedRequest;
 
-  const ChatRoomPage({
+  ChatRoomPage({
     super.key,
     this.friendRequestId,
     this.isChatEnabled,
@@ -92,6 +92,12 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
     chatController.dispose();
     Get.delete<ChattingController>();
     super.dispose();
+  }
+
+  void setOppUserName(String oppUserName){
+    setState(() {
+      widget.oppUserName=oppUserName;
+    });
   }
 
   @override
