@@ -18,7 +18,7 @@ Widget FriendProfilePage({
   required Friend userData,
   required VoidCallback voidCallback,
 }) {
-  final pageController = PageController();
+  final PageController pageController = PageController(initialPage: 0);
 
   return Padding(
     padding: EdgeInsets.fromLTRB(0, Get.height * 0.1, 0, Get.height * 0.1),
@@ -125,7 +125,12 @@ Widget FriendProfilePage({
                       itemBuilder: (context, index) {
                         var friendImage =
                             FriendController.to.friendImageData[index];
-                        return Image.network(friendImage.imagePath);
+                        return Image.network(
+                          friendImage.imagePath,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Image.asset('assets/images/logo.png');  // 기본 이미지 제공
+                          },
+                        );
                       },
                     ),
                   ),

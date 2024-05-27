@@ -30,7 +30,7 @@ class _MainPageState extends State<MainPage> {
   final TextEditingController minAgeController = TextEditingController();
   final TextEditingController maxAgeController = TextEditingController();
   final CarouselController _carouselController = CarouselController();
-  final pageController = PageController();
+  final PageController pageController = PageController(initialPage: 0);
 
   String accessToken = '';
   String email = '';

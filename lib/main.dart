@@ -5,6 +5,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:frontend_matching/controllers/bottomNavigationBar.dart';
 import 'package:frontend_matching/controllers/chatting_controller.dart';
 import 'package:frontend_matching/controllers/chatting_list_controller.dart';
+import 'package:frontend_matching/controllers/fcm_controller.dart';
 import 'package:frontend_matching/controllers/find_friend_controller.dart';
 import 'package:frontend_matching/controllers/infoModifyController.dart';
 import 'package:frontend_matching/controllers/keyword_controller.dart';
@@ -37,7 +38,13 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 /// Andoroid : 백그라운드일때, FCM을 받았을 때 실행
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+
+  /// Firebase 초기화
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   print(
       "백그라운드 때 받은 FCM 내용: ${message.notification} ${message.data} ${message.sentTime}");
 
@@ -54,7 +61,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   const NotificationDetails platformChannelSpecifics =
       NotificationDetails(android: androidPlatformChannelSpecifics);
 
-  if(message.data['route']=='chat'){
+  if (message.data['route'] == 'chat') {
     String payload =
         message.notification!.title! + ',' + message.data['roomId'];
 
@@ -65,7 +72,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       platformChannelSpecifics,
       payload: payload,
     );
-  } else if(message.data['route']=='friend'){
+  } else if (message.data['route'] == 'friend') {
     await flutterLocalNotificationsPlugin.show(
       0, // 알림 ID
       message.notification!.title, // 알림 제목
@@ -74,53 +81,6 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       payload: 'friendPage',
     );
   }
-
-
-}
-
-// 알림 설정
-void initializeNotifications() async {
-  // Notification plugin 초기화
-  await flutterLocalNotificationsPlugin.initialize(
-    const InitializationSettings(
-      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
-      iOS: DarwinInitializationSettings(),
-    ),
-
-    /// Android : 포그라운드일때, FCM 클릭시 핸들링 코드
-    onDidReceiveNotificationResponse: (NotificationResponse details) async {
-      print("페이로드 값 : ${details.payload}");
-      // 채팅 관련 알림
-      if (details.payload == "friendPage") {
-        BottomNavigationBarController.to.selectedIndex.value = 1;
-      }
-      // 친구 관련 알림
-      else {
-        List<String> chatData = details.payload!.split(',');
-        BottomNavigationBarController.to.selectedIndex.value = 2;
-        Get.to(() => ChatRoomPage(
-              roomId: chatData[1],
-              oppUserName: chatData[0],
-              isChatEnabled: true,
-          isReceivedRequest: false,
-            ));
-      }
-    },
-  );
-
-  // Android용 알림 채널 생성
-  const AndroidNotificationChannel channel = AndroidNotificationChannel(
-    'high_importance_channel', // 채널 ID
-    'High Importance Notifications', // 채널 이름
-    description: 'This channel is used for important notifications.', // 채널 설명
-    importance: Importance.high, // 중요도
-  );
-
-  // 채널을 플러그인에 등록
-  flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(channel);
 }
 
 // main 함수
@@ -130,169 +90,45 @@ void main() async {
   await dotenv.load(fileName: ".env");
   AppConfig.load();
 
-  initializeNotifications(); //안드로이드 알림 설정 초기화
-
   /// Firebase 초기화
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
   /// FCM : 종료 상태/백그라운드 알림 받을 때 실행
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-  /// FCM : 종료 상태에서 알림 클릭시 실행
-  RemoteMessage? initialMessage =
-  await FirebaseMessaging.instance.getInitialMessage();
-
-  if (initialMessage != null) {
-    print("종료상태에서 알림 누름");
-    Get.offNamed('/login');
-  }
-
-  /// FCM : 포그라운드 알림 받기
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-    print("포그라운드 메세지 수신 : ${message.data}");
-
-    // 채팅 관련 알림
-    if (message.data['route'] == "chat") {
-      // 채팅 리스트 받아오기
-      ChattingListController.getLastChatList();
-
-      String? incomingRoomId = message.data['roomId'];
-
-      // ChattingController의 인스턴스가 등록되어 있는지 확인
-      if (Get.isRegistered<ChattingController>()) {
-        // 등록된 컨트롤러 사용
-        final ChattingController chatRoomController = Get.find();
-
-        // 해당 채팅방에 입장되어있으면 알림 안오게 세팅
-        if (chatRoomController.roomId != incomingRoomId) {
-          const AndroidNotificationDetails androidPlatformChannelSpecifics =
-              AndroidNotificationDetails(
-            'SOUL MBTI_ID',
-            'SOUL MBTI_NAME',
-            channelDescription: 'SOUL MBTI_DESC',
-            importance: Importance.max,
-            priority: Priority.high,
-            showWhen: false,
-          );
-
-          const NotificationDetails platformChannelSpecifics =
-              NotificationDetails(android: androidPlatformChannelSpecifics);
-
-          String payload =
-              message.notification!.title! + ',' + message.data['roomId'];
-          print("페이로드 값 : $payload");
-
-          await flutterLocalNotificationsPlugin.show(
-              0, // 알림 ID
-              message.notification!.title, // 알림 제목
-              message.notification!.body, // 알림 내용
-              platformChannelSpecifics,
-              payload: payload // 알림 눌렀을 때 사용할 데이터
-              );
-        }
-      }
-      // ChattingController의 인스턴스가 등록이 안되어 있을때
-      else {
-        // 친구 관련이나 다른거 등등
-        const AndroidNotificationDetails androidPlatformChannelSpecifics =
-            AndroidNotificationDetails(
-          'SOUL MBTI_ID',
-          'SOUL MBTI_NAME',
-          channelDescription: 'SOUL MBTI_DESC',
-          importance: Importance.max,
-          priority: Priority.high,
-          showWhen: false,
-        );
-
-        const NotificationDetails platformChannelSpecifics =
-            NotificationDetails(android: androidPlatformChannelSpecifics);
-
-        String payload =
-            message.notification!.title! + ',' + message.data['roomId'];
-        print("페이로드 값 : $payload");
-
-        await flutterLocalNotificationsPlugin.show(
-          0, // 알림 ID
-          message.notification!.title, // 알림 제목
-          message.notification!.body, // 알림 내용
-          platformChannelSpecifics,
-          payload: payload,
-        );
-      }
-    }
-    // 다른 알림 관련
-    else {
-      // 친구 관련이나 다른거 등등
-      const AndroidNotificationDetails androidPlatformChannelSpecifics =
-          AndroidNotificationDetails(
-        'SOUL MBTI_ID',
-        'SOUL MBTI_NAME',
-        channelDescription: 'SOUL MBTI_DESC',
-        importance: Importance.max,
-        priority: Priority.high,
-        showWhen: false,
-      );
-
-      const NotificationDetails platformChannelSpecifics =
-          NotificationDetails(android: androidPlatformChannelSpecifics);
-
-      await flutterLocalNotificationsPlugin.show(
-        0, // 알림 ID
-        message.notification!.title, // 알림 제목
-        message.notification!.body, // 알림 내용
-        platformChannelSpecifics,
-        payload: 'friendPage',
-      );
-    }
-  });
-
-  void navigateToChat(RemoteMessage message) {
-    // String roomId = message.data['roomId'] ?? 'default_room_id';
-    // ChattingController.to.roomId = roomId;
-    print("룸 아이디: ${message.data['roomId']}");
-    Get.offAllNamed('/chatList');
-  }
-
-  void navigateToFriendPage() {
-    Get.offAll(const InitPage());
-    BottomNavigationBarController.to.selectedIndex.value = 2;
-    print("친구 페이지로 기기");
-  }
-
-  void handleRouteNavigation(String route, RemoteMessage message) {
-    switch (route) {
-      case "chat":
-        navigateToChat(message);
-        break;
-      case "friend":
-        navigateToFriendPage();
-        break;
-      default:
-        print("라우팅 Route not recognized: $route");
-        break;
-    }
-  }
-
-  /// IOS : 포그라운드 상태일때 푸시알림 클릭시 실행,
-  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    print("FCM 클릭: ${message.data}");
-
-    if (message.data.containsKey('route')) {
-      handleRouteNavigation(message.data['route'], message);
-    } else {
-      print("No route specified in the data");
-    }
-  });
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
   //한국 시간 설정
   await initializeDateFormatting('ko_KR', null);
 
-  runApp(
-    GetMaterialApp(
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  MyApp({Key? key}) : super(key: key);
+
+  final FcmController fcmController = Get.put(FcmController());
+
+  @override
+  Widget build(BuildContext context) {
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const LoginPage(),
+      home: Scaffold(
+        body: FutureBuilder(
+          future: fcmController.initializeFcm(),
+          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+            if (snapshot.hasData &&
+                snapshot.connectionState == ConnectionState.done) {
+              print("FCM 초기화 성공적");
+              return const LoginPage();
+            } else if (snapshot.hasError) {
+              return const Center(child: Text('서버 오류!'));
+            } else {
+              return Center(child: Image.asset('assets/images/mbti.png'));
+            }
+          },
+        ),
+      ),
       theme: ThemeData(
         primarySwatch: Colors.blue,
         popupMenuTheme: PopupMenuThemeData(
@@ -309,7 +145,6 @@ void main() async {
       getPages: [
         GetPage(name: '/login', page: () => const LoginPage()),
       ],
-    ),
-  );
-
+    );
+  }
 }

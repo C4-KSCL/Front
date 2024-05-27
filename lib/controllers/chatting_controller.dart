@@ -28,7 +28,7 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
   ScrollController scrollController = ScrollController();
   String? roomId;
 
-  IO.Socket? _socket=null; //소켓IO 객체
+  IO.Socket? _socket; //소켓IO 객체
   RxList chats = [].obs; //채팅 객체를 담는 배열
   Rx<Event?> eventData = Rx<Event?>(null); // event 객체 하나를 담는 변수
 
@@ -69,7 +69,7 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
   @override
   void onClose() {
     WidgetsBinding.instance.removeObserver(this); // Observer 제거
-    _socket=null;
+    _socket = null;
     if (_socket != null) {
       _socket!.disconnect();
     }
@@ -83,20 +83,36 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
     super.didChangeAppLifecycleState(state);
     switch (state) {
       case AppLifecycleState.resumed:
-        // 앱이 포어그라운드로 돌아왔을 때
-        print("백그라운드->포그라운드 넘어갔음");
-        chats.clear();
-        ChattingController.to.lastChatDate = null;
-        fetchInitialMessages(roomId: roomId.toString());
+        // 앱이 포그라운드로 돌아왔을 때
+        print("앱 라이프사이클 : resumed(포그라운드)");
+        // FCM
+        if (_socket!.connected) {
+          print("소켓 연결되어 있음 : $roomId");
+        } else {
+          chats.clear();
+          ChattingController.to.lastChatDate = null;
+          fetchInitialMessages(roomId: roomId.toString());
+        }
         break;
       case AppLifecycleState.paused:
         // 앱이 백그라운드로 갔을 때
-        print("포그라운드-> 백그라운드로 넘어갔음");
+        print("앱 라이프사이클 : paused(백그라운드)");
         if (_socket != null) {
           _socket!.disconnect();
         }
         break;
+      case AppLifecycleState.detached:
+        print("앱 라이프사이클 : detached");
+        break;
+      case AppLifecycleState.hidden:
+        print("앱 라이프사이클 : hidden");
+        break;
+      // 위에 상단바 내렸을 때
+      case AppLifecycleState.inactive:
+        print("앱 라이프사이클 : inactive(상태바 내렸을떄)");
+        break;
       default:
+        print(AppLifecycleState);
         break;
     }
   }
@@ -123,7 +139,7 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
       'autoConnect': false, //수동으로 연결해야함
       'auth': {'token': UserDataController.to.accessToken},
     });
-    if(UserDataController.to.accessToken != _socket!.auth['token']) {
+    if (UserDataController.to.accessToken != _socket!.auth['token']) {
       _socket!.auth['token'] = UserDataController.to.accessToken;
       print("토큰 값 변경 : ${_socket!.auth['token']}");
     }
@@ -144,7 +160,7 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
     if (_socket == null) {
       print("소켓 객체 생성 실패");
     } else {
-      print("소켓 객체 생성 성공");
+      print("소켓 객체 생성 성공 : $roomId");
     }
 
     //소켓 연결
@@ -190,6 +206,7 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
     socket.on("user join in room", (data) {
       print(data);
       print("user join in room 도착");
+      print("접속한 방 아이디 : $roomId");
 
       // 안 읽은 채팅 1->0 으로 변환
       String joinUserEmail = data['userEmail'];
@@ -403,7 +420,8 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
     print("URL : $url");
 
     // http로 정보 받기
-    var response = await UserDataController.sendHttpRequestWithTokenManagement(method: 'get', url: url);
+    var response = await UserDataController.sendHttpRequestWithTokenManagement(
+        method: 'get', url: url);
 
     if (response.statusCode == 200) {
       print("채팅 가져올때 사용 토큰 : ${UserDataController.to.accessToken}");
@@ -486,7 +504,8 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
         }
       }
       // 채팅 개수 적으면 위쪽에 최근 채팅 날짜 띄우기
-      if(ChattingController.to.chats.length>1 && ChattingController.to.chats.length<20){
+      if (ChattingController.to.chats.length > 1 &&
+          ChattingController.to.chats.length < 20) {
         ChattingController.to.chats.add(Chat(
           id: 0,
           roomId: roomId,
@@ -504,7 +523,8 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
   static Future<void> getBigCategories() async {
     final url = Uri.parse('$baseUrl/$events/get-big/');
 
-    var response = await UserDataController.sendHttpRequestWithTokenManagement(method: 'get', url: url);
+    var response = await UserDataController.sendHttpRequestWithTokenManagement(
+        method: 'get', url: url);
 
     if (response.statusCode == 200) {
       print(response.body);
@@ -521,7 +541,8 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
   }) async {
     final url = Uri.parse('$baseUrl/$events/get-small/$bigCategoryName');
 
-    var response = await UserDataController.sendHttpRequestWithTokenManagement(method: 'get', url: url);
+    var response = await UserDataController.sendHttpRequestWithTokenManagement(
+        method: 'get', url: url);
 
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
@@ -537,7 +558,8 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
   }) async {
     final url = Uri.parse('$baseUrl/$events/get-event-page/$quizId');
 
-    var response = await UserDataController.sendHttpRequestWithTokenManagement(method: 'get', url: url);
+    var response = await UserDataController.sendHttpRequestWithTokenManagement(
+        method: 'get', url: url);
 
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);

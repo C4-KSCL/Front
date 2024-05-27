@@ -63,11 +63,10 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   late FocusNode focusNode;
   late TextEditingController chatController;
 
-
-
   @override
   void initState() {
     super.initState();
+    print("채팅방 화면 로딩");
     focusNode = FocusNode();
     chatController = TextEditingController();
 
@@ -77,19 +76,13 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
       }
     });
 
-    Get.lazyPut<ChattingController>(() => ChattingController(
+    Get.put(ChattingController(
       roomId: widget.roomId,
       isChatEnabled: widget.isChatEnabled!.obs,
       isReceivedRequest: widget.isReceivedRequest!.obs,
     ));
 
     ChattingController.to.fetchInitialMessages(roomId: widget.roomId);
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      print("채팅방 화면 리로딩");
-
-    });
-
   }
 
   @override
