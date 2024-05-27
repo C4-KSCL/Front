@@ -27,6 +27,7 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
   static String? baseUrl = AppConfig.baseUrl;
   ScrollController scrollController = ScrollController();
   String? roomId;
+  RxString oppUserName=''.obs;
 
   IO.Socket? _socket; //소켓IO 객체
   RxList chats = [].obs; //채팅 객체를 담는 배열

@@ -108,14 +108,8 @@ class FcmController extends GetxController {
           if (Get.isRegistered<ChattingController>()) {
             print("채팅방 입장되어 있는거 확인 roomId ${chatData[1]}로 변경");
             ChattingController.to.roomId=chatData[1];
-            ChatRoomPage
-            // Get.back();
-            // Get.to(() => ChatRoomPage(
-            //   roomId: chatData[1],
-            //   oppUserName: chatData[0],
-            //   isChatEnabled: true,
-            //   isReceivedRequest: false,
-            // ));
+            ChattingController.to.oppUserName.value=chatData[0];
+            ChattingController.to.isChatEnabled.value=true;
           }
           else{
             Get.to(() => ChatRoomPage(

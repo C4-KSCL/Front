@@ -81,6 +81,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
       isChatEnabled: widget.isChatEnabled!.obs,
       isReceivedRequest: widget.isReceivedRequest!.obs,
     ));
+    ChattingController.to.oppUserName.value=widget.oppUserName;
 
     ChattingController.to.fetchInitialMessages(roomId: widget.roomId);
   }
@@ -92,12 +93,6 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
     chatController.dispose();
     Get.delete<ChattingController>();
     super.dispose();
-  }
-
-  void setOppUserName(String oppUserName){
-    setState(() {
-      widget.oppUserName=oppUserName;
-    });
   }
 
   @override
@@ -117,7 +112,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
             Get.back();
           },
         ),
-        title: Text(widget.oppUserName),
+        title: Obx(()=>Text(ChattingController.to.oppUserName.value)),
         centerTitle: true,
       ),
       body: Column(
