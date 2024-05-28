@@ -1,17 +1,25 @@
+////////////////////////// 추가
+buildscript {
+    ext.kotlin_version = '1.8.22'
+
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+///////////////////////////
+
 allprojects {
     repositories {
         google()
         mavenCentral()
     }
-//    // FCM 코드
-//    dependencies{
-//        lasspath 'com.android.tools.build:gradle:7.2.0'
-//        classpath 'com.google.gms:google-services:4.3.10'
-//    }
-//    // FCM 코드
+
 }
-
-
 
 rootProject.buildDir = '../build'
 subprojects {

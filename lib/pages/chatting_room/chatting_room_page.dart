@@ -41,12 +41,12 @@ enum ChatType {
 
 class ChatRoomPage extends StatefulWidget {
   final String roomId;
-  final String oppUserName;
+  String oppUserName;
   final int? friendRequestId;
   final bool? isChatEnabled;
   final bool? isReceivedRequest;
 
-  const ChatRoomPage({
+  ChatRoomPage({
     super.key,
     this.friendRequestId,
     this.isChatEnabled,
@@ -63,11 +63,10 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   late FocusNode focusNode;
   late TextEditingController chatController;
 
-
-
   @override
   void initState() {
     super.initState();
+    print("채팅방 화면 로딩");
     focusNode = FocusNode();
     chatController = TextEditingController();
 
@@ -77,23 +76,14 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
       }
     });
 
-    Get.lazyPut<ChattingController>(() => ChattingController(
+    Get.put(ChattingController(
       roomId: widget.roomId,
       isChatEnabled: widget.isChatEnabled!.obs,
       isReceivedRequest: widget.isReceivedRequest!.obs,
     ));
+    ChattingController.to.oppUserName.value=widget.oppUserName;
 
-    // ChattingController.to.init();
     ChattingController.to.fetchInitialMessages(roomId: widget.roomId);
-    // if (ChattingController.to.roomId != null) {
-    //   ChattingController.to.connect(roomId: widget.roomId); //웹소켓 연결
-    // }
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      print("채팅방 화면 리로딩");
-
-    });
-
   }
 
   @override
@@ -122,7 +112,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
             Get.back();
           },
         ),
-        title: Text(widget.oppUserName),
+        title: Obx(()=>Text(ChattingController.to.oppUserName.value)),
         centerTitle: true,
       ),
       body: Column(

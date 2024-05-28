@@ -36,9 +36,10 @@ class FriendController extends GetxController {
     sentRequests.clear();
     receivedRequests.clear();
     blockedFriends.clear();
+    pageNumber=0.obs;
   }
 
-  //친구 요청 보내기
+  /// 친구 요청 보내기
   static Future<void> sendFriendRequest({
     required String oppEmail,
     required String content,
@@ -47,46 +48,7 @@ class FriendController extends GetxController {
 
     final body = json.encode({"oppEmail": oppEmail, "content": content});
 
-    var response = await UserDataController.postRequest(
-      url: url,
-      accessToken: UserDataController.to.accessToken,
-      body: body,
-    );
-
-    if (response.statusCode == 401) {
-      // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
-      print("AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도");
-      print(response.body);
-      response = await UserDataController.postRequestWithRefreshToken(
-        url: url,
-        accessToken: UserDataController.to.accessToken,
-        refreshToken: UserDataController.to.refreshToken,
-        body: body,
-      );
-
-      if (response.statusCode == 300) {
-        // 새로운 토큰을 받아서 갱신 후 요청
-        print("새로운 토큰을 받아서 갱신 및 요청");
-        print(response.body);
-
-        final newTokens = jsonDecode(response.body);
-        UserDataController.to
-            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
-
-        response = await UserDataController.postRequest(
-          url: url,
-          accessToken: UserDataController.to.accessToken,
-          body: body,
-        );
-      } else if (response.statusCode == 402) {
-        // RefreshToken도 만료된 경우
-        print('리프레시 토큰 만료, 재로그인');
-        print(response.body);
-        Get.snackbar('실패', '로그인이 필요합니다.');
-        UserDataController.to.logout();
-        return;
-      }
-    }
+    var response = await UserDataController.sendHttpRequestWithTokenManagement(method: 'post', url: url, body: body);
 
     // 이미 친구인 경우, 받은 요청이 있을 경우, 보낸 요청이 있을 경우
     if (response.statusCode == 400) {
@@ -98,7 +60,7 @@ class FriendController extends GetxController {
       // 받은 요청이거나 보낸 요청이 있을 경우
       else if (errMsg['msg']['error_msg'] == "already exist : request") {
         // 보낸 요청이 있을 경우
-        String requestId = errMsg['msg']['requestId'];
+        int requestId = errMsg['msg']['requestId'];
         if (errMsg['msg']['reqUser'] ==
             UserDataController.to.user.value!.email) {
           // 보낸 요청이 있다고 알려주기
@@ -124,43 +86,7 @@ class FriendController extends GetxController {
     final url = Uri.parse('$baseUrl/$requests/get-received');
     List<Request> tempReceivedRequests = [];
 
-    var response = await UserDataController.getRequest(
-      url: url,
-      accessToken: UserDataController.to.accessToken,
-    );
-
-    if (response.statusCode == 401) {
-      // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
-      print("401 RefreshToken을 사용하여 AccessToken 갱신 시도");
-      print(response.body);
-      response = await UserDataController.getRequestWithRefreshToken(
-        url: url,
-        accessToken: UserDataController.to.accessToken,
-        refreshToken: UserDataController.to.refreshToken,
-      );
-
-      if (response.statusCode == 300) {
-        // 새로운 토큰을 받아서 갱신 후 요청
-        print("새로운 토큰을 받아서 갱신 및 요청");
-        print(response.body);
-
-        final newTokens = jsonDecode(response.body);
-        UserDataController.to
-            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
-
-        response = await UserDataController.getRequest(
-          url: url,
-          accessToken: newTokens['accessToken'],
-        );
-      } else if (response.statusCode == 402) {
-        // RefreshToken도 만료된 경우
-        print('리프레시 토큰 만료, 재로그인');
-        print(response.body);
-        Get.snackbar('실패', '로그인이 필요합니다.');
-        UserDataController.to.logout();
-        return;
-      }
-    }
+    var response= await UserDataController.sendHttpRequestWithTokenManagement(method: 'get', url: url);
 
     if (response.statusCode == 200) {
       var receivedRequests = jsonDecode(response.body);
@@ -203,43 +129,7 @@ class FriendController extends GetxController {
     final url = Uri.parse('$baseUrl/$requests/get-sended');
     List<Request> tempSentRequests = [];
 
-    var response = await UserDataController.getRequest(
-      url: url,
-      accessToken: UserDataController.to.accessToken,
-    );
-
-    if (response.statusCode == 401) {
-      // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
-      print("401 RefreshToken을 사용하여 AccessToken 갱신 시도");
-      print(response.body);
-      response = await UserDataController.getRequestWithRefreshToken(
-        url: url,
-        accessToken: UserDataController.to.accessToken,
-        refreshToken: UserDataController.to.refreshToken,
-      );
-
-      if (response.statusCode == 300) {
-        // 새로운 토큰을 받아서 갱신 후 요청
-        print("새로운 토큰을 받아서 갱신 및 요청");
-        print(response.body);
-
-        final newTokens = jsonDecode(response.body);
-        UserDataController.to
-            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
-
-        response = await UserDataController.getRequest(
-          url: url,
-          accessToken: newTokens['accessToken'],
-        );
-      } else if (response.statusCode == 402) {
-        // RefreshToken도 만료된 경우
-        print('리프레시 토큰 만료, 재로그인');
-        print(response.body);
-        Get.snackbar('실패', '로그인이 필요합니다.');
-        UserDataController.to.logout();
-        return;
-      }
-    }
+    var response= await UserDataController.sendHttpRequestWithTokenManagement(method: 'get', url: url);
 
     print(response.statusCode);
     print(response.body);
@@ -281,105 +171,28 @@ class FriendController extends GetxController {
 
   /// 받은 친구 요청 수락
   static Future<void> acceptFriendRequest({
-    required String requestId,
+    required int requestId,
   }) async {
     final url = Uri.parse('$baseUrl/$requests/accept');
 
     final body = jsonEncode({"requestId": requestId});
 
-    var response = await UserDataController.postRequest(
-      url: url,
-      accessToken: UserDataController.to.accessToken,
-      body: body,
-    );
+    var response = await UserDataController.sendHttpRequestWithTokenManagement(method: 'post', url: url, body: body);
 
-    if (response.statusCode == 401) {
-      // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
-      print("AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도");
-      print(response.body);
-      response = await UserDataController.postRequestWithRefreshToken(
-        url: url,
-        accessToken: UserDataController.to.accessToken,
-        refreshToken: UserDataController.to.refreshToken,
-        body: body,
-      );
-
-      if (response.statusCode == 300) {
-        // 새로운 토큰을 받아서 갱신 후 요청
-        print("새로운 토큰을 받아서 갱신 및 요청");
-        print(response.body);
-
-        final newTokens = jsonDecode(response.body);
-        UserDataController.to
-            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
-
-        response = await UserDataController.postRequest(
-          url: url,
-          accessToken: UserDataController.to.accessToken,
-          body: body,
-        );
-      } else if (response.statusCode == 402) {
-        // RefreshToken도 만료된 경우
-        print('리프레시 토큰 만료, 재로그인');
-        print(response.body);
-        Get.snackbar('실패', '로그인이 필요합니다.');
-        UserDataController.to.logout();
-        return;
-      }
-    }
-
+    // response.statusCode == 201 이면 성공
     print(response.statusCode);
     print(response.body);
   }
 
-  //받은 친구 요청 거절
+  /// 받은 친구 요청 거절
   static Future<void> rejectFriendRequest({
-    required String requestId,
+    required int requestId,
   }) async {
     final url = Uri.parse('$baseUrl/$requests/reject');
 
     final body = jsonEncode({"requestId": requestId});
 
-    var response = await UserDataController.patchRequest(
-      url: url,
-      accessToken: UserDataController.to.accessToken,
-      body: body,
-    );
-
-    if (response.statusCode == 401) {
-      // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
-      print("401 RefreshToken을 사용하여 AccessToken 갱신 시도");
-      print(response.body);
-      response = await UserDataController.patchRequestWithRefreshToken(
-        url: url,
-        accessToken: UserDataController.to.accessToken,
-        refreshToken: UserDataController.to.refreshToken,
-        body: body,
-      );
-
-      if (response.statusCode == 300) {
-        // 새로운 토큰을 받아서 갱신 후 요청
-        print("새로운 토큰을 받아서 갱신 및 요청");
-        print(response.body);
-
-        final newTokens = jsonDecode(response.body);
-        UserDataController.to
-            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
-
-        response = await UserDataController.patchRequest(
-          url: url,
-          accessToken: newTokens['accessToken'],
-          body: body,
-        );
-      } else if (response.statusCode == 402) {
-        // RefreshToken도 만료된 경우
-        print('리프레시 토큰 만료, 재로그인');
-        print(response.body);
-        Get.snackbar('실패', '로그인이 필요합니다.');
-        UserDataController.to.logout();
-        return;
-      }
-    }
+    var response= await UserDataController.sendHttpRequestWithTokenManagement(method: 'patch', url: url,body: body);
 
     print(response.statusCode);
     print(response.body);
@@ -391,43 +204,7 @@ class FriendController extends GetxController {
   }) async {
     final url = Uri.parse('$baseUrl/$requests/$delete/$requestId');
 
-    var response = await UserDataController.deleteRequest(
-      url: url,
-      accessToken: UserDataController.to.accessToken,
-    );
-
-    if (response.statusCode == 401) {
-      // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
-      print("401 RefreshToken을 사용하여 AccessToken 갱신 시도");
-      print(response.body);
-      response = await UserDataController.deleteRequestWithRefreshToken(
-        url: url,
-        accessToken: UserDataController.to.accessToken,
-        refreshToken: UserDataController.to.refreshToken,
-      );
-
-      if (response.statusCode == 300) {
-        // 새로운 토큰을 받아서 갱신 후 요청
-        print("새로운 토큰을 받아서 갱신 및 요청");
-        print(response.body);
-
-        final newTokens = jsonDecode(response.body);
-        UserDataController.to
-            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
-
-        response = await UserDataController.deleteRequest(
-          url: url,
-          accessToken: newTokens['accessToken'],
-        );
-      } else if (response.statusCode == 402) {
-        // RefreshToken도 만료된 경우
-        print('리프레시 토큰 만료, 재로그인');
-        print(response.body);
-        Get.snackbar('실패', '로그인이 필요합니다.');
-        UserDataController.to.logout();
-        return;
-      }
-    }
+    var response= await UserDataController.sendHttpRequestWithTokenManagement(method: 'delete', url: url,);
 
     print(response.statusCode);
     print(response.body);
@@ -438,43 +215,7 @@ class FriendController extends GetxController {
     final url = Uri.parse('$baseUrl/friends/get-list');
     List<Friend> tempFriendList = [];
 
-    var response = await UserDataController.getRequest(
-      url: url,
-      accessToken: UserDataController.to.accessToken,
-    );
-
-    if (response.statusCode == 401) {
-      // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
-      print("401 RefreshToken을 사용하여 AccessToken 갱신 시도");
-      print(response.body);
-      response = await UserDataController.getRequestWithRefreshToken(
-        url: url,
-        accessToken: UserDataController.to.accessToken,
-        refreshToken: UserDataController.to.refreshToken,
-      );
-
-      if (response.statusCode == 300) {
-        // 새로운 토큰을 받아서 갱신 후 요청
-        print("새로운 토큰을 받아서 갱신 및 요청");
-        print(response.body);
-
-        final newTokens = jsonDecode(response.body);
-        UserDataController.to
-            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
-
-        response = await UserDataController.getRequest(
-          url: url,
-          accessToken: newTokens['accessToken'],
-        );
-      } else if (response.statusCode == 402) {
-        // RefreshToken도 만료된 경우
-        print('리프레시 토큰 만료, 재로그인');
-        print(response.body);
-        Get.snackbar('실패', '로그인이 필요합니다.');
-        UserDataController.to.logout();
-        return;
-      }
-    }
+    var response= await UserDataController.sendHttpRequestWithTokenManagement(method: 'get', url: url);
 
     print(response.statusCode);
     print(response.body);
@@ -495,7 +236,6 @@ class FriendController extends GetxController {
         String gender = friendData['friend']['gender'];
         String userImage = friendData['friend']['userImage'];
         bool isJoinRoom = friendData['room']['join'];
-        print(isJoinRoom);
 
         Friend friend = Friend(
           id: id,
@@ -523,43 +263,7 @@ class FriendController extends GetxController {
   }) async {
     final url = Uri.parse('$baseUrl/friends/$delete/$oppEmail');
 
-    var response = await UserDataController.getRequest(
-      url: url,
-      accessToken: UserDataController.to.accessToken,
-    );
-
-    if (response.statusCode == 401) {
-      // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
-      print("401 RefreshToken을 사용하여 AccessToken 갱신 시도");
-      print(response.body);
-      response = await UserDataController.getRequestWithRefreshToken(
-        url: url,
-        accessToken: UserDataController.to.accessToken,
-        refreshToken: UserDataController.to.refreshToken,
-      );
-
-      if (response.statusCode == 300) {
-        // 새로운 토큰을 받아서 갱신 후 요청
-        print("새로운 토큰을 받아서 갱신 및 요청");
-        print(response.body);
-
-        final newTokens = jsonDecode(response.body);
-        UserDataController.to
-            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
-
-        response = await UserDataController.getRequest(
-          url: url,
-          accessToken: newTokens['accessToken'],
-        );
-      } else if (response.statusCode == 402) {
-        // RefreshToken도 만료된 경우
-        print('리프레시 토큰 만료, 재로그인');
-        print(response.body);
-        Get.snackbar('실패', '로그인이 필요합니다.');
-        UserDataController.to.logout();
-        return;
-      }
-    }
+    var response= await UserDataController.sendHttpRequestWithTokenManagement(method: 'get', url: url);
 
     print(response.statusCode);
     print(response.body);
@@ -573,11 +277,7 @@ class FriendController extends GetxController {
 
     final body = jsonEncode({"oppEmail": oppEmail});
 
-    final response = await UserDataController.patchRequest(
-      url: url,
-      accessToken: UserDataController.to.accessToken,
-      body: body,
-    );
+    var response= await UserDataController.sendHttpRequestWithTokenManagement(method: 'patch', url: url,body: body);
 
     print(response.statusCode);
     print(response.body);
@@ -591,11 +291,7 @@ class FriendController extends GetxController {
 
     final body = jsonEncode({"oppEmail": oppEmail});
 
-    final response = await UserDataController.patchRequest(
-      url: url,
-      accessToken: UserDataController.to.accessToken,
-      body: body,
-    );
+    var response= await UserDataController.sendHttpRequestWithTokenManagement(method: 'patch', url: url,body: body);
 
     print(response.statusCode);
     print(response.body);
@@ -606,44 +302,9 @@ class FriendController extends GetxController {
     final url = Uri.parse('$baseUrl/friends/get-blocking-friend');
     List<Friend> tempBlockedFriendList = [];
 
-    var response = await UserDataController.getRequest(
-      url: url,
-      accessToken: UserDataController.to.accessToken,
-    );
+    var response= await UserDataController.sendHttpRequestWithTokenManagement(method: 'get', url: url);
 
-    if (response.statusCode == 401) {
-      // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
-      print("401 RefreshToken을 사용하여 AccessToken 갱신 시도");
-      print(response.body);
-      response = await UserDataController.getRequestWithRefreshToken(
-        url: url,
-        accessToken: UserDataController.to.accessToken,
-        refreshToken: UserDataController.to.refreshToken,
-      );
-
-      if (response.statusCode == 300) {
-        // 새로운 토큰을 받아서 갱신 후 요청
-        print("새로운 토큰을 받아서 갱신 및 요청");
-        print(response.body);
-
-        final newTokens = jsonDecode(response.body);
-        UserDataController.to
-            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
-
-        response = await UserDataController.getRequest(
-          url: url,
-          accessToken: newTokens['accessToken'],
-        );
-      } else if (response.statusCode == 402) {
-        // RefreshToken도 만료된 경우
-        print('리프레시 토큰 만료, 재로그인');
-        print(response.body);
-        Get.snackbar('실패', '로그인이 필요합니다.');
-        UserDataController.to.logout();
-        return;
-      }
-    }
-
+    print("차단한 친구 불러오기");
     print(response.statusCode);
     print(response.body);
 
@@ -651,36 +312,35 @@ class FriendController extends GetxController {
 
     if (response.statusCode == 200) {
       var blockedFriendsData = jsonDecode(response.body);
+      if(response.body.isNotEmpty){
+        for (var friendData in blockedFriendsData) {
+          int id = friendData['id'];
+          String userEmail = friendData['userEmail'];
+          String oppEmail = friendData['oppEmail'];
+          String? roomId =
+          friendData['room'] == null ? null : friendData['room']['roomId'];
+          String myMBTI = friendData['friend']['myMBTI'];
+          String nickname = friendData['friend']['nickname'];
+          String myKeyword = friendData['friend']['myKeyword'];
+          String age = friendData['friend']['age'];
+          String gender = friendData['friend']['gender'];
+          String userImage = friendData['friend']['userImage'];
 
-      for (var friendData in blockedFriendsData) {
-        int id = friendData['id'];
-        String userEmail = friendData['userEmail'];
-        String oppEmail = friendData['oppEmail'];
-        String? roomId =
-            friendData['room'] == null ? null : friendData['room']['roomId'];
-        String myMBTI = friendData['friend']['myMBTI'];
-        String nickname = friendData['friend']['nickname'];
-        String myKeyword = friendData['friend']['myKeyword'];
-        String age = friendData['friend']['age'];
-        String gender = friendData['friend']['gender'];
-        String userImage = friendData['friend']['userImage'];
-        bool isJoinRoom = friendData['room']['join'];
+          Friend friend = Friend(
+            id: id,
+            userEmail: userEmail,
+            oppEmail: oppEmail,
+            myMBTI: myMBTI,
+            myKeyword: myKeyword,
+            nickname: nickname,
+            userImage: userImage,
+            age: age,
+            gender: gender,
+            roomId: roomId,
+          );
 
-        Friend friend = Friend(
-          id: id,
-          userEmail: userEmail,
-          oppEmail: oppEmail,
-          myMBTI: myMBTI,
-          myKeyword: myKeyword,
-          nickname: nickname,
-          userImage: userImage,
-          age: age,
-          gender: gender,
-          roomId: roomId,
-          isJoinRoom: isJoinRoom,
-        );
-
-        tempBlockedFriendList.add(friend);
+          tempBlockedFriendList.add(friend);
+        }
       }
       FriendController.to.blockedFriends.assignAll(tempBlockedFriendList);
     }
@@ -694,46 +354,7 @@ class FriendController extends GetxController {
 
     final body = jsonEncode({"friendEmail": friendEmail});
 
-    var response = await UserDataController.postRequest(
-      url: url,
-      accessToken: UserDataController.to.accessToken,
-      body: body,
-    );
-
-    if (response.statusCode == 401) {
-      // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
-      print("AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도");
-      print(response.body);
-      response = await UserDataController.postRequestWithRefreshToken(
-        url: url,
-        accessToken: UserDataController.to.accessToken,
-        refreshToken: UserDataController.to.refreshToken,
-        body: body,
-      );
-
-      if (response.statusCode == 300) {
-        // 새로운 토큰을 받아서 갱신 후 요청
-        print("새로운 토큰을 받아서 갱신 및 요청");
-        print(response.body);
-
-        final newTokens = jsonDecode(response.body);
-        UserDataController.to
-            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
-
-        response = await UserDataController.postRequest(
-          url: url,
-          accessToken: UserDataController.to.accessToken,
-          body: body,
-        );
-      } else if (response.statusCode == 402) {
-        // RefreshToken도 만료된 경우
-        print('리프레시 토큰 만료, 재로그인');
-        print(response.body);
-        Get.snackbar('실패', '로그인이 필요합니다.');
-        UserDataController.to.logout();
-        return;
-      }
-    }
+    var response = await UserDataController.sendHttpRequestWithTokenManagement(method: 'post', url: url, body: body);
 
     print(response.statusCode);
     print(response.body);

@@ -9,7 +9,7 @@ class Friend {
   final String age; // 친구 나이
   final String gender; // 친구 성별
   final String? roomId; // 친구와 연결된 채팅방 id
-  final bool isJoinRoom;
+  final bool? isJoinRoom;
 
   Friend({
     required this.id,
@@ -21,7 +21,7 @@ class Friend {
     required this.userImage,
     required this.age,
     required this.gender,
-     this.roomId,
-    required this.isJoinRoom,
+    this.roomId,
+    this.isJoinRoom,
   });
 }

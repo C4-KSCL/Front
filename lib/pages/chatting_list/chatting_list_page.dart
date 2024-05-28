@@ -68,7 +68,7 @@ class ChattingListPage extends StatelessWidget {
                                   onPressed: () async {
                                     await FriendController.rejectFriendRequest(
                                         requestId: chatListData.friendRequestId
-                                            .toString());
+                                            !);
                                     await ChattingListController
                                         .getLastChatList();
                                     await FriendController.getFriendReceivedRequest();

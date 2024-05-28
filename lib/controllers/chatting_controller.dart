@@ -27,6 +27,7 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
   static String? baseUrl = AppConfig.baseUrl;
   ScrollController scrollController = ScrollController();
   String? roomId;
+  RxString oppUserName=''.obs;
 
   IO.Socket? _socket; //소켓IO 객체
   RxList chats = [].obs; //채팅 객체를 담는 배열
@@ -59,7 +60,7 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
   static const events = 'events';
 
   @override
-  void onInit() async {
+  void onInit() {
     super.onInit();
     WidgetsBinding.instance.addObserver(this); // Observer 추가
     scrollController.addListener(_onScroll);
@@ -69,6 +70,7 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
   @override
   void onClose() {
     WidgetsBinding.instance.removeObserver(this); // Observer 제거
+    _socket = null;
     if (_socket != null) {
       _socket!.disconnect();
     }
@@ -82,22 +84,41 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
     super.didChangeAppLifecycleState(state);
     switch (state) {
       case AppLifecycleState.resumed:
-        // 앱이 포어그라운드로 돌아왔을 때
-        print("백그라운드->포그라운드 넘어갔음");
-        ChattingController.to.init();
-        if (ChattingController.to.roomId != null) {
+        // 앱이 포그라운드로 돌아왔을 때
+        print("앱 라이프사이클 : resumed(포그라운드)");
+        // FCM
+        if (_socket!.connected) {
+          print("소켓 연결되어 있음 : $roomId");
+          chats.clear();
+          leaveRoom();
           ChattingController.to.lastChatDate = null;
-          ChattingController.to.connect(roomId: roomId.toString()); //웹소켓 연결
+          getRoomChats(roomId: roomId!);
+          joinRoom(roomId: roomId!);
+        } else {
+          chats.clear();
+          ChattingController.to.lastChatDate = null;
+          fetchInitialMessages(roomId: roomId.toString());
         }
         break;
       case AppLifecycleState.paused:
         // 앱이 백그라운드로 갔을 때
-        print("포그라운드-> 백그라운드로 넘어갔음");
+        print("앱 라이프사이클 : paused(백그라운드)");
         if (_socket != null) {
           _socket!.disconnect();
         }
         break;
+      case AppLifecycleState.detached:
+        print("앱 라이프사이클 : detached");
+        break;
+      case AppLifecycleState.hidden:
+        print("앱 라이프사이클 : hidden");
+        break;
+      // 위에 상단바 내렸을 때
+      case AppLifecycleState.inactive:
+        print("앱 라이프사이클 : inactive(상태바 내렸을떄)");
+        break;
       default:
+        print(AppLifecycleState);
         break;
     }
   }
@@ -118,22 +139,24 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
   //Socket.io 관련 함수
 
   /// 소켓 객체 정의
-  void init() {
+  void initSocket() {
     _socket = IO.io(baseUrl, <String, dynamic>{
       'transports': ['websocket'], //전송 방식을 웹소켓으로 설정
       'autoConnect': false, //수동으로 연결해야함
       'auth': {'token': UserDataController.to.accessToken},
     });
-    print("소켓 정의시 사용하는 토큰 : ${UserDataController.to.accessToken}");
+    if (UserDataController.to.accessToken != _socket!.auth['token']) {
+      _socket!.auth['token'] = UserDataController.to.accessToken;
+      print("토큰 값 변경 : ${_socket!.auth['token']}");
+    }
   }
 
   /// 초기 톡방 내용 가져오기
   void fetchInitialMessages({required String roomId}) async {
     // 채팅방 내용 가져오기
     await getRoomChats(roomId: roomId);
-    init();
+    initSocket();
     await ChattingController.to.connect(roomId: roomId);
-
   }
 
   /// 웹 소켓 연결
@@ -143,11 +166,11 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
     if (_socket == null) {
       print("소켓 객체 생성 실패");
     } else {
-      print("소켓 객체 생성 성공");
+      print("소켓 객체 생성 성공 : $roomId");
     }
+
     //소켓 연결
     _socket!.connect();
-
     //소켓 연결되면 소켓 이벤트 리스너 설정하기
     _socket!.onConnect((_) {
       print("연결 완료");
@@ -179,6 +202,7 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
     socket.off("delete message");
     socket.off("new event");
     socket.off("answer to event");
+    socket.off("leave room");
 
     // 소켓 'connect' 이벤트 listen
     socket.on("connect", (_) {
@@ -189,6 +213,7 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
     socket.on("user join in room", (data) {
       print(data);
       print("user join in room 도착");
+      print("접속한 방 아이디 : $roomId");
 
       // 안 읽은 채팅 1->0 으로 변환
       String joinUserEmail = data['userEmail'];
@@ -303,6 +328,11 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
     });
 
     // 'disconnect' 이벤트 listen
+    socket.on("leave room", (data) {
+      print(data);
+    });
+
+    // 'disconnect' 이벤트 listen
     socket.on("disconnect", (_) {
       print("소켓 연결 끊김");
     });
@@ -374,6 +404,13 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
     };
     socket.emit("answer to event", data);
   }
+  
+  /// 채팅방 나가기(소켓상)
+  void leaveRoom(){
+    final socket = _socket!;
+    
+    socket.emit("leave room");
+  }
 
   void clickQuizButton(int index) {
     clickQuizButtonIndex.value = index;
@@ -402,48 +439,12 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
     print("URL : $url");
 
     // http로 정보 받기
-    var response = await UserDataController.getRequest(
-      url: url,
-      accessToken: UserDataController.to.accessToken,
-    );
-
-    print("채팅 내용 가져오기");
-
-    if (response.statusCode == 401) {
-      // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
-      print("AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도");
-      print(response.body);
-      response = await UserDataController.getRequestWithRefreshToken(
-        url: url,
-        accessToken: UserDataController.to.accessToken,
-        refreshToken: UserDataController.to.refreshToken,
-      );
-
-      if (response.statusCode == 300) {
-        // 새로운 토큰을 받아서 갱신 후 요청
-        print("새로운 토큰을 받아서 갱신 및 요청");
-        print(response.body);
-
-        final newTokens = jsonDecode(response.body);
-        UserDataController.to
-            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
-
-        response = await UserDataController.getRequest(
-          url: url,
-          accessToken: newTokens['accessToken'],
-        );
-      } else if (response.statusCode == 402) {
-        // RefreshToken도 만료된 경우
-        print('리프레시 토큰 만료, 재로그인');
-        print(response.body);
-        Get.snackbar('실패', '로그인이 필요합니다.');
-        UserDataController.to.logout();
-        return;
-      }
-    }
+    var response = await UserDataController.sendHttpRequestWithTokenManagement(
+        method: 'get', url: url);
 
     if (response.statusCode == 200) {
       print("채팅 가져올때 사용 토큰 : ${UserDataController.to.accessToken}");
+      print(response.body);
       // 받은 정보로 데이터 추가하기
       final jsonData = json.decode(response.body);
       if (jsonData['chats'] != null) {
@@ -521,6 +522,18 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
           print("firstChatDate 설정 : ${ChattingController.to.firstChatDate}");
         }
       }
+      // 채팅 개수 적으면 위쪽에 최근 채팅 날짜 띄우기
+      if (ChattingController.to.chats.length > 1 &&
+          ChattingController.to.chats.length < 20) {
+        ChattingController.to.chats.add(Chat(
+          id: 0,
+          roomId: roomId,
+          createdAt: ChattingController.to.lastChatDate!,
+          content: "timeBox",
+          readCount: 0,
+          type: 'time',
+        ));
+      }
     }
     ChattingController.to.isChatLoading.value = false;
   }
@@ -529,43 +542,8 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
   static Future<void> getBigCategories() async {
     final url = Uri.parse('$baseUrl/$events/get-big/');
 
-    var response = await UserDataController.getRequest(
-      url: url,
-      accessToken: UserDataController.to.accessToken,
-    );
-
-    if (response.statusCode == 401) {
-      // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
-      print("AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도");
-      print(response.body);
-      response = await UserDataController.getRequestWithRefreshToken(
-        url: url,
-        accessToken: UserDataController.to.accessToken,
-        refreshToken: UserDataController.to.refreshToken,
-      );
-
-      if (response.statusCode == 300) {
-        // 새로운 토큰을 받아서 갱신 후 요청
-        print("새로운 토큰을 받아서 갱신 및 요청");
-        print(response.body);
-
-        final newTokens = jsonDecode(response.body);
-        UserDataController.to
-            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
-
-        response = await UserDataController.getRequest(
-          url: url,
-          accessToken: newTokens['accessToken'],
-        );
-      } else if (response.statusCode == 402) {
-        // RefreshToken도 만료된 경우
-        print('리프레시 토큰 만료, 재로그인');
-        print(response.body);
-        Get.snackbar('실패', '로그인이 필요합니다.');
-        UserDataController.to.logout();
-        return;
-      }
-    }
+    var response = await UserDataController.sendHttpRequestWithTokenManagement(
+        method: 'get', url: url);
 
     if (response.statusCode == 200) {
       print(response.body);
@@ -582,43 +560,8 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
   }) async {
     final url = Uri.parse('$baseUrl/$events/get-small/$bigCategoryName');
 
-    var response = await UserDataController.getRequest(
-      url: url,
-      accessToken: UserDataController.to.accessToken,
-    );
-
-    if (response.statusCode == 401) {
-      // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
-      print("AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도");
-      print(response.body);
-      response = await UserDataController.getRequestWithRefreshToken(
-        url: url,
-        accessToken: UserDataController.to.accessToken,
-        refreshToken: UserDataController.to.refreshToken,
-      );
-
-      if (response.statusCode == 300) {
-        // 새로운 토큰을 받아서 갱신 후 요청
-        print("새로운 토큰을 받아서 갱신 및 요청");
-        print(response.body);
-
-        final newTokens = jsonDecode(response.body);
-        UserDataController.to
-            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
-
-        response = await UserDataController.getRequest(
-          url: url,
-          accessToken: newTokens['accessToken'],
-        );
-      } else if (response.statusCode == 402) {
-        // RefreshToken도 만료된 경우
-        print('리프레시 토큰 만료, 재로그인');
-        print(response.body);
-        Get.snackbar('실패', '로그인이 필요합니다.');
-        UserDataController.to.logout();
-        return;
-      }
-    }
+    var response = await UserDataController.sendHttpRequestWithTokenManagement(
+        method: 'get', url: url);
 
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
@@ -634,45 +577,8 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
   }) async {
     final url = Uri.parse('$baseUrl/$events/get-event-page/$quizId');
 
-    var response = await UserDataController.getRequest(
-      url: url,
-      accessToken: UserDataController.to.accessToken,
-    );
-
-    print(response.body);
-
-    if (response.statusCode == 401) {
-      // AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도
-      print("AccessToken이 만료된 경우, RefreshToken을 사용하여 갱신 시도");
-      print(response.body);
-      response = await UserDataController.getRequestWithRefreshToken(
-        url: url,
-        accessToken: UserDataController.to.accessToken,
-        refreshToken: UserDataController.to.refreshToken,
-      );
-
-      if (response.statusCode == 300) {
-        // 새로운 토큰을 받아서 갱신 후 요청
-        print("새로운 토큰을 받아서 갱신 및 요청");
-        print(response.body);
-
-        final newTokens = jsonDecode(response.body);
-        UserDataController.to
-            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
-
-        response = await UserDataController.getRequest(
-          url: url,
-          accessToken: newTokens['accessToken'],
-        );
-      } else if (response.statusCode == 402) {
-        // RefreshToken도 만료된 경우
-        print('리프레시 토큰 만료, 재로그인');
-        print(response.body);
-        Get.snackbar('실패', '로그인이 필요합니다.');
-        UserDataController.to.logout();
-        return;
-      }
-    }
+    var response = await UserDataController.sendHttpRequestWithTokenManagement(
+        method: 'get', url: url);
 
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);

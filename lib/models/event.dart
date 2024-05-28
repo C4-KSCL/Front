@@ -5,8 +5,8 @@ class Event {
   final int id;
   final int chattingId;
   final int category;
-  final String user1;
-  final String user2;
+  final String? user1;
+  final String? user2;
   final Rx<String?> user1Choice;
   final Rx<String?> user2Choice;
   final String createdAt;
