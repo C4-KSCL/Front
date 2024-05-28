@@ -53,6 +53,8 @@ class _InfoModifyPageState extends State<InfoModifyPage> {
       my_nickname = controller.user.value!.nickname;
       my_phoneNumber = controller.user.value!.phoneNumber;
       my_age = controller.user.value!.age;
+      my_profileImagePath = controller.user.value!.userImage ?? '';
+      print(my_profileImagePath);
 
       passwordController.text = my_password;
       nicknameController.text = my_nickname;
@@ -88,7 +90,7 @@ class _InfoModifyPageState extends State<InfoModifyPage> {
         appBar: AppBar(
           title: const Text('내 정보 수정하기'),
         ),
-        backgroundColor: blueColor5,
+        backgroundColor: Colors.white,
         body: SingleChildScrollView(
             child: Stack(children: [
           Positioned(
@@ -293,7 +295,7 @@ class _InfoModifyPageState extends State<InfoModifyPage> {
                                   actions: [
                                     TextButton(
                                       onPressed: () {
-                                        Navigator.pop(context);
+                                        Get.back();
                                       },
                                       child: const Text('확인'),
                                     ),

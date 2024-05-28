@@ -65,7 +65,11 @@ class _FriendMbtiPageState extends State<FriendMbtiPage> {
               onMbtiSelected: (String mbti) {
                 setState(() {
                   selectedMBTI = mbti;
-                  isMbtiComplete = selectedMBTI.length == 4;
+                  if (selectedMBTI.length == 4) {
+                    isMbtiComplete = true;
+                  } else {
+                    isMbtiComplete = false;
+                  }
                 });
               },
             ),

@@ -67,6 +67,8 @@ class _MyMbtiPageState extends State<MyMbtiPage> {
                   selectedMBTI = mbti;
                   if (selectedMBTI.length == 4) {
                     isMbtiComplete = true;
+                  } else {
+                    isMbtiComplete = false;
                   }
                 });
               },
