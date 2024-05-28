@@ -40,23 +40,6 @@ class FcmController extends GetxController {
       sound: true,
     );
 
-    /// FCM : 종료 상태에서 알림 클릭시 실행
-    RemoteMessage? initialMessage =
-        await FirebaseMessaging.instance.getInitialMessage();
-
-    if (initialMessage != null) {
-      print("종료 상태에서 FCM 클릭 누름");
-      print(initialMessage.data);
-      Get.to(()=>const LoginPage());
-      BottomNavigationBarController.to.selectedIndex.value = 2;
-      Get.to(() => ChatRoomPage(
-            roomId: initialMessage.data['roomId'],
-            oppUserName: initialMessage.notification!.title!,
-            isChatEnabled: true,
-            isReceivedRequest: false,
-          ));
-    }
-
     /// Android용 알림 채널 생성
     const AndroidNotificationChannel channel = AndroidNotificationChannel(
       'high_importance_channel', // 채널 ID

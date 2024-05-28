@@ -94,6 +94,23 @@ void main() async {
   /// FCM : 종료 상태/백그라운드 알림 받을 때 실행
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
+  /// FCM : 종료 상태에서 알림 클릭시 실행
+  RemoteMessage? initialMessage =
+  await FirebaseMessaging.instance.getInitialMessage();
+
+  if (initialMessage != null) {
+    print("종료 상태에서 FCM 클릭 누름");
+    print(initialMessage.data);
+    Get.to(()=>const LoginPage());
+    BottomNavigationBarController.to.selectedIndex.value = 2;
+    Get.to(() => ChatRoomPage(
+      roomId: initialMessage.data['roomId'],
+      oppUserName: initialMessage.notification!.title!,
+      isChatEnabled: true,
+      isReceivedRequest: false,
+    ));
+  }
+
   //한국 시간 설정
   await initializeDateFormatting('ko_KR', null);
 
