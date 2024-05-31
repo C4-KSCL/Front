@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/models/user.dart';
 import 'package:frontend_matching/models/userImage.dart';
@@ -46,7 +47,6 @@ class FindFriendController extends GetxController {
             newTokens['accessToken'], newTokens['refreshToken']);
 
         response = await _getRequest(url, newTokens['accessToken']);
-
       } else if (response.statusCode == 402) {
         // RefreshToken도 만료된 경우
         print('리프레시 토큰 만료, 재로그인');
@@ -59,6 +59,7 @@ class FindFriendController extends GetxController {
 
     if (response.statusCode == 200) {
       final friendsData = jsonDecode(response.body);
+      print('check');
       print(friendsData['users']);
       print(friendsData['images']);
 
@@ -80,6 +81,42 @@ class FindFriendController extends GetxController {
         }
         FindFriendController.to.matchingFriendImageList.add(images);
       }
+    } else if (response.statusCode == 400) {
+      showDialog(
+        context: Get.context!,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('시간 제한'),
+            content: const Text('아직 다음 매칭시간이 남았습니다.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('확인'),
+              ),
+            ],
+          );
+        },
+      );
+    } else if (response.statusCode == 404) {
+      showDialog(
+        context: Get.context!,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('친구 없음'),
+            content: const Text('해당하는 친구가 더 존재하지 않습니다.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('확인'),
+              ),
+            ],
+          );
+        },
+      );
     } else {
       print('${response.statusCode} ${response.body}');
     }

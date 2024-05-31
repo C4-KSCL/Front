@@ -6,6 +6,7 @@ import 'package:frontend_matching/components/genderButton.dart';
 import 'package:frontend_matching/components/textformField.dart';
 import 'package:frontend_matching/controllers/signupController.dart';
 import 'package:frontend_matching/pages/init_page.dart';
+import 'package:frontend_matching/pages/signup/friendKeywordPage.dart';
 import 'package:frontend_matching/pages/signup/imageUpload/profileImagePage.dart';
 import 'package:frontend_matching/pages/signup/imageUpload/selectImagePage.dart';
 import 'package:frontend_matching/pages/signup/schoolAuth.dart';
@@ -80,16 +81,35 @@ class FriendInfoPage extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: const Text(
-          '',
-          style: TextStyle(color: Colors.black),
+          'info',
+          style: TextStyle(color: Colors.white),
         ),
         elevation: 0.0,
         titleTextStyle:
             const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
-        backgroundColor: blueColor5,
+        backgroundColor: blueColor3,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            signupController.deleteToSignupArray();
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const FriendKeywordPage(),
+              ),
+            );
+          },
+        ),
         actions: [
-          IconButton(icon: Icon(Icons.home), onPressed: () => {}),
-          IconButton(icon: Icon(Icons.search), onPressed: () => {})
+          IconButton(
+              icon: Icon(Icons.home, color: Colors.white), onPressed: () => {}),
+          IconButton(
+              icon: Icon(Icons.search, color: Colors.white),
+              onPressed: () => {})
         ],
       ),
       backgroundColor: blueColor5,

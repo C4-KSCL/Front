@@ -39,7 +39,9 @@ class UserDataController extends GetxController {
   }
 
   void updateUserInfo(User newUser) {
+    print('Updating user info with: $newUser');
     user.value = newUser;
+    update();
   }
 
   void updateImageInfo(List<UserImage> newImages) {
@@ -56,10 +58,10 @@ class UserDataController extends GetxController {
     final response = await http.post(url, headers: headers, body: body);
 
     if (response.statusCode == 200) {
-        // 자동 로그인 관련 아이디 비번 저장
-        await AppConfig.storage.write(key: "autoLoginEmail", value: email);
-        await AppConfig.storage.write(key: "autoLoginPw", value: password);
-        await AppConfig.storage.write(key: "isAutoLogin", value: "true");
+      // 자동 로그인 관련 아이디 비번 저장
+      await AppConfig.storage.write(key: "autoLoginEmail", value: email);
+      await AppConfig.storage.write(key: "autoLoginPw", value: password);
+      await AppConfig.storage.write(key: "isAutoLogin", value: "true");
 
       FcmService.requestPermission();
 
@@ -175,7 +177,8 @@ class UserDataController extends GetxController {
         print(response.body);
 
         final newTokens = jsonDecode(response.body);
-        UserDataController.to.updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
+        UserDataController.to
+            .updateTokens(newTokens['accessToken'], newTokens['refreshToken']);
 
         response = await sendHttpRequest(
           method: method,
@@ -188,9 +191,10 @@ class UserDataController extends GetxController {
         print(response.body);
         Get.snackbar('실패', '로그인이 필요합니다.');
         UserDataController.to.logout();
-        return http.Response('Unauthorized - Session expired', 402);  // 로그아웃 상황이라 오류 응답 반환
+        return http.Response(
+            'Unauthorized - Session expired', 402); // 로그아웃 상황이라 오류 응답 반환
       }
     }
-    return response;  // 갱신 성공 또는 기존 토큰 유효시 response 반환
+    return response; // 갱신 성공 또는 기존 토큰 유효시 response 반환
   }
 }

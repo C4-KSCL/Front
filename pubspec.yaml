@@ -58,6 +58,7 @@ dependencies:
   crop_image: ^1.0.12
   mime:
   collection:
+  rive:
 
 dev_dependencies:
   flutter_test:

@@ -3,6 +3,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:frontend_matching/components/textField.dart';
 import 'package:frontend_matching/components/textformField.dart';
 import 'package:frontend_matching/controllers/infoModifyController.dart';
@@ -88,7 +89,35 @@ class _InfoModifyPageState extends State<InfoModifyPage> {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
+          centerTitle: true,
           title: const Text('내 정보 수정하기'),
+          elevation: 1.0,
+          titleTextStyle:
+              const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+          backgroundColor: blueColor3,
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Get.back();
+            },
+          ),
+          actions: [
+            IconButton(
+                icon: const Icon(
+                  Icons.home,
+                  color: Colors.white,
+                ),
+                onPressed: () => {}),
+            IconButton(
+                icon: const Icon(
+                  Icons.search,
+                  color: Colors.white,
+                ),
+                onPressed: () => {})
+          ],
         ),
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
@@ -268,23 +297,23 @@ class _InfoModifyPageState extends State<InfoModifyPage> {
                               phoneNumber,
                               age,
                             );
-                            // showDialog(
-                            //   context: context,
-                            //   builder: (BuildContext context) {
-                            //     return AlertDialog(
-                            //       title: Text('정보 수정'),
-                            //       content: Text('정보가 수정되었습니다.'),
-                            //       actions: [
-                            //         TextButton(
-                            //           onPressed: () {
-                            //             Navigator.pop(context);
-                            //           },
-                            //           child: const Text('확인'),
-                            //         ),
-                            //       ],
-                            //     );
-                            //   },
-                            // );
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('정보 수정'),
+                                  content: Text('정보가 수정되었습니다.'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text('확인'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
                           } else {
                             showDialog(
                               context: context,

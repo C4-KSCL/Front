@@ -9,6 +9,12 @@ class SignupController extends GetxController {
     signupArray.add(value);
   }
 
+  void deleteToSignupArray() {
+    if (signupArray.isNotEmpty) {
+      signupArray.removeLast();
+    }
+  }
+
   void clearSignupArray() {
     signupArray.clear();
   }

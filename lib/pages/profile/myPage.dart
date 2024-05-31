@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
+import 'package:frontend_matching/pages/matching/loadingPage.dart';
 import 'package:frontend_matching/pages/profile/buttons/InfoModifyButton.dart';
 import 'package:frontend_matching/pages/profile/buttons/columnButton.dart';
 import 'package:frontend_matching/pages/profile/imageModifyPage.dart';
@@ -254,7 +255,7 @@ class MyPage extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => TestPage(),
+                                  builder: (context) => LoadingPage(),
                                 ),
                               );
                             },

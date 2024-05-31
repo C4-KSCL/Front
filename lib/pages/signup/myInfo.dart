@@ -53,6 +53,7 @@ class _InfoAuthPageState extends State<InfoAuthPage> {
             color: Colors.white,
           ),
           onPressed: () {
+            signupController.deleteToSignupArray();
             Navigator.push(
               context,
               MaterialPageRoute(

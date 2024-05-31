@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:frontend_matching/components/mbtiKeyword.dart';
 import 'package:frontend_matching/controllers/keyword_controller.dart';
 import 'package:frontend_matching/controllers/signupController.dart';
+import 'package:frontend_matching/pages/profile/myKeywordModifyPage.dart';
 import 'package:frontend_matching/pages/signup/friendKeywordPage.dart';
+import 'package:frontend_matching/pages/signup/myKeywordPage.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get.dart';
 
@@ -26,16 +28,35 @@ class _FriendMbtiPageState extends State<FriendMbtiPage> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text(
-          '',
-          style: TextStyle(color: Colors.black),
+          'mbti',
+          style: TextStyle(color: Colors.white),
         ),
         elevation: 0.0,
         titleTextStyle:
             const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
-        backgroundColor: Colors.white,
+        backgroundColor: blueColor3,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            signupController.deleteToSignupArray();
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const MyKeywordPage(),
+              ),
+            );
+          },
+        ),
         actions: [
-          IconButton(icon: Icon(Icons.home), onPressed: () => {}),
-          IconButton(icon: Icon(Icons.search), onPressed: () => {})
+          IconButton(
+              icon: Icon(Icons.home, color: Colors.white), onPressed: () => {}),
+          IconButton(
+              icon: Icon(Icons.search, color: Colors.white),
+              onPressed: () => {})
         ],
       ),
       backgroundColor: blueColor5,

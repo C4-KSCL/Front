@@ -65,11 +65,12 @@ class UserProfileController extends GetxController {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
+      print('Profile image deleted successfully: $data');
       userInfo.value = User.fromJson(data['user']);
-      userDataController.updateUserInfo(userInfo.value);
-      print('삭제 성공');
+      Get.find<UserDataController>().updateUserInfo(userInfo.value);
+      print('User info updated: ${userInfo.value}');
     } else {
-      print('오류 발생: ${response.statusCode}');
+      print('Error occurred: ${response.statusCode}');
     }
   }
 
@@ -125,11 +126,12 @@ class UserProfileController extends GetxController {
       if (response.statusCode == 200) {
         final respBody = await http.Response.fromStream(response);
         final data = jsonDecode(respBody.body);
+        print('Profile image uploaded successfully: $data');
         userInfo.value = User.fromJson(data['user']);
-        userDataController.updateUserInfo(userInfo.value);
-        print('이미지 저장 성공');
+        Get.find<UserDataController>().updateUserInfo(userInfo.value);
+        print('User info updated: ${userInfo.value}');
       } else {
-        print('이미지 저장 실패: ${response.statusCode}');
+        print('Image upload failed: ${response.statusCode}');
       }
     }
   }

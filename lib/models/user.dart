@@ -19,6 +19,7 @@ class User {
   DateTime? requestTime;
   int? suspend;
   int? manager;
+  String? analysis;
 
   User({
     required this.userNumber,
@@ -41,6 +42,7 @@ class User {
     this.requestTime,
     this.manager,
     this.suspend,
+    this.analysis,
   });
 
   //Dart 객체 -> JSON
@@ -66,6 +68,7 @@ class User {
       'requestTime': requestTime,
       'suspend': suspend,
       'manager': manager,
+      'analysis': analysis,
     };
   }
 
@@ -92,6 +95,7 @@ class User {
       requestTime: DateTime.tryParse(json['requestTime']),
       suspend: json['suspend'],
       manager: json['manager'],
+      analysis: json['analysis'],
     );
   }
 }

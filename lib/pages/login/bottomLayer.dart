@@ -111,7 +111,7 @@ class _BottomLayerLoginScreenState extends State<BottomLayerLoginScreen> {
                   )),
             ),
             const SizedBox(
-              height: 10,
+              height: 8,
             ),
             SizedBox(
               width: double.infinity,

@@ -140,8 +140,64 @@ class _PostPageState extends State<PostPage> {
           print(category);
           print(title);
           print(content);
-          serviceCenterController.submitPost(
-              category, title, content, imageFile, accessToken);
+          if (category == "") {
+            showDialog(
+              context: Get.context!,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text('카테고리'),
+                  content: const Text('카테고리의 값이 비어있습니다.'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('확인'),
+                    ),
+                  ],
+                );
+              },
+            );
+          } else if (title == "") {
+            showDialog(
+              context: Get.context!,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text('제목'),
+                  content: const Text('제목이 비어있습니다.'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('확인'),
+                    ),
+                  ],
+                );
+              },
+            );
+          } else if (content == "") {
+            showDialog(
+              context: Get.context!,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text('내용'),
+                  content: const Text('내용이 비어있습니다.'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('확인'),
+                    ),
+                  ],
+                );
+              },
+            );
+          } else {
+            serviceCenterController.submitPost(
+                category, title, content, imageFile, accessToken);
+          }
         },
         child: const Icon(Icons.add),
       ),
