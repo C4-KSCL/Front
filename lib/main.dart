@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:frontend_matching/controllers/fcm_controller.dart';
 import 'package:frontend_matching/pages/login/loginPage.dart';
-import 'package:frontend_matching/services/fcm_service.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -23,7 +22,6 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
   print(
       "백그라운드 때 받은 FCM 내용: ${message.data} ${message.sentTime}");
-  WakeScreen.wakeUpScreen();
 }
 
 // main 함수
