@@ -7,7 +7,6 @@ import '../firebase_options.dart';
 
 import '../pages/chatting_room/chatting_room_page.dart';
 import '../pages/init_page.dart';
-import '../pages/login/loginPage.dart';
 import 'bottomNavigationBar.dart';
 import 'chatting_controller.dart';
 import 'chatting_list_controller.dart';
@@ -76,29 +75,29 @@ class FcmController extends GetxController {
       onDidReceiveNotificationResponse: _onNotificationResponse,
     );
 
-    /// FCM : 포그라운드 알림 받기
-    FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
-
-    /// IOS(포그라운드), Android(백그라운드) : 푸시알림 클릭시 실행
-    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessageOpenedApp);
-
     /// FCM : 종료 상태에서 알림 클릭시 실행
     FirebaseMessaging.instance
         .getInitialMessage()
-        .then((RemoteMessage? message) {
+        .then((RemoteMessage? message) async{
       if (message != null) {
         print("종료 상태에서 FCM 클릭 누름");
         print(message.data);
-        Get.to(() => const LoginPage());
         BottomNavigationBarController.to.selectedIndex.value = 2;
+        await Future.delayed(const Duration(seconds: 1));
         Get.to(() => ChatRoomPage(
           roomId: message.data['roomId'],
-          oppUserName: message.data['title']!,
+          oppUserName: message.notification!.title!,
           isChatEnabled: true,
           isReceivedRequest: false,
         ));
       }
     });
+
+    /// FCM : 포그라운드 알림 받기
+    FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
+
+    /// IOS(포그라운드), Android(백그라운드) : 푸시알림 클릭시 실행
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessageOpenedApp);
 
     return true;
   }
@@ -178,13 +177,13 @@ class FcmController extends GetxController {
               NotificationDetails(android: androidPlatformChannelSpecifics);
 
           String payload =
-              message.data['title']! + ',' + message.data['roomId'];
+              message.notification!.title! + ',' + message.data['roomId'];
           print("페이로드 값 : $payload");
 
           await flutterLocalNotificationsPlugin.show(
               0, // 알림 ID
-              message.data['title'], // 알림 제목
-              message.data['body'], // 알림 내용
+              message.notification!.title, // 알림 제목
+              message.notification!.body, // 알림 내용
               platformChannelSpecifics,
               payload: payload // 알림 눌렀을 때 사용할 데이터
               );
@@ -195,14 +194,13 @@ class FcmController extends GetxController {
         const NotificationDetails platformChannelSpecifics =
             NotificationDetails(android: androidPlatformChannelSpecifics);
 
-        String payload =
-            message.data['title']! + ',' + message.data['roomId'];
+        String payload = message.notification!.title! + ',' + message.data['roomId'];
         print("페이로드 값 : $payload");
 
         await flutterLocalNotificationsPlugin.show(
           0, // 알림 ID
-          message.data['title'], // 알림 제목
-          message.data['body'], // 알림 내용
+          message.notification!.title, // 알림 제목
+          message.notification!.body, // 알림 내용
           platformChannelSpecifics,
           payload: payload,
         );
@@ -215,8 +213,8 @@ class FcmController extends GetxController {
 
       await flutterLocalNotificationsPlugin.show(
         0, // 알림 ID
-        message.data['title'], // 알림 제목
-        message.data['body'], // 알림 내용
+        message.notification!.title, // 알림 제목
+        message.notification!.body, // 알림 내용
         platformChannelSpecifics,
         payload: 'friendPage',
       );
@@ -238,11 +236,11 @@ class FcmController extends GetxController {
             // message.notification이 null인지 확인
             if (message.notification != null) {
               Get.to(() => ChatRoomPage(
-                roomId: message.data['roomId'],
-                oppUserName: message.data['title']!,
-                isChatEnabled: true,
-                isReceivedRequest: false,
-              ));
+                    roomId: message.data['roomId'],
+                    oppUserName: message.notification!.title!,
+                    isChatEnabled: true,
+                    isReceivedRequest: false,
+                  ));
             } else {
               print("Notification is null");
             }
@@ -266,7 +264,4 @@ class FcmController extends GetxController {
       print("No route specified in the data");
     }
   }
-
-
-
 }

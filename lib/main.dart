@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:frontend_matching/controllers/bottomNavigationBar.dart';
 import 'package:frontend_matching/controllers/fcm_controller.dart';
-import 'package:frontend_matching/pages/chatting_room/chatting_room_page.dart';
 import 'package:frontend_matching/pages/login/loginPage.dart';
+import 'package:frontend_matching/services/fcm_service.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -22,48 +22,14 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   print(
-      "백그라운드 때 받은 FCM 내용: ${message.notification} ${message.data} ${message.sentTime}");
-
-  const AndroidNotificationDetails androidPlatformChannelSpecifics =
-      AndroidNotificationDetails(
-    'SOUL MBTI_ID',
-    'SOUL MBTI_NAME',
-    channelDescription: 'SOUL MBTI_DESC',
-    importance: Importance.max,
-    priority: Priority.high,
-    showWhen: false,
-  );
-
-  const NotificationDetails platformChannelSpecifics =
-      NotificationDetails(android: androidPlatformChannelSpecifics);
-
-  if (message.data['route'] == 'chat') {
-    print("백그라운드 chat 알림");
-    String payload = message.data['title']! + ',' + message.data['roomId'];
-
-    await flutterLocalNotificationsPlugin.show(
-      0, // 알림 ID
-      message.data['title'], // 알림 제목
-      message.data['body'], // 알림 내용
-      platformChannelSpecifics,
-      payload: payload,
-    );
-  } else if (message.data['route'] == 'friend') {
-    print("백그라운드 friend 알림");
-    await flutterLocalNotificationsPlugin.show(
-      0, // 알림 ID
-      message.data['title'], // 알림 제목
-      message.data['body'], // 알림 내용
-      platformChannelSpecifics,
-      payload: 'friendPage',
-    );
-  }
+      "백그라운드 때 받은 FCM 내용: ${message.data} ${message.sentTime}");
+  WakeScreen.wakeUpScreen();
 }
 
 // main 함수
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //.env 파일 불러오기
+  ///.env 파일 불러오기
   await dotenv.load(fileName: ".env");
   AppConfig.load();
 
@@ -71,6 +37,9 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  FcmController fcmController = Get.put(FcmController());
+  await fcmController.initializeFcm();
 
   /// FCM : 종료 상태/백그라운드 알림 받을 때 실행
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
@@ -90,21 +59,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: FutureBuilder(
-          future: fcmController.initializeFcm(),
-          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-            if (snapshot.hasData &&
-                snapshot.connectionState == ConnectionState.done) {
-              print("FCM 초기화 성공적");
-              return const LoginPage();
-            } else if (snapshot.hasError) {
-              return const Center(child: Text('서버 오류!'));
-            } else {
-              return Center(child: Image.asset('assets/images/mbti.png'));
-            }
-          },
-        ),
+      home: const Scaffold(
+        body: LoginPage(),
       ),
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -119,15 +75,6 @@ class MyApp extends StatelessWidget {
       initialBinding: BindingsBuilder(() {
         AppConfig.putGetxControllerDependency();
       }),
-      getPages: [
-        GetPage(
-          name: '/login',
-          page: () => const LoginPage(),
-          binding: BindingsBuilder(() {
-            AppConfig.putGetxControllerDependency();
-          }),
-        ),
-      ],
     );
   }
 }

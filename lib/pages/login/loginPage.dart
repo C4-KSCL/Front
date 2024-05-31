@@ -1,7 +1,12 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/config.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/pages/login/bottomLayer.dart';
+import 'package:get/get.dart';
+
+import '../../controllers/bottomNavigationBar.dart';
+import '../chatting_room/chatting_room_page.dart';
 
 
 class LoginPage extends StatefulWidget {
