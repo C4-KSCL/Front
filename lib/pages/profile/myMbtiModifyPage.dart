@@ -25,6 +25,7 @@ class _MyMbtiModifyPageState extends State<MyMbtiModifyPage> {
   String accessToken = '';
 
   String selectedMBTI = '';
+  bool isMbtiComplete = false; // 버튼 활성화 관련
   //String genderString = '';
 
   late SettingModifyController settingModifyController;
@@ -80,7 +81,14 @@ class _MyMbtiModifyPageState extends State<MyMbtiModifyPage> {
             MbtiKeyWord(
               title: 'mbti',
               onMbtiSelected: (String mbti) {
-                selectedMBTI = mbti;
+                setState(() {
+                  selectedMBTI = mbti;
+                  if (selectedMBTI.length == 4) {
+                    isMbtiComplete = true;
+                  } else {
+                    isMbtiComplete = false;
+                  }
+                });
               },
             ),
             const Gap(),
@@ -92,16 +100,18 @@ class _MyMbtiModifyPageState extends State<MyMbtiModifyPage> {
                     backgroundColor: const Color(0xFF7EA5F3),
                     minimumSize: const Size(300, 50),
                   ),
+                  onPressed: isMbtiComplete
+                      ? () async {
+                          await infocontroller.MbtiModify(selectedMBTI);
+                          KeywordController.to.resetMBTI();
+                          print(selectedMBTI);
+                          Get.back();
+                        }
+                      : null,
                   child: const Text('변경',
                       style: TextStyle(
                         color: Colors.white,
-                      )),
-                  onPressed: () async {
-                    await infocontroller.MbtiModify(selectedMBTI);
-                    KeywordController.to.resetMBTI();
-                    print(selectedMBTI);
-                    Get.back();
-                  }),
+                      ))),
             ),
           ]),
         ),

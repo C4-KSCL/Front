@@ -5,6 +5,7 @@ import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:crop_image/crop_image.dart';
+import 'package:page_indicator/page_indicator.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:image/image.dart' as img;
@@ -134,58 +135,94 @@ class _ImageModifyPageState extends State<ImageModifyPage> {
       appBar: AppBar(
         title: const Text('사진 수정하기'),
       ),
-      body: GridView.builder(
-        padding: const EdgeInsets.all(8.0),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 1,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-          childAspectRatio: 2,
-        ),
-        itemCount: 3,
-        itemBuilder: (context, index) {
-          return Obx(() {
-            var img = index < userDataController.images.length
-                ? userDataController.images[index]
-                : null;
+      body: Column(
+        children: [
+          SizedBox(
+            height: MediaQuery.of(context).size.height / 8,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
+              width: double.infinity,
+              height: (MediaQuery.of(context).size.width * 1.2),
+              child: PageIndicatorContainer(
+                align: IndicatorAlign.bottom,
+                length: 3,
+                indicatorSpace: 10.0,
+                padding: const EdgeInsets.all(10),
+                indicatorColor: Colors.white,
+                indicatorSelectorColor: Colors.blue,
+                shape: IndicatorShape.circle(size: 8),
+                child: PageView.builder(
+                  controller: PageController(viewportFraction: 0.8),
+                  itemCount: 3,
+                  itemBuilder: (context, index) {
+                    return Obx(() {
+                      var img = index < userDataController.images.length
+                          ? userDataController.images[index]
+                          : null;
 
-            return Card(
-              clipBehavior: Clip.antiAlias,
-              child: Stack(
-                children: [
-                  if (img?.imagePath != null && img!.imagePath.isNotEmpty)
-                    Image.network(
-                      img.imagePath,
-                      fit: BoxFit.cover,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return const Center(child: CircularProgressIndicator());
-                      },
-                      errorBuilder: (context, error, stackTrace) =>
-                          const Center(child: Text('이미지를 불러올 수 없습니다.')),
-                    )
-                  else
-                    Container(
-                      alignment: Alignment.center,
-                      child: IconButton(
-                        icon: const Icon(Icons.add, size: 40),
-                        onPressed: () => pickImage(),
-                      ),
-                    ),
-                  Positioned(
-                    right: 4,
-                    top: 4,
-                    child: IconButton(
-                      icon: const Icon(Icons.remove_circle_outline,
-                          color: Colors.red),
-                      onPressed: () => deleteImage(index),
-                    ),
-                  ),
-                ],
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Card(
+                          clipBehavior: Clip.antiAlias,
+                          elevation: 5,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Stack(
+                            children: [
+                              if (img?.imagePath != null &&
+                                  img!.imagePath.isNotEmpty)
+                                Image.network(
+                                  img.imagePath,
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                  loadingBuilder:
+                                      (context, child, loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return const Center(
+                                        child: CircularProgressIndicator());
+                                  },
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      const Center(
+                                          child: Text('이미지를 불러올 수 없습니다.')),
+                                )
+                              else
+                                Container(
+                                  alignment: Alignment.center,
+                                  color: Colors.grey[200],
+                                  child: IconButton(
+                                    icon: const Icon(Icons.add,
+                                        size: 40, color: Colors.grey),
+                                    onPressed: () => pickImage(),
+                                  ),
+                                ),
+                              Positioned(
+                                right: 4,
+                                top: 4,
+                                child: CircleAvatar(
+                                  backgroundColor: Colors.white,
+                                  child: IconButton(
+                                    icon: const Icon(
+                                        Icons.remove_circle_outline,
+                                        color: Colors.red),
+                                    onPressed: () => deleteImage(index),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    });
+                  },
+                ),
               ),
-            );
-          });
-        },
+            ),
+          ),
+        ],
       ),
     );
   }

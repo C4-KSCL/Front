@@ -4,10 +4,15 @@ import 'package:frontend_matching/theme/colors.dart';
 
 class KeywordController extends GetxController {
   static KeywordController get to => Get.find();
+
   RxList<bool> selectedIE = <bool>[false, false].obs;
   RxList<bool> selectedNS = <bool>[false, false].obs;
   RxList<bool> selectedFT = <bool>[false, false].obs;
   RxList<bool> selectedPJ = <bool>[false, false].obs;
+
+  KeywordController() {
+    resetMBTI();
+  }
 
   String get mbti =>
       (selectedIE[0] ? 'I' : 'E') +
@@ -16,6 +21,7 @@ class KeywordController extends GetxController {
       (selectedPJ[0] ? 'P' : 'J');
 
   RxString selectedMBTI = ''.obs; //mbti 합치깅
+
   void selectMBTI(int index, String dimension) {
     switch (dimension) {
       case 'IE':

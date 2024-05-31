@@ -38,7 +38,7 @@ class MatchingUser {
   final String requestTime;
   final String userImage;
   final String userImageKey;
-
+  final String analysis;
   MatchingUser({
     required this.userNumber,
     required this.email,
@@ -60,6 +60,7 @@ class MatchingUser {
     required this.requestTime,
     required this.userImage,
     required this.userImageKey,
+    required this.analysis,
   });
 
   factory MatchingUser.fromJson(Map<String, dynamic> json) => MatchingUser(
@@ -83,6 +84,7 @@ class MatchingUser {
         requestTime: json["requestTime"],
         userImage: json["userImage"],
         userImageKey: json["userImageKey"],
+        analysis: json["analysis"],
       );
 }
 

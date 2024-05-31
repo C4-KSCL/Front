@@ -5,6 +5,7 @@ import 'package:frontend_matching/components/hobbyKeyword.dart';
 import 'package:frontend_matching/components/mindKeyword.dart';
 import 'package:frontend_matching/controllers/signupController.dart';
 import 'package:frontend_matching/pages/signup/friendInfo.dart';
+import 'package:frontend_matching/pages/signup/friendMbtiPage.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:frontend_matching/theme/textStyle.dart';
 import 'package:get/get.dart';
@@ -36,16 +37,35 @@ class _FriendKeywordPageState extends State<FriendKeywordPage> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text(
-          '',
-          style: TextStyle(color: Colors.black),
+          'keyword',
+          style: TextStyle(color: Colors.white),
         ),
         elevation: 0.0,
         titleTextStyle:
             const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
-        backgroundColor: Colors.white,
+        backgroundColor: blueColor3,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            signupController.deleteToSignupArray();
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const FriendMbtiPage(),
+              ),
+            );
+          },
+        ),
         actions: [
-          IconButton(icon: Icon(Icons.home), onPressed: () => {}),
-          IconButton(icon: Icon(Icons.search), onPressed: () => {})
+          IconButton(
+              icon: Icon(Icons.home, color: Colors.white), onPressed: () => {}),
+          IconButton(
+              icon: Icon(Icons.search, color: Colors.white),
+              onPressed: () => {})
         ],
       ),
       backgroundColor: blueColor5,
