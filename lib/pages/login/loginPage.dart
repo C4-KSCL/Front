@@ -1,14 +1,13 @@
-// ignore: file_names
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/config.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/pages/login/bottomLayer.dart';
-import 'package:frontend_matching/services/fcm_token_service.dart';
 import 'package:get/get.dart';
 
-import '../../controllers/chatting_list_controller.dart';
-import '../../controllers/friend_controller.dart';
+import '../../controllers/bottomNavigationBar.dart';
+import '../chatting_room/chatting_room_page.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

@@ -22,7 +22,7 @@ Widget QuizPage({
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // 데이터를 기다리는 동안 로딩 인디케이터를 보여줌
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           // 에러 발생 시
           return Text("Error: ${snapshot.error}");
@@ -30,12 +30,17 @@ Widget QuizPage({
           //초기화
           ChattingController.to.isQuizAnswered.value = false;
 
+          // 퀴즈를 보낸 사람이 나라면
           if (isSentQuiz) {
+            print("퀴즈 보낸 사람이 나임");
             if (ChattingController.to.eventData.value!.user1Choice.value !=
                 "아직 선택하지 않았습니다") {
               ChattingController.to.isQuizAnswered.value = true;
             }
-          } else {
+          }
+          // 퀴즈를 보낸 사람이 상대방이라면
+          else {
+            print("퀴즈 보낸 사람이 상대방임");
             if (ChattingController.to.eventData.value!.user2Choice.value !=
                 "아직 선택하지 않았습니다") {
               ChattingController.to.isQuizAnswered.value = true;
