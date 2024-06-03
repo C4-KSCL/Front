@@ -51,8 +51,6 @@ void main() async {
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
 
-  FcmController fcmController = Get.put(FcmController());
-
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
