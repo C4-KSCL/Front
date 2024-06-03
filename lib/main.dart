@@ -19,7 +19,7 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
+  
   print(
       "백그라운드 때 받은 FCM 내용: ${message.data} ${message.sentTime}");
 }
@@ -44,6 +44,11 @@ void main() async {
 
   /// 한국 시간 설정
   await initializeDateFormatting('ko_KR', null);
+
+  WidgetsFlutterBinding.ensureInitialized();
+  Get.put(FindFriendController());
+  Get.put(BottomNavigationBarController());
+  Get.put(KeywordController());
 
   runApp(MyApp());
 }
@@ -71,6 +76,9 @@ class MyApp extends StatelessWidget {
       initialBinding: BindingsBuilder(() {
         AppConfig.putGetxControllerDependency();
       }),
+      getPages: [
+        GetPage(name: '/login', page: () => const LoginPage()),
+      ],
     );
   }
 }

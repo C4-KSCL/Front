@@ -119,7 +119,7 @@ class _InfoModifyPageState extends State<InfoModifyPage> {
                 onPressed: () => {})
           ],
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: blueColor3,
         body: SingleChildScrollView(
             child: Stack(children: [
           Positioned(
