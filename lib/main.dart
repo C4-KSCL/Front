@@ -40,7 +40,6 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 /// Andoroid : 백그라운드일때, FCM을 받았을 때 실행
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-
   print(
       "백그라운드 때 받은 FCM 내용: ${message.notification} ${message.data} ${message.sentTime}");
 
@@ -96,23 +95,28 @@ void main() async {
 
   /// FCM : 종료 상태에서 알림 클릭시 실행
   RemoteMessage? initialMessage =
-  await FirebaseMessaging.instance.getInitialMessage();
+      await FirebaseMessaging.instance.getInitialMessage();
 
   if (initialMessage != null) {
     print("종료 상태에서 FCM 클릭 누름");
     print(initialMessage.data);
-    Get.to(()=>const LoginPage());
+    Get.to(() => const LoginPage());
     BottomNavigationBarController.to.selectedIndex.value = 2;
     Get.to(() => ChatRoomPage(
-      roomId: initialMessage.data['roomId'],
-      oppUserName: initialMessage.notification!.title!,
-      isChatEnabled: true,
-      isReceivedRequest: false,
-    ));
+          roomId: initialMessage.data['roomId'],
+          oppUserName: initialMessage.notification!.title!,
+          isChatEnabled: true,
+          isReceivedRequest: false,
+        ));
   }
 
   //한국 시간 설정
   await initializeDateFormatting('ko_KR', null);
+
+  WidgetsFlutterBinding.ensureInitialized();
+  Get.put(FindFriendController());
+  Get.put(BottomNavigationBarController());
+  Get.put(KeywordController());
 
   runApp(MyApp());
 }

@@ -4,6 +4,7 @@ import 'package:frontend_matching/controllers/find_friend_controller.dart';
 import 'package:frontend_matching/controllers/friend_controller.dart';
 import 'package:frontend_matching/controllers/signupController.dart';
 import 'package:frontend_matching/pages/login/loginPage.dart';
+import 'package:frontend_matching/pages/matching/loadingPage.dart';
 import 'package:frontend_matching/services/fcm_token_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
@@ -48,6 +49,50 @@ class UserDataController extends GetxController {
     images.assignAll(newImages);
   }
 
+  // static Future<void> loginUser(String email, String password) async {
+  //   AppConfig.putGetxControllerDependency();
+  //   final url = Uri.parse('$baseUrl/$auth/$login');
+
+  //   Map<String, String> headers = {"Content-type": "application/json"};
+  //   final body = jsonEncode({"email": email, "password": password});
+
+  //   final response = await http.post(url, headers: headers, body: body);
+
+  //   if (response.statusCode == 200) {
+  //     // 자동 로그인 관련 아이디 비번 저장
+  //     await AppConfig.storage.write(key: "autoLoginEmail", value: email);
+  //     await AppConfig.storage.write(key: "autoLoginPw", value: password);
+  //     await AppConfig.storage.write(key: "isAutoLogin", value: "true");
+
+  //     FcmService.requestPermission();
+
+  //     final loginUserData = jsonDecode(response.body);
+  //     print(loginUserData);
+
+  //     UserDataController.to.user.value = User.fromJson(loginUserData['user']);
+
+  //     List<UserImage> images = (loginUserData['images'] as List)
+  //         .map((data) => UserImage.fromJson(data as Map<String, dynamic>))
+  //         .toList();
+
+  //     UserDataController.to.updateImageInfo(images);
+
+  //     UserDataController.to.accessToken = loginUserData['accessToken'];
+  //     UserDataController.to.refreshToken = loginUserData['refreshToken'];
+  //     print('login success');
+  //     print(loginUserData['accessToken']);
+  //     print(loginUserData['refreshToken']);
+
+  //     await FindFriendController.findFriends();
+  //     await FriendController.getFriendList();
+  //     await FriendController.getFriendReceivedRequest();
+  //     await FriendController.getFriendSentRequest();
+  //     await ChattingListController.getLastChatList();
+  //     Get.offAll(() => const InitPage());
+  //   } else {
+  //     print('login fail');
+  //   }
+  // }
   static Future<void> loginUser(String email, String password) async {
     AppConfig.putGetxControllerDependency();
     final url = Uri.parse('$baseUrl/$auth/$login');
@@ -82,11 +127,14 @@ class UserDataController extends GetxController {
       print(loginUserData['accessToken']);
       print(loginUserData['refreshToken']);
 
-      await FindFriendController.findFriends();
+      // 필요한 데이터 가져오기
+      //await FindFriendController.findFriends();
       await FriendController.getFriendList();
       await FriendController.getFriendReceivedRequest();
       await FriendController.getFriendSentRequest();
       await ChattingListController.getLastChatList();
+
+      // 메인 페이지로 이동
       Get.offAll(() => const InitPage());
     } else {
       print('login fail');
@@ -105,6 +153,7 @@ class UserDataController extends GetxController {
     signupController.resetAllInputs();
     FriendController.to.resetData();
     ChattingListController.to.resetData();
+    FindFriendController.to.previousFriendImageList.clear();
     ////////////////수정 필요 //////////////////////////
 
     Get.offNamed('/login');

@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/models/user.dart';
 import 'package:frontend_matching/models/userImage.dart';
+import 'package:frontend_matching/pages/init_page.dart';
+import 'package:frontend_matching/pages/matching/mainPage.dart';
+import 'package:frontend_matching/pages/matching/mbtiSettingPage.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import '../config.dart';
+
+List<User> users = [];
 
 class FindFriendController extends GetxController {
   static FindFriendController get to => Get.find();
@@ -15,6 +21,7 @@ class FindFriendController extends GetxController {
 
   RxList<User> matchingFriendInfoList = RxList<User>();
   RxList<List<UserImage>> matchingFriendImageList = RxList<List<UserImage>>();
+  RxList<List<UserImage>> previousFriendImageList = RxList<List<UserImage>>();
 
   static Future<void> findFriends() async {
     final url = Uri.parse('$baseUrl/findfriend/friend-matching');
@@ -64,9 +71,9 @@ class FindFriendController extends GetxController {
       print(friendsData['images']);
 
       // users 배열을 User 객체의 리스트로 변환
-      List<User> users =
+      users =
           List.from(friendsData['users'].map((data) => User.fromJson(data)));
-
+      FindFriendController.to.previousFriendImageList.clear();
       for (User user in users) {
         FindFriendController.to.matchingFriendInfoList.add(user);
         List<UserImage> images = [];
@@ -80,46 +87,49 @@ class FindFriendController extends GetxController {
           }
         }
         FindFriendController.to.matchingFriendImageList.add(images);
+        FindFriendController.to.previousFriendImageList.add(images);
       }
     } else if (response.statusCode == 400) {
-      showDialog(
-        context: Get.context!,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('시간 제한'),
-            content: const Text('아직 다음 매칭시간이 남았습니다.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('확인'),
-              ),
-            ],
-          );
-        },
+      _showErrorDialog(
+        title: '시간 제한',
+        content: '아직 다음 매칭시간이 남았습니다.',
       );
     } else if (response.statusCode == 404) {
-      showDialog(
-        context: Get.context!,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('친구 없음'),
-            content: const Text('해당하는 친구가 더 존재하지 않습니다.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('확인'),
-              ),
-            ],
-          );
-        },
+      _showErrorDialog(
+        title: '친구 없음',
+        content: '해당하는 친구가 더 존재하지 않습니다.',
       );
     } else {
       print('${response.statusCode} ${response.body}');
     }
+  }
+
+  static Future<void> _showErrorDialog({
+    required String title,
+    required String content,
+  }) async {
+    await showDialog(
+      context: Get.context!,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(content),
+          actions: [
+            TextButton(
+              onPressed: () {
+                for (User user in users) {
+                  FindFriendController.to.matchingFriendInfoList.add(user);
+                }
+                FindFriendController.to.matchingFriendImageList
+                    .addAll(FindFriendController.to.previousFriendImageList);
+                Navigator.of(context).pop();
+              },
+              child: const Text('확인'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   static Future<http.Response> _getRequest(
