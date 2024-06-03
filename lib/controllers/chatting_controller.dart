@@ -288,20 +288,22 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
     socket.on("answer to event", (data) {
       print(data);
       print("밸런스 게임 답변 받음");
-      // 받은 이벤트 id가 컨트롤러 안에 있는 이벤트 id와 같으면 변경 -> UI 실시간 변경 가능
-      print(UserDataController.to.user.value!.nickname);
+      String nullValue="아직 선택하지 않았습니다"; // 답변하지 않았을 때 기본 값
 
+      // 받은 이벤트 id가 컨트롤러 안에 있는 이벤트 id와 같으면 변경 -> UI 실시간 변경 가능
+      // 보낸 사람의
       if (UserDataController.to.user.value!.nickname ==
               data['event']['user1'] &&
-          data['event']['user1Choice'] != null) {
+          data['event']['user1Choice'] != nullValue) {
         if (eventData.value!.id == data['event']['id']) {
           eventData.value!.user1Choice.value = data['event']['user1Choice'];
           eventData.value!.user2Choice.value = data['event']['user2Choice'];
           ChattingController.to.isQuizAnswered.value = true;
         }
-      } else if (UserDataController.to.user.value!.nickname ==
+      }
+      else if (UserDataController.to.user.value!.nickname ==
               data['event']['user2'] &&
-          data['event']['user2Choice'] != null) {
+          data['event']['user2Choice'] != nullValue) {
         if (eventData.value!.id == data['event']['id']) {
           eventData.value!.user1Choice.value = data['event']['user1Choice'];
           eventData.value!.user2Choice.value = data['event']['user2Choice'];

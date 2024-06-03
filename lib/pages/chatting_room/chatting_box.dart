@@ -377,7 +377,7 @@ Widget ReceiveQuizChatBox({
                             QuizPage(
                               voidCallback: Get.back,
                               quizId: chat.event!.id.toString(),
-                              isSentQuiz: true,
+                              isSentQuiz: false,
                             ),
                             backgroundColor: Colors.white,
                             shape: RoundedRectangleBorder(
