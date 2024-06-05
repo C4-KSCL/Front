@@ -78,11 +78,14 @@ Widget bigCategory() {
                           ChattingController.to.showSecondGridView.value = true;
                         },
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             const Spacer(),
                             Image.network(
-                              bigCategory.eventImage!.filepath!,
-                              width: 30, // 원하는 너비로 설정
+
+                              bigCategory.eventImage!.filepath,
+                              width: 30,
                               height: 30,
                             ),
                             const SizedBox(

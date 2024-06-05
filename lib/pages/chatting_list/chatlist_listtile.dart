@@ -15,8 +15,15 @@ Widget ChatListTile({
 }) {
   return ListTile(
     key: ValueKey(chatListData.roomId),
-    leading: CircleAvatar(
-      backgroundImage: NetworkImage(chatListData.userImage),
+    leading: ClipRRect(
+      borderRadius: BorderRadius.circular(8.0), // 모서리를 둥글게 처리
+      child: Image.network(
+        chatListData.userImage, // 예시 이미지 URL
+        width: 50,
+        height: 100,
+        fit: BoxFit.cover,
+        alignment: Alignment.center,// 이미지가 넘치면 잘라냄
+      ),
     ),
     title: Column(
       crossAxisAlignment: CrossAxisAlignment.start,

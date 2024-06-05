@@ -15,7 +15,7 @@ Widget QuizPage({
   required bool isSentQuiz,
 }) {
   return Container(
-    padding: EdgeInsets.all(16), // 내부 여백을 조정합니다.
+    padding: const EdgeInsets.all(16), // 내부 여백을 조정합니다.
     height: Get.height * 0.85, // BottomSheet의 높이를 설정합니다.
     child: FutureBuilder(
       future: ChattingController.getQuizInfo(quizId: quizId),
@@ -60,7 +60,7 @@ Widget QuizPage({
                     Text(
                         ChattingController.to.eventData.value!.smallCategory.name,
                         style:
-                            TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                            const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                     // 중앙에 타이틀 또는 공간을 배치할 수 있습니다.
                     IconButton(
                         icon: const Icon(Icons.close),

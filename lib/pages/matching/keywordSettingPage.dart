@@ -55,150 +55,144 @@ class _KeywordSettingPageState extends State<KeywordSettingPage> {
         elevation: 0.0,
         titleTextStyle:
             const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
-        backgroundColor: Colors.white,
-        actions: [
-          IconButton(icon: Icon(Icons.home), onPressed: () => {}),
-          IconButton(icon: Icon(Icons.search), onPressed: () => {})
-        ],
+        backgroundColor: blueColor5,
       ),
       backgroundColor: blueColor5,
-      body: Container(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Text(
-                '친구 키워드',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 35,
-                  color: Color.fromARGB(255, 212, 118, 172),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Text(
+              '친구 키워드',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 35,
+                color: Color.fromARGB(255, 212, 118, 172),
+              ),
+            ),
+            Text(
+              '다시 설정하기',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 35,
+              ),
+            ),
+            Gap(),
+            SizedBox(
+              height: 30,
+              child: Text('여가 키워드', style: greyTextStyle1),
+            ),
+            HobbyKeyWord(
+              onKeywordsSelected: (keywords) {
+                selectedHobbyKeywords = keywords;
+                checkElevationButtonStatus();
+              },
+            ),
+            SizedBox(
+              height: 30,
+              child: Text('성격 키워드', style: greyTextStyle1),
+            ),
+            MindKeyWord(
+              onKeywordsSelected: (keywords) {
+                selectedMindKeywords = keywords;
+                checkElevationButtonStatus();
+              },
+            ),
+            SizedBox(
+              height: 30,
+              child: Text('운동 키워드', style: greyTextStyle1),
+            ),
+            TrainningKeyWord(
+              onKeywordsSelected: (keywords) {
+                selectedTrainningKeywords = keywords;
+                checkElevationButtonStatus();
+              },
+            ),
+            SizedBox(
+              height: 30,
+              child: Text('아이돌 키워드', style: greyTextStyle1),
+            ),
+            IdolKeyWord(
+              onKeywordsSelected: (keywords) {
+                selectedIdolKeywords = keywords;
+                checkElevationButtonStatus();
+              },
+            ),
+            SizedBox(
+              height: 30,
+              child: Text('자기계발 키워드', style: greyTextStyle1),
+            ),
+            DevelopKeyWord(
+              onKeywordsSelected: (keywords) {
+                selectedDevelopKeywords = keywords;
+                checkElevationButtonStatus();
+              },
+            ),
+            SizedBox(
+              height: 30,
+              child: Text('대학 키워드', style: greyTextStyle1),
+            ),
+            MajorKeyWord(
+              onKeywordsSelected: (keywords) {
+                selectedMajorKeywords = keywords;
+                checkElevationButtonStatus();
+              },
+            ),
+            SizedBox(
+              width: 350,
+              height: 50,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF7EA5F3),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15)),
                 ),
-              ),
-              Text(
-                '다시 설정하기',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 35,
-                ),
-              ),
-              Gap(),
-              SizedBox(
-                height: 30,
-                child: Text('여가 키워드', style: greyTextStyle1),
-              ),
-              HobbyKeyWord(
-                onKeywordsSelected: (keywords) {
-                  selectedHobbyKeywords = keywords;
-                  checkElevationButtonStatus();
-                },
-              ),
-              SizedBox(
-                height: 30,
-                child: Text('성격 키워드', style: greyTextStyle1),
-              ),
-              MindKeyWord(
-                onKeywordsSelected: (keywords) {
-                  selectedMindKeywords = keywords;
-                  checkElevationButtonStatus();
-                },
-              ),
-              SizedBox(
-                height: 30,
-                child: Text('운동 키워드', style: greyTextStyle1),
-              ),
-              TrainningKeyWord(
-                onKeywordsSelected: (keywords) {
-                  selectedTrainningKeywords = keywords;
-                  checkElevationButtonStatus();
-                },
-              ),
-              SizedBox(
-                height: 30,
-                child: Text('아이돌 키워드', style: greyTextStyle1),
-              ),
-              IdolKeyWord(
-                onKeywordsSelected: (keywords) {
-                  selectedIdolKeywords = keywords;
-                  checkElevationButtonStatus();
-                },
-              ),
-              SizedBox(
-                height: 30,
-                child: Text('자기계발 키워드', style: greyTextStyle1),
-              ),
-              DevelopKeyWord(
-                onKeywordsSelected: (keywords) {
-                  selectedDevelopKeywords = keywords;
-                  checkElevationButtonStatus();
-                },
-              ),
-              SizedBox(
-                height: 30,
-                child: Text('대학 키워드', style: greyTextStyle1),
-              ),
-              MajorKeyWord(
-                onKeywordsSelected: (keywords) {
-                  selectedMajorKeywords = keywords;
-                  checkElevationButtonStatus();
-                },
-              ),
-              SizedBox(
-                width: 350,
-                height: 50,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF7EA5F3),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15)),
-                  ),
-                  onPressed: isElevationButtonEnabled
-                      ? () async {
-                          String HobbyKeywords =
-                              selectedHobbyKeywords.join(',');
-                          String MindKeywords = selectedMindKeywords.join(',');
-                          String TrainningKeywords =
-                              selectedTrainningKeywords.join(',');
-                          String IdolKeywords = selectedIdolKeywords.join(',');
-                          String MajorKeywords =
-                              selectedMajorKeywords.join(',');
-                          String DevelopKeywords =
-                              selectedDevelopKeywords.join(',');
-                          String combinedKeywords = HobbyKeywords +
-                              ',' +
-                              MindKeywords +
-                              ',' +
-                              TrainningKeywords +
-                              "," +
-                              IdolKeywords +
-                              ',' +
-                              MajorKeywords +
-                              "," +
-                              DevelopKeywords;
-                          print(HobbyKeywords);
-                          print(MindKeywords);
-                          await FriendSettingService.updateFriendKeywordSetting(
-                            userDataController.accessToken,
-                            userDataController.refreshToken,
-                            combinedKeywords,
-                          );
+                onPressed: isElevationButtonEnabled
+                    ? () async {
+                        String HobbyKeywords =
+                            selectedHobbyKeywords.join(',');
+                        String MindKeywords = selectedMindKeywords.join(',');
+                        String TrainningKeywords =
+                            selectedTrainningKeywords.join(',');
+                        String IdolKeywords = selectedIdolKeywords.join(',');
+                        String MajorKeywords =
+                            selectedMajorKeywords.join(',');
+                        String DevelopKeywords =
+                            selectedDevelopKeywords.join(',');
+                        String combinedKeywords = HobbyKeywords +
+                            ',' +
+                            MindKeywords +
+                            ',' +
+                            TrainningKeywords +
+                            "," +
+                            IdolKeywords +
+                            ',' +
+                            MajorKeywords +
+                            "," +
+                            DevelopKeywords;
+                        print(HobbyKeywords);
+                        print(MindKeywords);
+                        await FriendSettingService.updateFriendKeywordSetting(
+                          userDataController.accessToken,
+                          userDataController.refreshToken,
+                          combinedKeywords,
+                        );
 
-                          Get.back();
-                          Get.back();
-                        }
-                      : null, // 버튼이 비활성 상태일 때는 null로 설정
-                  child: const Text(
-                    '다음으로',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
+                        Get.back();
+                        Get.back();
+                      }
+                    : null, // 버튼이 비활성 상태일 때는 null로 설정
+                child: const Text(
+                  '다음으로',
+                  style: TextStyle(
+                    color: Colors.white,
                   ),
                 ),
               ),
-              SizedBox(
-                height: 30,
-              ),
-            ],
-          ),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+          ],
         ),
       ),
     );

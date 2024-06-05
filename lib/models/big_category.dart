@@ -13,9 +13,7 @@ class BigCategory {
     return BigCategory(
       name: json['name'],
       imageId: json['imageId'],
-      eventImage: json['eventImage'] != null
-          ? EventImage.fromJson(json['eventImage'])
-          : null,
+      eventImage: json['eventImage'] != null ? EventImage.fromJson(json['eventImage']) : null,
     );
   }
 
