@@ -248,13 +248,13 @@ class SelectImagePageState extends State<SelectImagePage> {
                       print(images);
                       userDataController.logout();
                     } else {
-                      print('이미지는 최대 4개 이상이어야 합니다.');
+                      print('이미지는 최대 3개입니다.');
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: const Text('이미지 추가'),
-                            content: const Text('이미지를 1장 이상 넣어주세요.'),
+                            title: const Text('이미지 초과'),
+                            content: const Text('이미지는 최대 3개입니다.'),
                             actions: [
                               TextButton(
                                 onPressed: () {

@@ -30,7 +30,18 @@ class _MindKeyWordState extends State<MindKeyWord> {
               GroupButton(
                 controller: controller,
                 isRadio: false,
-                buttons: ["활발함", "소심함", "친구없음", "방콕", "울보", "슈퍼인싸"],
+                buttons: [
+                  "활발함",
+                  "소심함",
+                  "친절함",
+                  "신중함",
+                  "낙천적",
+                  "성실함",
+                  "차분함",
+                  "열정적",
+                  "현실적",
+                  "감상적",
+                ],
                 onSelected: (keyword, i, selected) {
                   setState(() {
                     if (selected) {
@@ -55,7 +66,7 @@ class _MindKeyWordState extends State<MindKeyWord> {
                 ),
               ),
               const SizedBox(
-                height: 110,
+                height: 30,
               ),
             ],
           ),

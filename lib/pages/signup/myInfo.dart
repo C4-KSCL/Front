@@ -106,7 +106,7 @@ class _InfoAuthPageState extends State<InfoAuthPage> {
                 onPressed: () async {
                   // 닉네임 인증
                   String nickname = nicknameController.text;
-                  if (nickname.length >= 8) {
+                  if (nickname.length > 8) {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
