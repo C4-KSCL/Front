@@ -44,10 +44,11 @@ class InfoModifyButton extends StatelessWidget {
           height: medHeight / 5.5,
           width: medWidth / 2.5,
           decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                  color: Color.fromARGB(255, 216, 216, 216), width: 0.3)),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+                color: Color.fromARGB(255, 216, 216, 216), width: 0.3),
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

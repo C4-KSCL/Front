@@ -15,6 +15,7 @@ import 'package:frontend_matching/pages/signup/imageUpload/imageTest.dart';
 import 'package:frontend_matching/pages/signup/imageUpload/selectImagePage.dart';
 import 'package:frontend_matching/services/delete_user_service.dart';
 import 'package:frontend_matching/theme/colors.dart';
+import 'package:frontend_matching/theme/textStyle.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 
 class MyPage extends StatelessWidget {
@@ -36,6 +37,15 @@ class MyPage extends StatelessWidget {
     String accesstoken = '';
 
     return Scaffold(
+        appBar: AppBar(
+          title: const Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("마이페이지"),
+            ],
+          ),
+          backgroundColor: Colors.white,
+        ),
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
             child: GetBuilder<UserDataController>(builder: (controller) {
@@ -69,26 +79,20 @@ class MyPage extends StatelessWidget {
                           topRight: Radius.circular(30),
                         )),
                     padding: EdgeInsets.fromLTRB(0, medHeight, medWidth, 0.0))),
-            Opacity(
-              opacity: 0.8,
-              child: Container(
-                decoration: const BoxDecoration(
-                    color: Colors.white,
-                    border: Border(
-                        bottom: BorderSide(width: 0.5, color: Colors.grey))),
-                height: statusBarHeight + 55,
-              ),
-            ),
+            // Opacity(
+            //   opacity: 0.8,
+            //   child: Container(
+            //     decoration: const BoxDecoration(
+            //         color: Colors.white,
+            //         border: Border(
+            //             bottom: BorderSide(width: 0.5, color: Colors.grey))),
+            //     height: statusBarHeight + 55,
+            //   ),
+            // ),
             Container(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TopLayer(
-                    onpressed: () {},
-                    medHeight: medHeight,
-                    medWidth: medWidth,
-                    statusBarHeight: statusBarHeight,
-                  ),
                   SizedBox(
                     height: medHeight / 10,
                   ),
@@ -112,25 +116,24 @@ class MyPage extends StatelessWidget {
                         style: TextStyle(
                             fontSize: 29, fontWeight: FontWeight.w600),
                       ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                              side: const BorderSide(
-                                  color: Colors.black26, width: 1),
-                              backgroundColor: Colors.white,
-                              shape: const RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(12)))),
-                          onPressed: () {},
-                          child: Text(
-                            my_gender,
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: blueColor3),
-                          ))
+
+                      // OutlinedButton(
+                      //   style: OutlinedButton.styleFrom(
+                      //       side: const BorderSide(
+                      //           color: Colors.black26, width: 1),
+                      //       backgroundColor: Colors.white,
+                      //       shape: const RoundedRectangleBorder(
+                      //           borderRadius:
+                      //               BorderRadius.all(Radius.circular(12)))),
+                      //   onPressed: () {},
+                      //   child: Text(
+                      //     my_gender,
+                      //     style: TextStyle(
+                      //         fontSize: 16,
+                      //         fontWeight: FontWeight.w600,
+                      //         color: blueColor3),
+                      //   ),
+                      // )
                     ],
                   ),
                   Padding(
@@ -164,6 +167,13 @@ class MyPage extends StatelessWidget {
                               ),
                             ),
                             Text(
+                              //성별
+                              my_gender,
+                              style:
+                                  TextStyle(fontSize: 14.0, color: Colors.grey),
+                            ),
+                            SizedBox(width: 10),
+                            Text(
                               //나이
                               my_age + '살',
                               style:
@@ -171,25 +181,36 @@ class MyPage extends StatelessWidget {
                             )
                           ],
                         ),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 8.0),
-                                child: Text(
-                                  //키워드
-                                  my_keyword,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.amber,
-                                  ),
-                                ),
-                              ),
-                            ],
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: [
+                                ...my_keyword
+                                    .split(',')
+                                    .map((item) => item.trim())
+                                    .map(
+                                      (item) => Padding(
+                                        padding: const EdgeInsets.all(4),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            color: greyColor6,
+                                          ),
+                                          padding: const EdgeInsets.all(5),
+                                          child: Text(
+                                            item,
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                    .toList(),
+                              ],
+                            ),
                           ),
                         ),
                         Row(
