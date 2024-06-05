@@ -50,8 +50,8 @@ Widget bigCategory() {
               return GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 5,
+                  mainAxisSpacing: 5,
                 ),
                 itemCount: ChattingController.to.bigCategories.length,
                 itemBuilder: (context, index) {
@@ -78,16 +78,16 @@ Widget bigCategory() {
                         },
                         child: Column(
                           children: [
-                            Spacer(),
-                            Image.asset("assets/icons/heart.png"),
-                            SizedBox(
+                            const Spacer(),
+                            Image.network(bigCategory.eventImage!),
+                            const SizedBox(
                               height: 10,
                             ),
                             Text(
                               bigCategory.name,
                               style: blackTextStyle2,
                             ),
-                            Spacer(),
+                            const Spacer(),
                           ],
                         ),
                       ),

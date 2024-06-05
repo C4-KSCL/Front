@@ -51,50 +51,6 @@ class UserDataController extends GetxController {
     images.assignAll(newImages);
   }
 
-  // static Future<void> loginUser(String email, String password) async {
-  //   AppConfig.putGetxControllerDependency();
-  //   final url = Uri.parse('$baseUrl/$auth/$login');
-
-  //   Map<String, String> headers = {"Content-type": "application/json"};
-  //   final body = jsonEncode({"email": email, "password": password});
-
-  //   final response = await http.post(url, headers: headers, body: body);
-
-  //   if (response.statusCode == 200) {
-  //     // 자동 로그인 관련 아이디 비번 저장
-  //     await AppConfig.storage.write(key: "autoLoginEmail", value: email);
-  //     await AppConfig.storage.write(key: "autoLoginPw", value: password);
-  //     await AppConfig.storage.write(key: "isAutoLogin", value: "true");
-
-  //     FcmService.requestPermission();
-
-  //     final loginUserData = jsonDecode(response.body);
-  //     print(loginUserData);
-
-  //     UserDataController.to.user.value = User.fromJson(loginUserData['user']);
-
-  //     List<UserImage> images = (loginUserData['images'] as List)
-  //         .map((data) => UserImage.fromJson(data as Map<String, dynamic>))
-  //         .toList();
-
-  //     UserDataController.to.updateImageInfo(images);
-
-  //     UserDataController.to.accessToken = loginUserData['accessToken'];
-  //     UserDataController.to.refreshToken = loginUserData['refreshToken'];
-  //     print('login success');
-  //     print(loginUserData['accessToken']);
-  //     print(loginUserData['refreshToken']);
-
-  //     await FindFriendController.findFriends();
-  //     await FriendController.getFriendList();
-  //     await FriendController.getFriendReceivedRequest();
-  //     await FriendController.getFriendSentRequest();
-  //     await ChattingListController.getLastChatList();
-  //     Get.offAll(() => const InitPage());
-  //   } else {
-  //     print('login fail');
-  //   }
-  // }
   static Future<void> loginUser(String email, String password) async {
     AppConfig.putGetxControllerDependency();
     final url = Uri.parse('$baseUrl/$auth/$login');
@@ -148,6 +104,7 @@ class UserDataController extends GetxController {
     await AppConfig.storage.write(key: "autoLoginPw", value: '');
     await AppConfig.storage
         .write(key: "isAutoLogin", value: "false"); // 자동 로그인 해제
+
     user.value = null;
     accessToken = '';
     refreshToken = '';
@@ -155,20 +112,17 @@ class UserDataController extends GetxController {
     FriendController.to.resetData();
     ChattingListController.to.resetData();
     FindFriendController.to.previousFriendImageList.clear();
-    BottomNavigationBarController.to.selectedIndex.value = 0;
+    images.value = <UserImage>[].obs;
+    BottomNavigationBarController.to.selectedIndex.value=0;
     ////////////////수정 필요 //////////////////////////
 
+
     Get.offNamed('/login');
-    // Get.delete<FriendController>();
-    // Get.delete<ChattingListController>();
-    // Get.put(FriendController());
-    // Get.put(ChattingListController());
-    images.value = <UserImage>[].obs;
 
     print("로그아웃");
   }
 
-  // http 종류에 맞는 메소드를 이용하여 요청
+  /// http 종류에 맞는 메소드를 이용하여 요청
   static Future<http.Response> sendHttpRequest({
     required String method,
     required Uri url,
@@ -198,7 +152,7 @@ class UserDataController extends GetxController {
     }
   }
 
-  // http 요청 보낼때 JWT 토큰 관련 체크 과정
+  /// http 요청 보낼때 JWT 토큰 관련 체크 과정
   static Future<http.Response> sendHttpRequestWithTokenManagement({
     required String method,
     required Uri url,

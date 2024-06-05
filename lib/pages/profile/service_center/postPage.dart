@@ -59,22 +59,6 @@ class _PostPageState extends State<PostPage> {
             Get.back();
           },
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.home,
-              color: Colors.white,
-            ),
-            onPressed: () => {},
-          ),
-          IconButton(
-            icon: const Icon(
-              Icons.search,
-              color: Colors.white,
-            ),
-            onPressed: () => {},
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
