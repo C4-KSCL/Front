@@ -132,14 +132,6 @@ Container IconTextFieldBox({
     decoration: BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(12),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.grey.withOpacity(0.1),
-          blurRadius: 5.0,
-          spreadRadius: 1.0,
-          offset: const Offset(5, 5), // 그림자의 위치
-        ),
-      ],
     ),
     child: TextField(
       style: blackTextStyle2,
@@ -182,15 +174,15 @@ class NumberInputField extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Container(
-      width: screenWidth * 0.37,
+      width: 140,
       padding: EdgeInsets.symmetric(horizontal: 40.0),
-      margin: EdgeInsets.all(20.0),
+      margin: EdgeInsets.all(10.0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10.0),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
+            color: Colors.grey.withOpacity(0.2),
             spreadRadius: 2,
             blurRadius: 5,
             offset: Offset(0, 3),

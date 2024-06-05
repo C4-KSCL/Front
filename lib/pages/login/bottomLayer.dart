@@ -75,7 +75,7 @@ class _BottomLayerLoginScreenState extends State<BottomLayerLoginScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => FindPasswordPage()));
+                                builder: (context) => const FindPasswordPage()));
                       },
                       child: const Text(
                         '비밀번호 찾기',
@@ -95,7 +95,7 @@ class _BottomLayerLoginScreenState extends State<BottomLayerLoginScreen> {
                 height: 50,
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF7EA5F3),
+                      backgroundColor: blueColor1,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15)),
                     ),
