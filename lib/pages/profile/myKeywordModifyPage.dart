@@ -64,10 +64,6 @@ class _MyKeywordModifyPageState extends State<MyKeywordModifyPage> {
         titleTextStyle:
             const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
         backgroundColor: Colors.white,
-        actions: [
-          IconButton(icon: const Icon(Icons.home), onPressed: () => {}),
-          IconButton(icon: const Icon(Icons.search), onPressed: () => {})
-        ],
       ),
       backgroundColor: blueColor5,
       body: SingleChildScrollView(

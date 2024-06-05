@@ -10,7 +10,6 @@ import 'package:frontend_matching/pages/matching/keywordSettingPage.dart';
 import 'package:frontend_matching/services/friend_setting.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 class MbtiSettingPage extends StatefulWidget {
   const MbtiSettingPage({super.key});
@@ -70,85 +69,86 @@ class _MbtiSettingPageState extends State<MbtiSettingPage> {
         elevation: 0.0,
         titleTextStyle:
             const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
-        backgroundColor: blueColor5,
+        backgroundColor: Colors.white,
       ),
       backgroundColor: blueColor5,
       body: SingleChildScrollView(
         child: Center(
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Row(
-              children: [
-                const Text(
-                  '    이상형 설정하기',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(fontSize: 27),
-                ),
-                const SizedBox(width: 100),
-                IconButton(
-                  icon: const Icon(
-                    Icons.double_arrow_rounded,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Gap(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    '이상형 설정하기',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(fontSize: 27),
                   ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const KeywordSettingPage(),
-                      ),
-                    );
-                  },
-                )
-              ],
-            ),
-                const SizedBox(height: 10,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                GenderButton(
-                  onGenderSelected: (selectedValue) {
-                    genderInt = selectedValue;
-                    if (genderInt == 1) {
-                      genderString = "남";
-                    } else {
-                      genderString = "여";
-                    }
-                    print(genderString);
-                  },
-                ),
-              ],
-            ),
-            const Gap(),
-            MbtiKeyWord(
-              title: 'mbti',
-              onMbtiSelected: (String mbti) {
-                selectedMBTI = mbti;
-              },
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                NumberInputField(
-                  controller: minAgeController,
-                  hintText: '최소 나이',
-                ),
-                const Icon(Icons.remove),
-                NumberInputField(
-                  controller: maxAgeController,
-                  hintText: '최대 나이',
-                ),
-              ],
-            ),
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  const SizedBox(width: 20),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.double_arrow_rounded,
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const KeywordSettingPage(),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+              const Gap(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GenderButton(
+                    onGenderSelected: (selectedValue) {
+                      genderInt = selectedValue;
+                      if (genderInt == 1) {
+                        genderString = "남";
+                      } else {
+                        genderString = "여";
+                      }
+                      print(genderString);
+                    },
+                  ),
+                ],
+              ),
+              const Gap(),
+              MbtiKeyWord(
+                title: 'mbti',
+                onMbtiSelected: (String mbti) {
+                  selectedMBTI = mbti;
+                },
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  NumberInputField(
+                    controller: minAgeController,
+                    hintText: '입력하기',
+                  ),
+                  const Icon(Icons.remove),
+                  NumberInputField(
+                    controller: maxAgeController,
+                    hintText: '입력하기',
+                  ),
+                ],
+              ),
+              const Gap(),
+              const Gap(),
+              Center(
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF7EA5F3),
-                    minimumSize: const Size(320, 50),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15)),
+                    minimumSize: const Size(300, 50),
                   ),
-                  child: const Text('변경하기',
+                  child: const Text('변경',
                       style: TextStyle(
                         color: Colors.white,
                       )),
@@ -249,8 +249,8 @@ class _MbtiSettingPageState extends State<MbtiSettingPage> {
                   },
                 ),
               ),
-            ),
-          ]),
+            ],
+          ),
         ),
       ),
     );

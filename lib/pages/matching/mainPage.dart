@@ -1,33 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_matching/components/gap.dart';
+import 'package:frontend_matching/components/genderButton.dart';
+import 'package:frontend_matching/components/mbtiKeyword.dart';
 import 'package:frontend_matching/components/textField.dart';
-import 'package:frontend_matching/controllers/find_friend_controller.dart';
-import 'package:frontend_matching/controllers/friend_controller.dart';
+import 'package:frontend_matching/controllers/keyword_controller.dart';
 import 'package:frontend_matching/controllers/settingModifyController.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
-import 'package:frontend_matching/models/userImage.dart';
-import 'package:frontend_matching/pages/matching/mbtiSettingPage.dart';
-import 'package:frontend_matching/pages/profile/imageModifyPage.dart';
+import 'package:frontend_matching/pages/matching/keywordSettingPage.dart';
 import 'package:frontend_matching/services/friend_setting.dart';
+import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:page_indicator/page_indicator.dart';
-import '../../theme/colors.dart';
-import '../../theme/textStyle.dart';
-import 'image_modify_page.dart';
 
-class MainPage extends StatefulWidget {
-  const MainPage({Key? key}) : super(key: key);
+class MbtiSettingPage extends StatefulWidget {
+  const MbtiSettingPage({super.key});
 
   @override
-  _MainPageState createState() => _MainPageState();
+  State<MbtiSettingPage> createState() => _MbtiSettingPageState();
 }
 
-class _MainPageState extends State<MainPage> {
-  final List<TextEditingController> sendingControllers = [];
-  final CarouselController _carouselController = CarouselController();
-  final PageController pageController = PageController(initialPage: 0);
+class _MbtiSettingPageState extends State<MbtiSettingPage> {
+  final TextEditingController sendingController = TextEditingController();
+  final TextEditingController minAgeController = TextEditingController();
+  final TextEditingController maxAgeController = TextEditingController();
+  final pageController = PageController();
 
   String accessToken = '';
+  String refreshToken = '';
   String email = '';
   String nickname = '';
   String age = '';
@@ -55,339 +53,206 @@ class _MainPageState extends State<MainPage> {
     final controller = Get.find<UserDataController>();
     if (controller.user.value != null) {
       accessToken = controller.accessToken;
+      refreshToken = controller.refreshToken;
     }
-
-    // 매칭된 사람 수만큼 컨트롤러 리스트 초기화
-    int matchingFriendsCount =
-        FindFriendController.to.matchingFriendInfoList.length;
-    for (int i = 0; i < matchingFriendsCount; i++) {
-      sendingControllers.add(TextEditingController());
-    }
-  }
-
-  void navigateToImageModifyPage() {
-    final containerWidth = MediaQuery.of(context).size.width;
-    final containerHeight = Get.height - 360;
-    final aspectRatio = containerWidth / containerHeight;
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const ImageModifyPage(),
-      ),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Image.asset("assets/images/logo.png"),
-          ],
+        centerTitle: true,
+        title: const Text(
+          '',
+          style: TextStyle(color: Colors.black),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const MbtiSettingPage(),
-                ),
-              );
-            },
-            icon: const Icon(Icons.settings_rounded),
-          ),
-          const SizedBox(width: 20),
-        ],
         elevation: 0.0,
         titleTextStyle:
             const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
-        backgroundColor: blueColor5,
+        backgroundColor: Colors.white,
       ),
       backgroundColor: blueColor5,
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-        child: Container(
-          height: Get.height,
-          decoration: BoxDecoration(
-            color: whiteColor1,
-            borderRadius: BorderRadius.circular(32),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.1),
-                blurRadius: 5.0,
-                spreadRadius: 1.0,
-                offset: const Offset(5, 5), // 그림자의 위치
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Gap(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    '이상형 설정하기',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(fontSize: 27),
+                  ),
+                  const SizedBox(width: 20),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.double_arrow_rounded,
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const KeywordSettingPage(),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+              const Gap(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GenderButton(
+                    onGenderSelected: (selectedValue) {
+                      genderInt = selectedValue;
+                      if (genderInt == 1) {
+                        genderString = "남";
+                      } else {
+                        genderString = "여";
+                      }
+                      print(genderString);
+                    },
+                  ),
+                ],
+              ),
+              const Gap(),
+              MbtiKeyWord(
+                title: 'mbti',
+                onMbtiSelected: (String mbti) {
+                  selectedMBTI = mbti;
+                },
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  NumberInputField(
+                    controller: minAgeController,
+                    hintText: '입력하기',
+                  ),
+                  const Icon(Icons.remove),
+                  NumberInputField(
+                    controller: maxAgeController,
+                    hintText: '입력하기',
+                  ),
+                ],
+              ),
+              const Gap(),
+              const Gap(),
+              Center(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF7EA5F3),
+                    minimumSize: const Size(300, 50),
+                  ),
+                  child: const Text('변경',
+                      style: TextStyle(
+                        color: Colors.white,
+                      )),
+                  onPressed: () async {
+                    settingModifyController.addToSettingArray(selectedMBTI);
+                    settingModifyController
+                        .addToSettingArray(maxAgeController.text);
+                    settingModifyController
+                        .addToSettingArray(minAgeController.text);
+                    settingModifyController.addToSettingArray(genderString);
+                    print(settingModifyController);
+
+                    if (selectedMBTI.isEmpty) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('mbti'),
+                            content: const Text('mbti가 비어있습니다.'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('확인'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    } else if (maxAgeController.text.isEmpty) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('최대나이'),
+                            content: const Text('최대나이가 비어있습니다.'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('확인'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    } else if (minAgeController.text.isEmpty) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('최소나이'),
+                            content: const Text('최소나이가 비어있습니다.'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('확인'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    } else if (genderString.isEmpty) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('성별'),
+                            content: const Text('성별이 비어있습니다.'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('확인'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    } else {
+                      await FriendSettingService.updateFriendMbtiSetting(
+                        accessToken,
+                        refreshToken,
+                        selectedMBTI,
+                        maxAgeController.text,
+                        minAgeController.text,
+                        genderString,
+                      );
+                      KeywordController.to.resetMBTI();
+                      print(selectedMBTI);
+                      Get.back();
+                    }
+                  },
+                ),
               ),
             ],
           ),
-          child: Obx(() {
-            return Padding(
-              padding: const EdgeInsets.all(10),
-              child: SizedBox(
-                child: CarouselSlider(
-                  items: List.generate(
-                        FindFriendController.to.matchingFriendInfoList.length,
-                        (infoIndex) {
-                          if (infoIndex >= sendingControllers.length) {
-                            sendingControllers.add(TextEditingController());
-                          }
-                          return Container(
-                            width: Get.width,
-                            margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(30),
-                                  child: Container(
-                                    height: Get.height - 360,
-                                    decoration: const BoxDecoration(
-                                      color: Colors.white,
-                                    ),
-                                    child: PageIndicatorContainer(
-                                      align: IndicatorAlign.bottom,
-                                      length: FindFriendController
-                                              .to
-                                              .matchingFriendImageList[
-                                                  infoIndex]
-                                              .length +
-                                          1,
-                                      indicatorSpace: 10.0,
-                                      padding: const EdgeInsets.all(10),
-                                      indicatorColor: Colors.white,
-                                      indicatorSelectorColor: Colors.blue,
-                                      shape: IndicatorShape.circle(size: 8),
-                                      child: PageView.builder(
-                                        controller: pageController,
-                                        itemCount: FindFriendController
-                                                .to
-                                                .matchingFriendImageList[
-                                                    infoIndex]
-                                                .length +
-                                            1,
-                                        itemBuilder: (context, imageIndex) {
-                                          if (imageIndex <
-                                              FindFriendController
-                                                  .to
-                                                  .matchingFriendImageList[
-                                                      infoIndex]
-                                                  .length) {
-                                            UserImage friendImage =
-                                                FindFriendController.to
-                                                        .matchingFriendImageList[
-                                                    infoIndex][imageIndex];
-                                            return Image.network(
-                                              friendImage.imagePath,
-                                              fit: BoxFit
-                                                  .cover, // 이미지가 컨테이너를 덮도록 설정
-                                            );
-                                          } else {
-                                            final analysis =
-                                                FindFriendController
-                                                    .to
-                                                    .matchingFriendInfoList[
-                                                        infoIndex]
-                                                    .analysis;
-                                            final displayText =
-                                                analysis != null &&
-                                                        analysis.isNotEmpty
-                                                    ? analysis
-                                                    : '분석 정보가 없습니다.';
-                                            return Container(
-                                              padding:
-                                                  const EdgeInsets.all(20.0),
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .center,
-                                                children: [
-                                                  const Text(
-                                                    '분석보기',
-                                                    style: TextStyle(
-                                                      fontSize: 24,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(
-                                                      height: 20),
-                                                  Text(
-                                                    displayText,
-                                                    style: const TextStyle(
-                                                        fontSize: 16),
-                                                    textAlign:
-                                                        TextAlign.center,
-                                                  ),
-                                                ],
-                                              ),
-                                            );
-                                          }
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 6),
-                                Row(
-                                  children: [
-                                    Text(
-                                      FindFriendController
-                                          .to
-                                          .matchingFriendInfoList[infoIndex]
-                                          .nickname,
-                                      style: blackTextStyle8,
-                                    ),
-                                    const SizedBox(width: 5),
-                                    Container(
-                                      width: 40,
-                                      height: 20,
-                                      decoration: BoxDecoration(
-                                        color: FindFriendController
-                                                    .to
-                                                    .matchingFriendInfoList[
-                                                        infoIndex]
-                                                    .gender ==
-                                                "남"
-                                            ? blueColor1
-                                            : pinkColor1,
-                                        borderRadius:
-                                            BorderRadius.circular(6),
-                                      ),
-                                      child: Center(
-                                        // 나이
-                                        child: Text(
-                                          '${FindFriendController.to.matchingFriendInfoList[infoIndex].age}세',
-                                          style: whiteTextStyle2,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 5),
-                                    Text(
-                                      FindFriendController
-                                          .to
-                                          .matchingFriendInfoList[infoIndex]
-                                          .myMBTI!,
-                                      style: blackTextStyle1,
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 5),
-                                SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.start,
-                                    children: FindFriendController
-                                        .to
-                                        .matchingFriendInfoList[infoIndex]
-                                        .myKeyword!
-                                        .split(',')
-                                        .map((item) => item.trim())
-                                        .map(
-                                          (item) => Padding(
-                                            padding: const EdgeInsets.all(8),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                                color: greyColor6,
-                                              ),
-                                              padding:
-                                                  const EdgeInsets.all(5),
-                                              child: Text(
-                                                item,
-                                                style: const TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                        .toList(),
-                                  ),
-                                ),
-                                const SizedBox(height: 5),
-                                IconTextFieldBox(
-                                  hintText: '간단하게 인사를 해봐요',
-                                  onPressed: () async {
-                                    if (sendingControllers[infoIndex]
-                                        .text
-                                        .isNotEmpty) {
-                                      await FriendController
-                                          .sendFriendRequest(
-                                        oppEmail: FindFriendController
-                                            .to
-                                            .matchingFriendInfoList[infoIndex]
-                                            .email,
-                                        content: sendingControllers[infoIndex]
-                                            .text,
-                                      );
-                                      sendingControllers[infoIndex].clear();
-                                      FriendController.getFriendSentRequest();
-                                    }
-                                  },
-                                  textEditingController:
-                                      sendingControllers[infoIndex],
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ) +
-                      [
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text(
-                                "더 많은 친구를 만나고 싶나요?",
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(height: 20),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: blueColor1,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(15)),
-                                ),
-                                onPressed: () async {
-                                  await FindFriendController.findFriends();
-                                  _carouselController.jumpToPage(0);
-                                  FocusScope.of(context).unfocus();
-                                },
-                                child: const Text("친구 찾아보기",style: TextStyle(color: Colors.white),),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                  options: CarouselOptions(
-                    scrollDirection: Axis.vertical,
-                    viewportFraction: 1,
-                    enableInfiniteScroll: false,
-                  ),
-                  carouselController: _carouselController,
-                ),
-              ),
-            );
-          }),
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    for (var controller in sendingControllers) {
-      controller.dispose();
-    }
-    super.dispose();
   }
 }

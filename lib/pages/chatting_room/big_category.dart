@@ -83,6 +83,7 @@ Widget bigCategory() {
                           children: [
                             const Spacer(),
                             Image.network(
+
                               bigCategory.eventImage!.filepath,
                               width: 30,
                               height: 30,
