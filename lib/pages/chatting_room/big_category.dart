@@ -73,13 +73,20 @@ Widget bigCategory() {
                           minimumSize: Size(Get.width * 0.3, 30),
                         ),
                         onPressed: () {
-                          ChattingController.to.bigCategoryName=bigCategory.name;
+                          ChattingController.to.bigCategoryName =
+                              bigCategory.name;
                           ChattingController.to.showSecondGridView.value = true;
                         },
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             const Spacer(),
-                            Image.network(bigCategory.eventImage!),
+                            Image.network(
+                              bigCategory.eventImage!.filepath,
+                              width: 30,
+                              height: 30,
+                            ),
                             const SizedBox(
                               height: 10,
                             ),

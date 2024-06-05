@@ -37,11 +37,11 @@ Widget FriendProfilePage({
         else {
           return Container(
             padding: const EdgeInsets.all(10),
-            width: Get.width * 0.6,
-            height: Get.height * 0.6,
+            width: Get.width * 0.7,
+            height: Get.height * 0.7,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              color: Colors.white.withOpacity(0.7),
+              color: Colors.white
             ),
             child: Column(
               children: [
@@ -103,10 +103,6 @@ Widget FriendProfilePage({
                 const SizedBox(
                   height: 10,
                 ),
-                const Divider(),
-                const SizedBox(
-                  height: 10,
-                ),
                 // 친구의 사진 보여주는 슬라이더
                 // http 요청을 통해 이미지 정보 못받으면 검정 화면
                 Expanded(
@@ -135,29 +131,31 @@ Widget FriendProfilePage({
                     ),
                   ),
                 ),
-
                 const SizedBox(
                   height: 10,
                 ),
-                Wrap(
-                  spacing: 8.0, // 수평 간격
-                  runSpacing: 4.0, // 수직 간격
-                  children: userData.myKeyword
-                      .split(',')
-                      .map((item) => item.trim()) // 공백 제거
-                      .map((item) => Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: blueColor1,
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  child: Wrap(
+                    spacing: 2.0, // 수평 간격
+                    runSpacing: 2.0, // 수직 간격
+                    children: userData.myKeyword
+                        .split(',')
+                        .map((item) => item.trim()) // 공백 제거
+                        .map((item) => Padding(
+                              padding: const EdgeInsets.all(4),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: greyColor6,
+                                ),
+                                padding: const EdgeInsets.all(4),
+                                child: Text(item,
+                                    style: const TextStyle(color: Colors.white)),
                               ),
-                              padding: const EdgeInsets.all(5),
-                              child: Text(item,
-                                  style: const TextStyle(color: Colors.white)),
-                            ),
-                          ))
-                      .toList(),
+                            ))
+                        .toList(),
+                  ),
                 ),
                 // 채팅방 이동 버튼
                 ColorBottomButton(
