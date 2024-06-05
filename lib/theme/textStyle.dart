@@ -52,6 +52,12 @@ const whiteTextStyle2 = TextStyle(
   fontWeight: FontWeight.w500, // Medium 처리
 );
 
+const whiteTextStyle4 = TextStyle(
+  fontSize: 12,
+  color: whiteColor1,
+  fontFamily: 'NotoSansKR',
+  fontWeight: FontWeight.w700, // Medium 처리
+);
 const whiteTextStyle3 = TextStyle(
   fontSize: 20,
   color: whiteColor1,
@@ -144,8 +150,6 @@ const blackTextStyle8 = TextStyle(
   fontFamily: 'NotoSansKR',
   fontWeight: FontWeight.w700, // Medium 처리
 );
-
-
 
 const pinkTextStyle1 = TextStyle(
   fontSize: 16,
