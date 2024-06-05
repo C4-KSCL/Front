@@ -2,6 +2,7 @@
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:frontend_matching/components/gap.dart';
 import 'package:frontend_matching/components/genderButton.dart';
 import 'package:frontend_matching/components/mbtiKeyword.dart';
@@ -135,185 +136,194 @@ class _MainPageState extends State<MainPage> {
                         return Container(
                           width: Get.width,
                           margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                height: Get.height - 360,
-                                child: PageIndicatorContainer(
-                                  align: IndicatorAlign.bottom,
-                                  length: FindFriendController
-                                          .to
-                                          .matchingFriendImageList[infoIndex]
-                                          .length +
-                                      1,
-                                  indicatorSpace: 10.0,
-                                  padding: const EdgeInsets.all(10),
-                                  indicatorColor: Colors.white,
-                                  indicatorSelectorColor: Colors.blue,
-                                  shape: IndicatorShape.circle(size: 8),
-                                  child: PageView.builder(
-                                    controller: pageController,
-                                    itemCount: FindFriendController
+                          child: SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  height: Get.height - 360,
+                                  child: PageIndicatorContainer(
+                                    align: IndicatorAlign.bottom,
+                                    length: FindFriendController
                                             .to
                                             .matchingFriendImageList[infoIndex]
                                             .length +
                                         1,
-                                    itemBuilder: (context, imageIndex) {
-                                      if (imageIndex <
-                                          FindFriendController
+                                    indicatorSpace: 10.0,
+                                    padding: const EdgeInsets.all(10),
+                                    indicatorColor: Colors.white,
+                                    indicatorSelectorColor: Colors.blue,
+                                    shape: IndicatorShape.circle(size: 8),
+                                    child: PageView.builder(
+                                      controller: pageController,
+                                      itemCount: FindFriendController
                                               .to
                                               .matchingFriendImageList[
                                                   infoIndex]
-                                              .length) {
-                                        UserImage friendImage =
+                                              .length +
+                                          1,
+                                      itemBuilder: (context, imageIndex) {
+                                        if (imageIndex <
                                             FindFriendController
-                                                    .to.matchingFriendImageList[
-                                                infoIndex][imageIndex];
-                                        return Image.network(
-                                          friendImage.imagePath,
-                                          fit: BoxFit.cover,
-                                        );
-                                      } else {
-                                        final analysis = FindFriendController
+                                                .to
+                                                .matchingFriendImageList[
+                                                    infoIndex]
+                                                .length) {
+                                          UserImage friendImage =
+                                              FindFriendController.to
+                                                      .matchingFriendImageList[
+                                                  infoIndex][imageIndex];
+                                          return Image.network(
+                                            friendImage.imagePath,
+                                            fit: BoxFit.cover,
+                                          );
+                                        } else {
+                                          final analysis = FindFriendController
+                                              .to
+                                              .matchingFriendInfoList[infoIndex]
+                                              .analysis;
+                                          final displayText =
+                                              analysis != null &&
+                                                      analysis.isNotEmpty
+                                                  ? analysis
+                                                  : '분석 정보가 없습니다.';
+                                          return Container(
+                                            padding: const EdgeInsets.all(20.0),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  '분석보기',
+                                                  style: TextStyle(
+                                                    fontSize: 24,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                SizedBox(height: 20),
+                                                SingleChildScrollView(
+                                                  child: Text(
+                                                    displayText,
+                                                    style:
+                                                        TextStyle(fontSize: 16),
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 6,
+                                ),
+                                SingleChildScrollView(
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        FindFriendController
                                             .to
                                             .matchingFriendInfoList[infoIndex]
-                                            .analysis;
-                                        final displayText = analysis != null &&
-                                                analysis.isNotEmpty
-                                            ? analysis
-                                            : '분석 정보가 없습니다.';
-                                        return Container(
-                                          padding: const EdgeInsets.all(20.0),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                '분석보기',
-                                                style: TextStyle(
-                                                  fontSize: 24,
-                                                  fontWeight: FontWeight.bold,
+                                            .nickname,
+                                        style: blackTextStyle8,
+                                      ),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                      Container(
+                                        width: 40,
+                                        height: 20,
+                                        decoration: BoxDecoration(
+                                          color: FindFriendController
+                                                      .to
+                                                      .matchingFriendInfoList[
+                                                          infoIndex]
+                                                      .gender ==
+                                                  "남"
+                                              ? blueColor1
+                                              : pinkColor1,
+                                          borderRadius:
+                                              BorderRadius.circular(6),
+                                        ),
+                                        child: Center(
+                                            child: Text(
+                                          '${FindFriendController.to.matchingFriendInfoList[infoIndex].age}세',
+                                          style: whiteTextStyle2,
+                                        )),
+                                      ),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                      Text(
+                                        FindFriendController
+                                            .to
+                                            .matchingFriendInfoList[infoIndex]
+                                            .myMBTI!,
+                                        style: blackTextStyle1,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: FindFriendController
+                                        .to
+                                        .matchingFriendInfoList[infoIndex]
+                                        .myKeyword!
+                                        .split(',')
+                                        .map((item) => item.trim()) // 공백 제거
+                                        .map((item) => Padding(
+                                              padding: const EdgeInsets.all(8),
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                  color: blueColor1,
                                                 ),
+                                                padding:
+                                                    const EdgeInsets.all(5),
+                                                child: Text(item,
+                                                    style: const TextStyle(
+                                                        color: Colors.white)),
                                               ),
-                                              SizedBox(height: 20),
-                                              SingleChildScrollView(
-                                                child: Text(
-                                                  displayText,
-                                                  style:
-                                                      TextStyle(fontSize: 16),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
+                                            ))
+                                        .toList(),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                IconTextFieldBox(
+                                    hintText: '간단하게 인사를 해봐요',
+                                    onPressed: () async {
+                                      if (sendingControllers[infoIndex]
+                                          .text
+                                          .isNotEmpty) {
+                                        await FriendController
+                                            .sendFriendRequest(
+                                          oppEmail: FindFriendController
+                                              .to
+                                              .matchingFriendInfoList[infoIndex]
+                                              .email,
+                                          content: sendingControllers[infoIndex]
+                                              .text,
                                         );
+                                        sendingControllers[infoIndex].clear();
+                                        FriendController.getFriendSentRequest();
                                       }
                                     },
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 6,
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    FindFriendController
-                                        .to
-                                        .matchingFriendInfoList[infoIndex]
-                                        .nickname,
-                                    style: blackTextStyle8,
-                                  ),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                  Container(
-                                    width: 40,
-                                    height: 20,
-                                    decoration: BoxDecoration(
-                                      color: FindFriendController
-                                                  .to
-                                                  .matchingFriendInfoList[
-                                                      infoIndex]
-                                                  .gender ==
-                                              "남"
-                                          ? blueColor1
-                                          : pinkColor1,
-                                      borderRadius: BorderRadius.circular(6),
-                                    ),
-                                    child: Center(
-                                        child: Text(
-                                      '${FindFriendController.to.matchingFriendInfoList[infoIndex].age}세',
-                                      style: whiteTextStyle2,
-                                    )),
-                                  ),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                  Text(
-                                    FindFriendController
-                                        .to
-                                        .matchingFriendInfoList[infoIndex]
-                                        .myMBTI!,
-                                    style: blackTextStyle1,
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: FindFriendController
-                                      .to
-                                      .matchingFriendInfoList[infoIndex]
-                                      .myKeyword!
-                                      .split(',')
-                                      .map((item) => item.trim()) // 공백 제거
-                                      .map((item) => Padding(
-                                            padding: const EdgeInsets.all(8),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                                color: blueColor1,
-                                              ),
-                                              padding: const EdgeInsets.all(5),
-                                              child: Text(item,
-                                                  style: const TextStyle(
-                                                      color: Colors.white)),
-                                            ),
-                                          ))
-                                      .toList(),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              IconTextFieldBox(
-                                  hintText: '간단하게 인사를 해봐요',
-                                  onPressed: () async {
-                                    if (sendingControllers[infoIndex]
-                                        .text
-                                        .isNotEmpty) {
-                                      await FriendController.sendFriendRequest(
-                                        oppEmail: FindFriendController
-                                            .to
-                                            .matchingFriendInfoList[infoIndex]
-                                            .email,
-                                        content:
-                                            sendingControllers[infoIndex].text,
-                                      );
-                                      sendingControllers[infoIndex].clear();
-                                      FriendController.getFriendSentRequest();
-                                    }
-                                  },
-                                  textEditingController:
-                                      sendingControllers[infoIndex]),
-                            ],
+                                    textEditingController:
+                                        sendingControllers[infoIndex]),
+                              ],
+                            ),
                           ),
                         );
                       }) +

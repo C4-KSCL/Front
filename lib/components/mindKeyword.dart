@@ -40,7 +40,7 @@ class _MindKeyWordState extends State<MindKeyWord> {
                   "차분함",
                   "열정적",
                   "현실적",
-                  "감상적",
+                  "감성적",
                 ],
                 onSelected: (keyword, i, selected) {
                   setState(() {

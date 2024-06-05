@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:frontend_matching/controllers/bottomNavigationBar.dart';
 import 'package:frontend_matching/controllers/chatting_list_controller.dart';
 import 'package:frontend_matching/controllers/find_friend_controller.dart';
 import 'package:frontend_matching/controllers/friend_controller.dart';
@@ -128,7 +130,6 @@ class UserDataController extends GetxController {
       print(loginUserData['refreshToken']);
 
       // 필요한 데이터 가져오기
-      //await FindFriendController.findFriends();
       await FriendController.getFriendList();
       await FriendController.getFriendReceivedRequest();
       await FriendController.getFriendSentRequest();
@@ -154,6 +155,7 @@ class UserDataController extends GetxController {
     FriendController.to.resetData();
     ChattingListController.to.resetData();
     FindFriendController.to.previousFriendImageList.clear();
+    BottomNavigationBarController.to.selectedIndex.value = 0;
     ////////////////수정 필요 //////////////////////////
 
     Get.offNamed('/login');

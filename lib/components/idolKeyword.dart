@@ -36,7 +36,6 @@ class _IdolKeyWordState extends State<IdolKeyWord> {
                   "세븐틴",
                   "아이브",
                   "트와이스",
-                  "배드민턴",
                   "블랙핑크",
                   "에스파",
                   "NCT",

@@ -285,7 +285,6 @@ class _InfoModifyPageState extends State<InfoModifyPage> {
                           String nickname = nicknameController.text;
                           String phoneNumber = phoneNumberController.text;
                           String age = ageController.text;
-                          print('check');
                           print(phoneNumber);
                           if (password.isNotEmpty &&
                               nickname.isNotEmpty &&
