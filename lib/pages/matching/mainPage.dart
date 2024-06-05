@@ -145,7 +145,7 @@ class _MainPageState extends State<MainPage> {
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(30),
                                     child: Container(
-                                      height: Get.height - 340,
+                                      height: Get.height - 360,
                                       decoration: const BoxDecoration(
                                         color: Colors.white,
                                       ),

@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:frontend_matching/controllers/user_data_controller.dart';
-import 'package:frontend_matching/models/user.dart';
-import 'package:frontend_matching/models/userImage.dart';
-import 'package:frontend_matching/pages/init_page.dart';
-import 'package:frontend_matching/pages/matching/mainPage.dart';
-import 'package:frontend_matching/pages/matching/mbtiSettingPage.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import '../config.dart';
+import '../models/user.dart';
+import '../models/userImage.dart';
+import '../controllers/user_data_controller.dart';
 
 List<User> users = [];
 
@@ -22,15 +18,20 @@ class FindFriendController extends GetxController {
   RxList<User> matchingFriendInfoList = RxList<User>();
   RxList<List<UserImage>> matchingFriendImageList = RxList<List<UserImage>>();
   RxList<List<UserImage>> previousFriendImageList = RxList<List<UserImage>>();
+  RxBool isLoading = false.obs;
 
   static Future<void> findFriends() async {
+    if (to.isLoading.value) return; //로딩즁이면 다시 리턴
+
     final url = Uri.parse('$baseUrl/findfriend/friend-matching');
     Get.put(UserDataController());
     UserDataController userDataController = Get.find();
 
+    to.isLoading.value = true;
+
     // matchingFriendList 비우기
-    FindFriendController.to.matchingFriendImageList.clear();
-    FindFriendController.to.matchingFriendInfoList.clear();
+    to.matchingFriendImageList.clear();
+    to.matchingFriendInfoList.clear();
 
     var response = await _getRequest(url, userDataController.accessToken);
 
@@ -60,6 +61,7 @@ class FindFriendController extends GetxController {
         print(response.body);
         Get.snackbar('실패', '로그인이 필요합니다.');
         userDataController.logout();
+        to.isLoading.value = false;
         return;
       }
     }
@@ -72,9 +74,9 @@ class FindFriendController extends GetxController {
       // users 배열을 User 객체의 리스트로 변환
       users =
           List.from(friendsData['users'].map((data) => User.fromJson(data)));
-      FindFriendController.to.previousFriendImageList.clear();
+      to.previousFriendImageList.clear();
       for (User user in users) {
-        FindFriendController.to.matchingFriendInfoList.add(user);
+        to.matchingFriendInfoList.add(user);
         List<UserImage> images = [];
         if (friendsData['images'] != null) {
           List<UserImage> userImages = List.from(
@@ -85,8 +87,8 @@ class FindFriendController extends GetxController {
             }
           }
         }
-        FindFriendController.to.matchingFriendImageList.add(images);
-        FindFriendController.to.previousFriendImageList.add(images);
+        to.matchingFriendImageList.add(images);
+        to.previousFriendImageList.add(images);
       }
     } else if (response.statusCode == 400) {
       _showErrorDialog(
@@ -101,6 +103,7 @@ class FindFriendController extends GetxController {
     } else {
       print('${response.statusCode} ${response.body}');
     }
+    to.isLoading.value = false;
   }
 
   static Future<void> _showErrorDialog({
@@ -117,10 +120,9 @@ class FindFriendController extends GetxController {
             TextButton(
               onPressed: () {
                 for (User user in users) {
-                  FindFriendController.to.matchingFriendInfoList.add(user);
+                  to.matchingFriendInfoList.add(user);
                 }
-                FindFriendController.to.matchingFriendImageList
-                    .addAll(FindFriendController.to.previousFriendImageList);
+                to.matchingFriendImageList.addAll(to.previousFriendImageList);
                 Navigator.of(context).pop();
               },
               child: const Text('확인'),

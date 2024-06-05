@@ -13,7 +13,8 @@ class _FindFriendsPageState extends State<FindFriendsPage> {
   @override
   void initState() {
     super.initState();
-    if (FindFriendController.to.matchingFriendInfoList.isEmpty) {
+    if (FindFriendController.to.matchingFriendInfoList.isEmpty &&
+        !FindFriendController.to.isLoading.value) {
       FindFriendController.findFriends();
     }
   }
@@ -22,7 +23,9 @@ class _FindFriendsPageState extends State<FindFriendsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Obx(() {
-        if (FindFriendController.to.matchingFriendInfoList.isEmpty) {
+        if (FindFriendController.to.isLoading.value) {
+          return const LoadingPage();
+        } else if (FindFriendController.to.matchingFriendInfoList.isEmpty) {
           return const LoadingPage();
         } else {
           return const MainPage();
