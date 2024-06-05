@@ -291,7 +291,7 @@ class _MainPageState extends State<MainPage> {
                                           .matchingFriendInfoList[infoIndex]
                                           .myKeyword!
                                           .split(',')
-                                          .map((item) => item.trim()) // 공백 제거
+                                          .map((item) => item.trim())
                                           .map(
                                             (item) => Padding(
                                               padding: const EdgeInsets.all(8),
