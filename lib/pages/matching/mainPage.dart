@@ -73,7 +73,7 @@ class _MainPageState extends State<MainPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ImageModifyPage(),
+        builder: (context) => const ImageModifyPage(),
       ),
     );
   }
@@ -94,13 +94,13 @@ class _MainPageState extends State<MainPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => MbtiSettingPage(),
+                  builder: (context) => const MbtiSettingPage(),
                 ),
               );
             },
-            icon: Icon(Icons.settings_rounded),
+            icon: const Icon(Icons.settings_rounded),
           ),
-          SizedBox(width: 20),
+          const SizedBox(width: 20),
         ],
         elevation: 0.0,
         titleTextStyle:
@@ -352,19 +352,24 @@ class _MainPageState extends State<MainPage> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
+                              const Text(
                                 "더 많은 친구를 만나고 싶나요?",
                                 style: TextStyle(
                                     fontSize: 20, fontWeight: FontWeight.bold),
                               ),
-                              SizedBox(height: 20),
+                              const SizedBox(height: 20),
                               ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: blueColor1,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15)),
+                                ),
                                 onPressed: () async {
                                   await FindFriendController.findFriends();
                                   _carouselController.jumpToPage(0);
                                   FocusScope.of(context).unfocus();
                                 },
-                                child: Text("친구 찾기 시작하기"),
+                                child: const Text("친구 찾아보기",style: TextStyle(color: Colors.white, fontSize: 18,),),
                               ),
                             ],
                           ),
