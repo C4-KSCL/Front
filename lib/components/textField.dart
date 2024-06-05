@@ -182,7 +182,7 @@ class NumberInputField extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Container(
-      width: screenWidth * 0.37,
+      width: screenWidth * 0.34,
       padding: EdgeInsets.symmetric(horizontal: 40.0),
       margin: EdgeInsets.all(20.0),
       decoration: BoxDecoration(

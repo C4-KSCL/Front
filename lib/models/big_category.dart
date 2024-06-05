@@ -1,7 +1,7 @@
 class BigCategory {
   final String name;
-  final int? imageId; // imageId
-  final String? eventImage; // imageUrl
+  final int? imageId;
+  final EventImage? eventImage;
 
   BigCategory({
     required this.name,
@@ -9,21 +9,39 @@ class BigCategory {
     this.eventImage,
   });
 
-  // JSON에서 EventModel 객체로 변환하는 팩토리 생성자
   factory BigCategory.fromJson(Map<String, dynamic> json) {
     return BigCategory(
       name: json['name'],
       imageId: json['imageId'],
-      eventImage: json['eventImage'],
+      eventImage: json['eventImage'] != null
+          ? EventImage.fromJson(json['eventImage'])
+          : null,
     );
   }
 
-  // EventModel 객체에서 JSON으로 변환하는 메서드
   Map<String, dynamic> toJson() {
     return {
       'name': name,
       'imageId': imageId,
-      'eventImage': eventImage,
+      'eventImage': eventImage?.toJson(),
+    };
+  }
+}
+
+class EventImage {
+  final String filepath;
+
+  EventImage({required this.filepath});
+
+  factory EventImage.fromJson(Map<String, dynamic> json) {
+    return EventImage(
+      filepath: json['filepath'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'filepath': filepath,
     };
   }
 }

@@ -10,7 +10,6 @@ import 'package:frontend_matching/pages/matching/keywordSettingPage.dart';
 import 'package:frontend_matching/services/friend_setting.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 class MbtiSettingPage extends StatefulWidget {
   const MbtiSettingPage({super.key});
@@ -71,187 +70,187 @@ class _MbtiSettingPageState extends State<MbtiSettingPage> {
         titleTextStyle:
             const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
         backgroundColor: Colors.white,
-        actions: [
-          IconButton(icon: const Icon(Icons.home), onPressed: () => {}),
-          IconButton(icon: const Icon(Icons.search), onPressed: () => {})
-        ],
       ),
       backgroundColor: blueColor5,
       body: SingleChildScrollView(
         child: Center(
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            const Gap(),
-            Row(
-              children: [
-                const Text(
-                  '    이상형 설정하기',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(fontSize: 27),
-                ),
-                const SizedBox(width: 100),
-                IconButton(
-                  icon: const Icon(
-                    Icons.double_arrow_rounded,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Gap(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    '이상형 설정하기',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(fontSize: 27),
                   ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const KeywordSettingPage(),
-                      ),
-                    );
-                  },
-                )
-              ],
-            ),
-            const Gap(),
-            Row(
-              children: [
-                const SizedBox(width: 50),
-                GenderButton(
-                  onGenderSelected: (selectedValue) {
-                    genderInt = selectedValue;
-                    if (genderInt == 1) {
-                      genderString = "남";
-                    } else {
-                      genderString = "여";
-                    }
-                    print(genderString);
-                  },
-                ),
-              ],
-            ),
-            const Gap(),
-            MbtiKeyWord(
-              title: 'mbti',
-              onMbtiSelected: (String mbti) {
-                selectedMBTI = mbti;
-              },
-            ),
-            Row(
-              children: [
-                NumberInputField(
-                  controller: minAgeController,
-                  hintText: '입력하기',
-                ),
-                const Icon(Icons.remove),
-                NumberInputField(
-                  controller: maxAgeController,
-                  hintText: '입력하기',
-                ),
-              ],
-            ),
-            const Gap(),
-            const Gap(),
-            Center(
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF7EA5F3),
-                  minimumSize: const Size(300, 50),
-                ),
-                child: const Text('변경',
-                    style: TextStyle(
-                      color: Colors.white,
-                    )),
-                onPressed: () async {
-                  settingModifyController.addToSettingArray(selectedMBTI);
-                  settingModifyController
-                      .addToSettingArray(maxAgeController.text);
-                  settingModifyController
-                      .addToSettingArray(minAgeController.text);
-                  settingModifyController.addToSettingArray(genderString);
-                  print(settingModifyController);
-
-                  if (selectedMBTI.isEmpty) {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text('mbti'),
-                          content: const Text('mbti가 비어있습니다.'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: const Text('확인'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  } else if (maxAgeController.text.isEmpty) {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text('최대나이'),
-                          content: const Text('최대나이가 비어있습니다.'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: const Text('확인'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  } else if (minAgeController.text.isEmpty) {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text('최소나이'),
-                          content: const Text('최소나이가 비어있습니다.'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: const Text('확인'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  } else if (genderString.isEmpty) {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text('성별'),
-                          content: const Text('성별이 비어있습니다.'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: const Text('확인'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  } else {
-                    await FriendSettingService.updateFriendMbtiSetting(
-                      accessToken,
-                      refreshToken,
-                      selectedMBTI,
-                      maxAgeController.text,
-                      minAgeController.text,
-                      genderString,
-                    );
-                    KeywordController.to.resetMBTI();
-                    print(selectedMBTI);
-                    Get.back();
-                  }
+                  const SizedBox(width: 20),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.double_arrow_rounded,
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const KeywordSettingPage(),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+              const Gap(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GenderButton(
+                    onGenderSelected: (selectedValue) {
+                      genderInt = selectedValue;
+                      if (genderInt == 1) {
+                        genderString = "남";
+                      } else {
+                        genderString = "여";
+                      }
+                      print(genderString);
+                    },
+                  ),
+                ],
+              ),
+              const Gap(),
+              MbtiKeyWord(
+                title: 'mbti',
+                onMbtiSelected: (String mbti) {
+                  selectedMBTI = mbti;
                 },
               ),
-            ),
-          ]),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  NumberInputField(
+                    controller: minAgeController,
+                    hintText: '입력하기',
+                  ),
+                  const Icon(Icons.remove),
+                  NumberInputField(
+                    controller: maxAgeController,
+                    hintText: '입력하기',
+                  ),
+                ],
+              ),
+              const Gap(),
+              const Gap(),
+              Center(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF7EA5F3),
+                    minimumSize: const Size(300, 50),
+                  ),
+                  child: const Text('변경',
+                      style: TextStyle(
+                        color: Colors.white,
+                      )),
+                  onPressed: () async {
+                    settingModifyController.addToSettingArray(selectedMBTI);
+                    settingModifyController
+                        .addToSettingArray(maxAgeController.text);
+                    settingModifyController
+                        .addToSettingArray(minAgeController.text);
+                    settingModifyController.addToSettingArray(genderString);
+                    print(settingModifyController);
+
+                    if (selectedMBTI.isEmpty) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('mbti'),
+                            content: const Text('mbti가 비어있습니다.'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('확인'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    } else if (maxAgeController.text.isEmpty) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('최대나이'),
+                            content: const Text('최대나이가 비어있습니다.'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('확인'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    } else if (minAgeController.text.isEmpty) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('최소나이'),
+                            content: const Text('최소나이가 비어있습니다.'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('확인'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    } else if (genderString.isEmpty) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('성별'),
+                            content: const Text('성별이 비어있습니다.'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('확인'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    } else {
+                      await FriendSettingService.updateFriendMbtiSetting(
+                        accessToken,
+                        refreshToken,
+                        selectedMBTI,
+                        maxAgeController.text,
+                        minAgeController.text,
+                        genderString,
+                      );
+                      KeywordController.to.resetMBTI();
+                      print(selectedMBTI);
+                      Get.back();
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

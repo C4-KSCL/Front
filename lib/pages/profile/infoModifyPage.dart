@@ -104,20 +104,6 @@ class _InfoModifyPageState extends State<InfoModifyPage> {
               Get.back();
             },
           ),
-          actions: [
-            IconButton(
-                icon: const Icon(
-                  Icons.home,
-                  color: Colors.white,
-                ),
-                onPressed: () => {}),
-            IconButton(
-                icon: const Icon(
-                  Icons.search,
-                  color: Colors.white,
-                ),
-                onPressed: () => {})
-          ],
         ),
         backgroundColor: blueColor3,
         body: SingleChildScrollView(

@@ -207,6 +207,8 @@ class _MainPageState extends State<MainPage> {
                                                         MainAxisAlignment
                                                             .center,
                                                     children: [
+                                                      const SizedBox(
+                                                          height: 50),
                                                       const Text(
                                                         '분석보기',
                                                         style: TextStyle(
@@ -216,7 +218,7 @@ class _MainPageState extends State<MainPage> {
                                                         ),
                                                       ),
                                                       const SizedBox(
-                                                          height: 20),
+                                                          height: 30),
                                                       Text(
                                                         displayText,
                                                         style: const TextStyle(
