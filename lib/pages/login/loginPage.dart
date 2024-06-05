@@ -24,7 +24,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _checkAutoLogin() async {
-    // 자동 로그인 여부 확인
+    // 자동 로그인 여부 확인하기
     String? isAutoLogin = await AppConfig.storage.read(key: "isAutoLogin");
     // 자동 로그인이 설정된 경우
     if (isAutoLogin == "true") {
