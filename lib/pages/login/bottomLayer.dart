@@ -60,16 +60,16 @@ class _BottomLayerLoginScreenState extends State<BottomLayerLoginScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  TextButton(
-                      onPressed: () {},
-                      child: const Text(
-                        '이메일 찾기',
-                        style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w800,
-                            decoration: TextDecoration.underline),
-                      )),
+                  // TextButton(
+                  //     onPressed: () {},
+                  //     child: const Text(
+                  //       '이메일 찾기',
+                  //       style: TextStyle(
+                  //           color: Colors.grey,
+                  //           fontSize: 14,
+                  //           fontWeight: FontWeight.w800,
+                  //           decoration: TextDecoration.underline),
+                  //     )),
                   TextButton(
                       onPressed: () {
                         Navigator.push(

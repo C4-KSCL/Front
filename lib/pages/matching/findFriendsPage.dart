@@ -11,21 +11,19 @@ class FindFriendsPage extends StatefulWidget {
 
 class _FindFriendsPageState extends State<FindFriendsPage> {
   @override
+  void initState() {
+    super.initState();
+    if (FindFriendController.to.matchingFriendInfoList.isEmpty) {
+      FindFriendController.findFriends();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Obx(() {
         if (FindFriendController.to.matchingFriendInfoList.isEmpty) {
-          return FutureBuilder(
-              future: FindFriendController.findFriends(),
-              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const LoadingPage();
-                } else if (snapshot.hasError) {
-                  return Text("${snapshot.error}");
-                } else {
-                  return const MainPage();
-                }
-              });
+          return const LoadingPage();
         } else {
           return const MainPage();
         }

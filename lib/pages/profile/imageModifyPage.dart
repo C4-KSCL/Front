@@ -12,7 +12,9 @@ import 'package:image/image.dart' as img;
 import 'dart:ui' as ui;
 
 class ImageModifyPage extends StatefulWidget {
-  const ImageModifyPage({Key? key}) : super(key: key);
+  final double? aspectRatio;
+
+  const ImageModifyPage({Key? key, this.aspectRatio}) : super(key: key);
 
   @override
   State<ImageModifyPage> createState() => _ImageModifyPageState();
@@ -62,7 +64,7 @@ class _ImageModifyPageState extends State<ImageModifyPage> {
           height: 400,
           child: CropImage(
             controller: cropController!,
-            image: Image.file(imageFile!, fit: BoxFit.cover),
+            image: Image.file(imageFile!, fit: BoxFit.contain),
             gridColor: Colors.white70,
             paddingSize: 20,
             touchSize: 30,
@@ -110,13 +112,13 @@ class _ImageModifyPageState extends State<ImageModifyPage> {
     final file = File(filePath);
     await file.writeAsBytes(buffer);
 
-    // 이미지를 고정된 크기로 리사이즈
-    final fixedWidth = 400; // 원하는 고정된 너비
-    final fixedHeight = 800; // 원하는 고정된 높이
-    final image = img.decodeImage(file.readAsBytesSync());
-    final resizedImage =
-        img.copyResize(image!, width: fixedWidth, height: fixedHeight);
-    file.writeAsBytesSync(img.encodePng(resizedImage));
+    // // 이미지를 고정된 크기로 리사이즈
+    // const fixedWidth = 400; // 원하는 고정된 너비
+    // const fixedHeight = 800; // 원하는 고정된 높이
+    // final image = img.decodeImage(file.readAsBytesSync());
+    // final resizedImage =
+    //     img.copyResize(image!, width: fixedWidth, height: fixedHeight);
+    // file.writeAsBytesSync(img.encodePng(resizedImage));
 
     await UserImageController().addImage(XFile(file.path));
     setState(() {
