@@ -44,7 +44,7 @@ class _HobbyKeyWordState extends State<HobbyKeyWord> {
                   "카페",
                   "드라마",
                   "미술관",
-                  "유투브",
+                  "유튜브",
                 ],
                 onSelected: (keyword, i, selected) {
                   setState(() {

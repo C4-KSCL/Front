@@ -66,7 +66,6 @@ class FindFriendController extends GetxController {
 
     if (response.statusCode == 200) {
       final friendsData = jsonDecode(response.body);
-      print('check');
       print(friendsData['users']);
       print(friendsData['images']);
 

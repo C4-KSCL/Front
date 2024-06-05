@@ -38,7 +38,7 @@ class _ImageModifyPageState extends State<ImageModifyPage> {
       setState(() {
         imageFile = File(pickedFile.path);
         cropController = CropController(
-          aspectRatio: 0.5, // 가로:세로 비율을 1:2로 설정
+          aspectRatio: 0.5,
           defaultCrop: Rect.fromCenter(
             center: const Offset(0.5, 0.5),
             width: 0.98,
@@ -62,7 +62,7 @@ class _ImageModifyPageState extends State<ImageModifyPage> {
           height: 400,
           child: CropImage(
             controller: cropController!,
-            image: Image.file(imageFile!, fit: BoxFit.contain),
+            image: Image.file(imageFile!, fit: BoxFit.cover),
             gridColor: Colors.white70,
             paddingSize: 20,
             touchSize: 30,
