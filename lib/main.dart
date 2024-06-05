@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:frontend_matching/controllers/bottomNavigationBar.dart';
 import 'package:frontend_matching/controllers/fcm_controller.dart';
+import 'package:frontend_matching/controllers/find_friend_controller.dart';
+import 'package:frontend_matching/controllers/keyword_controller.dart';
 import 'package:frontend_matching/pages/login/loginPage.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get.dart';
@@ -22,14 +25,14 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  
-  print(
-      "백그라운드 때 받은 FCM 내용: ${message.data} ${message.sentTime}");
+
+  print("백그라운드 때 받은 FCM 내용: ${message.data} ${message.sentTime}");
 }
 
 // main 함수
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   ///.env 파일 불러오기
   await dotenv.load(fileName: ".env");
   AppConfig.load();

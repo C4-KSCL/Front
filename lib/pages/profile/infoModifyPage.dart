@@ -285,7 +285,6 @@ class _InfoModifyPageState extends State<InfoModifyPage> {
                           String nickname = nicknameController.text;
                           String phoneNumber = phoneNumberController.text;
                           String age = ageController.text;
-                          print('check');
                           print(phoneNumber);
                           if (password.isNotEmpty &&
                               nickname.isNotEmpty &&
@@ -306,6 +305,7 @@ class _InfoModifyPageState extends State<InfoModifyPage> {
                                   actions: [
                                     TextButton(
                                       onPressed: () {
+                                        Navigator.pop(context);
                                         Navigator.pop(context);
                                       },
                                       child: const Text('확인'),

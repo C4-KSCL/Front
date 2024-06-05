@@ -6,16 +6,16 @@ import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get.dart';
 import 'package:group_button/group_button.dart';
 
-class HobbyKeyWord extends StatefulWidget {
+class MajorKeyWord extends StatefulWidget {
   final Function(List<String>) onKeywordsSelected;
 
-  HobbyKeyWord({Key? key, required this.onKeywordsSelected}) : super(key: key);
+  MajorKeyWord({Key? key, required this.onKeywordsSelected}) : super(key: key);
 
   @override
-  _HobbyKeyWordState createState() => _HobbyKeyWordState();
+  _MajorKeyWordState createState() => _MajorKeyWordState();
 }
 
-class _HobbyKeyWordState extends State<HobbyKeyWord> {
+class _MajorKeyWordState extends State<MajorKeyWord> {
   SignupController signupController = Get.find<SignupController>();
   final controller = GroupButtonController(selectedIndex: 20);
   List<String> selectedKeywords = [];
@@ -31,20 +31,18 @@ class _HobbyKeyWordState extends State<HobbyKeyWord> {
                 controller: controller,
                 isRadio: false,
                 buttons: [
-                  "책읽기",
-                  "영화보기",
-                  "롤",
-                  "피파",
-                  "배그",
-                  "음악감상",
-                  "여행",
-                  "등산",
-                  "사진",
-                  "요리",
-                  "카페",
-                  "드라마",
-                  "미술관",
-                  "유튜브",
+                  "공대",
+                  "의대",
+                  "미대",
+                  "약대",
+                  "인문대",
+                  "간호대",
+                  "경영대",
+                  "음대",
+                  "사회대",
+                  "자연대",
+                  "생활대",
+                  "체대",
                 ],
                 onSelected: (keyword, i, selected) {
                   setState(() {
@@ -71,7 +69,7 @@ class _HobbyKeyWordState extends State<HobbyKeyWord> {
               ),
               const SizedBox(
                 height: 30,
-              )
+              ),
             ],
           ),
         ),
