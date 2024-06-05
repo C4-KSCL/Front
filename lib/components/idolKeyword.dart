@@ -6,16 +6,16 @@ import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get.dart';
 import 'package:group_button/group_button.dart';
 
-class HobbyKeyWord extends StatefulWidget {
+class IdolKeyWord extends StatefulWidget {
   final Function(List<String>) onKeywordsSelected;
 
-  HobbyKeyWord({Key? key, required this.onKeywordsSelected}) : super(key: key);
+  IdolKeyWord({Key? key, required this.onKeywordsSelected}) : super(key: key);
 
   @override
-  _HobbyKeyWordState createState() => _HobbyKeyWordState();
+  _IdolKeyWordState createState() => _IdolKeyWordState();
 }
 
-class _HobbyKeyWordState extends State<HobbyKeyWord> {
+class _IdolKeyWordState extends State<IdolKeyWord> {
   SignupController signupController = Get.find<SignupController>();
   final controller = GroupButtonController(selectedIndex: 20);
   List<String> selectedKeywords = [];
@@ -31,20 +31,17 @@ class _HobbyKeyWordState extends State<HobbyKeyWord> {
                 controller: controller,
                 isRadio: false,
                 buttons: [
-                  "책읽기",
-                  "영화보기",
-                  "롤",
-                  "피파",
-                  "배그",
-                  "음악감상",
-                  "여행",
-                  "등산",
-                  "사진",
-                  "요리",
-                  "카페",
-                  "드라마",
-                  "미술관",
-                  "유투브",
+                  "프로미스나인",
+                  "BTS",
+                  "세븐틴",
+                  "아이브",
+                  "트와이스",
+                  "배드민턴",
+                  "블랙핑크",
+                  "에스파",
+                  "NCT",
+                  "레드벨벳",
+                  "ITZY",
                 ],
                 onSelected: (keyword, i, selected) {
                   setState(() {
@@ -71,7 +68,7 @@ class _HobbyKeyWordState extends State<HobbyKeyWord> {
               ),
               const SizedBox(
                 height: 30,
-              )
+              ),
             ],
           ),
         ),

@@ -307,6 +307,7 @@ class _InfoModifyPageState extends State<InfoModifyPage> {
                                     TextButton(
                                       onPressed: () {
                                         Navigator.pop(context);
+                                        Navigator.pop(context);
                                       },
                                       child: const Text('확인'),
                                     ),

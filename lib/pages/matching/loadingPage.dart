@@ -14,7 +14,7 @@ class _LoadingPageState extends State<LoadingPage> {
     return const Scaffold(
       body: Center(
         child: RiveAnimation.asset(
-          'assets/images/loading.riv',
+          'assets/images/loading_airplane.riv',
           fit: BoxFit.cover,
         ),
       ),
