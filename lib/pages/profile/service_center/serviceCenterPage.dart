@@ -66,20 +66,6 @@ class _ServiceCenterPageState extends State<ServiceCenterPage> {
               Get.back();
             },
           ),
-          actions: [
-            IconButton(
-                icon: const Icon(
-                  Icons.home,
-                  color: Colors.white,
-                ),
-                onPressed: () => {}),
-            IconButton(
-                icon: const Icon(
-                  Icons.search,
-                  color: Colors.white,
-                ),
-                onPressed: () => {})
-          ],
         ),
         body: isLoading
             ? const Center(child: CircularProgressIndicator())

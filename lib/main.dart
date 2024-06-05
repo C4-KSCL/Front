@@ -11,6 +11,9 @@ import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'config.dart';
+import 'controllers/bottomNavigationBar.dart';
+import 'controllers/find_friend_controller.dart';
+import 'controllers/keyword_controller.dart';
 import 'firebase_options.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -48,9 +51,7 @@ void main() async {
   /// 한국 시간 설정
   await initializeDateFormatting('ko_KR', null);
 
-  Get.put(FindFriendController());
-  Get.put(BottomNavigationBarController());
-  Get.put(KeywordController());
+  AppConfig.putGetxControllerDependency();
 
   runApp(MyApp());
 }
@@ -75,9 +76,6 @@ class MyApp extends StatelessWidget {
           elevation: 0,
         ),
       ),
-      initialBinding: BindingsBuilder(() {
-        AppConfig.putGetxControllerDependency();
-      }),
       getPages: [
         GetPage(name: '/login', page: () => const LoginPage()),
       ],
