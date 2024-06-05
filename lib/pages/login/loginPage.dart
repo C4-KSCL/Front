@@ -47,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
           Positioned.fill(
             child: Image.asset(
               'assets/images/brand.png',
-              fit: BoxFit.cover, // 전체 화면으로 배경 함
+              fit: BoxFit.cover, // 전체 화면으로 배경
             ),
           ),
           Align(
