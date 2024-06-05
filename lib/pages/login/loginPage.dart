@@ -24,7 +24,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _checkAutoLogin() async {
-    // 자동 로그인 여부 확인
+    // 자동 로그인 여부 확인하기
     String? isAutoLogin = await AppConfig.storage.read(key: "isAutoLogin");
     // 자동 로그인이 설정된 경우
     if (isAutoLogin == "true") {
@@ -47,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
           Positioned.fill(
             child: Image.asset(
               'assets/images/brand.png',
-              fit: BoxFit.cover, // 전체 화면으로 배경 함
+              fit: BoxFit.cover, // 전체 화면으로 배경
             ),
           ),
           Align(
