@@ -18,11 +18,37 @@ Widget ChatListTile({
     leading: ClipRRect(
       borderRadius: BorderRadius.circular(8.0), // 모서리를 둥글게 처리
       child: Image.network(
-        chatListData.userImage, // 예시 이미지 URL
+        chatListData.userImage,
         width: 50,
         height: 100,
         fit: BoxFit.cover,
-        alignment: Alignment.center,// 이미지가 넘치면 잘라냄
+        alignment: Alignment.center,
+        loadingBuilder: (BuildContext context, Widget child,
+            ImageChunkEvent? loadingProgress) {
+          if (loadingProgress == null) {
+            return child;
+          } else {
+            return Center(
+              child: CircularProgressIndicator(
+                value: loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded /
+                    (loadingProgress.expectedTotalBytes ?? 1)
+                    : null,
+              ),
+            );
+          }
+        },
+        errorBuilder:
+            (BuildContext context, Object error, StackTrace? stackTrace) {
+          return
+            Image.asset(
+              'assets/icons/defalut_user.png',
+              width: 50,
+              height: 100,
+              fit: BoxFit.cover,
+              alignment: Alignment.center,
+            );
+        },
       ),
     ),
     title: Column(

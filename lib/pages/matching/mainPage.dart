@@ -183,8 +183,43 @@ class _MainPageState extends State<MainPage> {
                                                       infoIndex][imageIndex];
                                               return Image.network(
                                                 friendImage.imagePath,
-                                                fit: BoxFit
-                                                    .cover, // 이미지가 컨테이너를 덮도록 설정
+                                                fit: BoxFit.cover,
+                                                loadingBuilder:
+                                                    (BuildContext context,
+                                                        Widget child,
+                                                        ImageChunkEvent?
+                                                            loadingProgress) {
+                                                  if (loadingProgress == null) {
+                                                    return child;
+                                                  } else {
+                                                    return Center(
+                                                      child:
+                                                          CircularProgressIndicator(
+                                                        value: loadingProgress
+                                                                    .expectedTotalBytes !=
+                                                                null
+                                                            ? loadingProgress
+                                                                    .cumulativeBytesLoaded /
+                                                                (loadingProgress
+                                                                        .expectedTotalBytes ??
+                                                                    1)
+                                                            : null,
+                                                      ),
+                                                    );
+                                                  }
+                                                },
+                                                errorBuilder: (BuildContext
+                                                        context,
+                                                    Object error,
+                                                    StackTrace? stackTrace) {
+                                                  return Image.asset(
+                                                    'assets/icons/defalut_user.png',
+                                                    width: 50,
+                                                    height: 100,
+                                                    fit: BoxFit.cover,
+                                                    alignment: Alignment.center,
+                                                  );
+                                                },
                                               );
                                             } else {
                                               final analysis =
@@ -369,7 +404,13 @@ class _MainPageState extends State<MainPage> {
                                   _carouselController.jumpToPage(0);
                                   FocusScope.of(context).unfocus();
                                 },
-                                child: const Text("친구 찾아보기",style: TextStyle(color: Colors.white, fontSize: 18,),),
+                                child: const Text(
+                                  "친구 찾아보기",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
