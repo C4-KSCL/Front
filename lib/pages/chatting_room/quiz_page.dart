@@ -6,6 +6,7 @@ import 'package:frontend_matching/models/chat.dart';
 import 'package:frontend_matching/controllers/chatting_controller.dart';
 import 'package:get/get.dart';
 
+import '../../services/text_service.dart';
 import '../../theme/colors.dart';
 import '../../theme/textStyle.dart';
 
@@ -46,28 +47,33 @@ Widget QuizPage({
               ChattingController.to.isQuizAnswered.value = true;
             }
           }
-          print(ChattingController.to.isQuizAnswered.value );
+          print(ChattingController.to.isQuizAnswered.value);
 
           return SingleChildScrollView(
             child: Column(
               children: [
                 //QuizPage 소제목, 'x' 버튼
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Stack(
                   children: [
-                    const SizedBox(width: 24),
-                    // 'X' 버튼과 동일한 공간을 만들어 균형을 맞춥니다.
-                    Text(
-                        ChattingController.to.eventData.value!.smallCategory.name,
-                        style:
-                            const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                    // 중앙에 타이틀 또는 공간을 배치할 수 있습니다.
-                    IconButton(
+                    // 중앙에 텍스트를 배치
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: Center(
+                        child: Text(
+                          ChattingController
+                              .to.eventData.value!.smallCategory.name,
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                    // 오른쪽 끝에 아이콘 버튼을 배치
+                    Positioned(
+                      right: 0,
+                      child: IconButton(
                         icon: const Icon(Icons.close),
-                        // 'X' 버튼을 누르면 BottomSheet을 종료합니다.
-                        onPressed: () {
-                          voidCallback();
-                        }),
+                        onPressed: voidCallback,
+                      ),
+                    ),
                   ],
                 ),
                 // Quiz 관련 이미지
@@ -76,15 +82,17 @@ Widget QuizPage({
                       .to.eventData.value!.smallCategory.eventImage!.filepath),
                 ),
                 const SizedBox(
-                  height: 20,
+                  height: 15,
                 ),
                 //Quiz 관련 컨텐츠 내용
                 Text(
-                  ChattingController.to.eventData.value!.smallCategory.content,
+                  splitAndJoinText(ChattingController
+                      .to.eventData.value!.smallCategory.content),
                   style: blackTextStyle3,
+                    textAlign: TextAlign.center
                 ),
                 const SizedBox(
-                  height: 20,
+                  height: 15,
                 ),
                 // Quiz의 답변 여부에 따라 답변을 선택하는 버튼들 or 상대의 답변을 보여주는 화면
                 Obx(() => ChattingController.to.isQuizAnswered.value
@@ -108,8 +116,8 @@ Widget QuizPage({
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
                                   isSentQuiz
-                                          ? '"${ChattingController.to.eventData.value!.user2Choice.toString()}"'
-                                          : '"${ChattingController.to.eventData.value!.user1Choice.toString()}"',
+                                      ? ' "${ChattingController.to.eventData.value!.user2Choice.toString()}"'
+                                      : '"${ChattingController.to.eventData.value!.user1Choice.toString()}"',
                                   style: blackTextStyle6,
                                 ),
                               ),
@@ -119,8 +127,8 @@ Widget QuizPage({
                             height: 20,
                           ),
                           Align(
-                            alignment:
-                                Alignment.centerRight, // 두 번째 Container를 우측으로 정렬
+                            alignment: Alignment
+                                .centerRight, // 두 번째 Container를 우측으로 정렬
                             child: Container(
                               constraints:
                                   BoxConstraints(maxWidth: Get.width * 0.75),
@@ -154,8 +162,8 @@ Widget QuizPage({
                               ChattingController.to.answerToEvent(
                                 eventId:
                                     ChattingController.to.eventData.value!.id,
-                                selectedContent: ChattingController
-                                    .to.eventData.value!.smallCategory.selectOne,
+                                selectedContent: ChattingController.to.eventData
+                                    .value!.smallCategory.selectOne,
                               );
                             },
                             textStyle: blackTextStyle1,
@@ -171,8 +179,8 @@ Widget QuizPage({
                               ChattingController.to.answerToEvent(
                                 eventId:
                                     ChattingController.to.eventData.value!.id,
-                                selectedContent: ChattingController
-                                    .to.eventData.value!.smallCategory.selectTwo,
+                                selectedContent: ChattingController.to.eventData
+                                    .value!.smallCategory.selectTwo,
                               );
                             },
                             textStyle: blackTextStyle1,

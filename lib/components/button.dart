@@ -1,23 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:marquee/marquee.dart';
 
-SizedBox ColorBottomButton(
-    {required String text,
-    required Color backgroundColor,
-    required VoidCallback onPressed,
-    required TextStyle textStyle}) {
+SizedBox ColorBottomButton({
+  required String text,
+  required Color backgroundColor,
+  required VoidCallback onPressed,
+  required TextStyle textStyle,
+}) {
   return SizedBox(
     width: 400,
     height: 50,
     child: TextButton(
-      onPressed: () {
-        onPressed();
-      },
-      child: Text(text, style: textStyle),
+      onPressed: onPressed,
       style: OutlinedButton.styleFrom(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
         backgroundColor: backgroundColor,
+      ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          // Measure text width
+          final textPainter = TextPainter(
+            text: TextSpan(text: text, style: textStyle),
+            maxLines: 1,
+            textDirection: TextDirection.ltr,
+          )..layout();
+
+          // Check if text width exceeds button width
+          final isTextOverflowing = textPainter.size.width > constraints.maxWidth;
+
+          if (isTextOverflowing) {
+            return Marquee(
+              text: text,
+              style: textStyle,
+              scrollAxis: Axis.horizontal,
+              blankSpace: 20.0,
+              velocity: 50.0,
+              pauseAfterRound: const Duration(seconds: 1),
+              startPadding: 10.0,
+              showFadingOnlyWhenScrolling: true,
+              fadingEdgeStartFraction: 0.1,
+              fadingEdgeEndFraction: 0.1,
+            );
+          } else {
+            return Text(
+              text,
+              style: textStyle,
+              overflow: TextOverflow.ellipsis,
+            );
+          }
+        },
       ),
     ),
   );
@@ -47,13 +80,13 @@ Container WhiteBottomButton(
       onPressed: () {
         onPressed();
       },
-      child: Text(text, style: textStyle),
       style: OutlinedButton.styleFrom(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
         backgroundColor: backgroundColor,
       ),
+      child: Text(text, style: textStyle),
     ),
   );
 }
