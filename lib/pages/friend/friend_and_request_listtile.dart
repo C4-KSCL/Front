@@ -20,12 +20,39 @@ ListTile friendListTile({
     key: ValueKey(friendData.id),
     leading: ClipRRect(
       borderRadius: BorderRadius.circular(8.0), // 모서리를 둥글게 처리
-      child: Image.network(
-        friendData.userImage, // 예시 이미지 URL
+      child:
+      Image.network(
+        friendData.userImage,
         width: 50,
         height: 100,
         fit: BoxFit.cover,
-        alignment: Alignment.center,// 이미지가 넘치면 잘라냄
+        alignment: Alignment.center,
+        loadingBuilder: (BuildContext context, Widget child,
+            ImageChunkEvent? loadingProgress) {
+          if (loadingProgress == null) {
+            return child;
+          } else {
+            return Center(
+              child: CircularProgressIndicator(
+                value: loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded /
+                        (loadingProgress.expectedTotalBytes ?? 1)
+                    : null,
+              ),
+            );
+          }
+        },
+        errorBuilder:
+            (BuildContext context, Object error, StackTrace? stackTrace) {
+          return
+            Image.asset(
+            'assets/icons/defalut_user.png',
+            width: 50,
+            height: 100,
+            fit: BoxFit.cover,
+            alignment: Alignment.center,
+          );
+        },
       ),
     ),
     title: Column(
@@ -81,12 +108,39 @@ ListTile receivedRequestListTile({
     key: ValueKey(receivedRequestData.requestId),
     leading: ClipRRect(
       borderRadius: BorderRadius.circular(8.0), // 모서리를 둥글게 처리
-      child: Image.network(
-        receivedRequestData.userImage, // 예시 이미지 URL
+      child:
+      Image.network(
+        receivedRequestData.userImage,
         width: 50,
         height: 100,
         fit: BoxFit.cover,
-        alignment: Alignment.center,// 이미지가 넘치면 잘라냄
+        alignment: Alignment.center,
+        loadingBuilder: (BuildContext context, Widget child,
+            ImageChunkEvent? loadingProgress) {
+          if (loadingProgress == null) {
+            return child;
+          } else {
+            return Center(
+              child: CircularProgressIndicator(
+                value: loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded /
+                    (loadingProgress.expectedTotalBytes ?? 1)
+                    : null,
+              ),
+            );
+          }
+        },
+        errorBuilder:
+            (BuildContext context, Object error, StackTrace? stackTrace) {
+          return
+            Image.asset(
+              'assets/icons/defalut_user.png',
+              width: 50,
+              height: 100,
+              fit: BoxFit.cover,
+              alignment: Alignment.center,
+            );
+        },
       ),
     ),
     title: Column(
@@ -125,13 +179,13 @@ ListTile receivedRequestListTile({
     ),
     trailing: IconButton(
       onPressed: () {
-        Get.to(()=>ChatRoomPage(
-          roomId: receivedRequestData.roomId,
-          oppUserName: receivedRequestData.nickname,
-          friendRequestId: receivedRequestData.requestId,
-          isChatEnabled: false,
-          isReceivedRequest: true,
-        ));
+        Get.to(() => ChatRoomPage(
+              roomId: receivedRequestData.roomId,
+              oppUserName: receivedRequestData.nickname,
+              friendRequestId: receivedRequestData.requestId,
+              isChatEnabled: false,
+              isReceivedRequest: true,
+            ));
       },
       icon: Image.asset("assets/icons/question_message.png"),
     ),
@@ -155,12 +209,39 @@ ListTile sentRequestListTile({
     key: ValueKey(sentRequestData.requestId),
     leading: ClipRRect(
       borderRadius: BorderRadius.circular(8.0), // 모서리를 둥글게 처리
-      child: Image.network(
-        sentRequestData.userImage, // 예시 이미지 URL
+      child:
+      Image.network(
+        sentRequestData.userImage,
         width: 50,
         height: 100,
         fit: BoxFit.cover,
-        alignment: Alignment.center,// 이미지가 넘치면 잘라냄
+        alignment: Alignment.center,
+        loadingBuilder: (BuildContext context, Widget child,
+            ImageChunkEvent? loadingProgress) {
+          if (loadingProgress == null) {
+            return child;
+          } else {
+            return Center(
+              child: CircularProgressIndicator(
+                value: loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded /
+                    (loadingProgress.expectedTotalBytes ?? 1)
+                    : null,
+              ),
+            );
+          }
+        },
+        errorBuilder:
+            (BuildContext context, Object error, StackTrace? stackTrace) {
+          return
+            Image.asset(
+              'assets/icons/defalut_user.png',
+              width: 50,
+              height: 100,
+              fit: BoxFit.cover,
+              alignment: Alignment.center,
+            );
+        },
       ),
     ),
     title: Column(
@@ -198,13 +279,13 @@ ListTile sentRequestListTile({
     ),
     trailing: IconButton(
       onPressed: () {
-        Get.to(()=>ChatRoomPage(
-          roomId: sentRequestData.roomId,
-          oppUserName: sentRequestData.nickname,
-          friendRequestId: sentRequestData.requestId,
-          isChatEnabled: false,
-          isReceivedRequest: false,
-        ));
+        Get.to(() => ChatRoomPage(
+              roomId: sentRequestData.roomId,
+              oppUserName: sentRequestData.nickname,
+              friendRequestId: sentRequestData.requestId,
+              isChatEnabled: false,
+              isReceivedRequest: false,
+            ));
       },
       icon: Image.asset("assets/icons/question_message.png"),
     ),
@@ -227,12 +308,39 @@ ListTile friendSettingListTile({
     key: ValueKey(friendData.id),
     leading: ClipRRect(
       borderRadius: BorderRadius.circular(8.0), // 모서리를 둥글게 처리
-      child: Image.network(
-        friendData.userImage, // 예시 이미지 URL
+      child:
+      Image.network(
+        friendData.userImage,
         width: 50,
         height: 100,
         fit: BoxFit.cover,
-        alignment: Alignment.center,// 이미지가 넘치면 잘라냄
+        alignment: Alignment.center,
+        loadingBuilder: (BuildContext context, Widget child,
+            ImageChunkEvent? loadingProgress) {
+          if (loadingProgress == null) {
+            return child;
+          } else {
+            return Center(
+              child: CircularProgressIndicator(
+                value: loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded /
+                    (loadingProgress.expectedTotalBytes ?? 1)
+                    : null,
+              ),
+            );
+          }
+        },
+        errorBuilder:
+            (BuildContext context, Object error, StackTrace? stackTrace) {
+          return
+            Image.asset(
+              'assets/icons/defalut_user.png',
+              width: 50,
+              height: 100,
+              fit: BoxFit.cover,
+              alignment: Alignment.center,
+            );
+        },
       ),
     ),
     title: Column(
@@ -295,11 +403,37 @@ ListTile blockedFriendSettingListTile({
     leading: ClipRRect(
       borderRadius: BorderRadius.circular(8.0), // 모서리를 둥글게 처리
       child: Image.network(
-        friendData.userImage, // 예시 이미지 URL
+        friendData.userImage,
         width: 50,
         height: 100,
         fit: BoxFit.cover,
-        alignment: Alignment.center,// 이미지가 넘치면 잘라냄
+        alignment: Alignment.center,
+        loadingBuilder: (BuildContext context, Widget child,
+            ImageChunkEvent? loadingProgress) {
+          if (loadingProgress == null) {
+            return child;
+          } else {
+            return Center(
+              child: CircularProgressIndicator(
+                value: loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded /
+                    (loadingProgress.expectedTotalBytes ?? 1)
+                    : null,
+              ),
+            );
+          }
+        },
+        errorBuilder:
+            (BuildContext context, Object error, StackTrace? stackTrace) {
+          return
+            Image.asset(
+              'assets/icons/defalut_user.png',
+              width: 50,
+              height: 100,
+              fit: BoxFit.cover,
+              alignment: Alignment.center,
+            );
+        },
       ),
     ),
     title: Column(
