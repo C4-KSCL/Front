@@ -5,3 +5,7 @@ String summarizeText(String content) {
   }
   return content;
 }
+
+String splitAndJoinText(String text) {
+  return text.replaceAll(' vs ', '\nvs\n');
+}

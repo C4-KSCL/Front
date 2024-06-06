@@ -59,6 +59,7 @@ dependencies:
   mime:
   collection:
   rive:
+  marquee:
 
 dev_dependencies:
   flutter_test:
