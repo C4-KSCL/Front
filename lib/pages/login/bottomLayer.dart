@@ -72,10 +72,7 @@ class _BottomLayerLoginScreenState extends State<BottomLayerLoginScreen> {
                   //     )),
                   TextButton(
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const FindPasswordPage()));
+                        Get.to(()=>const FindPasswordPage());
                       },
                       child: const Text(
                         '비밀번호 찾기',
@@ -103,7 +100,6 @@ class _BottomLayerLoginScreenState extends State<BottomLayerLoginScreen> {
                       String email = idController.text;
                       String password = pwController.text;
                       print("login check");
-
                       UserDataController.loginUser(email, password);
                     },
                     child: const Text(
@@ -124,10 +120,7 @@ class _BottomLayerLoginScreenState extends State<BottomLayerLoginScreen> {
                           borderRadius: BorderRadius.circular(15)),
                     ),
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SchoolAuthPage()));
+                      Get.to(()=>const SchoolAuthPage());
                     },
                     child: const Text(
                       '회원가입하기',

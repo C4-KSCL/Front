@@ -139,7 +139,7 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
   //Socket.io 관련 함수
 
   /// 소켓 객체 정의
-  void initSocket() {
+  Future<void> initSocket() async {
     _socket = IO.io(baseUrl, <String, dynamic>{
       'transports': ['websocket'], //전송 방식을 웹소켓으로 설정
       'autoConnect': false, //수동으로 연결해야함
@@ -155,7 +155,7 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
   void fetchInitialMessages({required String roomId}) async {
     // 채팅방 내용 가져오기
     await getRoomChats(roomId: roomId);
-    initSocket();
+    await initSocket();
     await ChattingController.to.connect(roomId: roomId);
   }
 
@@ -175,10 +175,8 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
     _socket!.onConnect((_) {
       print("연결 완료");
       _initSocketListeners();
+      joinRoom(roomId: roomId);
     });
-
-    // 방 참여
-    joinRoom(roomId: roomId);
 
     _socket!.onConnectError((data) {
       print("Failed to connect to the server: $data");
@@ -192,9 +190,20 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
 
   // 소켓 리스너 초기 설정
   void _initSocketListeners() {
-    final socket = _socket!;
+    if(_socket==null){
+      _socket= IO.io(baseUrl, <String, dynamic>{
+        'transports': ['websocket'], //전송 방식을 웹소켓으로 설정
+        'autoConnect': false, //수동으로 연결해야함
+        'auth': {'token': UserDataController.to.accessToken},
+      });
+      if (UserDataController.to.accessToken != _socket!.auth['token']) {
+        _socket!.auth['token'] = UserDataController.to.accessToken;
+        print("토큰 값 변경 : ${_socket!.auth['token']}");
+      }
+    }
+    var socket=_socket!;
 
-    //리스너가 중복되어 실행되지 않게 설정
+    // //리스너가 중복되어 실행되지 않게 설정
     socket.off("disconnect");
     socket.off("connect");
     socket.off("user join in room");
@@ -350,7 +359,9 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
     final data = {
       "roomId": roomId,
     };
-    _socket!.emit("join room", data);
+    final socket = _socket!;
+
+    socket.emit("join room", data);
   }
 
   //채팅 보내기

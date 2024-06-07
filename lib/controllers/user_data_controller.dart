@@ -51,8 +51,14 @@ class UserDataController extends GetxController {
     images.assignAll(newImages);
   }
 
+  void resetData(){
+    user.value = null;
+    accessToken = '';
+    refreshToken = '';
+    images.value = <UserImage>[].obs;
+  }
+
   static Future<void> loginUser(String email, String password) async {
-    AppConfig.putGetxControllerDependency();
     final url = Uri.parse('$baseUrl/$auth/$login');
 
     Map<String, String> headers = {"Content-type": "application/json"};
@@ -90,14 +96,12 @@ class UserDataController extends GetxController {
       await FriendController.getFriendReceivedRequest();
       await FriendController.getFriendSentRequest();
       await ChattingListController.getLastChatList();
-
-      // 메인 페이지로 이동
-      Get.offAll(() => const InitPage());
     } else {
       print('login fail');
     }
   }
 
+  /// 로그아웃
   void logout() async {
     await FcmService.deleteUserFcmToken(); //fcm 토큰 삭제
     await AppConfig.storage.write(key: "autoLoginEmail", value: '');
@@ -105,20 +109,12 @@ class UserDataController extends GetxController {
     await AppConfig.storage
         .write(key: "isAutoLogin", value: "false"); // 자동 로그인 해제
 
-    user.value = null;
-    accessToken = '';
-    refreshToken = '';
     signupController.resetAllInputs();
     FriendController.to.resetData();
     ChattingListController.to.resetData();
-    FindFriendController.to.previousFriendImageList.clear();
-    images.value = <UserImage>[].obs;
+    FindFriendController.to.resetData();
+    resetData();
     BottomNavigationBarController.to.selectedIndex.value=0;
-    ////////////////수정 필요 //////////////////////////
-
-
-    Get.offNamed('/login');
-
     print("로그아웃");
   }
 

@@ -35,4 +35,6 @@ class AppConfig {
     Get.lazyPut(() => UserImageController());
     Get.lazyPut(() => ServiceCenterController());
   }
+
+
 }

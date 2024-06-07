@@ -5,6 +5,7 @@ import 'package:frontend_matching/controllers/bottomNavigationBar.dart';
 import 'package:frontend_matching/controllers/fcm_controller.dart';
 import 'package:frontend_matching/controllers/find_friend_controller.dart';
 import 'package:frontend_matching/controllers/keyword_controller.dart';
+import 'package:frontend_matching/pages/init_page.dart';
 import 'package:frontend_matching/pages/login/loginPage.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get.dart';
@@ -14,6 +15,7 @@ import 'config.dart';
 import 'controllers/bottomNavigationBar.dart';
 import 'controllers/find_friend_controller.dart';
 import 'controllers/keyword_controller.dart';
+import 'controllers/user_data_controller.dart';
 import 'firebase_options.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -53,6 +55,21 @@ void main() async {
 
   AppConfig.putGetxControllerDependency();
 
+    // 자동 로그인 여부 확인하기
+    String? isAutoLogin = await AppConfig.storage.read(key: "isAutoLogin");
+
+    // 자동 로그인이 설정된 경우
+    if (isAutoLogin == "true") {
+      print("자동 로그인 한적 있음");
+      String? email = await AppConfig.storage.read(key: "autoLoginEmail");
+      String? password = await AppConfig.storage.read(key: "autoLoginPw");
+      if (email != null && password != null) {
+        await UserDataController.loginUser(email, password);
+        // 로그인 후의 UI 업데이트나 다른 처리
+      }
+    }
+
+
   runApp(MyApp());
 }
 
@@ -63,8 +80,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const Scaffold(
-        body: LoginPage(),
+      home: Scaffold(
+        body: Obx(()=> UserDataController.to.user.value==null ? const LoginPage() : const InitPage() )
       ),
       theme: ThemeData(
         primarySwatch: Colors.blue,

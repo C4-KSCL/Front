@@ -218,11 +218,11 @@ Widget RequestProfilePage({
 
           return Container(
             padding: const EdgeInsets.all(10),
-            width: Get.width * 0.6,
-            height: Get.height * 0.6,
+            width: Get.width * 0.7,
+            height: Get.height * 0.7,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.white.withOpacity(0.7),
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white
             ),
             child: Column(
               children: [
@@ -316,23 +316,23 @@ Widget RequestProfilePage({
                   height: 10,
                 ),
                 Wrap(
-                  spacing: 8.0, // 수평 간격
-                  runSpacing: 4.0, // 수직 간격
+                  spacing: 2.0, // 수평 간격
+                  runSpacing: 2.0, // 수직 간격
                   children: userData.myKeyword
                       .split(',')
                       .map((item) => item.trim()) // 공백 제거
                       .map((item) => Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: blueColor1,
-                              ),
-                              padding: const EdgeInsets.all(5),
-                              child: Text(item,
-                                  style: const TextStyle(color: Colors.white)),
-                            ),
-                          ))
+                    padding: const EdgeInsets.all(4),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: greyColor6,
+                      ),
+                      padding: const EdgeInsets.all(4),
+                      child: Text(item,
+                          style: const TextStyle(color: Colors.white)),
+                    ),
+                  ))
                       .toList(),
                 ),
               ],

@@ -193,8 +193,7 @@ class _MainPageState extends State<MainPage> {
                                                     return child;
                                                   } else {
                                                     return Center(
-                                                      child:
-                                                          CircularProgressIndicator(
+                                                      child: CircularProgressIndicator(
                                                         value: loadingProgress
                                                                     .expectedTotalBytes !=
                                                                 null
@@ -242,8 +241,6 @@ class _MainPageState extends State<MainPage> {
                                                         MainAxisAlignment
                                                             .center,
                                                     children: [
-                                                      const SizedBox(
-                                                          height: 50),
                                                       const Text(
                                                         '분석보기',
                                                         style: TextStyle(
@@ -366,8 +363,20 @@ class _MainPageState extends State<MainPage> {
                                               .email,
                                           content: sendingControllers[infoIndex]
                                               .text,
-                                        );
+                                        ).then((value) {
+                                          // 친구 요청 보낸 알림 띄우기
+                                          Get.snackbar("친구 요청 성공",
+                                              "${FindFriendController.to.matchingFriendInfoList[infoIndex].nickname}에게 친구 요청을 보냈습니다.");
+                                          // 요청 보낸 친구는 리스트에서 삭제
+                                          FindFriendController
+                                              .to.matchingFriendInfoList
+                                              .removeAt(infoIndex);
+                                          FindFriendController
+                                              .to.matchingFriendImageList
+                                              .removeAt(infoIndex);
+                                        });
                                         sendingControllers[infoIndex].clear();
+                                        FocusScope.of(context).unfocus();
                                         FriendController.getFriendSentRequest();
                                       }
                                     },

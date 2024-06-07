@@ -76,6 +76,7 @@ Widget CancelButtonLayer(int? friendRequestId) {
         ),
       ),
       onPressed: () async {
+        ChattingController.to.disconnect();
         await FriendController.deleteFriendRequest(requestId: friendRequestId.toString());
         await FriendController.getFriendSentRequest();
         await ChattingListController.getLastChatList();
