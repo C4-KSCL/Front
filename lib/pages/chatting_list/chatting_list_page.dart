@@ -8,6 +8,7 @@ import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/pages/chatting_list/chatlist_listtile.dart';
 import 'package:frontend_matching/controllers/chatting_list_controller.dart';
 import 'package:frontend_matching/theme/colors.dart';
+import 'package:frontend_matching/theme/textStyle.dart';
 import 'package:get/get.dart';
 
 class ChattingListPage extends StatelessWidget {
@@ -30,7 +31,9 @@ class ChattingListPage extends StatelessWidget {
         ),
       ),
       body: Obx(
-        () => ListView.separated(
+        () => ChattingListController.to.chattingList.isEmpty ? const Center(child: Text("텅...",style: greyTextStyle3,),) :
+
+            ListView.separated(
           itemCount: ChattingListController.to.chattingList.length,
           itemBuilder: (context, index) {
             var chatListData = ChattingListController.to.chattingList[index];
@@ -134,6 +137,7 @@ class ChattingListPage extends StatelessWidget {
                                   await ChattingListController
                                       .getLastChatList();
                                   Get.back();
+                                  FriendController.getFriendList();
                                 },
                               ),
                             ],

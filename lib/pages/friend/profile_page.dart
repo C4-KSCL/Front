@@ -40,9 +40,7 @@ Widget FriendProfilePage({
             width: Get.width * 0.7,
             height: Get.height * 0.7,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.white
-            ),
+                borderRadius: BorderRadius.circular(10), color: Colors.white),
             child: Column(
               children: [
                 Row(
@@ -124,7 +122,8 @@ Widget FriendProfilePage({
                         return Image.network(
                           friendImage.imagePath,
                           errorBuilder: (context, error, stackTrace) {
-                            return Image.asset('assets/images/logo.png');  // 기본 이미지 제공
+                            return Image.asset(
+                                'assets/images/logo.png'); // 기본 이미지 제공
                           },
                         );
                       },
@@ -151,7 +150,8 @@ Widget FriendProfilePage({
                                 ),
                                 padding: const EdgeInsets.all(4),
                                 child: Text(item,
-                                    style: const TextStyle(color: Colors.white)),
+                                    style:
+                                        const TextStyle(color: Colors.white)),
                               ),
                             ))
                         .toList(),
@@ -168,12 +168,15 @@ Widget FriendProfilePage({
                       print("재입장 필요");
                       await ChattingListController.rejoinRoom(
                               oppEmail: userData.oppEmail)
-                          .then((value) => Get.to(ChatRoomPage(
-                                roomId: userData.roomId!,
-                                oppUserName: userData.nickname,
-                                isChatEnabled: true,
-                                isReceivedRequest: false,
-                              )));
+                          .then((value) {
+                        Get.to(ChatRoomPage(
+                          roomId: userData.roomId!,
+                          oppUserName: userData.nickname,
+                          isChatEnabled: true,
+                          isReceivedRequest: false,
+                        ));
+                        FriendController.getFriendList();
+                      });
                     }
                     Get.to(() => ChatRoomPage(
                           roomId: userData.roomId!,
@@ -221,9 +224,7 @@ Widget RequestProfilePage({
             width: Get.width * 0.7,
             height: Get.height * 0.7,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white
-            ),
+                borderRadius: BorderRadius.circular(10), color: Colors.white),
             child: Column(
               children: [
                 Row(
@@ -322,17 +323,17 @@ Widget RequestProfilePage({
                       .split(',')
                       .map((item) => item.trim()) // 공백 제거
                       .map((item) => Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: greyColor6,
-                      ),
-                      padding: const EdgeInsets.all(4),
-                      child: Text(item,
-                          style: const TextStyle(color: Colors.white)),
-                    ),
-                  ))
+                            padding: const EdgeInsets.all(4),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: greyColor6,
+                              ),
+                              padding: const EdgeInsets.all(4),
+                              child: Text(item,
+                                  style: const TextStyle(color: Colors.white)),
+                            ),
+                          ))
                       .toList(),
                 ),
               ],

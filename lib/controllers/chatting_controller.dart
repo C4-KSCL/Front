@@ -69,12 +69,11 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
 
   @override
   void onClose() {
+    chats.clear();
     WidgetsBinding.instance.removeObserver(this); // Observer 제거
-    _socket = null;
     if (_socket != null) {
       _socket!.disconnect();
     }
-    chats.clear();
     print("ChattingController 종료");
     super.onClose();
   }
@@ -172,11 +171,13 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
     //소켓 연결
     _socket!.connect();
     //소켓 연결되면 소켓 이벤트 리스너 설정하기
-    _socket!.onConnect((_) {
-      print("연결 완료");
-      _initSocketListeners();
-      joinRoom(roomId: roomId);
-    });
+    // _socket!.onConnect((_) {
+    //   print("연결 완료");
+    //
+    // });
+    _initSocketListeners();
+
+    joinRoom(roomId: roomId);
 
     _socket!.onConnectError((data) {
       print("Failed to connect to the server: $data");
@@ -522,21 +523,21 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
         }
         // 채팅 데이터가 비어있으면 타임 박스 추가
         else {
-          ChattingController.to.chats.add(Chat(
-            id: 0,
-            roomId: roomId,
-            createdAt: DateTime.now().toString(),
-            content: "timeBox",
-            readCount: 0,
-            type: 'time',
-          ));
+          // ChattingController.to.chats.add(Chat(
+          //   id: 0,
+          //   roomId: roomId,
+          //   createdAt: DateTime.now().toString(),
+          //   content: "timeBox",
+          //   readCount: 0,
+          //   type: 'time',
+          // ));
           ChattingController.to.firstChatDate =
               DateTime.now().toString(); // 오늘 날짜
           print("firstChatDate 설정 : ${ChattingController.to.firstChatDate}");
         }
       }
       // 채팅 개수 적으면 위쪽에 최근 채팅 날짜 띄우기
-      if (ChattingController.to.chats.length > 1 &&
+      if (ChattingController.to.chats.isNotEmpty &&
           ChattingController.to.chats.length < 20) {
         ChattingController.to.chats.add(Chat(
           id: 0,
