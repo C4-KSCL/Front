@@ -58,7 +58,7 @@ class UserDataController extends GetxController {
     images.value = <UserImage>[].obs;
   }
 
-  static Future<void> loginUser(String email, String password) async {
+  Future<void> loginUser(String email, String password) async {
     final url = Uri.parse('$baseUrl/$auth/$login');
 
     Map<String, String> headers = {"Content-type": "application/json"};
@@ -115,6 +115,7 @@ class UserDataController extends GetxController {
     FindFriendController.to.resetData();
     resetData();
     BottomNavigationBarController.to.selectedIndex.value=0;
+    Get.off(const LoginPage());
     print("로그아웃");
   }
 

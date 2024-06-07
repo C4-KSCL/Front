@@ -7,6 +7,7 @@ import 'package:frontend_matching/components/textField.dart';
 import 'package:frontend_matching/components/textformField.dart';
 import 'package:frontend_matching/config.dart';
 import 'package:frontend_matching/controllers/signupController.dart';
+import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/pages/login/loginPage.dart';
 import 'package:frontend_matching/pages/signup/myInfo.dart';
 import 'package:frontend_matching/theme/colors.dart';

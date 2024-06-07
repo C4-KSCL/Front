@@ -64,7 +64,7 @@ void main() async {
       String? email = await AppConfig.storage.read(key: "autoLoginEmail");
       String? password = await AppConfig.storage.read(key: "autoLoginPw");
       if (email != null && password != null) {
-        await UserDataController.loginUser(email, password);
+        await UserDataController.to.loginUser(email, password);
         // 로그인 후의 UI 업데이트나 다른 처리
       }
     }
