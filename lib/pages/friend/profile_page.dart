@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/components/button.dart';
+import 'package:frontend_matching/controllers/bottomNavigationBar.dart';
 import 'package:frontend_matching/controllers/chatting_controller.dart';
 import 'package:frontend_matching/controllers/chatting_list_controller.dart';
 import 'package:frontend_matching/controllers/friend_controller.dart';
@@ -177,13 +178,15 @@ Widget FriendProfilePage({
                         ));
                         FriendController.getFriendList();
                       });
+                    } else{
+                      Get.to(() => ChatRoomPage(
+                        roomId: userData.roomId!,
+                        oppUserName: userData.nickname,
+                        isChatEnabled: true,
+                        isReceivedRequest: false,
+                      ));
                     }
-                    Get.to(() => ChatRoomPage(
-                          roomId: userData.roomId!,
-                          oppUserName: userData.nickname,
-                          isChatEnabled: true,
-                          isReceivedRequest: false,
-                        ));
+                    BottomNavigationBarController.to.selectedIndex.value=2;
                   },
                   textStyle: whiteTextStyle1,
                 )
