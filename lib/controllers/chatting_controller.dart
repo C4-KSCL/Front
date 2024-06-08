@@ -69,12 +69,11 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
 
   @override
   void onClose() {
+    chats.clear();
     WidgetsBinding.instance.removeObserver(this); // Observer 제거
-    _socket = null;
     if (_socket != null) {
       _socket!.disconnect();
     }
-    chats.clear();
     print("ChattingController 종료");
     super.onClose();
   }
@@ -139,7 +138,7 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
   //Socket.io 관련 함수
 
   /// 소켓 객체 정의
-  void initSocket() {
+  Future<void> initSocket() async {
     _socket = IO.io(baseUrl, <String, dynamic>{
       'transports': ['websocket'], //전송 방식을 웹소켓으로 설정
       'autoConnect': false, //수동으로 연결해야함
@@ -155,7 +154,7 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
   void fetchInitialMessages({required String roomId}) async {
     // 채팅방 내용 가져오기
     await getRoomChats(roomId: roomId);
-    initSocket();
+    await initSocket();
     await ChattingController.to.connect(roomId: roomId);
   }
 
@@ -172,12 +171,12 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
     //소켓 연결
     _socket!.connect();
     //소켓 연결되면 소켓 이벤트 리스너 설정하기
-    _socket!.onConnect((_) {
-      print("연결 완료");
-      _initSocketListeners();
-    });
+    // _socket!.onConnect((_) {
+    //   print("연결 완료");
+    //
+    // });
+    _initSocketListeners();
 
-    // 방 참여
     joinRoom(roomId: roomId);
 
     _socket!.onConnectError((data) {
@@ -192,9 +191,20 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
 
   // 소켓 리스너 초기 설정
   void _initSocketListeners() {
-    final socket = _socket!;
+    if(_socket==null){
+      _socket= IO.io(baseUrl, <String, dynamic>{
+        'transports': ['websocket'], //전송 방식을 웹소켓으로 설정
+        'autoConnect': false, //수동으로 연결해야함
+        'auth': {'token': UserDataController.to.accessToken},
+      });
+      if (UserDataController.to.accessToken != _socket!.auth['token']) {
+        _socket!.auth['token'] = UserDataController.to.accessToken;
+        print("토큰 값 변경 : ${_socket!.auth['token']}");
+      }
+    }
+    var socket=_socket!;
 
-    //리스너가 중복되어 실행되지 않게 설정
+    // //리스너가 중복되어 실행되지 않게 설정
     socket.off("disconnect");
     socket.off("connect");
     socket.off("user join in room");
@@ -350,7 +360,9 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
     final data = {
       "roomId": roomId,
     };
-    _socket!.emit("join room", data);
+    final socket = _socket!;
+
+    socket.emit("join room", data);
   }
 
   //채팅 보내기
@@ -511,21 +523,21 @@ class ChattingController extends GetxController with WidgetsBindingObserver {
         }
         // 채팅 데이터가 비어있으면 타임 박스 추가
         else {
-          ChattingController.to.chats.add(Chat(
-            id: 0,
-            roomId: roomId,
-            createdAt: DateTime.now().toString(),
-            content: "timeBox",
-            readCount: 0,
-            type: 'time',
-          ));
+          // ChattingController.to.chats.add(Chat(
+          //   id: 0,
+          //   roomId: roomId,
+          //   createdAt: DateTime.now().toString(),
+          //   content: "timeBox",
+          //   readCount: 0,
+          //   type: 'time',
+          // ));
           ChattingController.to.firstChatDate =
               DateTime.now().toString(); // 오늘 날짜
           print("firstChatDate 설정 : ${ChattingController.to.firstChatDate}");
         }
       }
       // 채팅 개수 적으면 위쪽에 최근 채팅 날짜 띄우기
-      if (ChattingController.to.chats.length > 1 &&
+      if (ChattingController.to.chats.isNotEmpty &&
           ChattingController.to.chats.length < 20) {
         ChattingController.to.chats.add(Chat(
           id: 0,

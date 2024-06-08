@@ -20,6 +20,12 @@ class FindFriendController extends GetxController {
   RxList<List<UserImage>> previousFriendImageList = RxList<List<UserImage>>();
   RxBool isLoading = false.obs;
 
+  void resetData(){
+    FindFriendController.to.matchingFriendImageList.clear();
+    FindFriendController.to.matchingFriendInfoList.clear();
+    FindFriendController.to.previousFriendImageList.clear();
+  }
+
   static Future<void> findFriends() async {
     if (to.isLoading.value) return; //로딩즁이면 다시 리턴
 

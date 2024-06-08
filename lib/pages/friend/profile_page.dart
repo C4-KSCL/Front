@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/components/button.dart';
+import 'package:frontend_matching/controllers/bottomNavigationBar.dart';
 import 'package:frontend_matching/controllers/chatting_controller.dart';
 import 'package:frontend_matching/controllers/chatting_list_controller.dart';
 import 'package:frontend_matching/controllers/friend_controller.dart';
@@ -40,9 +41,7 @@ Widget FriendProfilePage({
             width: Get.width * 0.7,
             height: Get.height * 0.7,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.white
-            ),
+                borderRadius: BorderRadius.circular(10), color: Colors.white),
             child: Column(
               children: [
                 Row(
@@ -124,7 +123,8 @@ Widget FriendProfilePage({
                         return Image.network(
                           friendImage.imagePath,
                           errorBuilder: (context, error, stackTrace) {
-                            return Image.asset('assets/images/logo.png');  // 기본 이미지 제공
+                            return Image.asset(
+                                'assets/images/logo.png'); // 기본 이미지 제공
                           },
                         );
                       },
@@ -151,7 +151,8 @@ Widget FriendProfilePage({
                                 ),
                                 padding: const EdgeInsets.all(4),
                                 child: Text(item,
-                                    style: const TextStyle(color: Colors.white)),
+                                    style:
+                                        const TextStyle(color: Colors.white)),
                               ),
                             ))
                         .toList(),
@@ -168,19 +169,24 @@ Widget FriendProfilePage({
                       print("재입장 필요");
                       await ChattingListController.rejoinRoom(
                               oppEmail: userData.oppEmail)
-                          .then((value) => Get.to(ChatRoomPage(
-                                roomId: userData.roomId!,
-                                oppUserName: userData.nickname,
-                                isChatEnabled: true,
-                                isReceivedRequest: false,
-                              )));
-                    }
-                    Get.to(() => ChatRoomPage(
+                          .then((value) {
+                        Get.to(ChatRoomPage(
                           roomId: userData.roomId!,
                           oppUserName: userData.nickname,
                           isChatEnabled: true,
                           isReceivedRequest: false,
                         ));
+                        FriendController.getFriendList();
+                      });
+                    } else{
+                      Get.to(() => ChatRoomPage(
+                        roomId: userData.roomId!,
+                        oppUserName: userData.nickname,
+                        isChatEnabled: true,
+                        isReceivedRequest: false,
+                      ));
+                    }
+                    BottomNavigationBarController.to.selectedIndex.value=2;
                   },
                   textStyle: whiteTextStyle1,
                 )
@@ -218,12 +224,10 @@ Widget RequestProfilePage({
 
           return Container(
             padding: const EdgeInsets.all(10),
-            width: Get.width * 0.6,
-            height: Get.height * 0.6,
+            width: Get.width * 0.7,
+            height: Get.height * 0.7,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.white.withOpacity(0.7),
-            ),
+                borderRadius: BorderRadius.circular(10), color: Colors.white),
             child: Column(
               children: [
                 Row(
@@ -316,19 +320,19 @@ Widget RequestProfilePage({
                   height: 10,
                 ),
                 Wrap(
-                  spacing: 8.0, // 수평 간격
-                  runSpacing: 4.0, // 수직 간격
+                  spacing: 2.0, // 수평 간격
+                  runSpacing: 2.0, // 수직 간격
                   children: userData.myKeyword
                       .split(',')
                       .map((item) => item.trim()) // 공백 제거
                       .map((item) => Padding(
-                            padding: const EdgeInsets.all(8),
+                            padding: const EdgeInsets.all(4),
                             child: Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(5),
-                                color: blueColor1,
+                                color: greyColor6,
                               ),
-                              padding: const EdgeInsets.all(5),
+                              padding: const EdgeInsets.all(4),
                               child: Text(item,
                                   style: const TextStyle(color: Colors.white)),
                             ),

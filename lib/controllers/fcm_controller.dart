@@ -206,7 +206,7 @@ class FcmController extends GetxController {
         );
       }
     }
-    // 다른 알림 관련
+    // 친구 관련
     else {
       const NotificationDetails platformChannelSpecifics =
           NotificationDetails(android: androidPlatformChannelSpecifics);

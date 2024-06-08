@@ -91,6 +91,8 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
     print("dispose 실행");
     focusNode.dispose();
     chatController.dispose();
+    ChattingController.to.disconnect();
+    ChattingListController.getLastChatList();
     Get.delete<ChattingController>();
     super.dispose();
   }
@@ -107,8 +109,6 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
             color: Colors.black,
           ),
           onPressed: () {
-            ChattingController.to.disconnect();
-            ChattingListController.getLastChatList();
             Get.back();
           },
         ),

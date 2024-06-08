@@ -10,6 +10,7 @@ import 'package:frontend_matching/components/textformField.dart';
 import 'package:frontend_matching/components/textformVerify.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/models/user.dart';
+import 'package:frontend_matching/pages/init_page.dart';
 import 'package:frontend_matching/pages/login/findPasswordPage.dart';
 import 'package:frontend_matching/pages/matching/mainPage.dart';
 import 'package:frontend_matching/pages/signup/schoolAuth.dart';
@@ -72,10 +73,7 @@ class _BottomLayerLoginScreenState extends State<BottomLayerLoginScreen> {
                   //     )),
                   TextButton(
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const FindPasswordPage()));
+                        Get.to(()=>const FindPasswordPage());
                       },
                       child: const Text(
                         '비밀번호 찾기',
@@ -99,12 +97,16 @@ class _BottomLayerLoginScreenState extends State<BottomLayerLoginScreen> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15)),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       String email = idController.text;
                       String password = pwController.text;
                       print("login check");
-
-                      UserDataController.loginUser(email, password);
+                      await UserDataController.to.loginUser(email, password);
+                      if(UserDataController.to.user.value!=null){
+                        Get.off(const InitPage());
+                      } else if(UserDataController.to.user.value==null){
+                        Get.snackbar("로그인 실패", "이메일과 비밀번호를 확인해주세요.");
+                      }
                     },
                     child: const Text(
                       '로그인하기',
@@ -124,10 +126,7 @@ class _BottomLayerLoginScreenState extends State<BottomLayerLoginScreen> {
                           borderRadius: BorderRadius.circular(15)),
                     ),
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SchoolAuthPage()));
+                      Get.to(()=>const SchoolAuthPage());
                     },
                     child: const Text(
                       '회원가입하기',

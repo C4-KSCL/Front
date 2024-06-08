@@ -5,7 +5,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/components/textField.dart';
 import 'package:frontend_matching/components/textformField.dart';
+import 'package:frontend_matching/config.dart';
 import 'package:frontend_matching/controllers/signupController.dart';
+import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/pages/login/loginPage.dart';
 import 'package:frontend_matching/pages/signup/myInfo.dart';
 import 'package:frontend_matching/theme/colors.dart';
@@ -14,7 +16,8 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 Future<String?> registerUser(String email) async {
-  final Uri url = Uri.parse('https://soulmbti.shop:8000/signup/emailauth');
+
+  final Uri url = Uri.parse('${AppConfig.baseUrl}/signup/emailauth');
 
   try {
     final response = await http.post(
