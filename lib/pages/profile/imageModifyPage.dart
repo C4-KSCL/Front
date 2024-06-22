@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/controllers/userImageController.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
+import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:crop_image/crop_image.dart';
@@ -134,7 +135,9 @@ class _ImageModifyPageState extends State<ImageModifyPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: blueColor5,
       appBar: AppBar(
+        backgroundColor: blueColor5,
         title: const Text('사진 수정하기'),
       ),
       body: Column(

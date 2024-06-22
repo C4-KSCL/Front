@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get.dart';
 
 import '../controllers/bottomNavigationBar.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class MyBottomNavigationBar extends GetView<BottomNavigationBarController> {
   const MyBottomNavigationBar({super.key});
@@ -19,22 +21,26 @@ class MyBottomNavigationBar extends GetView<BottomNavigationBarController> {
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: controller.selectedIndex.value ==
-              0 ? Image.asset('assets/icons/selected_home.png') : Image.asset('assets/icons/no_selected_home.png'),
+              0 ? SvgPicture.asset('assets/icons/home.svg',
+          color: blueColor1,) : SvgPicture.asset('assets/icons/home.svg'),
           label: '',
         ),
         BottomNavigationBarItem(
           icon: controller.selectedIndex.value ==
-              1 ? Image.asset('assets/icons/selected_friend.png') : Image.asset('assets/icons/no_selected_friend.png'),
+              1 ? SvgPicture.asset('assets/icons/friend.svg',
+            color: blueColor1,) : SvgPicture.asset('assets/icons/friend.svg'),
           label: '',
         ),
         BottomNavigationBarItem(
           icon: controller.selectedIndex.value ==
-              2 ? Image.asset('assets/icons/selected_message.png') : Image.asset('assets/icons/no_selected_message.png'),
+              2 ? SvgPicture.asset('assets/icons/message.svg',
+            color: blueColor1,) : SvgPicture.asset('assets/icons/message.svg'),
           label: '',
         ),
         BottomNavigationBarItem(
           icon: controller.selectedIndex.value ==
-              3 ? Image.asset('assets/icons/selected_myInformation.png') : Image.asset('assets/icons/no_selected_myInformation.png'),
+              3 ? SvgPicture.asset('assets/icons/my_information.svg',
+            color: blueColor1,) : SvgPicture.asset('assets/icons/my_information.svg'),
           label: '',
         ),
       ],

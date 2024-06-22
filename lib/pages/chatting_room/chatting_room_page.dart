@@ -103,6 +103,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
       backgroundColor: blueColor5,
       appBar: AppBar(
         backgroundColor: blueColor5,
+        scrolledUnderElevation:0,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back_ios_rounded,

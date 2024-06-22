@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/pages/matching/loadingPage.dart';
 import 'package:frontend_matching/pages/profile/buttons/InfoModifyButton.dart';
@@ -9,7 +10,6 @@ import 'package:frontend_matching/pages/profile/buttons/columnButton.dart';
 import 'package:frontend_matching/pages/profile/imageModifyPage.dart';
 import 'package:frontend_matching/pages/profile/infoModifyPage.dart';
 import 'package:frontend_matching/pages/profile/service_center/serviceCenterPage.dart';
-import 'package:frontend_matching/pages/profile/topLayer.dart';
 import 'package:frontend_matching/pages/profile/userAvatar.dart';
 import 'package:frontend_matching/pages/signup/imageUpload/imageTest.dart';
 import 'package:frontend_matching/pages/signup/imageUpload/selectImagePage.dart';
@@ -37,16 +37,18 @@ class MyPage extends StatelessWidget {
     String accesstoken = '';
 
     return Scaffold(
+
         appBar: AppBar(
+          scrolledUnderElevation:0,
           title: const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("마이페이지"),
             ],
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: blueColor5,
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: blueColor5,
         body: SingleChildScrollView(
             child: GetBuilder<UserDataController>(builder: (controller) {
           if (controller.user.value != null) {
@@ -103,6 +105,7 @@ class MyPage extends StatelessWidget {
                     deletePath: my_profileImagePath,
                     email: my_email,
                     password: my_password,
+                    isModifiable: false,
                   ),
                   const SizedBox(
                     height: 10,
@@ -240,7 +243,7 @@ class MyPage extends StatelessWidget {
                                     ),
                                   );
                                 },
-                                img: 'assets/icons/image_modify.png',
+                                img: 'assets/icons/image.svg',
                                 str: '내 사진 수정하기'),
                           ],
                         ),
@@ -253,12 +256,6 @@ class MyPage extends StatelessWidget {
                         ),
                         ColumnButton(
                             pressed: () {
-                              userDataController.logout();
-                            },
-                            img: 'assets/icons/setting_button.png',
-                            str: '로그아웃'),
-                        ColumnButton(
-                            pressed: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -266,14 +263,46 @@ class MyPage extends StatelessWidget {
                                 ),
                               );
                             },
-                            img: 'assets/icons/customer_center.png',
+                            img: 'assets/icons/service_center.svg',
                             str: '고객센터'),
+                        TextButton(
+                            onPressed: () {
+                              userDataController.logout();
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(15),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15),
+                                border: Border.all(color: Colors.grey, width: 0.1),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  SvgPicture.asset(
+                                    'assets/icons/logout.svg',
+                                    color: greyColor4,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    '로그아웃',
+                                    style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ],
+                              ),
+                            )),
                         ColumnButton(
                             pressed: () {
                               DeleteUserService.deleteUser(
                                   accesstoken); //유저 탈퇴하기
                             },
-                            img: 'assets/icons/delete_member.png',
+                            img: 'assets/icons/trash_bin.svg',
                             str: '탈퇴하기'),
                       ],
                     ),

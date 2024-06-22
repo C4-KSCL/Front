@@ -26,22 +26,17 @@ class _DetailPageState extends State<DetailPage> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text('고객센터'),
-        elevation: 1.0,
-        titleTextStyle: const TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 17,
-        ),
-        backgroundColor: blueColor3,
+        backgroundColor: blueColor5,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back,
-            color: Colors.white,
           ),
           onPressed: () {
             Get.back();
           },
         ),
       ),
+      backgroundColor: blueColor5,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(

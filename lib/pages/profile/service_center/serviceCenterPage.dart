@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_matching/controllers/service_center_controller.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/models/post.dart';
@@ -50,17 +51,14 @@ class _ServiceCenterPageState extends State<ServiceCenterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: blueColor5,
         appBar: AppBar(
           centerTitle: true,
           title: const Text('고객센터'),
-          elevation: 1.0,
-          titleTextStyle:
-              const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
-          backgroundColor: blueColor3,
+          backgroundColor: blueColor5,
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back,
-              color: Colors.white,
             ),
             onPressed: () {
               Get.back();
@@ -94,33 +92,24 @@ class _ServiceCenterPageState extends State<ServiceCenterPage> {
                           ),
                         ),
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DetailPage(
-                                post: post,
-                                postImage: image,
-                              ),
-                            ),
-                          );
+                          Get.to(()=>DetailPage(
+                            post: post,
+                            postImage: image,
+                          ));
                         },
                       );
                     },
                   ),
         floatingActionButton:
-            Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-          FloatingActionButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => PostPage(),
-                ),
-              );
-            },
-            child: const Icon(Icons.article_outlined),
-          ),
-          const SizedBox(width: 10),
-        ]));
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 20, 20),
+              child: FloatingActionButton(
+                backgroundColor: blueColor1,
+                onPressed: () {
+                  Get.to(()=>PostPage());
+                },
+                child: SvgPicture.asset('assets/icons/document.svg')
+              ),
+            ));
   }
 }

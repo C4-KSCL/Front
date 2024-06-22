@@ -20,37 +20,42 @@ ListTile friendListTile({
     key: ValueKey(friendData.id),
     leading: ClipRRect(
       borderRadius: BorderRadius.circular(8.0), // 모서리를 둥글게 처리
-      child:
-      Image.network(
-        friendData.userImage,
-        width: 50,
-        height: 100,
-        fit: BoxFit.cover,
+      child: Stack(
         alignment: Alignment.center,
-        loadingBuilder: (BuildContext context, Widget child,
-            ImageChunkEvent? loadingProgress) {
-          if (loadingProgress == null) {
-            return child;
-          } else {
-            return CircularProgressIndicator(
-              value: loadingProgress.expectedTotalBytes != null
-                  ? loadingProgress.cumulativeBytesLoaded /
-                      (loadingProgress.expectedTotalBytes ?? 1)
-                  : null,
-            );
-          }
-        },
-        errorBuilder:
-            (BuildContext context, Object error, StackTrace? stackTrace) {
-          return
-            Image.asset(
-            'assets/icons/defalut_user.png',
+        children: [
+          Image.network(
+            friendData.userImage,
             width: 50,
             height: 100,
             fit: BoxFit.cover,
             alignment: Alignment.center,
-          );
-        },
+            loadingBuilder: (BuildContext context, Widget child,
+                ImageChunkEvent? loadingProgress) {
+              if (loadingProgress == null) {
+                return child;
+              } else {
+                return const SizedBox(
+                  width: 50,
+                  height: 100,
+                  child: Center(
+                    child: CircularProgressIndicator(
+                    ),
+                  ),
+                );
+              }
+            },
+            errorBuilder:
+                (BuildContext context, Object error, StackTrace? stackTrace) {
+              return Image.asset(
+                'assets/icons/default_user.png',
+                width: 50,
+                height: 100,
+                fit: BoxFit.cover,
+                alignment: Alignment.center,
+              );
+            },
+          ),
+        ],
       ),
     ),
     title: Column(
@@ -74,9 +79,9 @@ ListTile friendListTile({
               ),
               child: Center(
                   child: Text(
-                '${friendData.age}세',
-                style: whiteTextStyle2,
-              )),
+                    '${friendData.age}세',
+                    style: whiteTextStyle2,
+                  )),
             ),
           ],
         ),
@@ -106,8 +111,7 @@ ListTile receivedRequestListTile({
     key: ValueKey(receivedRequestData.requestId),
     leading: ClipRRect(
       borderRadius: BorderRadius.circular(8.0), // 모서리를 둥글게 처리
-      child:
-      Image.network(
+      child: Image.network(
         receivedRequestData.userImage,
         width: 50,
         height: 100,
@@ -118,24 +122,25 @@ ListTile receivedRequestListTile({
           if (loadingProgress == null) {
             return child;
           } else {
-            return CircularProgressIndicator(
-              value: loadingProgress.expectedTotalBytes != null
-                  ? loadingProgress.cumulativeBytesLoaded /
-                  (loadingProgress.expectedTotalBytes ?? 1)
-                  : null,
+            return const SizedBox(
+              width: 50,
+              height: 100,
+              child: Center(
+                child: CircularProgressIndicator(
+                ),
+              ),
             );
           }
         },
         errorBuilder:
             (BuildContext context, Object error, StackTrace? stackTrace) {
-          return
-            Image.asset(
-              'assets/icons/defalut_user.png',
-              width: 50,
-              height: 100,
-              fit: BoxFit.cover,
-              alignment: Alignment.center,
-            );
+          return Image.asset(
+            'assets/icons/defalut_user.png',
+            width: 50,
+            height: 100,
+            fit: BoxFit.cover,
+            alignment: Alignment.center,
+          );
         },
       ),
     ),
@@ -205,8 +210,7 @@ ListTile sentRequestListTile({
     key: ValueKey(sentRequestData.requestId),
     leading: ClipRRect(
       borderRadius: BorderRadius.circular(8.0), // 모서리를 둥글게 처리
-      child:
-      Image.network(
+      child: Image.network(
         sentRequestData.userImage,
         width: 50,
         height: 100,
@@ -217,24 +221,25 @@ ListTile sentRequestListTile({
           if (loadingProgress == null) {
             return child;
           } else {
-            return CircularProgressIndicator(
-              value: loadingProgress.expectedTotalBytes != null
-                  ? loadingProgress.cumulativeBytesLoaded /
-                  (loadingProgress.expectedTotalBytes ?? 1)
-                  : null,
+            return const SizedBox(
+              width: 50,
+              height: 100,
+              child: Center(
+                child: CircularProgressIndicator(
+                ),
+              ),
             );
           }
         },
         errorBuilder:
             (BuildContext context, Object error, StackTrace? stackTrace) {
-          return
-            Image.asset(
-              'assets/icons/defalut_user.png',
-              width: 50,
-              height: 100,
-              fit: BoxFit.cover,
-              alignment: Alignment.center,
-            );
+          return Image.asset(
+            'assets/icons/defalut_user.png',
+            width: 50,
+            height: 100,
+            fit: BoxFit.cover,
+            alignment: Alignment.center,
+          );
         },
       ),
     ),
@@ -302,8 +307,7 @@ ListTile friendSettingListTile({
     key: ValueKey(friendData.id),
     leading: ClipRRect(
       borderRadius: BorderRadius.circular(8.0), // 모서리를 둥글게 처리
-      child:
-      Image.network(
+      child: Image.network(
         friendData.userImage,
         width: 50,
         height: 100,
@@ -314,24 +318,25 @@ ListTile friendSettingListTile({
           if (loadingProgress == null) {
             return child;
           } else {
-            return CircularProgressIndicator(
-              value: loadingProgress.expectedTotalBytes != null
-                  ? loadingProgress.cumulativeBytesLoaded /
-                  (loadingProgress.expectedTotalBytes ?? 1)
-                  : null,
+            return const SizedBox(
+              width: 50,
+              height: 100,
+              child: Center(
+                child: CircularProgressIndicator(
+                ),
+              ),
             );
           }
         },
         errorBuilder:
             (BuildContext context, Object error, StackTrace? stackTrace) {
-          return
-            Image.asset(
-              'assets/icons/defalut_user.png',
-              width: 50,
-              height: 100,
-              fit: BoxFit.cover,
-              alignment: Alignment.center,
-            );
+          return Image.asset(
+            'assets/icons/defalut_user.png',
+            width: 50,
+            height: 100,
+            fit: BoxFit.cover,
+            alignment: Alignment.center,
+          );
         },
       ),
     ),
@@ -405,24 +410,25 @@ ListTile blockedFriendSettingListTile({
           if (loadingProgress == null) {
             return child;
           } else {
-            return CircularProgressIndicator(
-              value: loadingProgress.expectedTotalBytes != null
-                  ? loadingProgress.cumulativeBytesLoaded /
-                  (loadingProgress.expectedTotalBytes ?? 1)
-                  : null,
+            return const SizedBox(
+              width: 50,
+              height: 100,
+              child: Center(
+                child: CircularProgressIndicator(
+                ),
+              ),
             );
           }
         },
         errorBuilder:
             (BuildContext context, Object error, StackTrace? stackTrace) {
-          return
-            Image.asset(
-              'assets/icons/defalut_user.png',
-              width: 50,
-              height: 100,
-              fit: BoxFit.cover,
-              alignment: Alignment.center,
-            );
+          return Image.asset(
+            'assets/icons/defalut_user.png',
+            width: 50,
+            height: 100,
+            fit: BoxFit.cover,
+            alignment: Alignment.center,
+          );
         },
       ),
     ),

@@ -11,6 +11,7 @@ class UserAvatar extends StatefulWidget {
   final String deletePath;
   final String email;
   final String password;
+  final bool isModifiable;
 
   UserAvatar({
     required this.img,
@@ -19,6 +20,7 @@ class UserAvatar extends StatefulWidget {
     required this.deletePath,
     required this.email,
     required this.password,
+    required this.isModifiable
   });
 
   @override
@@ -62,6 +64,7 @@ class _UserAvatarState extends State<UserAvatar> {
                 radius: widget.medWidth / 5.5,
                 backgroundImage: NetworkImage(widget.img),
               )),
+        if(widget.isModifiable)
         Positioned(
           right: 0,
           bottom: 0,
@@ -73,6 +76,7 @@ class _UserAvatarState extends State<UserAvatar> {
             },
           ),
         ),
+        if(widget.isModifiable)
         Positioned(
           right: 120,
           bottom: 0,

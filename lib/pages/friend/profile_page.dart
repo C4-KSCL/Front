@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_matching/components/button.dart';
 import 'package:frontend_matching/controllers/bottomNavigationBar.dart';
 import 'package:frontend_matching/controllers/chatting_controller.dart';
@@ -123,8 +124,9 @@ Widget FriendProfilePage({
                         return Image.network(
                           friendImage.imagePath,
                           errorBuilder: (context, error, stackTrace) {
-                            return Image.asset(
-                                'assets/images/logo.png'); // 기본 이미지 제공
+                            return SvgPicture.asset(
+                              'assets/images/logo.svg',
+                            );;
                           },
                         );
                       },
