@@ -23,7 +23,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
-/// Android : 백그라운드일때, FCM을 받았을 때 실행
+// Android : 백그라운드일때, FCM을 받았을 때 실행
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -35,11 +35,11 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  ///.env 파일 불러오기
+  //.env 파일 불러오기
   await dotenv.load(fileName: ".env");
   AppConfig.load();
 
-  /// Firebase 초기화
+  // Firebase 초기화
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -47,28 +47,34 @@ void main() async {
   FcmController fcmController = Get.put(FcmController());
   await fcmController.initializeFcm();
 
-  /// FCM : 종료 상태/백그라운드 알림 받을 때 실행
+  // FCM : 종료 상태/백그라운드 알림 받을 때 실행
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
-  /// 한국 시간 설정
+  // 한국 시간 설정
   await initializeDateFormatting('ko_KR', null);
 
   AppConfig.putGetxControllerDependency();
 
-    // 자동 로그인 여부 확인하기
-    String? isAutoLogin = await AppConfig.storage.read(key: "isAutoLogin");
+  // 자동 로그인 여부 확인하기
+  String? isAutoLogin = await AppConfig.storage.read(key: "isAutoLogin");
 
-    // 자동 로그인이 설정된 경우
-    if (isAutoLogin == "true") {
-      print("자동 로그인 한적 있음");
-      String? email = await AppConfig.storage.read(key: "autoLoginEmail");
-      String? password = await AppConfig.storage.read(key: "autoLoginPw");
-      if (email != null && password != null) {
-        await UserDataController.to.loginUser(email, password);
-        // 로그인 후의 UI 업데이트나 다른 처리
-      }
+  // 자동 로그인이 설정된 경우
+  if (isAutoLogin == "true") {
+    print("자동 로그인 한적 있음");
+    String? email = await AppConfig.storage.read(key: "autoLoginEmail");
+    String? password = await AppConfig.storage.read(key: "autoLoginPw");
+    if (email != null && password != null) {
+      await UserDataController.to.loginUser(email, password);
+      // 로그인 후의 UI 업데이트나 다른 처리
     }
+  }
 
+  // 상태 표시줄 색상 설정
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    statusBarColor: Colors.white, // 원하는 색상으로 변경
+    statusBarIconBrightness:
+        Brightness.dark,
+  ));
 
   runApp(MyApp());
 }
@@ -81,8 +87,9 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: Obx(()=> UserDataController.to.user.value==null ? const LoginPage() : const InitPage() )
-      ),
+          body: Obx(() => UserDataController.to.user.value == null
+              ? const LoginPage()
+              : const InitPage())),
       theme: ThemeData(
         primarySwatch: Colors.blue,
         popupMenuTheme: PopupMenuThemeData(

@@ -14,6 +14,7 @@ import 'package:frontend_matching/pages/profile/myMbtiModifyPage.dart';
 import 'package:frontend_matching/pages/profile/userAvatar.dart';
 import 'package:frontend_matching/services/nickname_check.dart';
 import 'package:frontend_matching/theme/colors.dart';
+import 'package:frontend_matching/theme/textStyle.dart';
 import 'package:get/get.dart';
 
 class InfoModifyPage extends StatefulWidget {
@@ -91,208 +92,101 @@ class _InfoModifyPageState extends State<InfoModifyPage> {
         appBar: AppBar(
           centerTitle: true,
           title: const Text('내 정보 수정하기'),
-          elevation: 1.0,
-          titleTextStyle:
-              const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
-          backgroundColor: blueColor3,
+          backgroundColor: blueColor5,
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back,
-              color: Colors.white,
             ),
             onPressed: () {
               Get.back();
             },
           ),
         ),
-        backgroundColor: blueColor3,
+        backgroundColor: blueColor5,
         body: SingleChildScrollView(
-            child: Stack(children: [
-          Positioned(
-              top: medHeight / 4.1,
+            child: Stack(
+          children: [
+            Positioned(
+                top: medHeight / 4.1,
+                child: Container(
+                    height: medHeight,
+                    decoration: const BoxDecoration(
+                        color: Color(0xFFFCFCFF),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30),
+                          topRight: Radius.circular(30),
+                        )),
+                    padding: EdgeInsets.fromLTRB(0, medHeight, medWidth, 0.0))),
+            Opacity(
+              opacity: 0.8,
               child: Container(
-                  height: medHeight,
-                  decoration: const BoxDecoration(
-                      color: Color(0xFFFCFCFF),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        topRight: Radius.circular(30),
-                      )),
-                  padding: EdgeInsets.fromLTRB(0, medHeight, medWidth, 0.0))),
-          Opacity(
-            opacity: 0.8,
-            child: Container(
-              decoration: const BoxDecoration(
-                  color: Colors.white,
-                  border: Border(
-                      bottom: BorderSide(width: 0.5, color: Colors.grey))),
-              height: statusBarHeight + 55,
+                decoration: const BoxDecoration(
+                    color: Colors.white,
+                    border: Border(
+                        bottom: BorderSide(width: 0.5, color: Colors.grey))),
+                height: statusBarHeight + 55,
+              ),
             ),
-          ),
-          Container(
-            color: blueColor5,
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              SizedBox(
-                height: medHeight / 10,
-              ),
-              UserAvatar(
-                img: my_profileImagePath,
-                medWidth: medWidth,
-                accessToken: accessToken,
-                deletePath: my_profileImagePath,
-                email: my_email,
-                password: my_password,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    my_nickname,
-                    style: TextStyle(fontSize: 29, fontWeight: FontWeight.w600),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                ],
-              ),
-              Padding(
-                padding: EdgeInsets.all(medWidth / 60),
-                child: GetTextContainer(
-                  textLogo: '',
-                  textType: '비밀번호',
-                  typeController: passwordController,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(medWidth / 60),
-                child: ButtonTextFieldBox(
-                  hintText: '입력하세요',
-                  onPressed: () async {
-                    String nickname = nicknameController.text;
-                    if (nickname.length >= 8) {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text('닉네임 길이 오류'),
-                            content: Text('최대 8자로 입력해주세요.'),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                  isNicknameVerified = false;
-                                },
-                                child: const Text('확인'),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    } else {
-                      bool? check =
-                          await NickNameCheck.checknickname(nickname, context);
-                      setState(() {
-                        if (check == true) {
-                          isNicknameVerified = true; // 닉네임 인증 상태를 true로 설정
-                        }
-                      });
-                    }
-                  },
-                  textEditingController: nicknameController,
-                  buttonText: '인증하기',
-                  TEXT: '닉네임',
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(medWidth / 60),
-                child: GetTextContainer(
-                  textLogo: '',
-                  textType: '전화번호',
-                  typeController: phoneNumberController,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(medWidth / 60),
-                child: GetTextContainer(
-                  textLogo: '',
-                  textType: '나이',
-                  typeController: ageController,
-                ),
-              ),
-              Row(
-                children: [
-                  SizedBox(width: 15),
-                  InfoModifyButton(
-                      medHeight: medHeight,
+            Container(
+              color: blueColor5,
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: medHeight / 10,
+                    ),
+                    UserAvatar(
+                      img: my_profileImagePath,
                       medWidth: medWidth,
-                      pressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MyMbtiModifyPage(),
-                          ),
-                        );
-                      },
-                      img: 'assets/images/mbti.png',
-                      str: '내 MBTI 수정하기'),
-                  InfoModifyButton(
-                      medHeight: medHeight,
-                      medWidth: medWidth,
-                      pressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MyKeywordModifyPage(),
-                          ),
-                        );
-                      },
-                      img: 'assets/images/keyword.jpeg',
-                      str: '내 키워드 수정하기'),
-                ],
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              Padding(
-                padding: EdgeInsets.all(medWidth / 60),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF7EA5F3),
-                    minimumSize: Size(300, 50),
-                  ),
-                  onPressed: isNicknameVerified
-                      ? () async {
-                          String password = passwordController.text;
+                      accessToken: accessToken,
+                      deletePath: my_profileImagePath,
+                      email: my_email,
+                      password: my_password,
+                      isModifiable: true,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          my_nickname,
+                          style: TextStyle(
+                              fontSize: 29, fontWeight: FontWeight.w600),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(medWidth / 60),
+                      child: GetTextContainer(
+                        textLogo: '',
+                        textType: '비밀번호',
+                        typeController: passwordController,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(medWidth / 60),
+                      child: ButtonTextFieldBox(
+                        hintText: '입력하세요',
+                        onPressed: () async {
                           String nickname = nicknameController.text;
-                          String phoneNumber = phoneNumberController.text;
-                          String age = ageController.text;
-                          print(phoneNumber);
-                          if (password.isNotEmpty &&
-                              nickname.isNotEmpty &&
-                              phoneNumber.isNotEmpty &&
-                              age.isNotEmpty) {
-                            await infoModifyController.InfoModify(
-                              password,
-                              nickname,
-                              phoneNumber,
-                              age,
-                            );
+                          if (nickname.length >= 8) {
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: Text('정보 수정'),
-                                  content: Text('정보가 수정되었습니다.'),
+                                  title: Text('닉네임 길이 오류'),
+                                  content: Text('최대 8자로 입력해주세요.'),
                                   actions: [
                                     TextButton(
                                       onPressed: () {
                                         Navigator.pop(context);
-                                        Navigator.pop(context);
+                                        isNicknameVerified = false;
                                       },
                                       child: const Text('확인'),
                                     ),
@@ -301,37 +195,150 @@ class _InfoModifyPageState extends State<InfoModifyPage> {
                               },
                             );
                           } else {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text('정보 수정'),
-                                  content: Text('모든 값을 입력해주세요!'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Get.back();
-                                      },
-                                      child: const Text('확인'),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
+                            bool? check = await NickNameCheck.checknickname(
+                                nickname, context);
+                            setState(() {
+                              if (check == true) {
+                                isNicknameVerified =
+                                    true; // 닉네임 인증 상태를 true로 설정
+                              }
+                            });
                           }
-                        }
-                      : null, // 닉네임 인증 상태에 따라 비활성화
-                  child: const Text('다음으로',
-                      style: TextStyle(
-                        color: Colors.white,
-                      )),
-                ),
-              ),
-              SizedBox(
-                height: 30,
-              ),
-            ]),
-          ),
-        ])));
+                        },
+                        textEditingController: nicknameController,
+                        buttonText: '인증하기',
+                        TEXT: '닉네임',
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(medWidth / 60),
+                      child: GetTextContainer(
+                        textLogo: '',
+                        textType: '전화번호',
+                        typeController: phoneNumberController,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(medWidth / 60),
+                      child: GetTextContainer(
+                        textLogo: '',
+                        textType: '나이',
+                        typeController: ageController,
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        SizedBox(width: 15),
+                        InfoModifyButton(
+                            medHeight: medHeight,
+                            medWidth: medWidth,
+                            pressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MyMbtiModifyPage(),
+                                ),
+                              );
+                            },
+                            img: 'assets/images/mbti.png',
+                            str: '내 MBTI 수정하기'),
+                        InfoModifyButton(
+                            medHeight: medHeight,
+                            medWidth: medWidth,
+                            pressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MyKeywordModifyPage(),
+                                ),
+                              );
+                            },
+                            img: 'assets/images/keyword.jpeg',
+                            str: '내 키워드 수정하기'),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(medWidth / 60),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(12), // 둥근 테두리 반경 설정
+                          ),
+                          backgroundColor: Color(0xFF7EA5F3),
+                          minimumSize: Size(300, 50),
+                        ),
+                        onPressed: isNicknameVerified
+                            ? () async {
+                                String password = passwordController.text;
+                                String nickname = nicknameController.text;
+                                String phoneNumber = phoneNumberController.text;
+                                String age = ageController.text;
+                                print(phoneNumber);
+                                if (password.isNotEmpty &&
+                                    nickname.isNotEmpty &&
+                                    phoneNumber.isNotEmpty &&
+                                    age.isNotEmpty) {
+                                  await infoModifyController.InfoModify(
+                                    password,
+                                    nickname,
+                                    phoneNumber,
+                                    age,
+                                  );
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text('정보 수정'),
+                                        content: Text('정보가 수정되었습니다.'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                            },
+                                            child: const Text('확인'),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                } else {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text('정보 수정'),
+                                        content: Text('모든 값을 입력해주세요!'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Get.back();
+                                            },
+                                            child: const Text('확인'),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }
+                              }
+                            : null, // 닉네임 인증 상태에 따라 비활성화
+                        child: const Text('수정하기',
+                            style: TextStyle(
+                              color: Colors.white,
+                            )),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                  ]),
+            ),
+          ],
+        )));
   }
 }

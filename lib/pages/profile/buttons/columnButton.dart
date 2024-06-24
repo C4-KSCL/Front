@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class ColumnButton extends StatelessWidget {
   final Function()? pressed;
@@ -9,10 +10,11 @@ class ColumnButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return TextButton(
         onPressed: pressed,
         child: Container(
-          padding: EdgeInsets.all(15),
+          padding: const EdgeInsets.all(15),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(15),
@@ -21,17 +23,16 @@ class ColumnButton extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(
-                height: 30,
-                width: 30,
-                child: Image.asset(img),
+              SvgPicture.asset(
+                img,
+                fit: BoxFit.cover,
               ),
-              SizedBox(
+              const SizedBox(
                 width: 10,
               ),
               Text(
                 '$str',
-                style: TextStyle(
+                style: const TextStyle(
                     color: Colors.black,
                     fontSize: 16,
                     fontWeight: FontWeight.w600),

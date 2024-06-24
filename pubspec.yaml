@@ -90,7 +90,6 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
-    - assets/icons/profile_modify.svg
     - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see

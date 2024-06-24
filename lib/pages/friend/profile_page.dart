@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_matching/components/button.dart';
 import 'package:frontend_matching/controllers/bottomNavigationBar.dart';
 import 'package:frontend_matching/controllers/chatting_controller.dart';
@@ -45,7 +46,7 @@ Widget FriendProfilePage({
             child: Column(
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       children: [
@@ -120,12 +121,17 @@ Widget FriendProfilePage({
                       itemBuilder: (context, index) {
                         var friendImage =
                             FriendController.to.friendImageData[index];
-                        return Image.network(
-                          friendImage.imagePath,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Image.asset(
-                                'assets/images/logo.png'); // 기본 이미지 제공
-                          },
+                        return ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.network(
+                            friendImage.imagePath,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return SvgPicture.asset(
+                                'assets/images/logo.svg',
+                              );
+                            },
+                          ),
                         );
                       },
                     ),
@@ -136,26 +142,35 @@ Widget FriendProfilePage({
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: Wrap(
-                    spacing: 2.0, // 수평 간격
-                    runSpacing: 2.0, // 수직 간격
-                    children: userData.myKeyword
-                        .split(',')
-                        .map((item) => item.trim()) // 공백 제거
-                        .map((item) => Padding(
-                              padding: const EdgeInsets.all(4),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: greyColor6,
-                                ),
-                                padding: const EdgeInsets.all(4),
-                                child: Text(item,
-                                    style:
-                                        const TextStyle(color: Colors.white)),
+                  child:
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        ...userData.myKeyword
+                            .split(',')
+                            .map((item) => item.trim())
+                            .map(
+                              (item) => Padding(
+                            padding: const EdgeInsets.all(4),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                BorderRadius.circular(5),
+                                color: greyColor6,
                               ),
-                            ))
-                        .toList(),
+                              padding: const EdgeInsets.all(5),
+                              child: Text(
+                                item,
+                                style: const TextStyle(
+                                    color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        )
+                            .toList(),
+                      ],
+                    ),
                   ),
                 ),
                 // 채팅방 이동 버튼
@@ -231,7 +246,7 @@ Widget RequestProfilePage({
             child: Column(
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       children: [
@@ -288,10 +303,6 @@ Widget RequestProfilePage({
                 const SizedBox(
                   height: 10,
                 ),
-                const Divider(),
-                const SizedBox(
-                  height: 10,
-                ),
                 // 친구의 사진 보여주는 슬라이더
                 // http 요청을 통해 이미지 정보 못받으면 검정 화면
                 Expanded(
@@ -310,7 +321,18 @@ Widget RequestProfilePage({
                       itemBuilder: (context, index) {
                         var friendImage =
                             FriendController.to.friendImageData[index];
-                        return Image.network(friendImage.imagePath);
+                        return ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.network(
+                            friendImage.imagePath,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return SvgPicture.asset(
+                                'assets/images/logo.svg',
+                              );
+                            },
+                          ),
+                        );
                       },
                     ),
                   ),
@@ -319,25 +341,34 @@ Widget RequestProfilePage({
                 const SizedBox(
                   height: 10,
                 ),
-                Wrap(
-                  spacing: 2.0, // 수평 간격
-                  runSpacing: 2.0, // 수직 간격
-                  children: userData.myKeyword
-                      .split(',')
-                      .map((item) => item.trim()) // 공백 제거
-                      .map((item) => Padding(
-                            padding: const EdgeInsets.all(4),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: greyColor6,
-                              ),
-                              padding: const EdgeInsets.all(4),
-                              child: Text(item,
-                                  style: const TextStyle(color: Colors.white)),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      ...userData.myKeyword
+                          .split(',')
+                          .map((item) => item.trim())
+                          .map(
+                            (item) => Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius:
+                              BorderRadius.circular(5),
+                              color: greyColor6,
                             ),
-                          ))
-                      .toList(),
+                            padding: const EdgeInsets.all(5),
+                            child: Text(
+                              item,
+                              style: const TextStyle(
+                                  color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      )
+                          .toList(),
+                    ],
+                  ),
                 ),
               ],
             ),

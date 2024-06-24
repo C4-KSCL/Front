@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/components/textField.dart';
 import 'package:frontend_matching/controllers/find_friend_controller.dart';
@@ -13,7 +14,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:page_indicator/page_indicator.dart';
 import '../../theme/colors.dart';
 import '../../theme/textStyle.dart';
-import 'image_modify_page.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -82,26 +83,29 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        scrolledUnderElevation:0,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset("assets/images/logo.png"),
+            SvgPicture.asset(
+              'assets/images/logo.svg',
+            ),
+            CupertinoButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MbtiSettingPage(),
+                  ),
+                );
+              },
+              child: SvgPicture.asset(
+                'assets/icons/setting.svg',
+              ),
+            ),
           ],
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const MbtiSettingPage(),
-                ),
-              );
-            },
-            icon: const Icon(Icons.settings_rounded),
-          ),
-          const SizedBox(width: 20),
-        ],
         elevation: 0.0,
         titleTextStyle:
             const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
@@ -192,17 +196,9 @@ class _MainPageState extends State<MainPage> {
                                                   if (loadingProgress == null) {
                                                     return child;
                                                   } else {
-                                                    return Center(
-                                                      child: CircularProgressIndicator(
-                                                        value: loadingProgress
-                                                                    .expectedTotalBytes !=
-                                                                null
-                                                            ? loadingProgress
-                                                                    .cumulativeBytesLoaded /
-                                                                (loadingProgress
-                                                                        .expectedTotalBytes ??
-                                                                    1)
-                                                            : null,
+                                                    return const Center(
+                                                      child:
+                                                          CircularProgressIndicator(
                                                       ),
                                                     );
                                                   }

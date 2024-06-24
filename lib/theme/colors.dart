@@ -9,6 +9,7 @@ const blueColor5 = Color(0xFFEEF0FA); //배경색
 const blueColor6 = Color(0xFFEFF2F8);
 const blueColor7 = Color(0xFF0D309A);
 const blueColor8 = Color(0xFF90CAF9);
+const blueColor9 = Color(0xFFC0D2F6);
 
 //그레이 색상
 const greyColor1 = Color(0xFFA7AFC0); //hintText 글자 색

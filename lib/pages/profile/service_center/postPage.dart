@@ -41,19 +41,14 @@ class _PostPageState extends State<PostPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: blueColor5,
       appBar: AppBar(
         centerTitle: true,
         title: const Text('게시글 작성'),
-        elevation: 1.0,
-        titleTextStyle: const TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 17,
-        ),
-        backgroundColor: blueColor3,
+        backgroundColor: blueColor5,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back,
-            color: Colors.white,
           ),
           onPressed: () {
             Get.back();
