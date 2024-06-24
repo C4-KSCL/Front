@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_matching/controllers/chatting_controller.dart';
 import 'package:frontend_matching/controllers/chatting_list_controller.dart';
 import 'package:frontend_matching/models/friend.dart';
@@ -188,7 +189,7 @@ ListTile receivedRequestListTile({
               isReceivedRequest: true,
             ));
       },
-      icon: Image.asset("assets/icons/question_message.png"),
+      icon: SvgPicture.asset("assets/icons/enter_room.svg",color: blueColor1,),
     ),
     onTap: () {
       //프로필 페이지 열기
@@ -286,7 +287,7 @@ ListTile sentRequestListTile({
               isReceivedRequest: false,
             ));
       },
-      icon: Image.asset("assets/icons/question_message.png"),
+      icon: SvgPicture.asset("assets/icons/enter_room.svg",color: blueColor1,),
     ),
     onTap: () {
       Get.bottomSheet(

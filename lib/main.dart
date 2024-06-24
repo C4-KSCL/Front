@@ -71,7 +71,7 @@ void main() async {
 
   // 상태 표시줄 색상 설정
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    statusBarColor: blueColor5, // 원하는 색상으로 변경
+    statusBarColor: Colors.white, // 원하는 색상으로 변경
     statusBarIconBrightness:
         Brightness.dark,
   ));
