@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_matching/controllers/chatting_list_controller.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/models/chat.dart';
@@ -205,9 +206,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                                 chatController.clear();
                               }
                             },
-                            icon: Image.asset(
-                                "assets/icons/send_message_button.png",
-                                color: blueColor1)),
+                            icon: SvgPicture.asset('assets/icons/send_button.svg')),
                       ],
                     ),
                   )

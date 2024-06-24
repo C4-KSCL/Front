@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:frontend_matching/theme/textStyle.dart';
 import 'package:flutter/services.dart';
@@ -154,13 +155,13 @@ Container IconTextFieldBox({
             borderSide: BorderSide(color: blueColor4, width: 2.0),
             borderRadius: BorderRadius.circular(12),
           ),
-          suffixIcon: IconButton(
-            onPressed: () {
-              onPressed();
-            },
-            icon: Icon(
-              Icons.send,
-              color: blueColor1,
+          suffixIcon: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
+            child: IconButton(
+              onPressed: () {
+                onPressed();
+              },
+              icon: SvgPicture.asset('assets/icons/send_button.svg')
             ),
           )),
       controller: textEditingController,
