@@ -51,20 +51,6 @@ class _MyMbtiPageState extends State<MyMbtiPage> {
             );
           },
         ),
-        actions: [
-          IconButton(
-              icon: Icon(
-                Icons.home,
-                color: Colors.white,
-              ),
-              onPressed: () => {}),
-          IconButton(
-              icon: Icon(
-                Icons.search,
-                color: Colors.white,
-              ),
-              onPressed: () => {})
-        ],
       ),
       backgroundColor: blueColor5,
       body: Container(

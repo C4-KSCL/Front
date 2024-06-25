@@ -102,20 +102,6 @@ class _SchoolAuthPageState extends State<SchoolAuthPage> {
               );
             },
           ),
-          actions: [
-            IconButton(
-                icon: const Icon(
-                  Icons.home,
-                  color: Colors.white,
-                ),
-                onPressed: () => {}),
-            IconButton(
-                icon: const Icon(
-                  Icons.search,
-                  color: Colors.white,
-                ),
-                onPressed: () => {})
-          ],
         ),
         backgroundColor: blueColor5,
         body: SingleChildScrollView(
