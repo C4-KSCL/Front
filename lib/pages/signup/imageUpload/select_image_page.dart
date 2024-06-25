@@ -5,7 +5,7 @@ import 'dart:ui' as ui;
 
 import 'package:crop_image/crop_image.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend_matching/controllers/signupController.dart';
+import 'package:frontend_matching/controllers/signup_controller.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';

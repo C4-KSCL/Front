@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:frontend_matching/controllers/userProfileController.dart';
+import 'package:frontend_matching/controllers/user_profile_controller.dart';
 
 class UserAvatar extends StatefulWidget {
   final String img;
@@ -13,15 +13,14 @@ class UserAvatar extends StatefulWidget {
   final String password;
   final bool isModifiable;
 
-  UserAvatar({
-    required this.img,
-    required this.medWidth,
-    required this.accessToken,
-    required this.deletePath,
-    required this.email,
-    required this.password,
-    required this.isModifiable
-  });
+  UserAvatar(
+      {required this.img,
+      required this.medWidth,
+      required this.accessToken,
+      required this.deletePath,
+      required this.email,
+      required this.password,
+      required this.isModifiable});
 
   @override
   State<UserAvatar> createState() => _UserAvatarState();
@@ -64,30 +63,30 @@ class _UserAvatarState extends State<UserAvatar> {
                 radius: widget.medWidth / 5.5,
                 backgroundImage: NetworkImage(widget.img),
               )),
-        if(widget.isModifiable)
-        Positioned(
-          right: 0,
-          bottom: 0,
-          child: IconButton(
-            icon: const Icon(Icons.delete, color: Colors.grey),
-            onPressed: () async {
-              await userProfileController.deleteProfileImage(
-                  widget.accessToken, widget.deletePath);
-            },
+        if (widget.isModifiable)
+          Positioned(
+            right: 0,
+            bottom: 0,
+            child: IconButton(
+              icon: const Icon(Icons.delete, color: Colors.grey),
+              onPressed: () async {
+                await userProfileController.deleteProfileImage(
+                    widget.accessToken, widget.deletePath);
+              },
+            ),
           ),
-        ),
-        if(widget.isModifiable)
-        Positioned(
-          right: 120,
-          bottom: 0,
-          child: IconButton(
-            icon: const Icon(Icons.add, color: Colors.black),
-            onPressed: () async {
-              await userProfileController
-                  .uploadProfileImage(widget.accessToken);
-            },
+        if (widget.isModifiable)
+          Positioned(
+            right: 120,
+            bottom: 0,
+            child: IconButton(
+              icon: const Icon(Icons.add, color: Colors.black),
+              onPressed: () async {
+                await userProfileController
+                    .uploadProfileImage(widget.accessToken);
+              },
+            ),
           ),
-        ),
       ],
     );
   }

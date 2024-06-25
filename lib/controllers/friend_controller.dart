@@ -5,7 +5,7 @@ import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/models/friend.dart';
 import 'package:frontend_matching/models/request.dart';
 import 'package:frontend_matching/models/user.dart';
-import 'package:frontend_matching/models/userImage.dart';
+import 'package:frontend_matching/models/user_image.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
@@ -36,7 +36,7 @@ class FriendController extends GetxController {
     sentRequests.clear();
     receivedRequests.clear();
     blockedFriends.clear();
-    pageNumber=0.obs;
+    pageNumber = 0.obs;
   }
 
   /// 친구 요청 보내기
@@ -48,7 +48,8 @@ class FriendController extends GetxController {
 
     final body = json.encode({"oppEmail": oppEmail, "content": content});
 
-    var response = await UserDataController.sendHttpRequestWithTokenManagement(method: 'post', url: url, body: body);
+    var response = await UserDataController.sendHttpRequestWithTokenManagement(
+        method: 'post', url: url, body: body);
 
     // 이미 친구인 경우, 받은 요청이 있을 경우, 보낸 요청이 있을 경우
     if (response.statusCode == 400) {
@@ -86,7 +87,8 @@ class FriendController extends GetxController {
     final url = Uri.parse('$baseUrl/$requests/get-received');
     List<Request> tempReceivedRequests = [];
 
-    var response= await UserDataController.sendHttpRequestWithTokenManagement(method: 'get', url: url);
+    var response = await UserDataController.sendHttpRequestWithTokenManagement(
+        method: 'get', url: url);
 
     if (response.statusCode == 200) {
       var receivedRequests = jsonDecode(response.body);
@@ -129,7 +131,8 @@ class FriendController extends GetxController {
     final url = Uri.parse('$baseUrl/$requests/get-sended');
     List<Request> tempSentRequests = [];
 
-    var response= await UserDataController.sendHttpRequestWithTokenManagement(method: 'get', url: url);
+    var response = await UserDataController.sendHttpRequestWithTokenManagement(
+        method: 'get', url: url);
 
     print(response.statusCode);
     print(response.body);
@@ -177,7 +180,8 @@ class FriendController extends GetxController {
 
     final body = jsonEncode({"requestId": requestId});
 
-    var response = await UserDataController.sendHttpRequestWithTokenManagement(method: 'post', url: url, body: body);
+    var response = await UserDataController.sendHttpRequestWithTokenManagement(
+        method: 'post', url: url, body: body);
 
     // response.statusCode == 201 이면 성공
     print(response.statusCode);
@@ -192,7 +196,8 @@ class FriendController extends GetxController {
 
     final body = jsonEncode({"requestId": requestId});
 
-    var response= await UserDataController.sendHttpRequestWithTokenManagement(method: 'patch', url: url,body: body);
+    var response = await UserDataController.sendHttpRequestWithTokenManagement(
+        method: 'patch', url: url, body: body);
 
     print(response.statusCode);
     print(response.body);
@@ -204,7 +209,10 @@ class FriendController extends GetxController {
   }) async {
     final url = Uri.parse('$baseUrl/$requests/$delete/$requestId');
 
-    var response= await UserDataController.sendHttpRequestWithTokenManagement(method: 'delete', url: url,);
+    var response = await UserDataController.sendHttpRequestWithTokenManagement(
+      method: 'delete',
+      url: url,
+    );
 
     print(response.statusCode);
     print(response.body);
@@ -215,7 +223,8 @@ class FriendController extends GetxController {
     final url = Uri.parse('$baseUrl/friends/get-list');
     List<Friend> tempFriendList = [];
 
-    var response= await UserDataController.sendHttpRequestWithTokenManagement(method: 'get', url: url);
+    var response = await UserDataController.sendHttpRequestWithTokenManagement(
+        method: 'get', url: url);
 
     print(response.statusCode);
     print(response.body);
@@ -263,7 +272,8 @@ class FriendController extends GetxController {
   }) async {
     final url = Uri.parse('$baseUrl/friends/$delete/$oppEmail');
 
-    var response= await UserDataController.sendHttpRequestWithTokenManagement(method: 'get', url: url);
+    var response = await UserDataController.sendHttpRequestWithTokenManagement(
+        method: 'get', url: url);
 
     print(response.statusCode);
     print(response.body);
@@ -277,7 +287,8 @@ class FriendController extends GetxController {
 
     final body = jsonEncode({"oppEmail": oppEmail});
 
-    var response= await UserDataController.sendHttpRequestWithTokenManagement(method: 'patch', url: url,body: body);
+    var response = await UserDataController.sendHttpRequestWithTokenManagement(
+        method: 'patch', url: url, body: body);
 
     print(response.statusCode);
     print(response.body);
@@ -291,7 +302,8 @@ class FriendController extends GetxController {
 
     final body = jsonEncode({"oppEmail": oppEmail});
 
-    var response= await UserDataController.sendHttpRequestWithTokenManagement(method: 'patch', url: url,body: body);
+    var response = await UserDataController.sendHttpRequestWithTokenManagement(
+        method: 'patch', url: url, body: body);
 
     print(response.statusCode);
     print(response.body);
@@ -302,7 +314,8 @@ class FriendController extends GetxController {
     final url = Uri.parse('$baseUrl/friends/get-blocking-friend');
     List<Friend> tempBlockedFriendList = [];
 
-    var response= await UserDataController.sendHttpRequestWithTokenManagement(method: 'get', url: url);
+    var response = await UserDataController.sendHttpRequestWithTokenManagement(
+        method: 'get', url: url);
 
     print("차단한 친구 불러오기");
     print(response.statusCode);
@@ -312,13 +325,13 @@ class FriendController extends GetxController {
 
     if (response.statusCode == 200) {
       var blockedFriendsData = jsonDecode(response.body);
-      if(response.body.isNotEmpty){
+      if (response.body.isNotEmpty) {
         for (var friendData in blockedFriendsData) {
           int id = friendData['id'];
           String userEmail = friendData['userEmail'];
           String oppEmail = friendData['oppEmail'];
           String? roomId =
-          friendData['room'] == null ? null : friendData['room']['roomId'];
+              friendData['room'] == null ? null : friendData['room']['roomId'];
           String myMBTI = friendData['friend']['myMBTI'];
           String nickname = friendData['friend']['nickname'];
           String myKeyword = friendData['friend']['myKeyword'];
@@ -354,7 +367,8 @@ class FriendController extends GetxController {
 
     final body = jsonEncode({"friendEmail": friendEmail});
 
-    var response = await UserDataController.sendHttpRequestWithTokenManagement(method: 'post', url: url, body: body);
+    var response = await UserDataController.sendHttpRequestWithTokenManagement(
+        method: 'post', url: url, body: body);
 
     print(response.statusCode);
     print(response.body);

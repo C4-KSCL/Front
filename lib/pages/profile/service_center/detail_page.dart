@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/components/gap.dart';
 import 'package:frontend_matching/models/post.dart';
-import 'package:frontend_matching/models/postImage.dart';
+import 'package:frontend_matching/models/post_image.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get.dart';
 

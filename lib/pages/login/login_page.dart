@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:frontend_matching/config.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
-import 'package:frontend_matching/pages/login/bottomLayer.dart';
+import 'package:frontend_matching/pages/login/bottom_layer.dart';
 import 'package:get/get.dart';
 
-import '../../controllers/bottomNavigationBar.dart';
+import '../../controllers/bottom_nav_controller.dart';
 import '../chatting_room/chatting_room_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -17,7 +17,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

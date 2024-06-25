@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend_matching/components/textField.dart';
 import 'package:frontend_matching/components/textformField.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
-import 'package:frontend_matching/pages/login/loginPage.dart';
+import 'package:frontend_matching/pages/login/login_page.dart';
 import 'package:frontend_matching/services/find_password.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get.dart';

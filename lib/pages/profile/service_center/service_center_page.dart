@@ -3,9 +3,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_matching/controllers/service_center_controller.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/models/post.dart';
-import 'package:frontend_matching/models/postImage.dart';
-import 'package:frontend_matching/pages/profile/service_center/detailPage.dart';
-import 'package:frontend_matching/pages/profile/service_center/postPage.dart';
+import 'package:frontend_matching/models/post_image.dart';
+import 'package:frontend_matching/pages/profile/service_center/detail_page.dart';
+import 'package:frontend_matching/pages/profile/service_center/post_page.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get.dart';
 
@@ -92,24 +92,22 @@ class _ServiceCenterPageState extends State<ServiceCenterPage> {
                           ),
                         ),
                         onTap: () {
-                          Get.to(()=>DetailPage(
-                            post: post,
-                            postImage: image,
-                          ));
+                          Get.to(() => DetailPage(
+                                post: post,
+                                postImage: image,
+                              ));
                         },
                       );
                     },
                   ),
-        floatingActionButton:
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 20, 20),
-              child: FloatingActionButton(
-                backgroundColor: blueColor1,
-                onPressed: () {
-                  Get.to(()=>PostPage());
-                },
-                child: SvgPicture.asset('assets/icons/document.svg')
-              ),
-            ));
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.fromLTRB(0, 0, 20, 20),
+          child: FloatingActionButton(
+              backgroundColor: blueColor1,
+              onPressed: () {
+                Get.to(() => PostPage());
+              },
+              child: SvgPicture.asset('assets/icons/document.svg')),
+        ));
   }
 }

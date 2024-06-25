@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/components/gap.dart';
 import 'package:frontend_matching/components/mbtiKeyword.dart';
-import 'package:frontend_matching/controllers/infoModifyController.dart';
+import 'package:frontend_matching/controllers/info_modify_controller.dart';
 import 'package:frontend_matching/controllers/keyword_controller.dart';
-import 'package:frontend_matching/controllers/settingModifyController.dart';
+import 'package:frontend_matching/controllers/setting_modify_controller.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/services/friend_setting.dart';
 import 'package:frontend_matching/theme/colors.dart';

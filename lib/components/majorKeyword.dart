@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
-import 'package:frontend_matching/controllers/signupController.dart';
+import 'package:frontend_matching/controllers/signup_controller.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get.dart';
 import 'package:group_button/group_button.dart';
