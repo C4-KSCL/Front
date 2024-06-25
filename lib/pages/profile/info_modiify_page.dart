@@ -4,17 +4,17 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:frontend_matching/components/textField.dart';
-import 'package:frontend_matching/components/textformField.dart';
+import 'package:frontend_matching/components/textfield.dart';
+import 'package:frontend_matching/components/textform_field.dart';
 import 'package:frontend_matching/controllers/info_modify_controller.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
-import 'package:frontend_matching/pages/profile/buttons/InfoModifyButton.dart';
+import 'package:frontend_matching/pages/profile/buttons/Info_modify_button.dart';
 import 'package:frontend_matching/pages/profile/mykeyword_modify_page.dart';
 import 'package:frontend_matching/pages/profile/mymbti_modify_page.dart';
 import 'package:frontend_matching/pages/profile/userAvatar.dart';
 import 'package:frontend_matching/services/nickname_check.dart';
 import 'package:frontend_matching/theme/colors.dart';
-import 'package:frontend_matching/theme/textStyle.dart';
+import 'package:frontend_matching/theme/text_style.dart';
 import 'package:get/get.dart';
 
 class InfoModifyPage extends StatefulWidget {

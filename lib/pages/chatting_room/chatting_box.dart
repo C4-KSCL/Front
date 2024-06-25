@@ -7,7 +7,7 @@ import 'package:frontend_matching/services/time_convert_service.dart';
 import 'package:get/get.dart';
 
 import '../../theme/colors.dart';
-import '../../theme/textStyle.dart';
+import '../../theme/text_style.dart';
 
 Widget SentTextChatBox({
   required Chat chat,

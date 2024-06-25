@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 
 import '../../services/text_service.dart';
 import '../../theme/colors.dart';
-import '../../theme/textStyle.dart';
+import '../../theme/text_style.dart';
 
 Widget QuizPage({
   required VoidCallback voidCallback,

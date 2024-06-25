@@ -11,7 +11,7 @@ import 'package:frontend_matching/models/request.dart';
 import 'package:frontend_matching/models/user_image.dart';
 import 'package:frontend_matching/pages/chatting_room/chatting_room_page.dart';
 import 'package:frontend_matching/theme/colors.dart';
-import 'package:frontend_matching/theme/textStyle.dart';
+import 'package:frontend_matching/theme/text_style.dart';
 import 'package:get/get.dart';
 import 'package:page_indicator/page_indicator.dart';
 import 'package:path/path.dart';

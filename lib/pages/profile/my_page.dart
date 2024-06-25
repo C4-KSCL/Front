@@ -5,8 +5,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/pages/matching/loading_page.dart';
-import 'package:frontend_matching/pages/profile/buttons/InfoModifyButton.dart';
-import 'package:frontend_matching/pages/profile/buttons/columnButton.dart';
+import 'package:frontend_matching/pages/profile/buttons/Info_modify_button.dart';
+import 'package:frontend_matching/pages/profile/buttons/column_button.dart';
 import 'package:frontend_matching/pages/profile/image_modify_page.dart';
 import 'package:frontend_matching/pages/profile/info_modiify_page.dart';
 import 'package:frontend_matching/pages/profile/service_center/service_center_page.dart';
@@ -15,7 +15,7 @@ import 'package:frontend_matching/pages/signup/imageUpload/image_test.dart';
 import 'package:frontend_matching/pages/signup/imageUpload/select_image_page.dart';
 import 'package:frontend_matching/services/delete_user_service.dart';
 import 'package:frontend_matching/theme/colors.dart';
-import 'package:frontend_matching/theme/textStyle.dart';
+import 'package:frontend_matching/theme/text_style.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 
 class MyPage extends StatelessWidget {

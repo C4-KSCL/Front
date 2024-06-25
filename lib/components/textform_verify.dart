@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/theme/colors.dart';
-import 'package:frontend_matching/theme/textStyle.dart';
+import 'package:frontend_matching/theme/text_style.dart';
 
 class TextformVerify extends StatefulWidget {
   final String textType;

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/components/gap.dart';
-import 'package:frontend_matching/components/genderButton.dart';
-import 'package:frontend_matching/components/mbtiKeyword.dart';
-import 'package:frontend_matching/components/textField.dart';
+import 'package:frontend_matching/components/gender_button.dart';
+import 'package:frontend_matching/components/mbti_keyword.dart';
+import 'package:frontend_matching/components/textfield.dart';
 import 'package:frontend_matching/controllers/keyword_controller.dart';
 import 'package:frontend_matching/controllers/setting_modify_controller.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';

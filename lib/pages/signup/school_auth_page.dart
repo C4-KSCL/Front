@@ -3,15 +3,15 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:frontend_matching/components/textField.dart';
-import 'package:frontend_matching/components/textformField.dart';
+import 'package:frontend_matching/components/textfield.dart';
+import 'package:frontend_matching/components/textform_field.dart';
 import 'package:frontend_matching/config.dart';
 import 'package:frontend_matching/controllers/signup_controller.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/pages/login/login_page.dart';
 import 'package:frontend_matching/pages/signup/my_info_page.dart';
 import 'package:frontend_matching/theme/colors.dart';
-import 'package:frontend_matching/theme/textStyle.dart';
+import 'package:frontend_matching/theme/text_style.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
@@ -101,20 +101,6 @@ class _SchoolAuthPageState extends State<SchoolAuthPage> {
               );
             },
           ),
-          actions: [
-            IconButton(
-                icon: const Icon(
-                  Icons.home,
-                  color: Colors.white,
-                ),
-                onPressed: () => {}),
-            IconButton(
-                icon: const Icon(
-                  Icons.search,
-                  color: Colors.white,
-                ),
-                onPressed: () => {})
-          ],
         ),
         backgroundColor: blueColor5,
         body: SingleChildScrollView(

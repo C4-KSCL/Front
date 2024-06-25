@@ -8,7 +8,7 @@ import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/pages/chatting_list/chatlist_listtile.dart';
 import 'package:frontend_matching/controllers/chatting_list_controller.dart';
 import 'package:frontend_matching/theme/colors.dart';
-import 'package:frontend_matching/theme/textStyle.dart';
+import 'package:frontend_matching/theme/text_style.dart';
 import 'package:get/get.dart';
 
 class ChattingListPage extends StatelessWidget {

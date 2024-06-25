@@ -3,7 +3,7 @@ import 'package:frontend_matching/controllers/chatting_controller.dart';
 import 'package:frontend_matching/controllers/chatting_list_controller.dart';
 import 'package:frontend_matching/controllers/friend_controller.dart';
 import 'package:frontend_matching/theme/colors.dart';
-import 'package:frontend_matching/theme/textStyle.dart';
+import 'package:frontend_matching/theme/text_style.dart';
 import 'package:get/get.dart';
 
 Widget AcceptOrRejectButtonLayer(int? friendRequestId) {

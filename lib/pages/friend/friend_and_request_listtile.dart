@@ -12,7 +12,7 @@ import 'package:get/get.dart';
 
 import '../../controllers/friend_controller.dart';
 import '../../theme/colors.dart';
-import '../../theme/textStyle.dart';
+import '../../theme/text_style.dart';
 
 ListTile friendListTile({
   required Friend friendData,

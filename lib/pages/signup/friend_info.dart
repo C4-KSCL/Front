@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/components/gap.dart';
-import 'package:frontend_matching/components/genderButton.dart';
-import 'package:frontend_matching/components/textformField.dart';
+import 'package:frontend_matching/components/gender_button.dart';
+import 'package:frontend_matching/components/textform_field.dart';
 import 'package:frontend_matching/controllers/signup_controller.dart';
 import 'package:frontend_matching/pages/init_page.dart';
 import 'package:frontend_matching/pages/signup/friend_keyword_page.dart';
@@ -104,13 +104,6 @@ class FriendInfoPage extends StatelessWidget {
             );
           },
         ),
-        actions: [
-          IconButton(
-              icon: Icon(Icons.home, color: Colors.white), onPressed: () => {}),
-          IconButton(
-              icon: Icon(Icons.search, color: Colors.white),
-              onPressed: () => {})
-        ],
       ),
       backgroundColor: blueColor5,
       body: Container(
