@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:frontend_matching/components/genderButton.dart';
 import 'package:frontend_matching/components/textField.dart';
 import 'package:frontend_matching/components/textformField.dart';
-import 'package:frontend_matching/controllers/signupController.dart';
-import 'package:frontend_matching/pages/signup/myMbtiPage.dart';
-import 'package:frontend_matching/pages/signup/schoolAuth.dart';
+import 'package:frontend_matching/controllers/signup_controller.dart';
+import 'package:frontend_matching/pages/signup/my_mbti_page.dart';
+import 'package:frontend_matching/pages/signup/school_auth_page.dart';
 import 'package:frontend_matching/services/nickname_check.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get.dart';
@@ -62,6 +62,20 @@ class _InfoAuthPageState extends State<InfoAuthPage> {
             );
           },
         ),
+        actions: [
+          IconButton(
+              icon: const Icon(
+                Icons.home,
+                color: Colors.white,
+              ),
+              onPressed: () => {}),
+          IconButton(
+              icon: const Icon(
+                Icons.search,
+                color: Colors.white,
+              ),
+              onPressed: () => {})
+        ],
       ),
       backgroundColor: blueColor5,
       body: SingleChildScrollView(

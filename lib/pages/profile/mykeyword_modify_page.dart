@@ -8,7 +8,7 @@ import 'package:frontend_matching/components/idolKeyword.dart';
 import 'package:frontend_matching/components/majorKeyword.dart';
 import 'package:frontend_matching/components/mindKeyword.dart';
 import 'package:frontend_matching/components/trainningKeyword.dart';
-import 'package:frontend_matching/controllers/infoModifyController.dart';
+import 'package:frontend_matching/controllers/info_modify_controller.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:frontend_matching/theme/textStyle.dart';

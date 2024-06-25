@@ -4,17 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:frontend_matching/components/gap.dart';
 import 'package:frontend_matching/components/genderButton.dart';
 import 'package:frontend_matching/components/textformField.dart';
-import 'package:frontend_matching/controllers/signupController.dart';
+import 'package:frontend_matching/controllers/signup_controller.dart';
 import 'package:frontend_matching/pages/init_page.dart';
-import 'package:frontend_matching/pages/signup/friendKeywordPage.dart';
-import 'package:frontend_matching/pages/signup/imageUpload/profileImagePage.dart';
-import 'package:frontend_matching/pages/signup/imageUpload/selectImagePage.dart';
-import 'package:frontend_matching/pages/signup/schoolAuth.dart';
+import 'package:frontend_matching/pages/signup/friend_keyword_page.dart';
+import 'package:frontend_matching/pages/signup/imageUpload/profile_image_page.dart';
+import 'package:frontend_matching/pages/signup/imageUpload/select_image_page.dart';
+import 'package:frontend_matching/pages/signup/school_auth_page.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:get/get.dart';
 // ignore_for_file: unused_import
 import 'package:http/http.dart' as http;
-import '../login/loginPage.dart';
+import '../login/login_page.dart';
 
 Future<void> registerUser(
   String email,
@@ -104,6 +104,13 @@ class FriendInfoPage extends StatelessWidget {
             );
           },
         ),
+        actions: [
+          IconButton(
+              icon: Icon(Icons.home, color: Colors.white), onPressed: () => {}),
+          IconButton(
+              icon: Icon(Icons.search, color: Colors.white),
+              onPressed: () => {})
+        ],
       ),
       backgroundColor: blueColor5,
       body: Container(

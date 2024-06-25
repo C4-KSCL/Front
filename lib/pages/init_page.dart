@@ -1,14 +1,14 @@
 // ignore_for_file: prefer_const_constructors, use_super_parameters
 
 import 'package:flutter/material.dart';
-import 'package:frontend_matching/pages/matching/findFriendsPage.dart';
-import 'package:frontend_matching/pages/profile/myPage.dart';
+import 'package:frontend_matching/pages/matching/find_friend_page.dart';
+import 'package:frontend_matching/pages/profile/my_page.dart';
 import 'package:get/get.dart';
-import '../components/my_bottom_navigationbar.dart';
-import '../controllers/bottomNavigationBar.dart';
+import '../components/myNavigatorBar.dart';
+import '../controllers/bottom_nav_controller.dart';
 import 'chatting_list/chatting_list_page.dart';
 import 'friend/friend_page.dart';
-import 'matching/mainPage.dart';
+import 'matching/main_page.dart';
 
 class InitPage extends StatelessWidget {
   const InitPage({Key? key}) : super(key: key);
