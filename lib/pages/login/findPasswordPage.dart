@@ -52,7 +52,6 @@ class _FindPasswordPageState extends State<FindPasswordPage> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 13.0, vertical: 8.0),
               child: ButtonTextFieldBox(
-                TEXT: '학교 이메일',
                 hintText: '입력해주세요',
                 onPressed: () async {
                   email = schoolEmailController.text;
@@ -65,6 +64,7 @@ class _FindPasswordPageState extends State<FindPasswordPage> {
                 },
                 buttonText: '인증하기',
                 textEditingController: schoolEmailController,
+                textType: '학교 이메일',
               ),
             ),
             Padding(

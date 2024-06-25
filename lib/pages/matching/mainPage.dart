@@ -83,7 +83,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        scrolledUnderElevation:0,
+        scrolledUnderElevation: 0,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -198,8 +198,7 @@ class _MainPageState extends State<MainPage> {
                                                   } else {
                                                     return const Center(
                                                       child:
-                                                          CircularProgressIndicator(
-                                                      ),
+                                                          CircularProgressIndicator(),
                                                     );
                                                   }
                                                 },
@@ -378,6 +377,7 @@ class _MainPageState extends State<MainPage> {
                                     },
                                     textEditingController:
                                         sendingControllers[infoIndex],
+                                    textType: '',
                                   ),
                                 ],
                               ),

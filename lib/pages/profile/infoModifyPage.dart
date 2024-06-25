@@ -162,7 +162,7 @@ class _InfoModifyPageState extends State<InfoModifyPage> {
                       ],
                     ),
                     Padding(
-                      padding: EdgeInsets.all(medWidth / 60),
+                      padding: EdgeInsets.all(medWidth / 45),
                       child: GetTextContainer(
                         textLogo: '',
                         textType: '비밀번호',
@@ -170,7 +170,7 @@ class _InfoModifyPageState extends State<InfoModifyPage> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.all(medWidth / 60),
+                      padding: EdgeInsets.all(medWidth / 45),
                       child: ButtonTextFieldBox(
                         hintText: '입력하세요',
                         onPressed: () async {
@@ -207,11 +207,11 @@ class _InfoModifyPageState extends State<InfoModifyPage> {
                         },
                         textEditingController: nicknameController,
                         buttonText: '인증하기',
-                        TEXT: '닉네임',
+                        textType: '닉네임',
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.all(medWidth / 60),
+                      padding: EdgeInsets.all(medWidth / 45),
                       child: GetTextContainer(
                         textLogo: '',
                         textType: '전화번호',
@@ -219,7 +219,7 @@ class _InfoModifyPageState extends State<InfoModifyPage> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.all(medWidth / 60),
+                      padding: EdgeInsets.all(medWidth / 45),
                       child: GetTextContainer(
                         textLogo: '',
                         textType: '나이',
@@ -261,12 +261,11 @@ class _InfoModifyPageState extends State<InfoModifyPage> {
                       height: 30,
                     ),
                     Padding(
-                      padding: EdgeInsets.all(medWidth / 60),
+                      padding: EdgeInsets.all(medWidth / 45),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(12), // 둥근 테두리 반경 설정
+                            borderRadius: BorderRadius.circular(12),
                           ),
                           backgroundColor: Color(0xFF7EA5F3),
                           minimumSize: Size(300, 50),

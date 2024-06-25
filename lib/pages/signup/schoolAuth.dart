@@ -16,7 +16,6 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 Future<String?> registerUser(String email) async {
-
   final Uri url = Uri.parse('${AppConfig.baseUrl}/signup/emailauth');
 
   try {
@@ -126,7 +125,6 @@ class _SchoolAuthPageState extends State<SchoolAuthPage> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 13.0, vertical: 8.0),
             child: ButtonTextFieldBox(
-              TEXT: '학교 이메일',
               hintText: '입력해주세요',
               onPressed: () async {
                 String email = schoolEmailController.text;
@@ -141,6 +139,7 @@ class _SchoolAuthPageState extends State<SchoolAuthPage> {
               },
               buttonText: '인증하기',
               textEditingController: schoolEmailController,
+              textType: '학교 이메일',
             ),
           ),
           Padding(

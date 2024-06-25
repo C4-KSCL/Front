@@ -102,7 +102,6 @@ class _InfoAuthPageState extends State<InfoAuthPage> {
                 hintText: '입력해주세요',
                 buttonText: '인증하기',
                 textEditingController: nicknameController,
-                TEXT: '닉네임',
                 onPressed: () async {
                   // 닉네임 인증
                   String nickname = nicknameController.text;
@@ -127,6 +126,7 @@ class _InfoAuthPageState extends State<InfoAuthPage> {
                   }
                   signupController.checkNickname(nickname, context);
                 },
+                textType: '닉네임',
               ),
             ),
             Padding(
