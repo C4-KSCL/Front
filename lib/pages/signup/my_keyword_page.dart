@@ -8,9 +8,9 @@ import 'package:frontend_matching/components/idolKeyword.dart';
 import 'package:frontend_matching/components/majorKeyword.dart';
 import 'package:frontend_matching/components/mindKeyword.dart';
 import 'package:frontend_matching/components/trainningKeyword.dart';
-import 'package:frontend_matching/controllers/signupController.dart';
-import 'package:frontend_matching/pages/signup/friendMbtiPage.dart';
-import 'package:frontend_matching/pages/signup/myMbtiPage.dart';
+import 'package:frontend_matching/controllers/signup_controller.dart';
+import 'package:frontend_matching/pages/signup/friend%20mbti_page.dart';
+import 'package:frontend_matching/pages/signup/my_mbti_page.dart';
 import 'package:frontend_matching/theme/colors.dart';
 import 'package:frontend_matching/theme/textStyle.dart';
 import 'package:get/get.dart';
@@ -73,6 +73,20 @@ class _MyKeywordPageState extends State<MyKeywordPage> {
             );
           },
         ),
+        actions: [
+          IconButton(
+              icon: Icon(
+                Icons.home,
+                color: Colors.white,
+              ),
+              onPressed: () => {}),
+          IconButton(
+              icon: Icon(
+                Icons.search,
+                color: Colors.white,
+              ),
+              onPressed: () => {})
+        ],
       ),
       backgroundColor: blueColor5,
       body: Container(

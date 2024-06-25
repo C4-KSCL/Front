@@ -1,14 +1,9 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:frontend_matching/config.dart';
-import 'package:frontend_matching/controllers/user_data_controller.dart';
-import 'package:frontend_matching/pages/login/bottomLayer.dart';
+import 'package:frontend_matching/pages/login/bottom_layer.dart';
 import 'package:get/get.dart';
-import 'dart:ui' as ui;
-import '../../controllers/bottomNavigationBar.dart';
-import '../chatting_room/chatting_room_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

@@ -7,7 +7,7 @@ import '../firebase_options.dart';
 
 import '../pages/chatting_room/chatting_room_page.dart';
 import '../pages/init_page.dart';
-import 'bottomNavigationBar.dart';
+import 'bottom_nav_controller.dart';
 import 'chatting_controller.dart';
 import 'chatting_list_controller.dart';
 

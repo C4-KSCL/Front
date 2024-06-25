@@ -5,7 +5,7 @@ import 'dart:convert';
 
 import '../config.dart';
 import '../models/user.dart';
-import '../models/userImage.dart';
+import '../models/user_image.dart';
 import '../controllers/user_data_controller.dart';
 
 List<User> users = [];
@@ -20,7 +20,7 @@ class FindFriendController extends GetxController {
   RxList<List<UserImage>> previousFriendImageList = RxList<List<UserImage>>();
   RxBool isLoading = false.obs;
 
-  void resetData(){
+  void resetData() {
     FindFriendController.to.matchingFriendImageList.clear();
     FindFriendController.to.matchingFriendInfoList.clear();
     FindFriendController.to.previousFriendImageList.clear();

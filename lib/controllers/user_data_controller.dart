@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:frontend_matching/controllers/bottomNavigationBar.dart';
+import 'package:frontend_matching/controllers/bottom_nav_controller.dart';
 import 'package:frontend_matching/controllers/chatting_list_controller.dart';
 import 'package:frontend_matching/controllers/find_friend_controller.dart';
 import 'package:frontend_matching/controllers/friend_controller.dart';
-import 'package:frontend_matching/controllers/signupController.dart';
-import 'package:frontend_matching/pages/login/loginPage.dart';
-import 'package:frontend_matching/pages/matching/loadingPage.dart';
+import 'package:frontend_matching/controllers/signup_controller.dart';
+import 'package:frontend_matching/pages/login/login_page.dart';
+import 'package:frontend_matching/pages/matching/loading_page.dart';
 import 'package:frontend_matching/services/fcm_token_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
@@ -15,7 +15,7 @@ import 'package:http/http.dart' as http;
 import '../config.dart';
 import '../pages/init_page.dart';
 import '../models/user.dart';
-import '../models/userImage.dart';
+import '../models/user_image.dart';
 
 class UserDataController extends GetxController {
   static UserDataController get to => Get.find<UserDataController>();

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/models/post.dart';
-import 'package:frontend_matching/models/postImage.dart';
+import 'package:frontend_matching/models/post_image.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/controllers/find_friend_controller.dart';
-import 'package:frontend_matching/pages/matching/loadingPage.dart';
-import 'package:frontend_matching/pages/matching/mainPage.dart';
+import 'package:frontend_matching/pages/matching/loading_page.dart';
+import 'package:frontend_matching/pages/matching/main_page.dart';
 import 'package:get/get.dart';
 
 class FindFriendsPage extends StatefulWidget {
