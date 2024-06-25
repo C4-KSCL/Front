@@ -10,7 +10,7 @@ import 'package:frontend_matching/services/fcm_token_service.dart';
 import 'package:get/get.dart';
 
 import '../../theme/colors.dart';
-import '../../theme/textStyle.dart';
+import '../../theme/text_style.dart';
 import 'friend_and_request_listtile.dart';
 
 class FriendPage extends StatelessWidget {

@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 
 import '../../models/chat_list.dart';
 import '../../services/text_service.dart';
-import '../../theme/textStyle.dart';
+import '../../theme/text_style.dart';
 import '../chatting_room/chatting_room_page.dart';
 
 Widget ChatListTile({

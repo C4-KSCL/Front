@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/pages/friend/friend_and_request_listtile.dart';
 import 'package:frontend_matching/controllers/friend_controller.dart';
-import 'package:frontend_matching/theme/textStyle.dart';
+import 'package:frontend_matching/theme/text_style.dart';
 import 'package:get/get.dart';
 
 Widget friendTabView() {

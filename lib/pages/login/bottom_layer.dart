@@ -4,10 +4,10 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend_matching/components/loginTextForm.dart';
-import 'package:frontend_matching/components/loginVerifyTextForm.dart';
-import 'package:frontend_matching/components/textformField.dart';
-import 'package:frontend_matching/components/textformVerify.dart';
+import 'package:frontend_matching/components/login_textform.dart';
+import 'package:frontend_matching/components/login_verify_textform.dart';
+import 'package:frontend_matching/components/textform_field.dart';
+import 'package:frontend_matching/components/textform_verify.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/models/user.dart';
 import 'package:frontend_matching/pages/init_page.dart';

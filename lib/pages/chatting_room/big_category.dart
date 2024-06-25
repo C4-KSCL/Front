@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_matching/models/big_category.dart';
 import 'package:frontend_matching/controllers/chatting_controller.dart';
-import 'package:frontend_matching/theme/textStyle.dart';
+import 'package:frontend_matching/theme/text_style.dart';
 import 'package:get/get.dart';
 
 Widget bigCategory() {

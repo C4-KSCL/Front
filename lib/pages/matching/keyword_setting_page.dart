@@ -1,17 +1,17 @@
 // ignore_for_file: prefer_const_constructors, prefer_interpolation_to_compose_strings
 
 import 'package:flutter/material.dart';
-import 'package:frontend_matching/components/developKeyword.dart';
+import 'package:frontend_matching/components/develop_keyword.dart';
 import 'package:frontend_matching/components/gap.dart';
-import 'package:frontend_matching/components/hobbyKeyword.dart';
-import 'package:frontend_matching/components/idolKeyword.dart';
-import 'package:frontend_matching/components/majorKeyword.dart';
-import 'package:frontend_matching/components/mindKeyword.dart';
-import 'package:frontend_matching/components/trainningKeyword.dart';
+import 'package:frontend_matching/components/hobby_keyword.dart';
+import 'package:frontend_matching/components/idol_keyword.dart';
+import 'package:frontend_matching/components/major_keyword.dart';
+import 'package:frontend_matching/components/mind_keyword.dart';
+import 'package:frontend_matching/components/trainning_keyword.dart';
 import 'package:frontend_matching/controllers/user_data_controller.dart';
 import 'package:frontend_matching/services/friend_setting.dart';
 import 'package:frontend_matching/theme/colors.dart';
-import 'package:frontend_matching/theme/textStyle.dart';
+import 'package:frontend_matching/theme/text_style.dart';
 import 'package:get/get.dart';
 
 class KeywordSettingPage extends StatefulWidget {

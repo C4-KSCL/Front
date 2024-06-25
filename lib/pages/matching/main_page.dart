@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend_matching/components/textField.dart';
+import 'package:frontend_matching/components/textfield.dart';
 import 'package:frontend_matching/controllers/find_friend_controller.dart';
 import 'package:frontend_matching/controllers/friend_controller.dart';
 import 'package:frontend_matching/controllers/setting_modify_controller.dart';
@@ -13,7 +13,7 @@ import 'package:get/get.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:page_indicator/page_indicator.dart';
 import '../../theme/colors.dart';
-import '../../theme/textStyle.dart';
+import '../../theme/text_style.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class MainPage extends StatefulWidget {

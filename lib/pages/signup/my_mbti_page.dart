@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
-import 'package:frontend_matching/components/mbtiKeyword.dart';
+import 'package:frontend_matching/components/mbti_keyword.dart';
 import 'package:frontend_matching/controllers/keyword_controller.dart';
 import 'package:frontend_matching/controllers/signup_controller.dart';
 import 'package:frontend_matching/pages/signup/my_info_page.dart';
@@ -51,20 +51,6 @@ class _MyMbtiPageState extends State<MyMbtiPage> {
             );
           },
         ),
-        actions: [
-          IconButton(
-              icon: Icon(
-                Icons.home,
-                color: Colors.white,
-              ),
-              onPressed: () => {}),
-          IconButton(
-              icon: Icon(
-                Icons.search,
-                color: Colors.white,
-              ),
-              onPressed: () => {})
-        ],
       ),
       backgroundColor: blueColor5,
       body: Container(

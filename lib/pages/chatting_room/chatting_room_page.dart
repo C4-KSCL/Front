@@ -11,7 +11,7 @@ import 'package:frontend_matching/pages/chatting_room/small_category.dart';
 import 'package:frontend_matching/pages/chatting_room/quiz_page.dart';
 import 'package:frontend_matching/controllers/chatting_controller.dart';
 import 'package:frontend_matching/services/time_convert_service.dart';
-import 'package:frontend_matching/theme/textStyle.dart';
+import 'package:frontend_matching/theme/text_style.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';

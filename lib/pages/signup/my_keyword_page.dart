@@ -1,18 +1,18 @@
 // ignore_for_file: prefer_const_constructors, non_constant_identifier_names, prefer_interpolation_to_compose_strings
 
 import 'package:flutter/material.dart';
-import 'package:frontend_matching/components/developKeyword.dart';
+import 'package:frontend_matching/components/develop_keyword.dart';
 import 'package:frontend_matching/components/gap.dart';
-import 'package:frontend_matching/components/hobbyKeyword.dart';
-import 'package:frontend_matching/components/idolKeyword.dart';
-import 'package:frontend_matching/components/majorKeyword.dart';
-import 'package:frontend_matching/components/mindKeyword.dart';
-import 'package:frontend_matching/components/trainningKeyword.dart';
+import 'package:frontend_matching/components/hobby_keyword.dart';
+import 'package:frontend_matching/components/idol_keyword.dart';
+import 'package:frontend_matching/components/major_keyword.dart';
+import 'package:frontend_matching/components/mind_keyword.dart';
+import 'package:frontend_matching/components/trainning_keyword.dart';
 import 'package:frontend_matching/controllers/signup_controller.dart';
 import 'package:frontend_matching/pages/signup/friend%20mbti_page.dart';
 import 'package:frontend_matching/pages/signup/my_mbti_page.dart';
 import 'package:frontend_matching/theme/colors.dart';
-import 'package:frontend_matching/theme/textStyle.dart';
+import 'package:frontend_matching/theme/text_style.dart';
 import 'package:get/get.dart';
 
 class MyKeywordPage extends StatefulWidget {
@@ -73,20 +73,6 @@ class _MyKeywordPageState extends State<MyKeywordPage> {
             );
           },
         ),
-        actions: [
-          IconButton(
-              icon: Icon(
-                Icons.home,
-                color: Colors.white,
-              ),
-              onPressed: () => {}),
-          IconButton(
-              icon: Icon(
-                Icons.search,
-                color: Colors.white,
-              ),
-              onPressed: () => {})
-        ],
       ),
       backgroundColor: blueColor5,
       body: Container(
