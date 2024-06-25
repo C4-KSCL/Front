@@ -132,11 +132,13 @@ class _MbtiSettingPageState extends State<MbtiSettingPage> {
                   NumberInputField(
                     controller: minAgeController,
                     hintText: '최소 나이',
+                    textType: '',
                   ),
                   const Icon(Icons.remove),
                   NumberInputField(
                     controller: maxAgeController,
                     hintText: '최대 나이',
+                    textType: '',
                   ),
                 ],
               ),
